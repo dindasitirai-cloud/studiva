@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Nunito', 'Segoe UI', Roboto, Arial, sans-serif;
+    line-height: 1.7;
+    color: #33415c;
+    background-color: #fff8e7;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: 'Poppins', 'Nunito', sans-serif;
+  }
+
+  /* Visible keyboard focus ring everywhere, including custom button/card components. */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 3px solid #5dade2;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex min-h-[48px] items-center justify-center rounded-full bg-gold px-7 py-3 font-bold text-navy shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg hover:bg-[#FFC700];
+  }
+
+  .btn-secondary {
+    @apply inline-flex min-h-[48px] items-center justify-center rounded-full bg-skyblue px-7 py-3 font-bold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg hover:bg-[#4A9BD1];
+  }
+
+  .btn-outline {
+    @apply inline-flex min-h-[48px] items-center justify-center rounded-full border-2 border-navy px-7 py-3 font-bold text-navy transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 hover:bg-navy hover:text-white;
+  }
+
+  /* Card lift-on-hover used on landing page program/feature/testimonial cards.
+     Scoped as a utility rather than baked into the shared Card component, since
+     not every Card usage across the app (dashboards, admin lists) wants a lift. */
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-xl;
+  }
+
+  /* CSS-grid accordion trick: animating 0fr -> 1fr is smoother and more
+     reliable across content lengths than animating max-height. */
+  .accordion-rows {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease;
+    overflow: hidden;
+  }
+
+  .accordion-rows.is-open {
+    grid-template-rows: 1fr;
+  }
+
+  .accordion-rows > * {
+    min-height: 0;
+  }
+}

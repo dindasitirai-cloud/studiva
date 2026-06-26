@@ -164,9 +164,16 @@ export default function LandingPage() {
               className="absolute inset-0 h-full w-full object-cover"
             />
             <div className="absolute inset-0 bg-black/15" />
-            <h1 className="relative z-10 max-w-[420px] px-10 py-5 text-center text-[32px] font-bold leading-[1.3] text-white [text-shadow:2px_2px_8px_rgba(0,0,0,0.4)] sm:text-[40px] md:text-[48px]">
-              Pendidikan Inklusif untuk <span className="text-gold">Setiap</span> Anak
-            </h1>
+            <div className="relative z-10 flex flex-col items-center px-10 py-5">
+              <img
+                src="/images/logo-studiva-bordered.png"
+                alt="Studiva"
+                className="z-20 mb-5 h-[188px] w-auto sm:h-[225px] md:mb-6 md:h-[263px]"
+              />
+              <h1 className="max-w-[420px] text-center text-[32px] font-bold leading-[1.3] text-white [text-shadow:2px_2px_8px_rgba(0,0,0,0.4)] sm:text-[40px] md:text-[48px]">
+                Pendidikan Inklusif untuk <span className="text-gold">Setiap</span> Anak
+              </h1>
+            </div>
           </div>
 
           {/* Right: stacked program cards, vertically centered with generous

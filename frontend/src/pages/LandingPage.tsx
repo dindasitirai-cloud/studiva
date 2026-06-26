@@ -174,19 +174,24 @@ export default function LandingPage() {
           <div className="flex flex-col items-center justify-center gap-7 bg-cream px-10 pb-[60px] pt-10 md:h-full md:w-1/2">
             <div
               id="tier1"
-              className="hover-lift flex h-[270px] w-full flex-col items-center justify-center rounded-2xl bg-skyblue p-8 text-center shadow-[0_8px_24px_rgba(0,0,0,0.1)]"
+              className="hover-lift flex min-h-[270px] w-full flex-col items-center justify-center rounded-2xl bg-skyblue px-5 py-[30px] text-center shadow-[0_8px_24px_rgba(0,0,0,0.1)] md:h-[270px] md:px-8 md:pb-8 md:pt-10"
             >
-              <h3 className="text-[26px] font-bold text-white">Sekolah Studiva</h3>
-              <p className="mt-1 w-full text-left text-[16px] text-white/90">Untuk Anak di Sekolah Kami</p>
-              <ul className="mt-3 w-full space-y-1 text-left">
+              <h3 className="mb-3 text-[20px] font-bold text-white md:mb-0 md:text-[26px]">Sekolah Studiva</h3>
+              <p className="mb-5 mt-1 w-full text-center text-[13px] text-white/90 md:mb-0 md:text-left md:text-[16px]">
+                Untuk Anak di Sekolah Kami
+              </p>
+              <ul className="mt-0 w-full space-y-2 text-left md:mt-3 md:space-y-1">
                 {tier1Features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-[15px] leading-[1.4] text-white">
+                  <li
+                    key={f}
+                    className="flex items-start gap-2 text-[12px] leading-[1.6] text-white md:text-[15px] md:leading-[1.4]"
+                  >
                     <span className="text-gold">•</span>
                     <span>{f}</span>
                   </li>
                 ))}
               </ul>
-              <div className="mt-4 flex items-center justify-center gap-4">
+              <div className="mt-4 flex flex-col items-center justify-center gap-[14px] md:flex-row md:gap-4">
                 <Link
                   to="/signup"
                   state={{ presetTier: 'tier1' }}
@@ -200,19 +205,24 @@ export default function LandingPage() {
 
             <div
               id="tier2"
-              className="hover-lift flex h-[270px] w-full flex-col items-center justify-center rounded-2xl bg-gold p-8 text-center shadow-[0_8px_24px_rgba(0,0,0,0.1)]"
+              className="hover-lift flex min-h-[270px] w-full flex-col items-center justify-center rounded-2xl bg-gold px-5 py-[30px] text-center shadow-[0_8px_24px_rgba(0,0,0,0.1)] md:h-[270px] md:px-8 md:pb-8 md:pt-10"
             >
-              <h3 className="text-[26px] font-bold text-navy">Studiva Digital</h3>
-              <p className="mt-1 w-full text-left text-[16px] text-navy/85">Untuk Orangtua di Mana Saja</p>
-              <ul className="mt-3 w-full space-y-1 text-left">
+              <h3 className="mb-3 text-[20px] font-bold text-navy md:mb-0 md:text-[26px]">Studiva Digital</h3>
+              <p className="mb-5 mt-1 w-full text-center text-[13px] text-navy/85 md:mb-0 md:text-left md:text-[16px]">
+                Untuk Orangtua di Mana Saja
+              </p>
+              <ul className="mt-0 w-full space-y-2 text-left md:mt-3 md:space-y-1">
                 {tier2Features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-[15px] leading-[1.4] text-navy">
+                  <li
+                    key={f}
+                    className="flex items-start gap-2 text-[12px] leading-[1.6] text-navy md:text-[15px] md:leading-[1.4]"
+                  >
                     <span>•</span>
                     <span>{f}</span>
                   </li>
                 ))}
               </ul>
-              <div className="mt-4 flex items-center justify-center gap-4">
+              <div className="mt-4 flex flex-col items-center justify-center gap-[14px] md:flex-row md:gap-4">
                 <Link
                   to="/signup"
                   state={{ presetTier: 'tier2' }}

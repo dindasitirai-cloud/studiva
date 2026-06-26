@@ -1,0 +1,6 @@
+{
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/build",
+  "installCommand": "echo 'No root install needed - frontend installs its own deps in buildCommand'",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}

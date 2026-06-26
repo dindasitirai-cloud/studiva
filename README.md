@@ -71,19 +71,21 @@ REACT_APP_API_URL=http://localhost:5001
 
 ## Test Credentials
 
-| Role           | Email               | Password            |
-|----------------|---------------------|----------------------|
-| Parent         | test@studiva.id     | password123          |
-| Teacher        | teacher@studiva.id  | password123          |
-| Admin          | admin@studiva.id    | password123          |
-| Admin / Expert | fitri@studiva.id    | Studiva@Fitri2026!   |
+| Role               | Email               | Password            |
+|--------------------|---------------------|----------------------|
+| Parent (Tier 1)    | test@studiva.id     | password123          |
+| Parent (Tier 2)    | tier2@studiva.id    | password123          |
+| Teacher            | teacher@studiva.id  | password123          |
+| Admin              | admin@studiva.id    | password123          |
+| Admin / Expert     | fitri@studiva.id    | Studiva@Fitri2026!   |
 
-The seed script creates the parent's child **Rafa** (age 6) and a second child **Maya** (age 7),
-both assigned to the teacher account, plus 5 sample daily updates, 10 sample resources, and an
-**active Tier 1 subscription** for the parent and teacher accounts (so they can access their
-dashboards out of the box — see Payments &amp; Subscriptions below for why this is needed). Admin
-accounts have no subscription requirement. `fitri@studiva.id` is the Psikolog Fitri Effendy
-account — see "Psikolog Fitri Admin/Expert Role" below.
+The seed script creates the Tier 1 parent's child **Rafa** (age 6) and a second child **Maya**
+(age 7), both assigned to the teacher account, plus the Tier 2 parent's child **Dimas** (age 5),
+5 sample daily updates, 10 sample resources, an **active Tier 1 subscription** for the Tier 1
+parent and teacher accounts, and an **active Tier 2 subscription** for the Tier 2 parent account
+(so each can access their respective dashboard out of the box — see Payments &amp; Subscriptions
+below for why this is needed). Admin accounts have no subscription requirement. `fitri@studiva.id`
+is the Psikolog Fitri Effendy account — see "Psikolog Fitri Admin/Expert Role" below.
 
 ## API Endpoints
 

@@ -62,6 +62,12 @@ async function seed(): Promise<void> {
     console.log('Created admin profile + expert/champion community profile for fitri@studiva.id');
   }
 
+  let tier2Parent = await findUserByEmail('tier2@studiva.id');
+  if (!tier2Parent) {
+    tier2Parent = await createUser('tier2@studiva.id', await bcrypt.hash('password123', 10), 'parent', 'Ibu Rina');
+    console.log('Created Tier 2 parent user: tier2@studiva.id');
+  }
+
   let children = await findChildrenByParentId(parent.id);
   let rafa = children.find((c) => c.name === 'Rafa');
   if (!rafa) {
@@ -88,6 +94,13 @@ async function seed(): Promise<void> {
 
   await assignTeacherToChild(teacher.id, rafa.id);
   await assignTeacherToChild(teacher.id, maya.id);
+
+  let tier2Children = await findChildrenByParentId(tier2Parent.id);
+  let dimas = tier2Children.find((c) => c.name === 'Dimas');
+  if (!dimas) {
+    dimas = await createChild('Dimas', 5, 'Auditory learner, benefits from routine and clear instructions', tier2Parent.id);
+    console.log('Created child: Dimas');
+  }
 
   const existingUpdates = await get('SELECT COUNT(*) as count FROM daily_updates') as { count: number };
   if (existingUpdates.count === 0) {
@@ -252,6 +265,22 @@ async function seed(): Promise<void> {
       0
     );
     console.log('Created active Tier 1 subscription for teacher@studiva.id');
+  }
+
+  if (!(await findActiveSubscriptionByUserId(tier2Parent.id))) {
+    const startDate = new Date().toISOString().slice(0, 10);
+    await createSubscription(
+      tier2Parent.id,
+      'tier2',
+      'monthly',
+      'active',
+      startDate,
+      computeEndDate('monthly', new Date()),
+      'manual',
+      null,
+      79_000
+    );
+    console.log('Created active Tier 2 subscription for tier2@studiva.id');
   }
 
   console.log('Seed complete.');

@@ -1,0 +1,9 @@
+{
+  "name": "studiva-website",
+  "private": true,
+  "description": "Monorepo root - delegates build/start to backend/ for Railway deployment. The actual app lives in frontend/ and backend/.",
+  "scripts": {
+    "build": "cd backend && npm install && npm run build",
+    "start": "cd backend && npm start"
+  }
+}

@@ -22,7 +22,23 @@ dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// Allow the configured frontend origin, localhost for development, and any
+// Vercel preview deployment for this project (random-subdomain URLs like
+// studiva-<hash>-raisha.vercel.app), rather than a wildcard "*" origin.
+const VERCEL_PREVIEW_PATTERN = /^https:\/\/studiva-[a-z0-9-]+\.vercel\.app$/;
+const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:3000'].filter(Boolean) as string[];
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin) || VERCEL_PREVIEW_PATTERN.test(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Not allowed by CORS: ${origin}`));
+      }
+    },
+  })
+);
 
 // Stripe webhook needs the raw request body to verify the signature, so it
 // must be registered before the global JSON body parser below.

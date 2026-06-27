@@ -17,24 +17,6 @@ module.exports = {
         bordergray: '#E8E0D0',
         textdark: '#33415C',
         textlight: '#6B7A99',
-
-        // shadcn-style semantic tokens, mapped onto the existing Studiva
-        // palette above instead of introducing a separate color system.
-        border: '#E8E0D0',
-        card: {
-          DEFAULT: '#FFFFFF',
-          foreground: '#33415C',
-        },
-        secondary: {
-          DEFAULT: '#F1F1F1',
-          foreground: '#33415C',
-        },
-        muted: {
-          DEFAULT: '#F1F1F1',
-          foreground: '#6B7A99',
-        },
-        'sky-start': '#BEE3F8',
-        'sky-end': '#5DADE2',
       },
       fontFamily: {
         sans: ['Nunito', 'Segoe UI', 'Roboto', 'Arial', 'sans-serif'],

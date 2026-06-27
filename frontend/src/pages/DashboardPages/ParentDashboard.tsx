@@ -1,19 +1,80 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { api } from '../../api/client';
+import { Child, Subscription } from '../../types';
 import ParentDashboardTier1 from './ParentDashboardTier1';
 import ParentDashboardTier2 from './ParentDashboardTier2';
 import OnboardingModal from '../../components/OnboardingModal';
+import { ProfileCard } from '../../components/ui/profile-card';
+
+function subscriptionProgressPercent(subscription: Subscription | null): number {
+  if (!subscription) return 0;
+  const start = new Date(subscription.start_date).getTime();
+  const end = new Date(subscription.end_date).getTime();
+  const now = Date.now();
+  if (!(end > start)) return 0;
+  return Math.max(0, Math.min(100, Math.round(((now - start) / (end - start)) * 100)));
+}
 
 export default function ParentDashboard() {
   const { user, tier, logout, refreshTier } = useAuth();
   const navigate = useNavigate();
   const [showOnboarding, setShowOnboarding] = useState(false);
 
+  const [childrenCount, setChildrenCount] = useState(0);
+  const [updatesCount, setUpdatesCount] = useState(0);
+  const [consultationsCount, setConsultationsCount] = useState(0);
+  const [subscriptionProgress, setSubscriptionProgress] = useState(0);
+
   useEffect(() => {
     refreshTier();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!tier) return;
+
+    async function loadProfileStats() {
+      try {
+        const { data } = await api.get('/children');
+        const children = data.children as Child[];
+        setChildrenCount(children.length);
+
+        // Daily updates are a Tier 1 (school) feature only - Tier 2 parents
+        // genuinely have none, so the count correctly stays 0 for them.
+        if (tier === 'tier1' && children.length > 0) {
+          const counts = await Promise.all(
+            children.map((child) =>
+              api
+                .get(`/updates?childId=${child.id}`)
+                .then(({ data: updatesData }) => updatesData.updates.length as number)
+                .catch(() => 0)
+            )
+          );
+          setUpdatesCount(counts.reduce((sum, count) => sum + count, 0));
+        }
+      } catch {
+        // Stats are decorative - leave them at 0 rather than blocking the dashboard.
+      }
+
+      try {
+        const { data } = await api.get('/consultations/my-bookings');
+        setConsultationsCount(data.consultations.length);
+      } catch {
+        // Same as above.
+      }
+
+      try {
+        const { data } = await api.get('/subscriptions/my-subscription');
+        setSubscriptionProgress(subscriptionProgressPercent(data.subscription));
+      } catch {
+        // Same as above.
+      }
+    }
+
+    loadProfileStats();
+  }, [tier]);
 
   useEffect(() => {
     if (!user || !tier) return;
@@ -47,6 +108,19 @@ export default function ParentDashboard() {
             Logout
           </button>
         </div>
+
+        {user && tier && (
+          <div className="mt-6">
+            <ProfileCard
+              name={user.name}
+              title={tier === 'tier1' ? 'Tier 1 Parent at Studiva' : 'Tier 2 Parent at Studiva'}
+              childrenCount={childrenCount}
+              updatesCount={updatesCount}
+              consultationsCount={consultationsCount}
+              subscriptionProgress={subscriptionProgress}
+            />
+          </div>
+        )}
 
         {tier === 'tier1' && <ParentDashboardTier1 />}
         {tier === 'tier2' && <ParentDashboardTier2 />}

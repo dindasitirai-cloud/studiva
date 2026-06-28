@@ -314,36 +314,36 @@ export default function LandingPage() {
       </section>
 
       {/* ============ MENGAPA MEMILIH STUDIVA ============ */}
-      <section className="relative snap-start overflow-hidden bg-white px-4 py-10 md:flex md:min-h-[calc(100vh-82px)] md:flex-col md:justify-center md:px-8">
+      <section className="relative snap-start overflow-hidden bg-white px-4 py-6 md:flex md:min-h-[calc(100vh-82px)] md:flex-col md:justify-center md:px-8">
         <FloatingBlobs>
           <div className="absolute left-[-90px] top-[60px] h-[280px] w-[280px] animate-stv-float rounded-full bg-stv-sky-tint blur-[8px]" />
           <div className="absolute bottom-10 right-[-70px] h-[220px] w-[220px] animate-stv-float-slow rounded-full bg-stv-yellow-tint blur-[6px]" />
         </FloatingBlobs>
 
         <div className="relative mx-auto max-w-[1160px]">
-          <div className="mx-auto mb-8 max-w-[680px] text-center">
+          <div className="mx-auto mb-5 max-w-[680px] text-center">
             <EyebrowPill label="Kenapa Kami" />
-            <h2 className="my-3 font-baloo text-[34px] font-extrabold leading-[1.08] text-stv-navy sm:text-[44px] md:text-[48px]">
+            <h2 className="my-2 font-baloo text-[34px] font-extrabold leading-[1.08] text-stv-navy sm:text-[40px] md:text-[40px]">
               Mengapa Memilih <Highlight>Studiva</Highlight>?
             </h2>
-            <p className="text-[17px] text-stv-body">
+            <p className="text-[15px] text-stv-body">
               Dipimpin oleh Psikolog Fitri Effendy yang berpengalaman puluhan tahun di bidang pendidikan inklusif.
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             {whyStudiva.map((item) => {
               const Icon = item.icon;
               return (
                 <div
                   key={item.title}
-                  className="hover-lift relative rounded-[28px] border-[1.5px] border-stv-border bg-white p-6 shadow-[0_10px_30px_rgba(16,58,107,.05)]"
+                  className="hover-lift relative rounded-[28px] border-[1.5px] border-stv-border bg-white p-5 shadow-[0_10px_30px_rgba(16,58,107,.05)]"
                 >
-                  <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-[16px] ${item.badgeBg} ${item.badgeColor}`}>
-                    <Icon className="h-6 w-6" strokeWidth={2} />
+                  <div className={`mb-2 flex h-10 w-10 items-center justify-center rounded-[14px] ${item.badgeBg} ${item.badgeColor}`}>
+                    <Icon className="h-5 w-5" strokeWidth={2} />
                   </div>
-                  <h3 className="mb-1.5 font-baloo text-[22px] font-bold text-stv-navy">{item.title}</h3>
-                  <p className="text-[15px] leading-[1.45] text-stv-body">{item.description}</p>
+                  <h3 className="mb-1 font-baloo text-[20px] font-bold text-stv-navy">{item.title}</h3>
+                  <p className="text-[14px] leading-[1.35] text-stv-body">{item.description}</p>
                   {item.sparkle && (
                     <Sparkle className="absolute right-[34px] top-[30px] h-[18px] w-[18px] text-stv-yellow" fill="currentColor" strokeWidth={0} />
                   )}

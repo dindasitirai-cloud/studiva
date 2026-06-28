@@ -260,12 +260,12 @@ export default function LandingPage() {
           {/* Sekolah Studiva (blue) */}
           <div
             id="tier1"
-            className="rounded-[28px] bg-stv-sky px-5 py-2 text-white shadow-[0_16px_36px_rgba(16,58,107,.14)] sm:px-6 sm:py-3"
+            className="rounded-[28px] bg-stv-sky px-5 py-2 text-stv-navy shadow-[0_16px_36px_rgba(16,58,107,.14)] sm:px-6 sm:py-3"
           >
-            <h3 className="mb-1 text-center font-baloo text-[22px] font-extrabold text-white sm:text-[24px]">
+            <h3 className="mb-1 text-center font-baloo text-[22px] font-extrabold text-stv-navy sm:text-[24px]">
               Sekolah Studiva
             </h3>
-            <div className="mb-2 text-[15px] font-bold text-white">Untuk Anak di Sekolah Kami</div>
+            <div className="mb-2 text-[15px] font-bold text-stv-navy">Untuk Anak di Sekolah Kami</div>
             <div className="mb-2 flex flex-col gap-1">
               {tier1Features.map((f) => (
                 <div key={f} className="flex items-center gap-[11px] text-[15px]">
@@ -279,7 +279,7 @@ export default function LandingPage() {
               state={{ presetTier: 'tier1' }}
               className="flex items-center justify-between no-underline transition hover:opacity-90"
             >
-              <span className="font-baloo text-[18px] font-bold text-stv-yellow">Daftar sekarang</span>
+              <span className="font-baloo text-[18px] font-bold text-stv-navy">Daftar sekarang</span>
               <ArrowCircle bgClass="bg-white" arrowClass="text-stv-navy" />
             </Link>
           </div>

@@ -191,8 +191,8 @@ function Highlight({ children }: { children: React.ReactNode }) {
 // <Link> here would create invalid nested anchors.
 function ArrowCircle({ bgClass, arrowClass }: { bgClass: string; arrowClass: string }) {
   return (
-    <span className={`flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full ${bgClass}`}>
-      <ArrowRight className={`h-5 w-5 ${arrowClass}`} strokeWidth={2.4} />
+    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${bgClass}`}>
+      <ArrowRight className={`h-4 w-4 ${arrowClass}`} strokeWidth={2.4} />
     </span>
   );
 }
@@ -256,19 +256,19 @@ export default function LandingPage() {
         </div>
 
         {/* Right: two product cards */}
-        <div className="flex flex-col justify-center gap-6 bg-stv-cream p-7 sm:p-[38px]">
+        <div className="flex flex-col justify-center gap-3 bg-stv-cream p-5 sm:p-6">
           {/* Sekolah Studiva (blue) */}
           <div
             id="tier1"
-            className="rounded-[28px] bg-stv-sky px-7 py-[26px] text-white shadow-[0_16px_36px_rgba(16,58,107,.14)] sm:px-[34px] sm:py-[30px]"
+            className="rounded-[28px] bg-stv-sky px-5 py-2 text-white shadow-[0_16px_36px_rgba(16,58,107,.14)] sm:px-6 sm:py-3"
           >
-            <h3 className="mb-[6px] text-center font-baloo text-[24px] font-extrabold text-white sm:text-[28px]">
+            <h3 className="mb-1 text-center font-baloo text-[22px] font-extrabold text-white sm:text-[24px]">
               Sekolah Studiva
             </h3>
-            <div className="mb-4 text-[16px] font-bold text-white">Untuk Anak di Sekolah Kami</div>
-            <div className="mb-[22px] flex flex-col gap-[10px]">
+            <div className="mb-2 text-[15px] font-bold text-white">Untuk Anak di Sekolah Kami</div>
+            <div className="mb-2 flex flex-col gap-1">
               {tier1Features.map((f) => (
-                <div key={f} className="flex items-center gap-[11px] text-[16px]">
+                <div key={f} className="flex items-center gap-[11px] text-[15px]">
                   <span className="h-2 w-2 shrink-0 rounded-full bg-stv-yellow" />
                   {f}
                 </div>
@@ -287,15 +287,15 @@ export default function LandingPage() {
           {/* Studiva Digital (yellow) */}
           <div
             id="tier2"
-            className="rounded-[28px] bg-stv-yellow px-7 py-[26px] text-stv-navy shadow-[0_16px_36px_rgba(251,208,10,.28)] sm:px-[34px] sm:py-[30px]"
+            className="rounded-[28px] bg-stv-yellow px-5 py-2 text-stv-navy shadow-[0_16px_36px_rgba(251,208,10,.28)] sm:px-6 sm:py-3"
           >
-            <h3 className="mb-[6px] text-center font-baloo text-[24px] font-extrabold text-stv-navy sm:text-[28px]">
+            <h3 className="mb-1 text-center font-baloo text-[22px] font-extrabold text-stv-navy sm:text-[24px]">
               Studiva Digital
             </h3>
-            <div className="mb-4 text-[16px] font-bold text-stv-navy">Untuk Orangtua di Mana Saja</div>
-            <div className="mb-[22px] flex flex-col gap-[10px]">
+            <div className="mb-2 text-[15px] font-bold text-stv-navy">Untuk Orangtua di Mana Saja</div>
+            <div className="mb-2 flex flex-col gap-1">
               {tier2Features.map((f) => (
-                <div key={f} className="flex items-center gap-[11px] text-[16px] font-semibold">
+                <div key={f} className="flex items-center gap-[11px] text-[15px] font-semibold">
                   <span className="h-2 w-2 shrink-0 rounded-full bg-stv-navy" />
                   {f}
                 </div>
@@ -314,36 +314,36 @@ export default function LandingPage() {
       </section>
 
       {/* ============ MENGAPA MEMILIH STUDIVA ============ */}
-      <section className="relative snap-start overflow-hidden bg-white px-4 py-[72px] md:flex md:min-h-[calc(100vh-82px)] md:flex-col md:justify-center md:px-8">
+      <section className="relative snap-start overflow-hidden bg-white px-4 py-10 md:flex md:min-h-[calc(100vh-82px)] md:flex-col md:justify-center md:px-8">
         <FloatingBlobs>
           <div className="absolute left-[-90px] top-[60px] h-[280px] w-[280px] animate-stv-float rounded-full bg-stv-sky-tint blur-[8px]" />
           <div className="absolute bottom-10 right-[-70px] h-[220px] w-[220px] animate-stv-float-slow rounded-full bg-stv-yellow-tint blur-[6px]" />
         </FloatingBlobs>
 
         <div className="relative mx-auto max-w-[1160px]">
-          <div className="mx-auto mb-16 max-w-[680px] text-center">
+          <div className="mx-auto mb-8 max-w-[680px] text-center">
             <EyebrowPill label="Kenapa Kami" />
-            <h2 className="my-[22px] font-baloo text-[34px] font-extrabold leading-[1.08] text-stv-navy sm:text-[44px] md:text-[54px]">
+            <h2 className="my-3 font-baloo text-[34px] font-extrabold leading-[1.08] text-stv-navy sm:text-[44px] md:text-[48px]">
               Mengapa Memilih <Highlight>Studiva</Highlight>?
             </h2>
-            <p className="text-[19px] text-stv-body">
+            <p className="text-[17px] text-stv-body">
               Dipimpin oleh Psikolog Fitri Effendy yang berpengalaman puluhan tahun di bidang pendidikan inklusif.
             </p>
           </div>
 
-          <div className="grid gap-7 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2">
             {whyStudiva.map((item) => {
               const Icon = item.icon;
               return (
                 <div
                   key={item.title}
-                  className="hover-lift relative rounded-[28px] border-[1.5px] border-stv-border bg-white p-10 shadow-[0_10px_30px_rgba(16,58,107,.05)]"
+                  className="hover-lift relative rounded-[28px] border-[1.5px] border-stv-border bg-white p-6 shadow-[0_10px_30px_rgba(16,58,107,.05)]"
                 >
-                  <div className={`mb-6 flex h-[66px] w-[66px] items-center justify-center rounded-[20px] ${item.badgeBg} ${item.badgeColor}`}>
-                    <Icon className="h-8 w-8" strokeWidth={2} />
+                  <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-[16px] ${item.badgeBg} ${item.badgeColor}`}>
+                    <Icon className="h-6 w-6" strokeWidth={2} />
                   </div>
-                  <h3 className="mb-3 font-baloo text-[26px] font-bold text-stv-navy">{item.title}</h3>
-                  <p className="text-[17px] leading-[1.6] text-stv-body">{item.description}</p>
+                  <h3 className="mb-1.5 font-baloo text-[22px] font-bold text-stv-navy">{item.title}</h3>
+                  <p className="text-[15px] leading-[1.45] text-stv-body">{item.description}</p>
                   {item.sparkle && (
                     <Sparkle className="absolute right-[34px] top-[30px] h-[18px] w-[18px] text-stv-yellow" fill="currentColor" strokeWidth={0} />
                   )}

@@ -275,11 +275,10 @@ export default function LandingPage() {
               ))}
             </div>
             <Link
-              to="/signup"
-              state={{ presetTier: 'tier1' }}
+              to="/sekolah-studiva"
               className="flex items-center justify-between no-underline transition hover:opacity-90"
             >
-              <span className="font-baloo text-[18px] font-bold text-stv-navy">Daftar sekarang</span>
+              <span className="font-baloo text-[18px] font-bold text-stv-navy">Pelajari lebih lanjut</span>
               <ArrowCircle bgClass="bg-white" arrowClass="text-stv-navy" />
             </Link>
           </div>

@@ -7,6 +7,7 @@ import PrivateRoute, { AdminRoute, ParentRoute, TeacherRoute } from './component
 import SubscriptionGuard from './components/SubscriptionGuard';
 
 import LandingPage from './pages/LandingPage';
+import SekolahStudivaPage from './pages/SekolahStudivaPage';
 import AboutPage from './pages/AboutPage';
 import PricingPage from './pages/PricingPage';
 import ResourcesPage from './pages/ResourcesPage';
@@ -51,6 +52,7 @@ export default function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/sekolah-studiva" element={<SekolahStudivaPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/resources" element={<ResourcesPage />} />

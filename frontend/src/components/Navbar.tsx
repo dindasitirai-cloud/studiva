@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 // more room and less competition for attention.
 const navLinks = [
   { to: '/', label: 'Home' },
-  { to: '/#tier1', label: 'Sekolah Studiva' },
+  { to: '/sekolah-studiva', label: 'Sekolah Studiva' },
   { to: '/#tier2', label: 'Studiva Digital' },
   { to: '/about', label: 'About' },
   { to: '/about#contact', label: 'Contact' },

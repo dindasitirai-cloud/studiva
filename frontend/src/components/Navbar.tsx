@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 const navLinks = [
   { to: '/', label: 'Home' },
   { to: '/sekolah-studiva', label: 'Sekolah Studiva' },
-  { to: '/#tier2', label: 'Studiva Digital' },
+  { to: '/studiva-digital', label: 'Studiva Digital' },
   { to: '/about', label: 'About' },
   { to: '/about#contact', label: 'Contact' },
 ];
@@ -45,13 +45,17 @@ export default function Navbar() {
         <div className="hidden items-center gap-8 lg:flex">
           {navLinks.map((link) => {
             const isActive = location.pathname === link.to;
+            // Each tier keeps its own brand color for the active-link indicator
+            // (sky for Sekolah Studiva, amber for Studiva Digital) rather than
+            // one fixed color that would clash on the other tier's page.
+            const activeColorClass = link.to === '/studiva-digital' ? 'border-amber-500 text-amber-600' : 'border-stv-sky-stroke text-stv-sky-stroke';
             return (
               <Link
                 key={link.to}
                 to={link.to}
                 className={
                   isActive
-                    ? 'rounded-[8px] border-[1.5px] border-stv-sky-stroke px-[14px] py-[6px] text-[16px] font-bold text-stv-sky-stroke no-underline'
+                    ? `rounded-[8px] border-[1.5px] px-[14px] py-[6px] text-[16px] font-bold no-underline ${activeColorClass}`
                     : 'text-[16px] font-semibold text-stv-navy no-underline transition hover:text-stv-sky-stroke'
                 }
               >

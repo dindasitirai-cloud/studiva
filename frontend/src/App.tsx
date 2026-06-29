@@ -8,6 +8,7 @@ import SubscriptionGuard from './components/SubscriptionGuard';
 
 import LandingPage from './pages/LandingPage';
 import SekolahStudivaPage from './pages/SekolahStudivaPage';
+import StudivaDigitalPage from './pages/StudivaDigitalPage';
 import AboutPage from './pages/AboutPage';
 import PricingPage from './pages/PricingPage';
 import ResourcesPage from './pages/ResourcesPage';
@@ -53,6 +54,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/sekolah-studiva" element={<SekolahStudivaPage />} />
+            <Route path="/studiva-digital" element={<StudivaDigitalPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/resources" element={<ResourcesPage />} />

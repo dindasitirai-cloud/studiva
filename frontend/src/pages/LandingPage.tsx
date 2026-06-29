@@ -301,8 +301,7 @@ export default function LandingPage() {
               ))}
             </div>
             <Link
-              to="/signup"
-              state={{ presetTier: 'tier2' }}
+              to="/studiva-digital"
               className="flex items-center justify-between no-underline transition hover:opacity-90"
             >
               <span className="font-baloo text-[18px] font-bold text-stv-navy">Daftar sekarang</span>

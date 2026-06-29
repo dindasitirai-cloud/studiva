@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  HandHeart,
+  Hand,
   UserCog,
   Sparkles,
-  GitBranch,
-  HeartHandshake,
+  Clock,
+  Users,
   FileText,
   Eye,
   Repeat,
@@ -36,29 +36,44 @@ interface IconCard {
   description: string;
 }
 
-const principles: IconCard[] = [
+interface BadgedIconCard extends IconCard {
+  badgeBg: string;
+  badgeColor: string;
+}
+
+const principles: BadgedIconCard[] = [
   {
-    icon: HandHeart,
+    icon: Hand,
+    badgeBg: 'bg-stv-yellow-tint',
+    badgeColor: 'text-stv-yellow-deep',
     title: 'Inklusif & non-diskriminatif',
     description: 'Menerima setiap anak berkebutuhan khusus apa pun jenis atau tingkat hambatannya, tanpa diskriminasi.',
   },
   {
     icon: UserCog,
+    badgeBg: 'bg-stv-sky-tint',
+    badgeColor: 'text-stv-sky-stroke',
     title: 'Personalisasi berbasis asesmen',
     description: 'Setiap rencana belajar disusun dari asesmen perkembangan masing-masing anak.',
   },
   {
     icon: Sparkles,
+    badgeBg: 'bg-stv-coral-tint',
+    badgeColor: 'text-stv-coral',
     title: 'Multisensori & berbasis pengalaman',
     description: 'Belajar lewat gambar, benda konkret, lagu, dan gerakan, bukan hanya hafalan.',
   },
   {
-    icon: GitBranch,
+    icon: Clock,
+    badgeBg: 'bg-stv-sky-tint',
+    badgeColor: 'text-stv-sky-stroke',
     title: 'Fleksibel pada kecepatan anak',
     description: 'Materi dan ritme disesuaikan dengan kemampuan unik tiap anak.',
   },
   {
-    icon: HeartHandshake,
+    icon: Users,
+    badgeBg: 'bg-stv-green-tint',
+    badgeColor: 'text-stv-green',
     title: 'Kolaboratif',
     description: 'Guru, orang tua, dan terapis bekerja sebagai satu tim.',
   },
@@ -253,15 +268,28 @@ function SectionHeading({ children, intro }: { children: React.ReactNode; intro?
   );
 }
 
+// Same badge-color rotation used for the "Mengapa Memilih Studiva" cards on the
+// home page (yellow/sky/coral/navy), with green added since this page also
+// uses it for the Prinsip cards - keeps every icon badge on-brand while still
+// giving each card its own color instead of one flat sky tint everywhere.
+const BADGE_PALETTE = [
+  { bg: 'bg-stv-yellow-tint', color: 'text-stv-yellow-deep' },
+  { bg: 'bg-stv-sky-tint', color: 'text-stv-sky-stroke' },
+  { bg: 'bg-stv-coral-tint', color: 'text-stv-coral' },
+  { bg: 'bg-stv-green-tint', color: 'text-stv-green' },
+  { bg: 'bg-stv-badge-navy-tint', color: 'text-stv-navy' },
+];
+
 function IconCardGrid({ items, columns = 'sm:grid-cols-2 lg:grid-cols-5' }: { items: IconCard[]; columns?: string }) {
   return (
     <div className={`grid grid-cols-1 gap-5 ${columns}`}>
-      {items.map((item) => {
+      {items.map((item, i) => {
         const Icon = item.icon;
+        const badge = BADGE_PALETTE[i % BADGE_PALETTE.length];
         return (
           <Reveal key={item.title}>
             <div className="hover-lift h-full rounded-2xl border-[1.5px] border-stv-border bg-white p-6 shadow-[0_10px_30px_rgba(16,58,107,.05)]">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-stv-sky-tint text-stv-sky-stroke">
+              <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl ${badge.bg} ${badge.color}`}>
                 <Icon className="h-6 w-6" strokeWidth={2} />
               </div>
               <h3 className="mb-1.5 font-baloo text-[18px] font-bold text-stv-navy">{item.title}</h3>
@@ -302,31 +330,56 @@ function DashboardGalleryItem({ image, onOpen }: { image: GalleryImage; onOpen: 
 
 function TentangPanel() {
   return (
-    <div className="mx-auto max-w-[1100px]">
-      <SectionHeading>Apa itu Sekolah Studiva?</SectionHeading>
-
-      <Reveal>
-        <p className="mx-auto max-w-[760px] text-center text-[16px] leading-[1.7] text-stv-body sm:text-[17px]">
-          Sekolah Studiva adalah sekolah khusus bagi anak berkebutuhan khusus. Setiap anak — apa pun jenis atau
-          tingkat hambatannya — memiliki ruang untuk tumbuh dan berkembang secara utuh dalam lingkungan yang aman,
-          suportif, dan penuh makna. Pembelajaran tidak menuntut anak menyesuaikan diri dengan satu standar;
-          sebaliknya, kurikulum yang menyesuaikan diri dengan setiap anak.
-        </p>
-      </Reveal>
-
-      <Reveal>
-        <div className="mx-auto mt-8 max-w-[760px] rounded-2xl border-[1.5px] border-stv-sky-tint bg-stv-sky-tint/50 p-6">
-          <p className="text-center text-[15px] italic leading-[1.6] text-stv-quote sm:text-[16px]">
-            Inklusif di Studiva berarti tidak ada anak yang ditolak karena kondisinya. Semua jenis kebutuhan khusus —
-            dari ASD, ADHD, Down Syndrome, hingga hambatan belajar dan sensorik — diterima dan didampingi sesuai
-            kebutuhan masing-masing.
+    <Reveal>
+      {/* 4a. Apa itu Sekolah Studiva? */}
+      <section className="bg-white px-4 pb-16 pt-12 sm:px-8 sm:pb-16 sm:pt-20">
+        <div className="mx-auto max-w-[800px] text-center">
+          <h2 className="mb-7 font-baloo text-[28px] font-extrabold leading-[1.1] text-stv-navy sm:text-[36px] md:text-[46px]">
+            Apa itu Sekolah Studiva?
+          </h2>
+          <p className="mb-8 text-[16px] leading-[1.85] text-stv-body sm:text-[18px]">
+            Sekolah Studiva adalah sekolah khusus bagi anak berkebutuhan khusus. Setiap anak — apa pun jenis atau
+            tingkat hambatannya — memiliki ruang untuk tumbuh dan berkembang secara utuh dalam lingkungan yang aman,
+            suportif, dan penuh makna. Pembelajaran tidak menuntut anak menyesuaikan diri dengan satu standar;
+            sebaliknya, kurikulum yang menyesuaikan diri dengan setiap anak.
           </p>
-        </div>
-      </Reveal>
 
-      <h3 className="mb-6 mt-12 text-center font-baloo text-[20px] font-bold text-stv-navy">Prinsip utama kami</h3>
-      <IconCardGrid items={principles} />
-    </div>
+          {/* Quote block */}
+          <div className="relative mb-12 rounded-2xl bg-[#EDF4FB] px-6 py-8 sm:mb-16 sm:px-11 sm:py-9">
+            <Sparkles className="absolute right-[18px] top-[14px] h-5 w-5 text-stv-yellow opacity-65" fill="currentColor" strokeWidth={0} />
+            <span className="absolute bottom-4 left-5 h-[9px] w-[9px] rounded-full bg-stv-coral opacity-50" />
+            <p className="text-[16px] italic leading-[1.85] text-stv-quote sm:text-[18px]">
+              Inklusif di Studiva berarti tidak ada anak yang ditolak karena kondisinya. Semua jenis kebutuhan khusus
+              — dari ASD, ADHD, Down Syndrome, hingga hambatan belajar dan sensorik — diterima dan didampingi sesuai
+              kebutuhan masing-masing.
+            </p>
+          </div>
+
+          <h3 className="font-baloo text-[24px] font-extrabold text-stv-navy sm:text-[32px]">Prinsip utama kami</h3>
+        </div>
+      </section>
+
+      {/* 4b. Prinsip cards */}
+      <section className="bg-white px-4 pb-16 pt-2 sm:px-8 sm:pb-[88px]">
+        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
+          {principles.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={item.title}
+                className="hover-lift rounded-[20px] border-[1.5px] border-stv-border bg-white p-[22px] shadow-[0_8px_24px_rgba(16,58,107,.05)] sm:p-7"
+              >
+                <div className={`mb-[18px] flex h-[52px] w-[52px] items-center justify-center rounded-[14px] ${item.badgeBg} ${item.badgeColor}`}>
+                  <Icon className="h-[26px] w-[26px]" strokeWidth={2} />
+                </div>
+                <h4 className="mb-3 font-baloo text-[19px] font-bold leading-[1.3] text-stv-navy">{item.title}</h4>
+                <p className="text-[14px] leading-[1.7] text-stv-body">{item.description}</p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    </Reveal>
   );
 }
 
@@ -443,41 +496,50 @@ export default function SekolahStudivaPage() {
   return (
     <div className="bg-white font-nunito-sans text-stv-body">
       {/* ============ HERO ============ */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-stv-sky-tint to-white px-4 py-16 sm:px-8 sm:py-20">
-        <div className="mx-auto max-w-[820px] text-center">
+      <section
+        className="relative overflow-hidden px-4 py-16 text-center sm:px-8 sm:py-20 md:py-[100px]"
+        style={{ background: 'linear-gradient(160deg, #EBF6FD 0%, #C8E8F8 55%, #DDF1FB 100%)' }}
+      >
+        <Reveal className="pointer-events-none absolute inset-0">
+          <div className="absolute left-[-90px] top-[-70px] h-[220px] w-[220px] animate-stv-float rounded-full bg-stv-sky/[.22] blur-[12px] sm:h-[340px] sm:w-[340px]" />
+          <div className="absolute bottom-[-50px] right-[-70px] h-[170px] w-[170px] animate-stv-float-slow rounded-full bg-stv-sky/[.18] blur-[10px] sm:h-[260px] sm:w-[260px]" />
+          <Sparkles className="absolute right-[10%] top-[60px] h-5 w-5 text-stv-yellow/50" fill="currentColor" strokeWidth={0} />
+          <span className="absolute bottom-20 left-[12%] h-[10px] w-[10px] rounded-full bg-stv-yellow/[.55]" />
+          <span className="absolute right-[5%] top-[38%] h-[13px] w-[13px] rounded-full bg-stv-coral/45" />
+        </Reveal>
+
+        <div className="relative mx-auto max-w-[740px]">
           <Reveal>
-            <span className="inline-flex items-center gap-2 rounded-full bg-white px-[18px] py-[9px] text-[13px] font-extrabold uppercase tracking-[2px] text-stv-navy shadow-sm">
-              <span className="h-[7px] w-[7px] rounded-full bg-stv-sky-stroke" />
+            <span className="inline-flex items-center gap-[10px] rounded-full bg-white px-[26px] py-[10px] text-[13px] font-extrabold uppercase tracking-[2.5px] text-stv-navy shadow-[0_4px_18px_rgba(16,58,107,.1)]">
+              <span className="h-2 w-2 rounded-full bg-stv-yellow" />
               Tier 1 · Sekolah Fisik
             </span>
-            <h1 className="mt-6 font-baloo text-[36px] font-extrabold leading-[1.1] text-stv-navy sm:text-[48px]">
+            <h1 className="mb-7 mt-6 font-baloo text-[40px] font-extrabold leading-[1.06] text-stv-navy sm:text-[56px] md:text-[76px]">
               Sekolah Studiva
             </h1>
-            <p className="mx-auto mt-5 max-w-[620px] text-[17px] italic leading-[1.6] text-stv-quote sm:text-[19px]">
+            <p className="mb-5 text-[17px] italic leading-[1.72] text-stv-quote sm:text-[21px]">
               Sekolah khusus inklusif tempat setiap anak berkebutuhan khusus tumbuh, belajar, dan berkembang sesuai
               potensinya — dengan pendampingan yang dirancang khusus untuk kebutuhannya.
             </p>
-            <p className="mx-auto mt-4 max-w-[560px] text-[14px] font-semibold text-stv-muted sm:text-[15px]">
+            <p className="mb-9 text-[15px] leading-[1.6] text-stv-muted sm:text-[16px]">
               Untuk anak berkebutuhan khusus usia 5–10 tahun · ASD, ADHD, Down Syndrome, hambatan belajar & sensorik,
               dll.
             </p>
-            <div className="mt-8 flex justify-center">
-              <Link
-                to="/signup"
-                state={{ presetTier: 'tier1' }}
-                className="rounded-full bg-stv-sky px-8 py-[14px] font-baloo text-[16px] font-bold text-white no-underline shadow-[0_10px_24px_rgba(95,176,221,.4)] transition hover:-translate-y-0.5 hover:bg-stv-sky-stroke"
-              >
-                Daftar sekarang
-              </Link>
-            </div>
+            <Link
+              to="/signup"
+              state={{ presetTier: 'tier1' }}
+              className="inline-flex items-center rounded-full bg-stv-yellow px-9 py-[18px] font-baloo text-[17px] font-bold text-stv-navy no-underline shadow-[0_10px_28px_rgba(251,208,10,.45)] transition hover:-translate-y-[3px] hover:bg-stv-yellow-hover sm:px-12 sm:text-[19px]"
+            >
+              Daftar sekarang
+            </Link>
           </Reveal>
         </div>
       </section>
 
       {/* ============ TAB BAR ============ */}
-      <div className="sticky top-[82px] z-40 border-b border-stv-border bg-white/95 backdrop-blur-sm">
+      <div className="sticky top-[82px] z-40 border-b border-stv-border bg-white">
         <div
-          className="mx-auto flex max-w-[1100px] justify-center gap-1 overflow-x-auto px-4 [&::-webkit-scrollbar]:hidden sm:px-8"
+          className="mx-auto flex max-w-[1240px] justify-center gap-7 overflow-x-auto px-4 [&::-webkit-scrollbar]:hidden sm:px-8"
           style={{ scrollbarWidth: 'none' }}
         >
           {tabs.map((tab) => {
@@ -487,8 +549,10 @@ export default function SekolahStudivaPage() {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`shrink-0 whitespace-nowrap border-b-2 px-4 py-4 text-[15px] font-semibold transition ${
-                  isActive ? 'border-sky-600 text-sky-700' : 'border-transparent text-gray-500 hover:text-sky-700'
+                className={`shrink-0 whitespace-nowrap border-b-[3px] px-1 py-[18px] text-[16px] transition ${
+                  isActive
+                    ? 'border-stv-sky-stroke font-bold text-stv-sky-stroke'
+                    : 'border-transparent font-semibold text-stv-body hover:text-stv-sky-stroke'
                 }`}
               >
                 {tab.label}
@@ -499,16 +563,19 @@ export default function SekolahStudivaPage() {
       </div>
 
       {/* ============ TAB CONTENT ============ */}
-      <section className="px-4 py-14 sm:px-8 sm:py-16">
-        <Reveal key={activeTab}>
-          {activeTab === 'tentang' && <TentangPanel />}
-          {activeTab === 'kurikulum' && <KurikulumPanel />}
-          {activeTab === 'riset' && <RisetPanel />}
-          {activeTab === 'tim' && <TimPanel />}
-          {activeTab === 'asesmen' && <AsesmenPanel />}
-          {activeTab === 'fitur' && <FiturPanel onOpenGallery={setLightboxIndex} />}
-        </Reveal>
-      </section>
+      {activeTab === 'tentang' ? (
+        <TentangPanel />
+      ) : (
+        <section className="px-4 py-14 sm:px-8 sm:py-16">
+          <Reveal key={activeTab}>
+            {activeTab === 'kurikulum' && <KurikulumPanel />}
+            {activeTab === 'riset' && <RisetPanel />}
+            {activeTab === 'tim' && <TimPanel />}
+            {activeTab === 'asesmen' && <AsesmenPanel />}
+            {activeTab === 'fitur' && <FiturPanel onOpenGallery={setLightboxIndex} />}
+          </Reveal>
+        </section>
+      )}
 
       {lightboxIndex !== null && (
         <Lightbox
@@ -520,19 +587,25 @@ export default function SekolahStudivaPage() {
       )}
 
       {/* ============ CTA PENUTUP ============ */}
-      <section className="bg-stv-sky px-4 py-16 text-center sm:px-8 sm:py-20">
-        <Reveal>
-          <div className="mx-auto max-w-[700px]">
-            <h2 className="font-baloo text-[28px] font-extrabold leading-[1.15] text-white sm:text-[36px]">
+      <section className="relative overflow-hidden bg-stv-sky px-4 py-20 text-center sm:px-8 md:py-[104px]">
+        <Reveal className="pointer-events-none absolute inset-0">
+          <div className="absolute left-[7%] top-6 h-[110px] w-[110px] animate-stv-float rounded-full bg-white/10 sm:h-[160px] sm:w-[160px]" />
+          <div className="absolute bottom-7 right-[9%] h-[90px] w-[90px] animate-stv-float-slow rounded-[28px] bg-white/[.08] sm:h-[130px] sm:w-[130px]" />
+          <Sparkles className="absolute right-[18%] top-[50px] h-[22px] w-[22px] text-white/40" fill="currentColor" strokeWidth={0} />
+          <span className="absolute bottom-[70px] left-[15%] h-3 w-3 rounded-full bg-white/35" />
+        </Reveal>
+        <Reveal className="relative">
+          <div className="mx-auto max-w-[720px]">
+            <h2 className="mb-[22px] font-baloo text-[32px] font-extrabold leading-[1.12] text-white sm:text-[42px] md:text-[54px]">
               Siap memberi anak Anda ruang untuk bertumbuh?
             </h2>
-            <p className="mx-auto mt-4 max-w-[560px] text-[16px] leading-[1.6] text-white/90 sm:text-[17px]">
+            <p className="mb-10 text-[16px] leading-[1.7] text-white/90 sm:text-[18px]">
               Bergabunglah dengan Sekolah Studiva dan jadi bagian dari komunitas belajar yang inklusif.
             </p>
             <Link
               to="/signup"
               state={{ presetTier: 'tier1' }}
-              className="mt-8 inline-block rounded-full bg-white px-10 py-4 font-baloo text-[18px] font-bold text-stv-navy no-underline shadow-[0_14px_30px_rgba(16,58,107,.25)] transition hover:-translate-y-0.5 hover:bg-stv-sky-tint"
+              className="inline-block rounded-2xl bg-stv-yellow px-12 py-[18px] font-baloo text-[19px] font-bold text-stv-navy no-underline shadow-[0_10px_28px_rgba(251,208,10,.4)] transition hover:-translate-y-[3px] hover:bg-stv-yellow-hover"
             >
               Daftar sekarang
             </Link>

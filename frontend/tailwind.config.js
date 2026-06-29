@@ -43,6 +43,8 @@ module.exports = {
         'stv-quote': '#2E3A52',
         'stv-border': '#EEF0F4',
         'stv-badge-navy-tint': '#E7EEF7',
+        'stv-green': '#3FBF6A',
+        'stv-green-tint': '#E7F7EF',
       },
       fontFamily: {
         sans: ['Nunito', 'Segoe UI', 'Roboto', 'Arial', 'sans-serif'],

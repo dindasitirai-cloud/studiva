@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 // Community is intentionally left out of the desktop nav per spec (it lives in
@@ -19,6 +19,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { user, tier, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   function handleLogout() {
     logout();
@@ -35,24 +36,29 @@ export default function Navbar() {
   const dashboardIcon = tier === 'tier1' ? '🏫 ' : tier === 'tier2' ? '💻 ' : '';
 
   return (
-    <header className="sticky top-0 z-50 border-b border-stv-border bg-white/[.88] backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-stv-border bg-white/[.92] backdrop-blur-[14px]">
       <nav className="mx-auto flex min-h-[82px] max-w-[1240px] items-center justify-between gap-6 px-4 py-[14px] font-nunito-sans md:px-8">
         <Link to="/" className="flex shrink-0 items-center gap-3">
           <img src="/images/logo-studiva.png" alt="Studiva" className="h-[52px] w-[52px] object-contain" />
         </Link>
 
-        <div className="hidden items-center gap-[34px] lg:flex">
-          {navLinks.map((link, i) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className={`text-[16px] text-stv-navy no-underline transition hover:text-stv-yellow-deep ${
-                i === 0 ? 'font-bold' : 'font-semibold'
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+        <div className="hidden items-center gap-8 lg:flex">
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.to;
+            return (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={
+                  isActive
+                    ? 'rounded-[8px] border-[1.5px] border-stv-sky-stroke px-[14px] py-[6px] text-[16px] font-bold text-stv-sky-stroke no-underline'
+                    : 'text-[16px] font-semibold text-stv-navy no-underline transition hover:text-stv-sky-stroke'
+                }
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </div>
 
         <div className="hidden items-center gap-[18px] lg:flex">

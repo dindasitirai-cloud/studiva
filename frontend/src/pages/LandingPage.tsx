@@ -235,6 +235,7 @@ export default function LandingPage() {
             src="/images/hero-children.jpg"
             alt="Anak-anak belajar bersama dengan penuh semangat di Studiva"
             className="absolute inset-0 h-full w-full object-cover"
+            style={{ objectPosition: 'center 50%' }}
           />
           <div
             className="absolute inset-0"

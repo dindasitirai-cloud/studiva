@@ -3,15 +3,19 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Clock, CircleCheck, Package, ListChecks, Lightbulb, Bookmark, BookmarkCheck, Puzzle, X } from 'lucide-react';
 import { getStrategyById } from './strategyData';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
+import { useDashboardBasePath } from '../useDashboardBasePath';
+import { useActivityChild } from '../useActivityChild';
 import ChildPicker from './ChildPicker';
 
 function StartDoingModal({ strategyId, onClose }: { strategyId: string; onClose: () => void }) {
-  const { children, saveStrategy, unsaveStrategy, isStrategySavedByChild } = useDashboardTier2();
-  const taggedChildIds = children.filter(c => isStrategySavedByChild(c.id, strategyId)).map(c => c.id);
+  const basePath = useDashboardBasePath();
+  const { saveStrategy, unsaveStrategy, isStrategySavedByChild } = useDashboardTier2();
+  const { singleChild, pickerChildren } = useActivityChild();
+  const taggedChildIds = pickerChildren.filter(c => isStrategySavedByChild(c.id, strategyId)).map(c => c.id);
 
   React.useEffect(() => {
-    if (children.length === 1 && !isStrategySavedByChild(children[0].id, strategyId)) {
-      saveStrategy(children[0].id, strategyId);
+    if (singleChild && !isStrategySavedByChild(singleChild.id, strategyId)) {
+      saveStrategy(singleChild.id, strategyId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -26,22 +30,22 @@ function StartDoingModal({ strategyId, onClose }: { strategyId: string; onClose:
           </button>
         </div>
 
-        {children.length === 0 ? (
+        {singleChild ? (
+          <div className="flex items-center gap-2 rounded-xl bg-stv-green-tint px-4 py-3 text-[13px] font-semibold text-stv-green">
+            <CircleCheck className="h-4 w-4 shrink-0" />
+            Tercatat di Perjalanan Pembelajaran {singleChild.name}.
+          </div>
+        ) : pickerChildren.length === 0 ? (
           <p className="rounded-xl bg-amber-50 px-4 py-3 text-[13px] text-stv-muted">
             Tambahkan{' '}
-            <Link to="/dashboard/tier2/profil-anak" className="font-semibold text-amber-600 underline">
+            <Link to={`${basePath}/profil-anak`} className="font-semibold text-amber-600 underline">
               profil anak
             </Link>{' '}
             agar aktivitas ini tercatat di Perjalanan Pembelajaran.
           </p>
-        ) : children.length === 1 ? (
-          <div className="flex items-center gap-2 rounded-xl bg-stv-green-tint px-4 py-3 text-[13px] font-semibold text-stv-green">
-            <CircleCheck className="h-4 w-4 shrink-0" />
-            Tercatat di Perjalanan Pembelajaran {children[0].name}.
-          </div>
         ) : (
           <ChildPicker
-            children={children}
+            children={pickerChildren}
             taggedIds={taggedChildIds}
             onToggle={(childId, isCurrentlyTagged) =>
               isCurrentlyTagged ? unsaveStrategy(childId, strategyId) : saveStrategy(childId, strategyId)
@@ -65,6 +69,7 @@ function StartDoingModal({ strategyId, onClose }: { strategyId: string; onClose:
 export default function StrategyDetailTier2() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const basePath = useDashboardBasePath();
   const { isStrategySavedByAnyChild } = useDashboardTier2();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -77,7 +82,7 @@ export default function StrategyDetailTier2() {
         <Puzzle className="h-10 w-10 text-amber-300" strokeWidth={1.5} />
         <h2 className="font-baloo text-[20px] font-bold text-stv-navy">Strategi tidak ditemukan</h2>
         <Link
-          to="/dashboard/tier2/strategies"
+          to={`${basePath}/strategies`}
           className="rounded-full bg-amber-500 px-5 py-2 text-[14px] font-bold text-white no-underline transition hover:bg-amber-600"
         >
           Kembali ke Learning Strategies
@@ -90,7 +95,7 @@ export default function StrategyDetailTier2() {
     <div className="mx-auto max-w-[680px]">
       <button
         type="button"
-        onClick={() => navigate('/dashboard/tier2/strategies')}
+        onClick={() => navigate(`${basePath}/strategies`)}
         className="mb-5 flex items-center gap-1.5 text-[14px] font-semibold text-stv-muted transition hover:text-amber-600"
       >
         <ArrowLeft className="h-4 w-4" />

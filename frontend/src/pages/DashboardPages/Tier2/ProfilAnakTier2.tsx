@@ -251,7 +251,7 @@ function ChildForm({ initial, onSave, onCancel, title }: ChildFormProps) {
 // ---------------------------------------------------------------------------
 // Perjalanan Pembelajaran
 // ---------------------------------------------------------------------------
-function PerjalananPembelajaran({ childId }: { childId: string }) {
+export function PerjalananPembelajaran({ childId }: { childId: string }) {
   const { getArticlesReadByChild, getCoursesEnrolledByChild, getStrategiesSavedByChild } = useDashboardTier2();
 
   const articleIds = getArticlesReadByChild(childId);

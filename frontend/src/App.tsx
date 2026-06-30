@@ -1,6 +1,7 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { DashboardTier2Provider } from './context/DashboardTier2Context';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PrivateRoute, { AdminRoute, ParentRoute, TeacherRoute } from './components/PrivateRoute';
@@ -43,14 +44,31 @@ import StrategyDetailTier2 from './pages/DashboardPages/Tier2/StrategyDetailTier
 import CommunityTier2 from './pages/DashboardPages/Tier2/CommunityTier2';
 import ThreadDetailTier2 from './pages/DashboardPages/Tier2/ThreadDetailTier2';
 import KonsultasiTier2 from './pages/DashboardPages/Tier2/KonsultasiTier2';
+import DashboardShellTier1 from './pages/DashboardPages/Tier1/DashboardShellTier1';
+import BerandaTier1 from './pages/DashboardPages/Tier1/BerandaTier1';
+import ProfilAnakTier1 from './pages/DashboardPages/Tier1/ProfilAnakTier1';
+import PerkembanganHarianTier1 from './pages/DashboardPages/Tier1/PerkembanganHarianTier1';
+import KehadiranTier1 from './pages/DashboardPages/Tier1/KehadiranTier1';
+import PortfolioTier1 from './pages/DashboardPages/Tier1/PortfolioTier1';
+import AsesmenTier1 from './pages/DashboardPages/Tier1/AsesmenTier1';
+import AssessmentDetailTier1 from './pages/DashboardPages/Tier1/AssessmentDetailTier1';
+import IEPTier1 from './pages/DashboardPages/Tier1/IEPTier1';
+import CatatanGuruTier1 from './pages/DashboardPages/Tier1/CatatanGuruTier1';
 
 const CONSULTATION_UPGRADE_MESSAGE =
   'Anda perlu upgrade ke Tier 1 atau Tier 2 untuk melakukan booking konsultasi. Silakan pilih plan yang sesuai untuk mulai berkonsultasi.';
 
 function Layout({ children }: { children: React.ReactNode }) {
+  // Both member dashboards have their own sidebar + topbar (incl. logout and
+  // a settings menu with the subscription link), so the public marketing
+  // navbar would just be redundant, duplicate navigation there.
+  const location = useLocation();
+  const isMemberDashboard =
+    location.pathname.startsWith('/dashboard/tier2') || location.pathname.startsWith('/dashboard/tier1');
+
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar />
+      {!isMemberDashboard && <Navbar />}
       <main className="flex-1">{children}</main>
       <Footer />
     </div>
@@ -61,6 +79,10 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        {/* Hoisted here (not inside DashboardShellTier2) so the Tier 1 and
+            Tier 2 dashboards share the exact same forum/article/course state
+            instead of each mounting its own independent copy. */}
+        <DashboardTier2Provider>
         <Layout>
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -218,6 +240,42 @@ export default function App() {
               <Route path="konsultasi" element={<KonsultasiTier2 />} />
             </Route>
 
+            {/* Tier 1 (Sekolah Studiva) member dashboard — nested routes with shared DashboardShellTier1 layout */}
+            <Route
+              path="/dashboard/tier1"
+              element={
+                <ParentRoute>
+                  <SubscriptionGuard>
+                    <DashboardShellTier1 />
+                  </SubscriptionGuard>
+                </ParentRoute>
+              }
+            >
+              <Route index element={<BerandaTier1 />} />
+              <Route path="profil-anak" element={<ProfilAnakTier1 />} />
+              <Route path="perkembangan" element={<PerkembanganHarianTier1 />} />
+              <Route path="kehadiran" element={<KehadiranTier1 />} />
+              <Route path="portfolio" element={<PortfolioTier1 />} />
+              <Route path="asesmen" element={<AsesmenTier1 />} />
+              <Route path="asesmen/:id" element={<AssessmentDetailTier1 />} />
+              <Route path="iep" element={<IEPTier1 />} />
+              <Route path="catatan-guru" element={<CatatanGuruTier1 />} />
+              {/* Same components as /dashboard/tier2 below, reading from the
+                  same hoisted DashboardTier2Provider - one shared forum,
+                  article-read state, course enrollments, etc. across both
+                  dashboards. Each component resolves its own internal links
+                  via useDashboardBasePath() so it stays inside whichever
+                  dashboard shell the parent is currently in. */}
+              <Route path="resources" element={<ResourceLibraryTier2 />} />
+              <Route path="resources/:id" element={<ArticleDetailTier2 />} />
+              <Route path="courses" element={<CoursesTier2 />} />
+              <Route path="strategies" element={<LearningStrategiesTier2 />} />
+              <Route path="strategies/:id" element={<StrategyDetailTier2 />} />
+              <Route path="community" element={<CommunityTier2 />} />
+              <Route path="community/:id" element={<ThreadDetailTier2 />} />
+              <Route path="konsultasi" element={<KonsultasiTier2 />} />
+            </Route>
+
             <Route
               path="/dashboard/parent"
               element={
@@ -250,6 +308,7 @@ export default function App() {
             />
           </Routes>
         </Layout>
+        </DashboardTier2Provider>
       </BrowserRouter>
     </AuthProvider>
   );

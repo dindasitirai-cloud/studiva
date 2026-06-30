@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { COURSES, Course, isVideoLike } from './courseData';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
+import { useActivityChild } from '../useActivityChild';
 import ChildPicker from './ChildPicker';
 
 const THEME_GRADIENT: Record<Course['colorTheme'], string> = {
@@ -96,8 +97,9 @@ function CourseCard({ course, isEnrolled, onAction }: { course: Course; isEnroll
 }
 
 function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnrolled: boolean; onClose: () => void }) {
-  const { children, enrollCourse, unenrollCourse, isCourseEnrolledByChild } = useDashboardTier2();
-  const taggedChildIds = children.filter(c => isCourseEnrolledByChild(c.id, course.id)).map(c => c.id);
+  const { enrollCourse, unenrollCourse, isCourseEnrolledByChild } = useDashboardTier2();
+  const { singleChild, pickerChildren } = useActivityChild();
+  const taggedChildIds = pickerChildren.filter(c => isCourseEnrolledByChild(c.id, course.id)).map(c => c.id);
 
   // Frozen at the moment this modal opens, on purpose: registering for a
   // webinar and seeing its join-link detail are two separate steps. Without
@@ -110,10 +112,11 @@ function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnroll
   const showWebinarDetail = course.type === 'webinar' && course.status !== 'completed' && wasEnrolledAtOpen;
   const isRegistrationMode = course.type === 'webinar' && course.status !== 'completed' && !wasEnrolledAtOpen;
 
-  // Single child: enroll immediately, no need to ask.
+  // Single child (always true for Tier 1, or a Tier 2 parent with exactly
+  // one child profile): enroll immediately, no need to ask.
   React.useEffect(() => {
-    if (children.length === 1 && !isCourseEnrolledByChild(children[0].id, course.id)) {
-      enrollCourse(children[0].id, course.id);
+    if (singleChild && !isCourseEnrolledByChild(singleChild.id, course.id)) {
+      enrollCourse(singleChild.id, course.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -166,18 +169,18 @@ function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnroll
           </div>
         )}
 
-        {children.length === 0 ? (
+        {singleChild ? (
+          <div className="flex items-center gap-2 rounded-xl bg-stv-green-tint px-4 py-3 text-[13px] font-semibold text-stv-green">
+            <CircleCheck className="h-4 w-4 shrink-0" />
+            Tercatat di Perjalanan Pembelajaran {singleChild.name}.
+          </div>
+        ) : pickerChildren.length === 0 ? (
           <p className="rounded-xl bg-amber-50 px-4 py-3 text-[13px] text-stv-muted">
             Tambahkan profil anak terlebih dahulu agar aktivitas ini tercatat di Perjalanan Pembelajaran.
           </p>
-        ) : children.length === 1 ? (
-          <div className="flex items-center gap-2 rounded-xl bg-stv-green-tint px-4 py-3 text-[13px] font-semibold text-stv-green">
-            <CircleCheck className="h-4 w-4 shrink-0" />
-            Tercatat di Perjalanan Pembelajaran {children[0].name}.
-          </div>
         ) : (
           <ChildPicker
-            children={children}
+            children={pickerChildren}
             taggedIds={taggedChildIds}
             onToggle={(childId, isCurrentlyTagged) =>
               isCurrentlyTagged ? unenrollCourse(childId, course.id) : enrollCourse(childId, course.id)

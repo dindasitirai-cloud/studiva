@@ -3,11 +3,13 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, MessageSquare, ShieldCheck, Send, Clock } from 'lucide-react';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
 import { useAuth } from '../../../context/AuthContext';
+import { useDashboardBasePath } from '../useDashboardBasePath';
 import { relativeTime } from './relativeTime';
 
 export default function ThreadDetailTier2() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const basePath = useDashboardBasePath();
   const { threads, addReply } = useDashboardTier2();
   const { user } = useAuth();
   const [reply, setReply] = useState('');
@@ -20,7 +22,7 @@ export default function ThreadDetailTier2() {
         <MessageSquare className="h-10 w-10 text-amber-300" strokeWidth={1.5} />
         <h2 className="font-baloo text-[20px] font-bold text-stv-navy">Diskusi tidak ditemukan</h2>
         <Link
-          to="/dashboard/tier2/community"
+          to={`${basePath}/community`}
           className="rounded-full bg-amber-500 px-5 py-2 text-[14px] font-bold text-white no-underline transition hover:bg-amber-600"
         >
           Kembali ke Community Forum
@@ -40,7 +42,7 @@ export default function ThreadDetailTier2() {
     <div className="mx-auto max-w-[680px]">
       <button
         type="button"
-        onClick={() => navigate('/dashboard/tier2/community')}
+        onClick={() => navigate(`${basePath}/community`)}
         className="mb-5 flex items-center gap-1.5 text-[14px] font-semibold text-stv-muted transition hover:text-amber-600"
       >
         <ArrowLeft className="h-4 w-4" />

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, MessageSquare, Clock, LifeBuoy, ShieldCheck, X } from 'lucide-react';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
 import { useAuth } from '../../../context/AuthContext';
+import { useDashboardBasePath } from '../useDashboardBasePath';
 import { relativeTime } from './relativeTime';
 
 function NewThreadModal({ isSupportRequest, onClose, onCreated }: {
@@ -83,12 +84,13 @@ function NewThreadModal({ isSupportRequest, onClose, onCreated }: {
 
 export default function CommunityTier2() {
   const navigate = useNavigate();
+  const basePath = useDashboardBasePath();
   const { threads } = useDashboardTier2();
   const [modalMode, setModalMode] = useState<'none' | 'discussion' | 'support'>('none');
 
   function handleCreated(threadId: string) {
     setModalMode('none');
-    navigate(`/dashboard/tier2/community/${threadId}`);
+    navigate(`${basePath}/community/${threadId}`);
   }
 
   const sortedThreads = [...threads].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -146,7 +148,7 @@ export default function CommunityTier2() {
             <button
               key={thread.id}
               type="button"
-              onClick={() => navigate(`/dashboard/tier2/community/${thread.id}`)}
+              onClick={() => navigate(`${basePath}/community/${thread.id}`)}
               className="flex flex-col gap-2 rounded-2xl bg-white p-5 text-left shadow-[0_4px_16px_rgba(16,58,107,.06)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(217,119,6,.12)]"
             >
               {thread.isSupportRequest && (

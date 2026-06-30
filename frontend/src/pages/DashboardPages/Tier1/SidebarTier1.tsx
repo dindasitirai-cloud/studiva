@@ -1,0 +1,214 @@
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import {
+  Home,
+  Baby,
+  TrendingUp,
+  CalendarCheck,
+  FolderOpen,
+  ClipboardList,
+  FileText,
+  MessageSquarePlus,
+  Library,
+  GraduationCap,
+  Lightbulb,
+  Users,
+  Settings,
+  LogOut,
+  CreditCard,
+  X,
+} from 'lucide-react';
+import { useAuth } from '../../../context/AuthContext';
+import { FEATURE_COLORS, FeatureKey } from './featureColors';
+
+const navItems: { to: string; label: string; icon: typeof Home; key: FeatureKey; end?: boolean }[] = [
+  { to: '/dashboard/tier1', label: 'Beranda', icon: Home, key: 'beranda', end: true },
+  { to: '/dashboard/tier1/profil-anak', label: 'Profil Anak', icon: Baby, key: 'profil-anak' },
+  { to: '/dashboard/tier1/perkembangan', label: 'Perkembangan Harian', icon: TrendingUp, key: 'perkembangan' },
+  { to: '/dashboard/tier1/kehadiran', label: 'Kehadiran', icon: CalendarCheck, key: 'kehadiran' },
+  { to: '/dashboard/tier1/portfolio', label: 'Portfolio', icon: FolderOpen, key: 'portfolio' },
+  { to: '/dashboard/tier1/asesmen', label: 'Asesmen', icon: ClipboardList, key: 'asesmen' },
+  { to: '/dashboard/tier1/iep', label: 'IEP', icon: FileText, key: 'iep' },
+  { to: '/dashboard/tier1/catatan-guru', label: 'Catatan untuk Guru', icon: MessageSquarePlus, key: 'catatan-guru' },
+];
+
+const digitalNavItems = [
+  { to: '/dashboard/tier1/resources', label: 'Resource Library', icon: Library },
+  { to: '/dashboard/tier1/courses', label: 'Courses', icon: GraduationCap },
+  { to: '/dashboard/tier1/strategies', label: 'Learning Strategies', icon: Lightbulb },
+  { to: '/dashboard/tier1/community', label: 'Community Forum', icon: Users },
+  { to: '/dashboard/tier1/konsultasi', label: 'Konsultasi', icon: CalendarCheck },
+];
+
+interface SidebarTier1Props {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function SidebarTier1({ open, onClose }: SidebarTier1Props) {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
+  function handleLogout() {
+    logout();
+    navigate('/');
+  }
+
+  function handleSubscriptionClick() {
+    setSettingsOpen(false);
+    onClose();
+    navigate('/subscription-settings');
+  }
+
+  const sidebar = (
+    <div className="flex h-full w-64 flex-col bg-white font-nunito-sans shadow-[2px_0_16px_rgba(0,0,0,.06)]">
+      {/* Logo */}
+      <div className="flex h-[72px] items-center gap-3 border-b border-stv-sky-tint px-5">
+        <img src="/images/logo-studiva.png" alt="Studiva" className="h-10 w-10 object-contain" />
+        <div>
+          <div className="font-baloo text-[15px] font-extrabold leading-none text-stv-navy">Studiva</div>
+          <div className="text-[11px] font-semibold text-stv-sky-stroke">Sekolah · Tier 1</div>
+        </div>
+      </div>
+
+      {/* Nav items */}
+      <nav className="flex-1 overflow-y-auto px-3 py-4">
+        <ul className="space-y-1">
+          {navItems.map(({ to, label, icon: Icon, key, end }) => {
+            const colors = FEATURE_COLORS[key];
+            return (
+              <li key={to}>
+                <NavLink
+                  to={to}
+                  end={end}
+                  onClick={onClose}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 rounded-xl px-4 py-[10px] text-[15px] font-semibold no-underline transition ${
+                      isActive ? `${colors.bg} font-bold ${colors.text}` : 'text-stv-body hover:bg-stv-sky-tint/60 hover:text-stv-sky-stroke'
+                    }`
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <Icon className={`h-5 w-5 shrink-0 ${isActive ? colors.text : 'text-stv-muted'}`} strokeWidth={2} />
+                      {label}
+                    </>
+                  )}
+                </NavLink>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="my-4 flex items-center gap-2 px-2">
+          <div className="h-px flex-1 bg-stv-border" />
+          <span className="text-[11px] font-bold uppercase tracking-wide text-stv-muted-2">Studiva Digital</span>
+          <div className="h-px flex-1 bg-stv-border" />
+        </div>
+
+        <ul className="space-y-1">
+          {digitalNavItems.map(({ to, label, icon: Icon }) => (
+            <li key={to}>
+              <NavLink
+                to={to}
+                onClick={onClose}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 rounded-xl px-4 py-[10px] text-[15px] font-semibold no-underline transition ${
+                    isActive ? 'bg-amber-50 font-bold text-amber-700' : 'text-stv-body hover:bg-amber-50 hover:text-amber-700'
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <Icon className={`h-5 w-5 shrink-0 ${isActive ? 'text-amber-600' : 'text-stv-muted'}`} strokeWidth={2} />
+                    {label}
+                  </>
+                )}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* Bottom: user info + settings + logout */}
+      <div className="border-t border-stv-sky-tint p-3">
+        <div className="mb-3 flex items-center gap-3 rounded-xl bg-stv-sky-tint px-3 py-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-stv-sky-stroke font-baloo text-[16px] font-bold text-white">
+            {user?.name?.charAt(0)?.toUpperCase() ?? '?'}
+          </div>
+          <div className="min-w-0">
+            <div className="truncate text-[13px] font-bold text-stv-navy">{user?.name ?? '-'}</div>
+            <div className="truncate text-[11px] text-stv-muted">{user?.email ?? ''}</div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setSettingsOpen(o => !o)}
+              aria-expanded={settingsOpen}
+              className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-stv-sky-tint py-2 text-[13px] font-semibold text-stv-body transition hover:bg-stv-sky-tint"
+            >
+              <Settings className="h-4 w-4" strokeWidth={2} />
+              Pengaturan
+            </button>
+
+            {settingsOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setSettingsOpen(false)} />
+                <div className="absolute bottom-full left-0 z-50 mb-2 w-48 rounded-xl bg-white p-1.5 shadow-[0_12px_32px_rgba(16,58,107,.18)]">
+                  <button
+                    type="button"
+                    onClick={handleSubscriptionClick}
+                    className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-[13px] font-semibold text-stv-body transition hover:bg-stv-sky-tint hover:text-stv-sky-stroke"
+                  >
+                    <CreditCard className="h-4 w-4 shrink-0" strokeWidth={2} />
+                    Subscription
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex items-center justify-center gap-1.5 rounded-lg border border-stv-sky-tint py-2 text-[13px] font-semibold text-stv-body transition hover:bg-stv-sky-tint hover:text-red-600"
+          >
+            <LogOut className="h-4 w-4" strokeWidth={2} />
+            Keluar
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop: always visible */}
+      <aside className="sticky top-0 hidden h-screen shrink-0 lg:block">
+        {sidebar}
+      </aside>
+
+      {/* Mobile: overlay drawer */}
+      {open && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="absolute inset-0 bg-stv-navy/40" onClick={onClose} />
+          <aside className="absolute left-0 top-0 h-full">
+            <div className="relative h-full">
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Tutup menu"
+                className="absolute right-3 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-stv-sky-tint text-stv-sky-stroke"
+              >
+                <X className="h-4 w-4" />
+              </button>
+              {sidebar}
+            </div>
+          </aside>
+        </div>
+      )}
+    </>
+  );
+}

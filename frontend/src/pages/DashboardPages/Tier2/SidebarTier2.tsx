@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Home,
@@ -10,6 +10,7 @@ import {
   CalendarCheck,
   Settings,
   LogOut,
+  CreditCard,
   X,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
@@ -32,10 +33,17 @@ interface SidebarTier2Props {
 export default function SidebarTier2({ open, onClose }: SidebarTier2Props) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   function handleLogout() {
     logout();
     navigate('/');
+  }
+
+  function handleSubscriptionClick() {
+    setSettingsOpen(false);
+    onClose();
+    navigate('/subscription-settings');
   }
 
   const sidebar = (
@@ -93,13 +101,33 @@ export default function SidebarTier2({ open, onClose }: SidebarTier2Props) {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            className="flex items-center justify-center gap-1.5 rounded-lg border border-amber-200 py-2 text-[13px] font-semibold text-stv-body transition hover:bg-amber-50"
-          >
-            <Settings className="h-4 w-4" strokeWidth={2} />
-            Pengaturan
-          </button>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setSettingsOpen(o => !o)}
+              aria-expanded={settingsOpen}
+              className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-amber-200 py-2 text-[13px] font-semibold text-stv-body transition hover:bg-amber-50"
+            >
+              <Settings className="h-4 w-4" strokeWidth={2} />
+              Pengaturan
+            </button>
+
+            {settingsOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setSettingsOpen(false)} />
+                <div className="absolute bottom-full left-0 z-50 mb-2 w-48 rounded-xl bg-white p-1.5 shadow-[0_12px_32px_rgba(16,58,107,.18)]">
+                  <button
+                    type="button"
+                    onClick={handleSubscriptionClick}
+                    className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-[13px] font-semibold text-stv-body transition hover:bg-amber-50 hover:text-amber-700"
+                  >
+                    <CreditCard className="h-4 w-4 shrink-0" strokeWidth={2} />
+                    Subscription
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
           <button
             type="button"
             onClick={handleLogout}
@@ -116,7 +144,7 @@ export default function SidebarTier2({ open, onClose }: SidebarTier2Props) {
   return (
     <>
       {/* Desktop: always visible */}
-      <aside className="sticky top-[82px] hidden h-[calc(100vh-82px)] shrink-0 lg:block">
+      <aside className="sticky top-0 hidden h-screen shrink-0 lg:block">
         {sidebar}
       </aside>
 

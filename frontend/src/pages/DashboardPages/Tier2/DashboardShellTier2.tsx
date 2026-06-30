@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, Bell, MessageSquare } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
-import { DashboardTier2Provider, useDashboardTier2 } from '../../../context/DashboardTier2Context';
+import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
 import SidebarTier2 from './SidebarTier2';
 import { relativeTime } from './relativeTime';
 
@@ -107,7 +107,7 @@ function Tier2Guard({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     if (!loading && tier && tier !== 'tier2') {
-      navigate('/dashboard/parent', { replace: true });
+      navigate(tier === 'tier1' ? '/dashboard/tier1' : '/dashboard/parent', { replace: true });
     }
   }, [tier, loading, navigate]);
 
@@ -135,42 +135,40 @@ export default function DashboardShellTier2() {
 
   return (
     <Tier2Guard>
-      <DashboardTier2Provider>
-        <div className="flex font-nunito-sans">
-          <SidebarTier2 open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex font-nunito-sans">
+        <SidebarTier2 open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-          {/* Main content column */}
-          <div className="flex min-h-[calc(100vh-82px)] flex-1 flex-col bg-amber-50/30">
-            {/* Topbar */}
-            <header className="sticky top-[82px] z-30 flex h-[60px] items-center justify-between border-b border-amber-100 bg-white px-4 sm:px-6">
-              <div className="flex items-center gap-3">
-                {/* Hamburger for mobile */}
-                <button
-                  type="button"
-                  onClick={() => setSidebarOpen(true)}
-                  aria-label="Buka menu"
-                  className="flex h-9 w-9 items-center justify-center rounded-xl text-stv-muted transition hover:bg-amber-50 hover:text-amber-600 lg:hidden"
-                >
-                  <Menu className="h-5 w-5" strokeWidth={2} />
-                </button>
-                <h1 className="font-baloo text-[18px] font-bold text-stv-navy sm:text-[20px]">{pageTitle}</h1>
-              </div>
+        {/* Main content column */}
+        <div className="flex min-h-screen flex-1 flex-col bg-amber-50/30">
+          {/* Topbar */}
+          <header className="sticky top-0 z-30 flex h-[60px] items-center justify-between border-b border-amber-100 bg-white px-4 sm:px-6">
+            <div className="flex items-center gap-3">
+              {/* Hamburger for mobile */}
+              <button
+                type="button"
+                onClick={() => setSidebarOpen(true)}
+                aria-label="Buka menu"
+                className="flex h-9 w-9 items-center justify-center rounded-xl text-stv-muted transition hover:bg-amber-50 hover:text-amber-600 lg:hidden"
+              >
+                <Menu className="h-5 w-5" strokeWidth={2} />
+              </button>
+              <h1 className="font-baloo text-[18px] font-bold text-stv-navy sm:text-[20px]">{pageTitle}</h1>
+            </div>
 
-              <div className="flex items-center gap-3">
-                <span className="hidden text-[14px] text-stv-body sm:block">
-                  Halo, <strong className="text-stv-navy">{user?.name?.split(' ')[0] ?? 'Bunda'}</strong> 👋
-                </span>
-                <NotificationBell />
-              </div>
-            </header>
+            <div className="flex items-center gap-3">
+              <span className="hidden text-[14px] text-stv-body sm:block">
+                Halo, <strong className="text-stv-navy">{user?.name?.split(' ')[0] ?? 'Bunda'}</strong> 👋
+              </span>
+              <NotificationBell />
+            </div>
+          </header>
 
-            {/* Page content */}
-            <main className="flex-1 px-4 py-6 sm:px-6 sm:py-8">
-              <Outlet />
-            </main>
-          </div>
+          {/* Page content */}
+          <main className="flex-1 px-4 py-6 sm:px-6 sm:py-8">
+            <Outlet />
+          </main>
         </div>
-      </DashboardTier2Provider>
+      </div>
     </Tier2Guard>
   );
 }

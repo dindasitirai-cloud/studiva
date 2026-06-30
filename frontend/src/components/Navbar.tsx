@@ -33,6 +33,8 @@ export default function Navbar() {
       : user?.role === 'parent'
       ? tier === 'tier2'
         ? '/dashboard/tier2'
+        : tier === 'tier1'
+        ? '/dashboard/tier1'
         : '/dashboard/parent'
       : '/login';
 

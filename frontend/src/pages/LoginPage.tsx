@@ -44,7 +44,7 @@ export default function LoginPage() {
     try {
       const { data } = await api.get('/subscriptions/check');
       if (data.hasSubscription) {
-        const dest = data.tier === 'tier2' ? '/dashboard/tier2' : '/dashboard/parent';
+        const dest = data.tier === 'tier2' ? '/dashboard/tier2' : data.tier === 'tier1' ? '/dashboard/tier1' : '/dashboard/parent';
         navigate(dest);
       } else {
         navigate('/pricing', { state: { message: 'Complete your subscription to access dashboard.' } });

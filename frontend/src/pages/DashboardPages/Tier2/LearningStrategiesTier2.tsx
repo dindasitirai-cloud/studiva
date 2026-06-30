@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { STRATEGIES, ACTIVITY_TYPES, AGE_GROUPS, Strategy } from './strategyData';
 import { useDashboardTier2, LearningStyle } from '../../../context/DashboardTier2Context';
+import { useDashboardBasePath } from '../useDashboardBasePath';
 
 const TYPE_ICON: Record<Strategy['activityType'], LucideIcon> = {
   Motorik: Dumbbell,
@@ -74,6 +75,7 @@ function StrategyCard({ strategy, isSaved, onClick }: { strategy: Strategy; isSa
 
 export default function LearningStrategiesTier2() {
   const navigate = useNavigate();
+  const basePath = useDashboardBasePath();
   const { isStrategySavedByAnyChild } = useDashboardTier2();
   const [search, setSearch] = useState('');
   const [activityType, setActivityType] = useState('Semua');
@@ -177,7 +179,7 @@ export default function LearningStrategiesTier2() {
               key={strategy.id}
               strategy={strategy}
               isSaved={isStrategySavedByAnyChild(strategy.id)}
-              onClick={() => navigate(`/dashboard/tier2/strategies/${strategy.id}`)}
+              onClick={() => navigate(`${basePath}/strategies/${strategy.id}`)}
             />
           ))}
         </div>

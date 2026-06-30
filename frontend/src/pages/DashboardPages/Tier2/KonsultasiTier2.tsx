@@ -5,6 +5,7 @@ import {
   XCircle, ShieldCheck, Trash2, User, Hourglass,
 } from 'lucide-react';
 import { useDashboardTier2, ConsultationBooking } from '../../../context/DashboardTier2Context';
+import { useDashboardBasePath } from '../useDashboardBasePath';
 
 const PSYCHOLOGIST_NAME = 'Psikolog Fitri Effendy, S.Psi';
 
@@ -41,6 +42,7 @@ function formatDateID(isoDate: string) {
 }
 
 export default function KonsultasiTier2() {
+  const basePath = useDashboardBasePath();
   const { children, bookings, addBooking, updateBookingStatus } = useDashboardTier2();
 
   const [childId, setChildId] = useState('');
@@ -116,7 +118,7 @@ export default function KonsultasiTier2() {
         {children.length === 0 ? (
           <p className="rounded-xl bg-amber-50 px-4 py-3 text-[13px] text-stv-body">
             Anda belum menambahkan profil anak. Tambahkan dulu di{' '}
-            <Link to="/dashboard/tier2/profil-anak" className="font-semibold text-amber-600 hover:underline">Profil Anak</Link>{' '}
+            <Link to={`${basePath}/profil-anak`} className="font-semibold text-amber-600 hover:underline">Profil Anak</Link>{' '}
             agar sesi konsultasi bisa dikaitkan dengan anak yang tepat.
           </p>
         ) : (

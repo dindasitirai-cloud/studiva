@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { ARTICLES, CATEGORIES, Article } from './articleData';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
+import { useDashboardBasePath } from '../useDashboardBasePath';
 
 const CATEGORY_ICON: Record<string, LucideIcon> = {
   'Gaya Belajar': Brain,
@@ -75,6 +76,7 @@ function ArticleCard({ article, isRead, onClick }: { article: Article; isRead: b
 
 export default function ResourceLibraryTier2() {
   const navigate = useNavigate();
+  const basePath = useDashboardBasePath();
   const { isArticleReadByAnyChild, totalArticlesRead } = useDashboardTier2();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('Semua');
@@ -145,7 +147,7 @@ export default function ResourceLibraryTier2() {
               key={article.id}
               article={article}
               isRead={isArticleReadByAnyChild(article.id)}
-              onClick={() => navigate(`/dashboard/tier2/resources/${article.id}`)}
+              onClick={() => navigate(`${basePath}/resources/${article.id}`)}
             />
           ))}
         </div>

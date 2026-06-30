@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useDashboardTier2, ConsultationBooking } from '../../../context/DashboardTier2Context';
 import { useDashboardBasePath } from '../useDashboardBasePath';
+import { useAuth } from '../../../context/AuthContext';
 
 // Same number/format used by the Tier-1 consultation flow
 // (backend/src/lib/whatsapp.ts) so both paths feel like one consistent
@@ -41,6 +42,7 @@ function formatDateID(isoDate: string) {
 
 export default function KonsultasiTier2() {
   const basePath = useDashboardBasePath();
+  const { user } = useAuth();
   const { children, bookings, addBooking, updateBookingStatus, psychologist } = useDashboardTier2();
 
   const [childId, setChildId] = useState('');
@@ -75,6 +77,7 @@ export default function KonsultasiTier2() {
     const id = addBooking({
       type,
       topic: topic.trim(),
+      parentName: user?.name ?? 'Orang Tua',
       childId: childId || undefined,
       notes: notes.trim() || undefined,
       status: 'pending',
@@ -268,7 +271,7 @@ export default function KonsultasiTier2() {
                         </span>
                         <span className="flex items-center gap-1.5">
                           <Clock className="h-3.5 w-3.5" />
-                          {booking.time} WIB
+                          {booking.time} WIB{booking.durationMinutes && ` (${booking.durationMinutes} menit)`}
                         </span>
                       </>
                     ) : (

@@ -34,29 +34,23 @@ export interface JournalEntry {
 export interface ConsultationBooking {
   id: string;
   // Parent only requests a session up front - the actual slot depends on the
-  // psychologist's availability, so date/time stay unset until the team
-  // confirms (see addBooking's simulated confirmation below).
+  // psychologist's real availability, which can't be known automatically.
+  // date/time/durationMinutes stay unset until an admin manually schedules
+  // the session (after coordinating with the parent via WhatsApp) from
+  // KonsultasiAdmin.
   date?: string;
   time?: string;
+  durationMinutes?: number;
   type: 'online' | 'offline';
   topic: string;
+  /** The logged-in parent's name at the time of booking - "who booked this". */
+  parentName?: string;
   childId?: string;
   notes?: string;
   status: 'pending' | 'confirmed' | 'completed' | 'canceled';
   psychologistName: string;
   /** Admin's notes after the session happens - separate from the parent's own `notes` above. */
   resultNotes?: string;
-}
-
-// Slots the admin/psychologist opens up for booking. Independent of
-// ConsultationBooking for now (the auto-confirm simulation in addBooking
-// just assigns a random date/time rather than consuming a real slot here).
-// TODO: once a backend exists, confirming a booking should consume the
-// matching slot instead of these living as two separate lists.
-export interface ConsultationSlot {
-  id: string;
-  date: string; // ISO date
-  time: string; // "09:00"
 }
 
 export interface PsychologistProfile {
@@ -91,7 +85,7 @@ export interface ForumThread {
 
 // Generic shape for all Studiva Digital notifications - shared between the
 // Tier 1 and Tier 2 dashboards since both read from this same context.
-export type AppNotificationKind = 'forum-reply' | 'webinar-registered' | 'webinar-reminder';
+export type AppNotificationKind = 'forum-reply' | 'webinar-registered' | 'webinar-reminder' | 'consultation-confirmed';
 
 export interface AppNotification {
   id: string;
@@ -108,24 +102,6 @@ export interface AppNotification {
 // started, so the notification flow is demonstrable without a real backend
 // or other logged-in users. TODO: remove once real multi-user data exists.
 const MOCK_REPLIERS = ['Ibu Siti', 'Bapak Andi', 'Ibu Dewi', 'Ibu Maya'];
-
-// Used only to simulate the team assigning a slot once they've checked the
-// psychologist's real availability. TODO: remove once real scheduling exists.
-const CONFIRM_TIME_SLOTS = ['09:00', '11:00', '13:00', '15:00', '17:00'];
-
-function daysFromNowISODate(daysFromNow: number): string {
-  const d = new Date();
-  d.setDate(d.getDate() + daysFromNow);
-  return d.toISOString().slice(0, 10);
-}
-
-const SEED_SLOTS: ConsultationSlot[] = [
-  { id: 'slot-1', date: daysFromNowISODate(2), time: '09:00' },
-  { id: 'slot-2', date: daysFromNowISODate(2), time: '11:00' },
-  { id: 'slot-3', date: daysFromNowISODate(3), time: '13:00' },
-  { id: 'slot-4', date: daysFromNowISODate(4), time: '09:00' },
-  { id: 'slot-5', date: daysFromNowISODate(4), time: '15:00' },
-];
 
 const SEED_PSYCHOLOGIST: PsychologistProfile = {
   name: 'Psikolog Fitri Effendy, S.Psi',
@@ -258,11 +234,8 @@ interface DashboardTier2ContextValue {
   addBooking: (booking: Omit<ConsultationBooking, 'id'>) => string;
   updateBookingStatus: (id: string, status: ConsultationBooking['status']) => void;
   updateBooking: (id: string, updates: Partial<Omit<ConsultationBooking, 'id'>>) => void;
-
-  // Consultation slots the admin/psychologist opens up for booking
-  slots: ConsultationSlot[];
-  addSlot: (slot: Omit<ConsultationSlot, 'id'>) => void;
-  removeSlot: (id: string) => void;
+  /** Sets date/time/duration and flips status to confirmed in one step, plus notifies the parent. */
+  confirmBookingSchedule: (id: string, date: string, time: string, durationMinutes: number) => void;
 
   // Psychologist profile shown on the parent-facing Konsultasi page
   psychologist: PsychologistProfile;
@@ -348,7 +321,6 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
   const [articles, setArticles] = useState<Article[]>(ARTICLES);
   const [courses, setCourses] = useState<Course[]>(COURSES);
   const [strategies, setStrategies] = useState<Strategy[]>(STRATEGIES);
-  const [slots, setSlots] = useState<ConsultationSlot[]>(SEED_SLOTS);
   const [psychologist, setPsychologist] = useState<PsychologistProfile>(SEED_PSYCHOLOGIST);
   const [categories, setCategories] = useState<string[]>(CATEGORIES.filter(c => c !== 'Semua'));
   const [ageGroups, setAgeGroups] = useState<string[]>(AGE_GROUPS.filter(g => g !== 'Semua usia'));
@@ -421,22 +393,10 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
   const addBooking = useCallback((booking: Omit<ConsultationBooking, 'id'>) => {
     const id = uid();
     setBookings(prev => [{ ...booking, id }, ...prev]);
-
-    // TODO: remove once a real backend with admin/psychologist availability
-    // exists - this simulates the team checking the psychologist's schedule
-    // and confirming a slot a short while after the parent's request comes in.
-    if (booking.status === 'pending') {
-      const delay = 5000 + Math.random() * 4000;
-      setTimeout(() => {
-        const confirmedDate = new Date();
-        confirmedDate.setDate(confirmedDate.getDate() + 2 + Math.floor(Math.random() * 5));
-        const confirmedTime = CONFIRM_TIME_SLOTS[Math.floor(Math.random() * CONFIRM_TIME_SLOTS.length)];
-        setBookings(prev => prev.map(b => b.id === id
-          ? { ...b, status: 'confirmed', date: confirmedDate.toISOString().slice(0, 10), time: confirmedTime }
-          : b
-        ));
-      }, delay);
-    }
+    // No auto-confirm here on purpose - the psychologist's real availability
+    // can't be known automatically, so the booking stays "pending" with no
+    // date/time until an admin manually schedules it (after coordinating via
+    // WhatsApp) from KonsultasiAdmin. See updateBooking for that flow.
     return id;
   }, []);
 
@@ -446,11 +406,22 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
   const updateBooking = useCallback((id: string, updates: Partial<Omit<ConsultationBooking, 'id'>>) =>
     setBookings(prev => prev.map(b => b.id === id ? { ...b, ...updates } : b)), []);
 
-  const addSlot = useCallback((slot: Omit<ConsultationSlot, 'id'>) =>
-    setSlots(prev => [...prev, { ...slot, id: uid() }].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time))), []);
+  const confirmBookingSchedule = useCallback((id: string, date: string, time: string, durationMinutes: number) => {
+    setBookings(prev => prev.map(b => b.id === id ? { ...b, date, time, durationMinutes, status: 'confirmed' } : b));
 
-  const removeSlot = useCallback((id: string) =>
-    setSlots(prev => prev.filter(s => s.id !== id)), []);
+    const booking = bookings.find(b => b.id === id);
+    const formattedDate = new Date(date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    const title = 'Jadwal konsultasi dikonfirmasi';
+    const message = booking
+      ? `Konsultasi "${booking.topic}" dijadwalkan ${formattedDate} pukul ${time} WIB.`
+      : `Jadwal konsultasi Anda dikonfirmasi ${formattedDate} pukul ${time} WIB.`;
+
+    setNotifications(prev => [
+      { id: uid(), kind: 'consultation-confirmed', title, message, createdAt: new Date().toISOString(), read: false },
+      ...prev,
+    ]);
+    showToast({ kind: 'consultation-confirmed', title, message });
+  }, [bookings, showToast]);
 
   const updatePsychologistProfile = useCallback((updates: Partial<PsychologistProfile>) =>
     setPsychologist(prev => ({ ...prev, ...updates })), []);
@@ -602,8 +573,7 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
       totalArticlesRead, totalCoursesEnrolled, totalStrategiesSaved,
       children, addChild, updateChild, removeChild,
       journalEntries, addJournalEntry, removeJournalEntry,
-      bookings, addBooking, updateBookingStatus, updateBooking,
-      slots, addSlot, removeSlot,
+      bookings, addBooking, updateBookingStatus, updateBooking, confirmBookingSchedule,
       psychologist, updatePsychologistProfile,
       articles, addArticle, updateArticle, deleteArticle,
       courses, addCourse, updateCourse, deleteCourse,

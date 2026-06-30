@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, Bell, TrendingUp, FolderOpen, ClipboardList, MessageSquare, Video, Clock as ClockIcon } from 'lucide-react';
+import { Menu, Bell, TrendingUp, FolderOpen, ClipboardList, MessageSquare, Video, Clock as ClockIcon, CalendarCheck } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
-import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
+import { useDashboardTier2, AppNotificationKind } from '../../../context/DashboardTier2Context';
 import { DashboardTier1Provider, useDashboardTier1, TeacherNotificationKind } from './DashboardTier1Context';
 import { relativeTime } from '../Tier2/relativeTime';
 import SidebarTier1 from './SidebarTier1';
@@ -11,6 +11,13 @@ const TEACHER_NOTIF_ICON: Record<TeacherNotificationKind, typeof TrendingUp> = {
   perkembangan: TrendingUp,
   portfolio: FolderOpen,
   asesmen: ClipboardList,
+};
+
+const DIGITAL_NOTIF_ICON: Record<AppNotificationKind, typeof MessageSquare> = {
+  'forum-reply': MessageSquare,
+  'webinar-registered': Video,
+  'webinar-reminder': ClockIcon,
+  'consultation-confirmed': CalendarCheck,
 };
 
 interface MergedNotification {
@@ -66,14 +73,20 @@ function NotificationBellTier1() {
     })),
     ...digitalNotifications.map(n => ({
       id: n.id,
-      icon: n.kind === 'forum-reply' ? MessageSquare : n.kind === 'webinar-registered' ? Video : ClockIcon,
+      icon: DIGITAL_NOTIF_ICON[n.kind],
       title: n.title,
       message: n.message,
       createdAt: n.createdAt,
       read: n.read,
       onClick: () => {
         markNotificationRead(n.id);
-        navigate(n.kind === 'forum-reply' && n.threadId ? `/dashboard/tier1/community/${n.threadId}` : '/dashboard/tier1/courses');
+        if (n.kind === 'forum-reply' && n.threadId) {
+          navigate(`/dashboard/tier1/community/${n.threadId}`);
+        } else if (n.kind === 'consultation-confirmed') {
+          navigate('/dashboard/tier1/konsultasi');
+        } else {
+          navigate('/dashboard/tier1/courses');
+        }
       },
     })),
   ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());

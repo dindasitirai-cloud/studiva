@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, Bell, MessageSquare, Video, Clock as ClockIcon } from 'lucide-react';
+import { Menu, Bell, MessageSquare, Video, Clock as ClockIcon, CalendarCheck } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { useDashboardTier2, AppNotification } from '../../../context/DashboardTier2Context';
 import SidebarTier2 from './SidebarTier2';
@@ -10,6 +10,7 @@ const NOTIF_ICON: Record<AppNotification['kind'], typeof MessageSquare> = {
   'forum-reply': MessageSquare,
   'webinar-registered': Video,
   'webinar-reminder': ClockIcon,
+  'consultation-confirmed': CalendarCheck,
 };
 
 const PAGE_TITLES: Record<string, string> = {
@@ -37,6 +38,8 @@ function NotificationBell() {
     setOpen(false);
     if (n.kind === 'forum-reply' && n.threadId) {
       navigate(`/dashboard/tier2/community/${n.threadId}`);
+    } else if (n.kind === 'consultation-confirmed') {
+      navigate('/dashboard/tier2/konsultasi');
     } else {
       navigate('/dashboard/tier2/courses');
     }

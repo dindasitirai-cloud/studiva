@@ -1,17 +1,18 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import { X, MessageSquare, Video, Clock, TrendingUp, FolderOpen, ClipboardList, LucideIcon } from 'lucide-react';
+import { X, MessageSquare, Video, Clock, TrendingUp, FolderOpen, ClipboardList, CalendarCheck, LucideIcon } from 'lucide-react';
 
 // Covers notification "kinds" from both DashboardTier2Context (shared
 // Studiva Digital activity) and DashboardTier1Context (teacher input) so
 // either can pop up a toast without this file depending on their types.
 export type ToastKind =
-  | 'forum-reply' | 'webinar-registered' | 'webinar-reminder'
+  | 'forum-reply' | 'webinar-registered' | 'webinar-reminder' | 'consultation-confirmed'
   | 'perkembangan' | 'portfolio' | 'asesmen';
 
 const ICON_META: Record<ToastKind, { icon: LucideIcon; color: string; bg: string }> = {
   'forum-reply': { icon: MessageSquare, color: 'text-amber-600', bg: 'bg-amber-50' },
   'webinar-registered': { icon: Video, color: 'text-amber-600', bg: 'bg-amber-50' },
   'webinar-reminder': { icon: Clock, color: 'text-amber-600', bg: 'bg-amber-50' },
+  'consultation-confirmed': { icon: CalendarCheck, color: 'text-teal-600', bg: 'bg-teal-50' },
   perkembangan: { icon: TrendingUp, color: 'text-orange-600', bg: 'bg-orange-50' },
   portfolio: { icon: FolderOpen, color: 'text-purple-600', bg: 'bg-purple-50' },
   asesmen: { icon: ClipboardList, color: 'text-indigo-600', bg: 'bg-indigo-50' },

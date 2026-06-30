@@ -29,21 +29,28 @@ export default function LoginPage() {
       return;
     }
 
-    const dashboardPath = user.role === 'teacher' ? '/dashboard/teacher' : '/dashboard/parent';
     if (user.role === 'admin') {
-      navigate(dashboardPath);
+      navigate('/dashboard/parent');
       return;
     }
 
+    if (user.role === 'teacher') {
+      navigate('/dashboard/teacher');
+      setSubmitting(false);
+      return;
+    }
+
+    // Parent: check subscription tier to decide which dashboard to show
     try {
       const { data } = await api.get('/subscriptions/check');
       if (data.hasSubscription) {
-        navigate(dashboardPath);
+        const dest = data.tier === 'tier2' ? '/dashboard/tier2' : '/dashboard/parent';
+        navigate(dest);
       } else {
         navigate('/pricing', { state: { message: 'Complete your subscription to access dashboard.' } });
       }
     } catch {
-      navigate(dashboardPath);
+      navigate('/dashboard/parent');
     } finally {
       setSubmitting(false);
     }

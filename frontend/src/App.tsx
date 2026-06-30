@@ -32,6 +32,17 @@ import AdminFitriDashboardPage from './pages/AdminFitriDashboardPage';
 import ParentDashboard from './pages/DashboardPages/ParentDashboard';
 import TeacherDashboard from './pages/DashboardPages/TeacherDashboard';
 import ChildProfile from './pages/DashboardPages/ChildProfile';
+import DashboardShellTier2 from './pages/DashboardPages/Tier2/DashboardShellTier2';
+import BerandaTier2 from './pages/DashboardPages/Tier2/BerandaTier2';
+import ProfilAnakTier2 from './pages/DashboardPages/Tier2/ProfilAnakTier2';
+import ResourceLibraryTier2 from './pages/DashboardPages/Tier2/ResourceLibraryTier2';
+import ArticleDetailTier2 from './pages/DashboardPages/Tier2/ArticleDetailTier2';
+import CoursesTier2 from './pages/DashboardPages/Tier2/CoursesTier2';
+import LearningStrategiesTier2 from './pages/DashboardPages/Tier2/LearningStrategiesTier2';
+import StrategyDetailTier2 from './pages/DashboardPages/Tier2/StrategyDetailTier2';
+import CommunityTier2 from './pages/DashboardPages/Tier2/CommunityTier2';
+import ThreadDetailTier2 from './pages/DashboardPages/Tier2/ThreadDetailTier2';
+import KonsultasiTier2 from './pages/DashboardPages/Tier2/KonsultasiTier2';
 
 const CONSULTATION_UPGRADE_MESSAGE =
   'Anda perlu upgrade ke Tier 1 atau Tier 2 untuk melakukan booking konsultasi. Silakan pilih plan yang sesuai untuk mulai berkonsultasi.';
@@ -183,6 +194,29 @@ export default function App() {
                 </PrivateRoute>
               }
             />
+
+            {/* Tier 2 member dashboard — nested routes with shared DashboardShellTier2 layout */}
+            <Route
+              path="/dashboard/tier2"
+              element={
+                <ParentRoute>
+                  <SubscriptionGuard>
+                    <DashboardShellTier2 />
+                  </SubscriptionGuard>
+                </ParentRoute>
+              }
+            >
+              <Route index element={<BerandaTier2 />} />
+              <Route path="profil-anak" element={<ProfilAnakTier2 />} />
+              <Route path="resources" element={<ResourceLibraryTier2 />} />
+              <Route path="resources/:id" element={<ArticleDetailTier2 />} />
+              <Route path="courses" element={<CoursesTier2 />} />
+              <Route path="strategies" element={<LearningStrategiesTier2 />} />
+              <Route path="strategies/:id" element={<StrategyDetailTier2 />} />
+              <Route path="community" element={<CommunityTier2 />} />
+              <Route path="community/:id" element={<ThreadDetailTier2 />} />
+              <Route path="konsultasi" element={<KonsultasiTier2 />} />
+            </Route>
 
             <Route
               path="/dashboard/parent"

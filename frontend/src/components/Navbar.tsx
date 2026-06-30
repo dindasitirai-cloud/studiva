@@ -28,7 +28,13 @@ export default function Navbar() {
   }
 
   const dashboardPath =
-    user?.role === 'teacher' ? '/dashboard/teacher' : user?.role === 'parent' ? '/dashboard/parent' : '/login';
+    user?.role === 'teacher'
+      ? '/dashboard/teacher'
+      : user?.role === 'parent'
+      ? tier === 'tier2'
+        ? '/dashboard/tier2'
+        : '/dashboard/parent'
+      : '/login';
 
   // Tier 1 (school) vs Tier 2 (digital) get a different dashboard icon; the menu
   // items themselves (Resources/Consultation/Subscription) are shared since both

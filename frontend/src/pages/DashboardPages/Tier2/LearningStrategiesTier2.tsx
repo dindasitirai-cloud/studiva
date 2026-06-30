@@ -12,7 +12,7 @@ import {
   Puzzle,
   LucideIcon,
 } from 'lucide-react';
-import { STRATEGIES, ACTIVITY_TYPES, AGE_GROUPS, Strategy } from './strategyData';
+import { ACTIVITY_TYPES, Strategy } from './strategyData';
 import { useDashboardTier2, LearningStyle } from '../../../context/DashboardTier2Context';
 import { useDashboardBasePath } from '../useDashboardBasePath';
 
@@ -76,7 +76,7 @@ function StrategyCard({ strategy, isSaved, onClick }: { strategy: Strategy; isSa
 export default function LearningStrategiesTier2() {
   const navigate = useNavigate();
   const basePath = useDashboardBasePath();
-  const { isStrategySavedByAnyChild } = useDashboardTier2();
+  const { strategies, ageGroups, isStrategySavedByAnyChild } = useDashboardTier2();
   const [search, setSearch] = useState('');
   const [activityType, setActivityType] = useState('Semua');
   const [ageGroup, setAgeGroup] = useState('Semua usia');
@@ -84,7 +84,8 @@ export default function LearningStrategiesTier2() {
   const [savedOnly, setSavedOnly] = useState(false);
 
   const filtered = useMemo(() => {
-    return STRATEGIES.filter(s => {
+    return strategies.filter(s => {
+      if (s.status !== 'published') return false;
       const matchesType = activityType === 'Semua' || s.activityType === activityType;
       const matchesAge = ageGroup === 'Semua usia' || s.ageGroup === ageGroup || s.ageGroup === 'Semua usia';
       const matchesStyle = learningStyle === 'Semua' || s.learningStyles.includes(learningStyle as LearningStyle);
@@ -93,7 +94,7 @@ export default function LearningStrategiesTier2() {
         s.summary.toLowerCase().includes(search.toLowerCase());
       return matchesType && matchesAge && matchesStyle && matchesSaved && matchesSearch;
     });
-  }, [search, activityType, ageGroup, learningStyle, savedOnly, isStrategySavedByAnyChild]);
+  }, [strategies, search, activityType, ageGroup, learningStyle, savedOnly, isStrategySavedByAnyChild]);
 
   return (
     <div className="flex flex-col gap-5">
@@ -136,7 +137,7 @@ export default function LearningStrategiesTier2() {
           onChange={e => setAgeGroup(e.target.value)}
           className="rounded-full border border-amber-200 bg-white px-4 py-2 text-[13px] font-semibold text-stv-body focus:border-amber-500 focus:outline-none"
         >
-          {AGE_GROUPS.map(g => <option key={g} value={g}>{g}</option>)}
+          {['Semua usia', ...ageGroups].map(g => <option key={g} value={g}>{g}</option>)}
         </select>
         <select
           value={learningStyle}

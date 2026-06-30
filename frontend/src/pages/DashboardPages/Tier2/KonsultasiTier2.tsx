@@ -7,8 +7,6 @@ import {
 import { useDashboardTier2, ConsultationBooking } from '../../../context/DashboardTier2Context';
 import { useDashboardBasePath } from '../useDashboardBasePath';
 
-const PSYCHOLOGIST_NAME = 'Psikolog Fitri Effendy, S.Psi';
-
 // Same number/format used by the Tier-1 consultation flow
 // (backend/src/lib/whatsapp.ts) so both paths feel like one consistent
 // system to the psychologist on the receiving end.
@@ -43,7 +41,7 @@ function formatDateID(isoDate: string) {
 
 export default function KonsultasiTier2() {
   const basePath = useDashboardBasePath();
-  const { children, bookings, addBooking, updateBookingStatus } = useDashboardTier2();
+  const { children, bookings, addBooking, updateBookingStatus, psychologist } = useDashboardTier2();
 
   const [childId, setChildId] = useState('');
   const [type, setType] = useState<'online' | 'offline' | ''>('');
@@ -80,7 +78,7 @@ export default function KonsultasiTier2() {
       childId: childId || undefined,
       notes: notes.trim() || undefined,
       status: 'pending',
-      psychologistName: PSYCHOLOGIST_NAME,
+      psychologistName: psychologist.name,
     });
     setSuccessId(id);
 
@@ -106,8 +104,8 @@ export default function KonsultasiTier2() {
           <Star className="h-7 w-7 text-white" fill="currentColor" strokeWidth={0} />
         </div>
         <div>
-          <p className="font-baloo text-[17px] font-bold text-white">{PSYCHOLOGIST_NAME}</p>
-          <p className="mt-0.5 text-[13px] text-white/90">Founder Studiva &middot; Berpengalaman mendampingi orang tua dan anak dengan kebutuhan belajar khusus.</p>
+          <p className="font-baloo text-[17px] font-bold text-white">{psychologist.name}</p>
+          <p className="mt-0.5 text-[13px] text-white/90">{psychologist.bio}</p>
         </div>
       </div>
 

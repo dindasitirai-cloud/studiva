@@ -30,7 +30,7 @@ export default function LoginPage() {
     }
 
     if (user.role === 'admin') {
-      navigate('/dashboard/parent');
+      navigate('/admin');
       return;
     }
 

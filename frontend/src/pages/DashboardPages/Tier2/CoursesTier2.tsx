@@ -10,7 +10,7 @@ import {
   GraduationCap,
   Link2,
 } from 'lucide-react';
-import { COURSES, Course, isVideoLike } from './courseData';
+import { Course, isVideoLike } from './courseData';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
 import { useActivityChild } from '../useActivityChild';
 import ChildPicker from './ChildPicker';
@@ -214,11 +214,11 @@ function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnroll
 export default function CoursesTier2() {
   const [tab, setTab] = useState<'webinar' | 'video'>('webinar');
   const [activeCourse, setActiveCourse] = useState<Course | null>(null);
-  const { isCourseEnrolledByAnyChild } = useDashboardTier2();
+  const { courses, isCourseEnrolledByAnyChild } = useDashboardTier2();
 
   // Completed webinars move into "Video Rekaman" since they're now just a
   // recording - only upcoming webinars stay in the "Live Webinar" tab.
-  const filtered = COURSES.filter(c => (tab === 'webinar' ? !isVideoLike(c) : isVideoLike(c)));
+  const filtered = courses.filter(c => c.visibility === 'published' && (tab === 'webinar' ? !isVideoLike(c) : isVideoLike(c)));
 
   return (
     <div className="flex flex-col gap-5">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, MessageSquare, ShieldCheck, Send, Clock } from 'lucide-react';
+import { ArrowLeft, MessageSquare, ShieldCheck, Send, Clock, Megaphone, Pin, Flag } from 'lucide-react';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
 import { useAuth } from '../../../context/AuthContext';
 import { useDashboardBasePath } from '../useDashboardBasePath';
@@ -10,11 +10,13 @@ export default function ThreadDetailTier2() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const basePath = useDashboardBasePath();
-  const { threads, addReply } = useDashboardTier2();
+  const { threads, addReply, reportThread } = useDashboardTier2();
   const { user } = useAuth();
   const [reply, setReply] = useState('');
+  const [justReported, setJustReported] = useState(false);
 
-  const thread = threads.find(t => t.id === id);
+  // Hidden by admin moderation - treat as not-found for parents.
+  const thread = threads.find(t => t.id === id && t.status !== 'disembunyikan');
 
   if (!thread) {
     return (
@@ -38,25 +40,56 @@ export default function ThreadDetailTier2() {
     setReply('');
   }
 
+  function handleReport() {
+    if (!thread || !window.confirm('Laporkan diskusi ini ke Tim Studiva untuk ditinjau?')) return;
+    reportThread(thread.id);
+    setJustReported(true);
+  }
+
   return (
     <div className="mx-auto max-w-[680px]">
-      <button
-        type="button"
-        onClick={() => navigate(`${basePath}/community`)}
-        className="mb-5 flex items-center gap-1.5 text-[14px] font-semibold text-stv-muted transition hover:text-amber-600"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Kembali ke Community Forum
-      </button>
+      <div className="mb-5 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={() => navigate(`${basePath}/community`)}
+          className="flex items-center gap-1.5 text-[14px] font-semibold text-stv-muted transition hover:text-amber-600"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Kembali ke Community Forum
+        </button>
+        <button
+          type="button"
+          onClick={handleReport}
+          disabled={justReported || thread.status === 'dilaporkan'}
+          className="flex items-center gap-1.5 text-[13px] font-semibold text-stv-muted transition hover:text-red-500 disabled:text-stv-green disabled:hover:text-stv-green"
+        >
+          <Flag className="h-3.5 w-3.5" />
+          {justReported || thread.status === 'dilaporkan' ? 'Sudah dilaporkan' : 'Laporkan'}
+        </button>
+      </div>
 
       {/* Original post */}
       <div className="rounded-2xl bg-white p-6 shadow-[0_4px_16px_rgba(16,58,107,.06)] sm:p-8">
-        {thread.isSupportRequest && (
-          <span className="mb-3 flex w-fit items-center gap-1 rounded-full bg-stv-green-tint px-2.5 py-0.5 text-[11px] font-bold text-stv-green">
-            <ShieldCheck className="h-3 w-3" />
-            Pertanyaan Resmi
-          </span>
-        )}
+        <div className="mb-3 flex flex-wrap items-center gap-1.5">
+          {thread.pinned && (
+            <span className="flex w-fit items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-700">
+              <Pin className="h-3 w-3" />
+              Disematkan
+            </span>
+          )}
+          {thread.isAnnouncement && (
+            <span className="flex w-fit items-center gap-1 rounded-full bg-stv-badge-navy-tint px-2.5 py-0.5 text-[11px] font-bold text-stv-navy">
+              <Megaphone className="h-3 w-3" />
+              Pengumuman Resmi
+            </span>
+          )}
+          {thread.isSupportRequest && (
+            <span className="flex w-fit items-center gap-1 rounded-full bg-stv-green-tint px-2.5 py-0.5 text-[11px] font-bold text-stv-green">
+              <ShieldCheck className="h-3 w-3" />
+              Pertanyaan Resmi
+            </span>
+          )}
+        </div>
         <h1 className="font-baloo text-[24px] font-extrabold leading-[1.3] text-stv-navy sm:text-[28px]">{thread.title}</h1>
         <div className="mt-3 flex items-center gap-3 text-[13px] text-stv-muted">
           <span className="flex items-center gap-1.5">

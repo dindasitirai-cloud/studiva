@@ -13,7 +13,7 @@ import {
   Library,
   LucideIcon,
 } from 'lucide-react';
-import { ARTICLES, CATEGORIES, Article } from './articleData';
+import { Article } from './articleData';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
 import { useDashboardBasePath } from '../useDashboardBasePath';
 
@@ -77,18 +77,19 @@ function ArticleCard({ article, isRead, onClick }: { article: Article; isRead: b
 export default function ResourceLibraryTier2() {
   const navigate = useNavigate();
   const basePath = useDashboardBasePath();
-  const { isArticleReadByAnyChild, totalArticlesRead } = useDashboardTier2();
+  const { articles, categories, isArticleReadByAnyChild, totalArticlesRead } = useDashboardTier2();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('Semua');
 
   const filtered = useMemo(() => {
-    return ARTICLES.filter(a => {
+    return articles.filter(a => {
+      if (a.status !== 'published') return false;
       const matchesCategory = category === 'Semua' || a.category === category;
       const matchesSearch = a.title.toLowerCase().includes(search.toLowerCase()) ||
         a.summary.toLowerCase().includes(search.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [search, category]);
+  }, [articles, search, category]);
 
   return (
     <div className="flex flex-col gap-5">
@@ -117,7 +118,7 @@ export default function ResourceLibraryTier2() {
 
       {/* Category chips */}
       <div className="flex flex-wrap gap-2">
-        {CATEGORIES.map(cat => (
+        {['Semua', ...categories].map(cat => (
           <button
             key={cat}
             type="button"

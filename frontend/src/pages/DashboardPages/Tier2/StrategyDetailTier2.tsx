@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Clock, CircleCheck, Package, ListChecks, Lightbulb, Bookmark, BookmarkCheck, Puzzle, X } from 'lucide-react';
-import { getStrategyById } from './strategyData';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
 import { useDashboardBasePath } from '../useDashboardBasePath';
 import { useActivityChild } from '../useActivityChild';
@@ -70,10 +69,10 @@ export default function StrategyDetailTier2() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const basePath = useDashboardBasePath();
-  const { isStrategySavedByAnyChild } = useDashboardTier2();
+  const { strategies, isStrategySavedByAnyChild } = useDashboardTier2();
   const [modalOpen, setModalOpen] = useState(false);
 
-  const strategy = id ? getStrategyById(id) : undefined;
+  const strategy = id ? strategies.find(s => s.id === id && s.status === 'published') : undefined;
   const isSaved = strategy ? isStrategySavedByAnyChild(strategy.id) : false;
 
   if (!strategy) {

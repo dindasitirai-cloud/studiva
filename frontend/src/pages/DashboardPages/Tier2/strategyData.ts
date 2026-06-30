@@ -1,5 +1,7 @@
 // TODO: replace with API call to backend once Tier-2 strategy content is
-// served dynamically. Kept as static mock data for now.
+// served dynamically. This array is now the SEED for DashboardTier2Context's
+// `strategies` state (see that file) - admin CRUD mutates the context's
+// copy, not this constant.
 
 import { LearningStyle } from '../../../context/DashboardTier2Context';
 
@@ -18,6 +20,9 @@ export interface Strategy {
   steps: string[];
   tip: string;
   colorTheme: 'amber' | 'sky' | 'coral' | 'green';
+  status: 'draft' | 'published';
+  /** Admin-uploaded supporting media (data URL for now). TODO: real file storage backend. */
+  thumbnailUrl?: string;
 }
 
 export const STRATEGIES: Strategy[] = [
@@ -39,6 +44,7 @@ export const STRATEGIES: Strategy[] = [
     ],
     tip: 'Simpan playdough dalam wadah kedap udara, bisa dipakai berulang kali selama 2-3 minggu.',
     colorTheme: 'amber',
+    status: 'published',
   },
   {
     id: 's2',
@@ -58,6 +64,7 @@ export const STRATEGIES: Strategy[] = [
     ],
     tip: 'Gunakan botol ini saat anak mulai menunjukkan tanda-tanda overload sensorik untuk membantu menenangkan diri.',
     colorTheme: 'sky',
+    status: 'published',
   },
   {
     id: 's3',
@@ -77,6 +84,7 @@ export const STRATEGIES: Strategy[] = [
     ],
     tip: 'Mulai dengan sesi singkat (5 menit) dan perpanjang secara bertahap sesuai kenyamanan anak.',
     colorTheme: 'coral',
+    status: 'published',
   },
   {
     id: 's4',
@@ -96,6 +104,7 @@ export const STRATEGIES: Strategy[] = [
     ],
     tip: 'Gunakan kata-kata dari kehidupan sehari-hari anak agar lebih mudah diingat dan relevan.',
     colorTheme: 'green',
+    status: 'published',
   },
   {
     id: 's5',
@@ -115,6 +124,7 @@ export const STRATEGIES: Strategy[] = [
     ],
     tip: 'Latih teknik ini saat anak tenang dulu, supaya ia familiar dan bisa menggunakannya sendiri saat dibutuhkan.',
     colorTheme: 'sky',
+    status: 'published',
   },
   {
     id: 's6',
@@ -134,6 +144,7 @@ export const STRATEGIES: Strategy[] = [
     ],
     tip: 'Konsistensi adalah kunci — gunakan papan ini di rumah dan minta sekolah/terapis melakukan hal yang sama.',
     colorTheme: 'amber',
+    status: 'published',
   },
   {
     id: 's7',
@@ -153,6 +164,7 @@ export const STRATEGIES: Strategy[] = [
     ],
     tip: 'Lakukan di permukaan yang rata dan jauh dari benda tajam untuk keamanan.',
     colorTheme: 'coral',
+    status: 'published',
   },
   {
     id: 's8',
@@ -172,6 +184,24 @@ export const STRATEGIES: Strategy[] = [
     ],
     tip: 'Gunakan foto kegiatan sehari-hari anak sendiri agar lebih personal dan mudah dipahami.',
     colorTheme: 'green',
+    status: 'published',
+  },
+  {
+    id: 's9',
+    title: 'Kartu Emosi Sederhana',
+    activityType: 'Sosial',
+    ageGroup: '3-5 tahun',
+    learningStyles: ['Visual'],
+    summary: 'Draft - belum ditinjau. Membantu anak mengenali dan menyebutkan emosi dasar dengan kartu bergambar.',
+    duration: '15 menit membuat',
+    materials: ['Kertas karton', 'Alat gambar/print wajah ekspresi dasar'],
+    steps: [
+      'Siapkan 4-6 kartu dengan ekspresi wajah dasar (senang, sedih, marah, takut).',
+      'Tunjukkan satu per satu sambil menyebutkan nama emosinya.',
+    ],
+    tip: 'Gunakan saat anak tenang untuk mengenalkan konsepnya, bukan saat emosi sedang tinggi.',
+    colorTheme: 'amber',
+    status: 'draft',
   },
 ];
 

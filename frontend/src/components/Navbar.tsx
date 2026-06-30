@@ -76,6 +76,12 @@ export default function Navbar() {
         <div className="hidden items-center gap-[18px] lg:flex">
           {user?.role === 'admin' ? (
             <>
+              <Link
+                to="/admin"
+                className="rounded-full bg-stv-yellow px-6 py-3 font-baloo font-bold text-stv-navy shadow-[0_6px_16px_rgba(251,208,10,.4)] transition hover:-translate-y-px hover:bg-stv-yellow-hover"
+              >
+                Dashboard
+              </Link>
               <Link to="/admin/consultations" className="font-semibold text-stv-navy transition hover:text-stv-yellow-deep">
                 Consultations
               </Link>
@@ -176,6 +182,13 @@ export default function Navbar() {
           ))}
           {user?.role === 'admin' ? (
             <>
+              <Link
+                to="/admin"
+                onClick={() => setOpen(false)}
+                className="w-full rounded-full bg-stv-yellow px-6 py-3 text-center font-baloo font-bold text-stv-navy"
+              >
+                Dashboard
+              </Link>
               <Link
                 to="/admin/consultations"
                 onClick={() => setOpen(false)}

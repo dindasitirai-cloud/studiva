@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Clock, CheckCircle2, BookOpen } from 'lucide-react';
-import { getArticleById } from './articleData';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
 import { useDashboardBasePath } from '../useDashboardBasePath';
 import { useActivityChild } from '../useActivityChild';
@@ -11,10 +10,10 @@ export default function ArticleDetailTier2() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const basePath = useDashboardBasePath();
-  const { markArticleRead, unmarkArticleRead, isArticleReadByChild } = useDashboardTier2();
+  const { articles, markArticleRead, unmarkArticleRead, isArticleReadByChild } = useDashboardTier2();
   const { singleChild, pickerChildren } = useActivityChild();
 
-  const article = id ? getArticleById(id) : undefined;
+  const article = id ? articles.find(a => a.id === id && a.status === 'published') : undefined;
 
   // Tier 1 parents always have exactly one school-managed child (no
   // picker), and Tier 2 parents with exactly one child profile get the same

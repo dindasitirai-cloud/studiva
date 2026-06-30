@@ -57,21 +57,41 @@ import AssessmentDetailTier1 from './pages/DashboardPages/Tier1/AssessmentDetail
 import IEPTier1 from './pages/DashboardPages/Tier1/IEPTier1';
 import CatatanGuruTier1 from './pages/DashboardPages/Tier1/CatatanGuruTier1';
 import SubscriptionTier1 from './pages/DashboardPages/Tier1/SubscriptionTier1';
+import AdminShell from './pages/AdminPages/AdminShell';
+import BerandaAdmin from './pages/AdminPages/BerandaAdmin';
+import ResourceLibraryAdmin from './pages/AdminPages/ResourceLibraryAdmin';
+import CoursesAdmin from './pages/AdminPages/CoursesAdmin';
+import StrategiesAdmin from './pages/AdminPages/StrategiesAdmin';
+import ForumAdmin from './pages/AdminPages/ForumAdmin';
+import KonsultasiAdmin from './pages/AdminPages/KonsultasiAdmin';
+import MembersAdmin from './pages/AdminPages/MembersAdmin';
+import PaymentsAdmin from './pages/AdminPages/PaymentsAdmin';
+import SettingsAdmin from './pages/AdminPages/SettingsAdmin';
 
 const CONSULTATION_UPGRADE_MESSAGE =
   'Anda perlu upgrade ke Tier 1 atau Tier 2 untuk melakukan booking konsultasi. Silakan pilih plan yang sesuai untuk mulai berkonsultasi.';
 
+// New AdminShell routes only - deliberately NOT a blanket "/admin" prefix
+// check, since the older standalone admin pages (consultations, community,
+// enrollment-requests, fitri-dashboard) still rely on the public Navbar for
+// navigation and aren't wrapped in AdminShell.
+const ADMIN_SHELL_PATHS = [
+  '/admin', '/admin/resource-library', '/admin/courses', '/admin/strategies',
+  '/admin/forum', '/admin/konsultasi', '/admin/members', '/admin/payments', '/admin/settings',
+];
+
 function Layout({ children }: { children: React.ReactNode }) {
-  // Both member dashboards have their own sidebar + topbar (incl. logout and
-  // a settings menu with the subscription link), so the public marketing
-  // navbar would just be redundant, duplicate navigation there.
+  // Both member dashboards (and now the admin dashboard) have their own
+  // sidebar + topbar (incl. logout), so the public marketing navbar would
+  // just be redundant, duplicate navigation there.
   const location = useLocation();
   const isMemberDashboard =
     location.pathname.startsWith('/dashboard/tier2') || location.pathname.startsWith('/dashboard/tier1');
+  const isAdminShell = ADMIN_SHELL_PATHS.some(p => location.pathname === p || location.pathname.startsWith(`${p}/`));
 
   return (
     <div className="flex min-h-screen flex-col">
-      {!isMemberDashboard && <Navbar />}
+      {!isMemberDashboard && !isAdminShell && <Navbar />}
       <main className="flex-1">{children}</main>
       <Footer />
     </div>
@@ -282,6 +302,33 @@ export default function App() {
               <Route path="community" element={<CommunityTier2 />} />
               <Route path="community/:id" element={<ThreadDetailTier2 />} />
               <Route path="konsultasi" element={<KonsultasiTier2 />} />
+            </Route>
+
+            {/* Admin dashboard - internal Studiva team only. Resource Library/
+                Courses/Learning Strategies/Forum/Konsultasi modules manage the
+                SAME shared data the Tier 1 & Tier 2 parent dashboards read
+                from (via DashboardTier2Context, hoisted globally above), not
+                a separate copy - publishing here is meant to show up there.
+                TODO: role distinction beyond AdminRoute's role==='admin'
+                check (e.g. content-editor vs psikolog vs super-admin) once
+                real auth/roles exist. */}
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <AdminShell />
+                </AdminRoute>
+              }
+            >
+              <Route index element={<BerandaAdmin />} />
+              <Route path="resource-library" element={<ResourceLibraryAdmin />} />
+              <Route path="courses" element={<CoursesAdmin />} />
+              <Route path="strategies" element={<StrategiesAdmin />} />
+              <Route path="forum" element={<ForumAdmin />} />
+              <Route path="konsultasi" element={<KonsultasiAdmin />} />
+              <Route path="members" element={<MembersAdmin />} />
+              <Route path="payments" element={<PaymentsAdmin />} />
+              <Route path="settings" element={<SettingsAdmin />} />
             </Route>
 
             <Route

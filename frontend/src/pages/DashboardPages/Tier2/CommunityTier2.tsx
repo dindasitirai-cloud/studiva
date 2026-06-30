@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, MessageSquare, Clock, LifeBuoy, ShieldCheck, X } from 'lucide-react';
+import { Plus, MessageSquare, Clock, LifeBuoy, ShieldCheck, Megaphone, Pin, X } from 'lucide-react';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
 import { useAuth } from '../../../context/AuthContext';
 import { useDashboardBasePath } from '../useDashboardBasePath';
@@ -93,7 +93,14 @@ export default function CommunityTier2() {
     navigate(`${basePath}/community/${threadId}`);
   }
 
-  const sortedThreads = [...threads].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  // Hidden threads (admin moderation) never show to parents - "dilaporkan"
+  // still shows normally since that's just an internal flag for review.
+  const sortedThreads = [...threads]
+    .filter(t => t.status !== 'disembunyikan')
+    .sort((a, b) => {
+      if (!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
 
   return (
     <div className="flex flex-col gap-6">
@@ -151,12 +158,26 @@ export default function CommunityTier2() {
               onClick={() => navigate(`${basePath}/community/${thread.id}`)}
               className="flex flex-col gap-2 rounded-2xl bg-white p-5 text-left shadow-[0_4px_16px_rgba(16,58,107,.06)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(217,119,6,.12)]"
             >
-              {thread.isSupportRequest && (
-                <span className="flex w-fit items-center gap-1 rounded-full bg-stv-green-tint px-2.5 py-0.5 text-[11px] font-bold text-stv-green">
-                  <ShieldCheck className="h-3 w-3" />
-                  Pertanyaan Resmi
-                </span>
-              )}
+              <div className="flex flex-wrap items-center gap-1.5">
+                {thread.pinned && (
+                  <span className="flex w-fit items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-700">
+                    <Pin className="h-3 w-3" />
+                    Disematkan
+                  </span>
+                )}
+                {thread.isAnnouncement && (
+                  <span className="flex w-fit items-center gap-1 rounded-full bg-stv-badge-navy-tint px-2.5 py-0.5 text-[11px] font-bold text-stv-navy">
+                    <Megaphone className="h-3 w-3" />
+                    Pengumuman Resmi
+                  </span>
+                )}
+                {thread.isSupportRequest && (
+                  <span className="flex w-fit items-center gap-1 rounded-full bg-stv-green-tint px-2.5 py-0.5 text-[11px] font-bold text-stv-green">
+                    <ShieldCheck className="h-3 w-3" />
+                    Pertanyaan Resmi
+                  </span>
+                )}
+              </div>
               <p className="font-baloo text-[16px] font-bold leading-[1.3] text-stv-navy">{thread.title}</p>
               <p className="line-clamp-2 text-[14px] leading-[1.5] text-stv-muted">{thread.content}</p>
               <div className="flex flex-wrap items-center gap-3 pt-1 text-[12px] text-stv-muted">

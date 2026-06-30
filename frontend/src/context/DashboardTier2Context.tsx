@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
+import { useToast } from '../components/ToastProvider';
 
 // TODO: replace all useState here with API calls / persistent storage once
 // the backend endpoints for Tier-2 member activity tracking are ready.
@@ -58,11 +59,17 @@ export interface ForumThread {
   replies: ForumReply[];
 }
 
-export interface ForumNotification {
+// Generic shape for all Studiva Digital notifications - shared between the
+// Tier 1 and Tier 2 dashboards since both read from this same context.
+export type AppNotificationKind = 'forum-reply' | 'webinar-registered' | 'webinar-reminder';
+
+export interface AppNotification {
   id: string;
-  threadId: string;
-  threadTitle: string;
-  replyAuthor: string;
+  kind: AppNotificationKind;
+  title: string;
+  message: string;
+  /** Only set for 'forum-reply' - used to build the thread link. */
+  threadId?: string;
   createdAt: string;
   read: boolean;
 }
@@ -194,11 +201,13 @@ interface DashboardTier2ContextValue {
   addThread: (title: string, content: string, author: string, isSupportRequest?: boolean) => string;
   addReply: (threadId: string, content: string, author: string, isSupport?: boolean) => void;
 
-  // Notifications - currently only "someone replied to your thread"
-  notifications: ForumNotification[];
+  // Notifications - forum replies + webinar registration/reminders, shared
+  // by both the Tier 1 and Tier 2 dashboards.
+  notifications: AppNotification[];
   unreadNotificationCount: number;
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
+  notifyWebinarRegistered: (courseTitle: string) => void;
 }
 
 const DashboardTier2Context = createContext<DashboardTier2ContextValue | null>(null);
@@ -216,6 +225,7 @@ function removeActivity(prev: ActivityRecord[], childId: string, itemId: string)
 }
 
 export function DashboardTier2Provider({ children: providerChildren }: { children: React.ReactNode }) {
+  const { showToast } = useToast();
   const [articleActivity, setArticleActivity] = useState<ActivityRecord[]>([]);
   const [courseActivity, setCourseActivity] = useState<ActivityRecord[]>([]);
   const [strategyActivity, setStrategyActivity] = useState<ActivityRecord[]>([]);
@@ -223,7 +233,7 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
   const [bookings, setBookings] = useState<ConsultationBooking[]>([]);
   const [threads, setThreads] = useState<ForumThread[]>(SEED_THREADS);
-  const [notifications, setNotifications] = useState<ForumNotification[]>([]);
+  const [notifications, setNotifications] = useState<AppNotification[]>([]);
 
   // addReply is called from a setTimeout scheduled inside addThread (to
   // simulate someone else replying). By the time it fires, a plain closure
@@ -325,12 +335,15 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
     // only case that matters here since the logged-in parent is always
     // either the thread author or the one submitting this reply themselves.
     if (thread && thread.author !== author) {
+      const title = 'Balasan baru di Community Forum';
+      const message = `${author} membalas diskusi "${thread.title}"`;
       setNotifications(prev => [
-        { id: uid(), threadId, threadTitle: thread.title, replyAuthor: author, createdAt: new Date().toISOString(), read: false },
+        { id: uid(), kind: 'forum-reply', title, message, threadId, createdAt: new Date().toISOString(), read: false },
         ...prev,
       ]);
+      showToast({ kind: 'forum-reply', title, message });
     }
-  }, []);
+  }, [showToast]);
 
   const addThread = useCallback((title: string, content: string, author: string, isSupportRequest?: boolean) => {
     const id = uid();
@@ -356,6 +369,29 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
     return id;
   }, [addReply]);
 
+  const notifyWebinarRegistered = useCallback((courseTitle: string) => {
+    const registeredTitle = 'Pendaftaran webinar berhasil';
+    const registeredMessage = `Anda berhasil mendaftar webinar "${courseTitle}". Lihat detailnya di Courses.`;
+    setNotifications(prev => [
+      { id: uid(), kind: 'webinar-registered', title: registeredTitle, message: registeredMessage, createdAt: new Date().toISOString(), read: false },
+      ...prev,
+    ]);
+    showToast({ kind: 'webinar-registered', title: registeredTitle, message: registeredMessage });
+
+    // TODO: in production the H-1 reminder should be a real scheduled job
+    // based on the webinar's actual date, not a fixed short demo delay.
+    const reminderDelay = 15000 + Math.random() * 5000;
+    setTimeout(() => {
+      const reminderTitle = 'Reminder: Webinar besok!';
+      const reminderMessage = `Webinar "${courseTitle}" akan berlangsung besok (H-1). Jangan sampai terlewat!`;
+      setNotifications(prev => [
+        { id: uid(), kind: 'webinar-reminder', title: reminderTitle, message: reminderMessage, createdAt: new Date().toISOString(), read: false },
+        ...prev,
+      ]);
+      showToast({ kind: 'webinar-reminder', title: reminderTitle, message: reminderMessage });
+    }, reminderDelay);
+  }, [showToast]);
+
   const markNotificationRead = useCallback((id: string) =>
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n)), []);
 
@@ -376,7 +412,7 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
       journalEntries, addJournalEntry, removeJournalEntry,
       bookings, addBooking, updateBookingStatus,
       threads, addThread, addReply,
-      notifications, unreadNotificationCount, markNotificationRead, markAllNotificationsRead,
+      notifications, unreadNotificationCount, markNotificationRead, markAllNotificationsRead, notifyWebinarRegistered,
     }}>
       {providerChildren}
     </DashboardTier2Context.Provider>

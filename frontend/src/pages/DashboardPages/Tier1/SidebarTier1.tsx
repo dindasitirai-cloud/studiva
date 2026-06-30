@@ -58,7 +58,7 @@ export default function SidebarTier1({ open, onClose }: SidebarTier1Props) {
   function handleSubscriptionClick() {
     setSettingsOpen(false);
     onClose();
-    navigate('/subscription-settings');
+    navigate('/dashboard/tier1/subscription');
   }
 
   const sidebar = (

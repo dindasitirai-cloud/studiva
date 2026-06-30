@@ -281,6 +281,57 @@ const ASSESSMENTS: AssessmentTier1[] = [
   },
 ];
 
+// Notifications for things the TEACHER inputs (catatan perkembangan, karya
+// portfolio, hasil asesmen) - derived from the seed data above rather than
+// a separate feed, since there's no live teacher panel yet pushing these in
+// real time. Kehadiran (routine, daily) and IEP (reviewed periodically, not
+// an ongoing input stream) are intentionally left out of this notification
+// feed - see chat history for the reasoning.
+export type TeacherNotificationKind = 'perkembangan' | 'portfolio' | 'asesmen';
+
+export interface TeacherNotificationTier1 {
+  id: string;
+  kind: TeacherNotificationKind;
+  title: string;
+  message: string;
+  to: string;
+  createdAt: string;
+  read: boolean;
+}
+
+const TEACHER_NOTIFICATIONS: TeacherNotificationTier1[] = (() => {
+  const items: Omit<TeacherNotificationTier1, 'read'>[] = [
+    ...DAILY_UPDATES.map(u => ({
+      id: `notif-${u.id}`,
+      kind: 'perkembangan' as const,
+      title: 'Catatan perkembangan baru',
+      message: `${u.teacherName} menambahkan catatan baru: "${u.note.slice(0, 70)}${u.note.length > 70 ? '...' : ''}"`,
+      to: '/dashboard/tier1/perkembangan',
+      createdAt: u.date,
+    })),
+    ...PORTFOLIO.map(p => ({
+      id: `notif-${p.id}`,
+      kind: 'portfolio' as const,
+      title: 'Karya baru diunggah',
+      message: `Guru menambahkan karya baru ke portfolio: "${p.title}".`,
+      to: '/dashboard/tier1/portfolio',
+      createdAt: p.date,
+    })),
+    ...ASSESSMENTS.map(a => ({
+      id: `notif-${a.id}`,
+      kind: 'asesmen' as const,
+      title: 'Hasil asesmen baru',
+      message: `${a.assessor} menambahkan hasil "${a.title}".`,
+      to: `/dashboard/tier1/asesmen/${a.id}`,
+      createdAt: a.date,
+    })),
+  ];
+  items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  // Only the 2 most recent start unread, so the bell feels like "something
+  // new happened" on first load instead of dumping years of history as unread.
+  return items.map((item, i) => ({ ...item, read: i >= 2 }));
+})();
+
 export type IEPGoalTerm = 'jangka-pendek' | 'jangka-panjang';
 export type IEPGoalStatus = 'tercapai' | 'berjalan' | 'perlu-perhatian';
 
@@ -401,6 +452,10 @@ interface DashboardTier1ContextValue {
   iep: IEPDataTier1;
   parentNotes: ParentNoteTier1[];
   addParentNote: (note: { date: string; category: ParentNoteCategory; message: string; urgency: ParentNoteUrgency }) => void;
+  teacherNotifications: TeacherNotificationTier1[];
+  unreadTeacherNotificationCount: number;
+  markTeacherNotificationRead: (id: string) => void;
+  markAllTeacherNotificationsRead: () => void;
 }
 
 const DashboardTier1Context = createContext<DashboardTier1ContextValue | null>(null);
@@ -412,6 +467,15 @@ export function DashboardTier1Provider({ children }: { children: React.ReactNode
   const [assessments] = useState<AssessmentTier1[]>(ASSESSMENTS);
   const [iep] = useState<IEPDataTier1>(IEP_DATA);
   const [parentNotes, setParentNotes] = useState<ParentNoteTier1[]>([]);
+  const [teacherNotifications, setTeacherNotifications] = useState<TeacherNotificationTier1[]>(TEACHER_NOTIFICATIONS);
+
+  const markTeacherNotificationRead = useCallback((id: string) =>
+    setTeacherNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n)), []);
+
+  const markAllTeacherNotificationsRead = useCallback(() =>
+    setTeacherNotifications(prev => prev.map(n => ({ ...n, read: true }))), []);
+
+  const unreadTeacherNotificationCount = teacherNotifications.filter(n => !n.read).length;
 
   const latestUpdate = dailyUpdates[0];
   const todayAttendance = attendanceRecords.find(a => a.date.slice(0, 10) === new Date().toISOString().slice(0, 10));
@@ -444,6 +508,10 @@ export function DashboardTier1Provider({ children }: { children: React.ReactNode
       iep,
       parentNotes,
       addParentNote,
+      teacherNotifications,
+      unreadTeacherNotificationCount,
+      markTeacherNotificationRead,
+      markAllTeacherNotificationsRead,
     }}>
       {children}
     </DashboardTier1Context.Provider>

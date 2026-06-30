@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { DashboardTier2Provider } from './context/DashboardTier2Context';
+import { ToastProvider } from './components/ToastProvider';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PrivateRoute, { AdminRoute, ParentRoute, TeacherRoute } from './components/PrivateRoute';
@@ -44,6 +45,7 @@ import StrategyDetailTier2 from './pages/DashboardPages/Tier2/StrategyDetailTier
 import CommunityTier2 from './pages/DashboardPages/Tier2/CommunityTier2';
 import ThreadDetailTier2 from './pages/DashboardPages/Tier2/ThreadDetailTier2';
 import KonsultasiTier2 from './pages/DashboardPages/Tier2/KonsultasiTier2';
+import SubscriptionTier2 from './pages/DashboardPages/Tier2/SubscriptionTier2';
 import DashboardShellTier1 from './pages/DashboardPages/Tier1/DashboardShellTier1';
 import BerandaTier1 from './pages/DashboardPages/Tier1/BerandaTier1';
 import ProfilAnakTier1 from './pages/DashboardPages/Tier1/ProfilAnakTier1';
@@ -54,6 +56,7 @@ import AsesmenTier1 from './pages/DashboardPages/Tier1/AsesmenTier1';
 import AssessmentDetailTier1 from './pages/DashboardPages/Tier1/AssessmentDetailTier1';
 import IEPTier1 from './pages/DashboardPages/Tier1/IEPTier1';
 import CatatanGuruTier1 from './pages/DashboardPages/Tier1/CatatanGuruTier1';
+import SubscriptionTier1 from './pages/DashboardPages/Tier1/SubscriptionTier1';
 
 const CONSULTATION_UPGRADE_MESSAGE =
   'Anda perlu upgrade ke Tier 1 atau Tier 2 untuk melakukan booking konsultasi. Silakan pilih plan yang sesuai untuk mulai berkonsultasi.';
@@ -81,7 +84,10 @@ export default function App() {
       <BrowserRouter>
         {/* Hoisted here (not inside DashboardShellTier2) so the Tier 1 and
             Tier 2 dashboards share the exact same forum/article/course state
-            instead of each mounting its own independent copy. */}
+            instead of each mounting its own independent copy. ToastProvider
+            wraps it so DashboardTier2Provider can pop up a toast the moment
+            a notification is created, not just add it to the bell list. */}
+        <ToastProvider>
         <DashboardTier2Provider>
         <Layout>
           <Routes>
@@ -230,6 +236,7 @@ export default function App() {
             >
               <Route index element={<BerandaTier2 />} />
               <Route path="profil-anak" element={<ProfilAnakTier2 />} />
+              <Route path="subscription" element={<SubscriptionTier2 />} />
               <Route path="resources" element={<ResourceLibraryTier2 />} />
               <Route path="resources/:id" element={<ArticleDetailTier2 />} />
               <Route path="courses" element={<CoursesTier2 />} />
@@ -260,6 +267,7 @@ export default function App() {
               <Route path="asesmen/:id" element={<AssessmentDetailTier1 />} />
               <Route path="iep" element={<IEPTier1 />} />
               <Route path="catatan-guru" element={<CatatanGuruTier1 />} />
+              <Route path="subscription" element={<SubscriptionTier1 />} />
               {/* Same components as /dashboard/tier2 below, reading from the
                   same hoisted DashboardTier2Provider - one shared forum,
                   article-read state, course enrollments, etc. across both
@@ -309,6 +317,7 @@ export default function App() {
           </Routes>
         </Layout>
         </DashboardTier2Provider>
+        </ToastProvider>
       </BrowserRouter>
     </AuthProvider>
   );

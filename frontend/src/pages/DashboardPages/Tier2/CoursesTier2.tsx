@@ -97,7 +97,7 @@ function CourseCard({ course, isEnrolled, onAction }: { course: Course; isEnroll
 }
 
 function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnrolled: boolean; onClose: () => void }) {
-  const { enrollCourse, unenrollCourse, isCourseEnrolledByChild } = useDashboardTier2();
+  const { enrollCourse, unenrollCourse, isCourseEnrolledByChild, notifyWebinarRegistered } = useDashboardTier2();
   const { singleChild, pickerChildren } = useActivityChild();
   const taggedChildIds = pickerChildren.filter(c => isCourseEnrolledByChild(c.id, course.id)).map(c => c.id);
 
@@ -111,6 +111,16 @@ function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnroll
   const [wasEnrolledAtOpen] = useState(isEnrolled);
   const showWebinarDetail = course.type === 'webinar' && course.status !== 'completed' && wasEnrolledAtOpen;
   const isRegistrationMode = course.type === 'webinar' && course.status !== 'completed' && !wasEnrolledAtOpen;
+
+  // Notify exactly once per registration session - regardless of whether it
+  // came from the single-child auto-enroll below or a ChildPicker tag.
+  const notifiedRef = React.useRef(false);
+  React.useEffect(() => {
+    if (course.type === 'webinar' && isRegistrationMode && isEnrolled && !notifiedRef.current) {
+      notifiedRef.current = true;
+      notifyWebinarRegistered(course.title);
+    }
+  }, [isEnrolled, isRegistrationMode, course.type, course.title, notifyWebinarRegistered]);
 
   // Single child (always true for Tier 1, or a Tier 2 parent with exactly
   // one child profile): enroll immediately, no need to ask.

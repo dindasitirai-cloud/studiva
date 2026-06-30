@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, Bell, MessageSquare } from 'lucide-react';
+import { Menu, Bell, MessageSquare, Video, Clock as ClockIcon } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
-import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
+import { useDashboardTier2, AppNotification } from '../../../context/DashboardTier2Context';
 import SidebarTier2 from './SidebarTier2';
 import { relativeTime } from './relativeTime';
+
+const NOTIF_ICON: Record<AppNotification['kind'], typeof MessageSquare> = {
+  'forum-reply': MessageSquare,
+  'webinar-registered': Video,
+  'webinar-reminder': ClockIcon,
+};
 
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard/tier2': 'Beranda',
@@ -14,6 +20,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/dashboard/tier2/strategies': 'Learning Strategies',
   '/dashboard/tier2/community': 'Community Forum',
   '/dashboard/tier2/konsultasi': 'Konsultasi',
+  '/dashboard/tier2/subscription': 'Subscription',
 };
 
 // Lives inside <DashboardTier2Provider> (rendered as a child below), so it
@@ -25,10 +32,14 @@ function NotificationBell() {
   const { notifications, unreadNotificationCount, markNotificationRead, markAllNotificationsRead } = useDashboardTier2();
   const [open, setOpen] = useState(false);
 
-  function handleClickNotification(threadId: string, notificationId: string) {
-    markNotificationRead(notificationId);
+  function handleClickNotification(n: AppNotification) {
+    markNotificationRead(n.id);
     setOpen(false);
-    navigate(`/dashboard/tier2/community/${threadId}`);
+    if (n.kind === 'forum-reply' && n.threadId) {
+      navigate(`/dashboard/tier2/community/${n.threadId}`);
+    } else {
+      navigate('/dashboard/tier2/courses');
+    }
   }
 
   return (
@@ -66,31 +77,33 @@ function NotificationBell() {
 
             {notifications.length === 0 ? (
               <p className="px-1 py-6 text-center text-[13px] text-stv-muted">
-                Belum ada notifikasi. Anda akan diberi tahu di sini saat ada yang membalas diskusi Anda.
+                Belum ada notifikasi. Anda akan diberi tahu di sini saat ada balasan forum atau update webinar.
               </p>
             ) : (
               <div className="flex max-h-[360px] flex-col gap-1 overflow-y-auto">
-                {notifications.map(n => (
-                  <button
-                    key={n.id}
-                    type="button"
-                    onClick={() => handleClickNotification(n.threadId, n.id)}
-                    className={`flex items-start gap-2.5 rounded-xl p-2.5 text-left transition hover:bg-amber-50 ${
-                      n.read ? '' : 'bg-amber-50/70'
-                    }`}
-                  >
-                    <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600">
-                      <MessageSquare className="h-3.5 w-3.5" />
-                    </span>
-                    <span className="flex-1">
-                      <span className="block text-[13px] leading-[1.4] text-stv-navy">
-                        <strong>{n.replyAuthor}</strong> membalas diskusi &quot;{n.threadTitle}&quot;
+                {notifications.map(n => {
+                  const Icon = NOTIF_ICON[n.kind];
+                  return (
+                    <button
+                      key={n.id}
+                      type="button"
+                      onClick={() => handleClickNotification(n)}
+                      className={`flex items-start gap-2.5 rounded-xl p-2.5 text-left transition hover:bg-amber-50 ${
+                        n.read ? '' : 'bg-amber-50/70'
+                      }`}
+                    >
+                      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+                        <Icon className="h-3.5 w-3.5" />
                       </span>
-                      <span className="mt-0.5 block text-[11px] text-stv-muted">{relativeTime(n.createdAt)}</span>
-                    </span>
-                    {!n.read && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-amber-500" />}
-                  </button>
-                ))}
+                      <span className="flex-1">
+                        <span className="block text-[13px] font-semibold leading-[1.4] text-stv-navy">{n.title}</span>
+                        <span className="mt-0.5 block text-[12px] leading-[1.4] text-stv-body">{n.message}</span>
+                        <span className="mt-0.5 block text-[11px] text-stv-muted">{relativeTime(n.createdAt)}</span>
+                      </span>
+                      {!n.read && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-amber-500" />}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>

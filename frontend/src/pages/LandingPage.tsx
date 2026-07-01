@@ -553,13 +553,14 @@ export default function LandingPage() {
             Bergabunglah dengan ribuan parents yang telah melihat perubahan positif dalam perkembangan anak mereka.
           </p>
           <div className="flex flex-wrap justify-center gap-[18px]">
-            <Link
-              to="/signup"
-              state={{ presetTier: 'tier1' }}
+            <a
+              href="https://wa.me/6281211470407?text=Halo%20Studiva%2C%20saya%20ingin%20mendaftarkan%20anak%20saya%20ke%20Sekolah%20Studiva"
+              target="_blank"
+              rel="noopener noreferrer"
               className="rounded-full bg-stv-yellow px-10 py-[18px] font-baloo text-[19px] font-bold text-stv-navy no-underline shadow-[0_14px_30px_rgba(251,208,10,.4)] transition hover:-translate-y-0.5 hover:bg-stv-yellow-hover"
             >
-              Daftar Tier 1
-            </Link>
+              Daftar Sekolah Studiva
+            </a>
             <Link
               to="/signup"
               state={{ presetTier: 'tier2' }}

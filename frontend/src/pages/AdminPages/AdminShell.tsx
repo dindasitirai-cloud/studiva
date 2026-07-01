@@ -17,6 +17,8 @@ const PAGE_TITLES: Record<string, string> = {
   '/admin/members': 'Anggota & Langganan',
   '/admin/payments': 'Pembayaran',
   '/admin/settings': 'Pengaturan',
+  '/admin/spp-billing': 'Tagihan SPP — Sekolah Studiva',
+  '/admin/sekolah-akun': 'Akun Orang Tua — Sekolah Studiva',
 };
 
 const ACTION_ICON: Record<AdminActionKind, typeof Bell> = {

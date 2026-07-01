@@ -12,6 +12,8 @@ import {
   Settings,
   LogOut,
   X,
+  Receipt,
+  UserPlus,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { ADMIN_COLORS, AdminModuleKey } from './adminFeatureColors';
@@ -35,6 +37,11 @@ const managementNav: { to: string; label: string; icon: typeof UserCog; key: Adm
   { to: '/admin/members', label: 'Anggota & Langganan', icon: UserCog, key: 'members' },
   { to: '/admin/payments', label: 'Pembayaran', icon: CreditCard, key: 'payments' },
   { to: '/admin/settings', label: 'Pengaturan', icon: Settings, key: 'settings' },
+];
+
+const sekolahNav: { to: string; label: string; icon: typeof UserCog; key: AdminModuleKey }[] = [
+  { to: '/admin/spp-billing', label: 'Tagihan SPP', icon: Receipt, key: 'spp-billing' },
+  { to: '/admin/sekolah-akun', label: 'Akun Orang Tua', icon: UserPlus, key: 'sekolah-akun' },
 ];
 
 function NavSection({ title, items, onClose }: {
@@ -99,6 +106,7 @@ export default function SidebarAdmin({ open, onClose }: SidebarAdminProps) {
   const visibleContentNav = contentNav.filter(item => canAccessModule(currentAdminRole, item.key));
   const visibleCommunityNav = communityNav.filter(item => canAccessModule(currentAdminRole, item.key));
   const visibleManagementNav = managementNav.filter(item => canAccessModule(currentAdminRole, item.key));
+  const visibleSekolahNav = sekolahNav.filter(item => canAccessModule(currentAdminRole, item.key));
 
   const sidebar = (
     <div className="flex h-full w-64 flex-col bg-white font-nunito-sans shadow-[2px_0_16px_rgba(0,0,0,.06)]">
@@ -140,6 +148,7 @@ export default function SidebarAdmin({ open, onClose }: SidebarAdminProps) {
         {visibleContentNav.length > 0 && <NavSection title="Konten" items={visibleContentNav} onClose={onClose} />}
         {visibleCommunityNav.length > 0 && <NavSection title="Komunitas" items={visibleCommunityNav} onClose={onClose} />}
         {visibleManagementNav.length > 0 && <NavSection title="Manajemen" items={visibleManagementNav} onClose={onClose} />}
+        {visibleSekolahNav.length > 0 && <NavSection title="Sekolah Studiva" items={visibleSekolahNav} onClose={onClose} />}
       </nav>
 
       {/* Bottom: user info + logout */}

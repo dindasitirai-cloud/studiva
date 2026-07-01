@@ -9,7 +9,7 @@ import { AdminRole } from './AdminContext';
 // upkeep. Neither gets Beranda/Anggota/Pembayaran/Pengaturan, since those
 // only make sense at the whole-platform level.
 export const ROLE_ACCESS: Record<AdminRole, AdminModuleKey[]> = {
-  'Super Admin': ['beranda', 'resources', 'courses', 'strategies', 'forum', 'konsultasi', 'members', 'payments', 'settings'],
+  'Super Admin': ['beranda', 'resources', 'courses', 'strategies', 'forum', 'konsultasi', 'members', 'payments', 'settings', 'spp-billing', 'sekolah-akun'],
   'Pengelola Konten': ['resources', 'courses', 'strategies'],
   Psikolog: ['forum', 'konsultasi'],
   'Staf Operasional': ['forum', 'konsultasi'],
@@ -34,6 +34,8 @@ export const MODULE_PATH: Record<AdminModuleKey, string> = {
   members: '/admin/members',
   payments: '/admin/payments',
   settings: '/admin/settings',
+  'spp-billing': '/admin/spp-billing',
+  'sekolah-akun': '/admin/sekolah-akun',
 };
 
 export const PATH_MODULE: Record<string, AdminModuleKey> = {
@@ -46,4 +48,6 @@ export const PATH_MODULE: Record<string, AdminModuleKey> = {
   '/admin/members': 'members',
   '/admin/payments': 'payments',
   '/admin/settings': 'settings',
+  '/admin/spp-billing': 'spp-billing',
+  '/admin/sekolah-akun': 'sekolah-akun',
 };

@@ -16,6 +16,7 @@ import {
   Settings,
   LogOut,
   CreditCard,
+  Receipt,
   X,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
@@ -30,6 +31,7 @@ const navItems: { to: string; label: string; icon: typeof Home; key: FeatureKey;
   { to: '/dashboard/tier1/asesmen', label: 'Asesmen', icon: ClipboardList, key: 'asesmen' },
   { to: '/dashboard/tier1/iep', label: 'IEP', icon: FileText, key: 'iep' },
   { to: '/dashboard/tier1/catatan-guru', label: 'Catatan untuk Guru', icon: MessageSquarePlus, key: 'catatan-guru' },
+  { to: '/dashboard/tier1/pembayaran-spp', label: 'Pembayaran SPP', icon: Receipt, key: 'pembayaran-spp' },
 ];
 
 const digitalNavItems = [

@@ -57,6 +57,7 @@ import AssessmentDetailTier1 from './pages/DashboardPages/Tier1/AssessmentDetail
 import IEPTier1 from './pages/DashboardPages/Tier1/IEPTier1';
 import CatatanGuruTier1 from './pages/DashboardPages/Tier1/CatatanGuruTier1';
 import SubscriptionTier1 from './pages/DashboardPages/Tier1/SubscriptionTier1';
+import PembayaranSPPTier1 from './pages/DashboardPages/Tier1/PembayaranSPPTier1';
 import GuruShell from './pages/GuruPages/GuruShell';
 import BerandaGuru from './pages/GuruPages/BerandaGuru';
 import KelasSayaGuru from './pages/GuruPages/KelasSayaGuru';
@@ -77,6 +78,8 @@ import KonsultasiAdmin from './pages/AdminPages/KonsultasiAdmin';
 import MembersAdmin from './pages/AdminPages/MembersAdmin';
 import PaymentsAdmin from './pages/AdminPages/PaymentsAdmin';
 import SettingsAdmin from './pages/AdminPages/SettingsAdmin';
+import SppAdmin from './pages/AdminPages/SppAdmin';
+import SekolahAkunAdmin from './pages/AdminPages/SekolahAkunAdmin';
 
 const CONSULTATION_UPGRADE_MESSAGE =
   'Anda perlu upgrade ke Tier 1 atau Tier 2 untuk melakukan booking konsultasi. Silakan pilih plan yang sesuai untuk mulai berkonsultasi.';
@@ -299,6 +302,7 @@ export default function App() {
               <Route path="iep" element={<IEPTier1 />} />
               <Route path="catatan-guru" element={<CatatanGuruTier1 />} />
               <Route path="subscription" element={<SubscriptionTier1 />} />
+              <Route path="pembayaran-spp" element={<PembayaranSPPTier1 />} />
               {/* Same components as /dashboard/tier2 below, reading from the
                   same hoisted DashboardTier2Provider - one shared forum,
                   article-read state, course enrollments, etc. across both
@@ -340,6 +344,8 @@ export default function App() {
               <Route path="members" element={<MembersAdmin />} />
               <Route path="payments" element={<PaymentsAdmin />} />
               <Route path="settings" element={<SettingsAdmin />} />
+              <Route path="spp-billing" element={<SppAdmin />} />
+              <Route path="sekolah-akun" element={<SekolahAkunAdmin />} />
             </Route>
 
             <Route

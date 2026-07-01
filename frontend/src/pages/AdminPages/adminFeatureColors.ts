@@ -11,7 +11,9 @@ export type AdminModuleKey =
   | 'konsultasi'
   | 'members'
   | 'payments'
-  | 'settings';
+  | 'settings'
+  | 'spp-billing'
+  | 'sekolah-akun';
 
 interface ModuleColor {
   text: string;
@@ -29,4 +31,6 @@ export const ADMIN_COLORS: Record<AdminModuleKey, ModuleColor> = {
   members: { text: 'text-pink-600', bg: 'bg-pink-50', bgSolid: 'bg-pink-500' },
   payments: { text: 'text-indigo-600', bg: 'bg-indigo-50', bgSolid: 'bg-indigo-500' },
   settings: { text: 'text-slate-600', bg: 'bg-slate-100', bgSolid: 'bg-slate-500' },
+  'spp-billing': { text: 'text-emerald-600', bg: 'bg-emerald-50', bgSolid: 'bg-emerald-500' },
+  'sekolah-akun': { text: 'text-sky-600', bg: 'bg-sky-50', bgSolid: 'bg-sky-500' },
 };

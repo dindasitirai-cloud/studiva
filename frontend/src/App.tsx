@@ -57,6 +57,16 @@ import AssessmentDetailTier1 from './pages/DashboardPages/Tier1/AssessmentDetail
 import IEPTier1 from './pages/DashboardPages/Tier1/IEPTier1';
 import CatatanGuruTier1 from './pages/DashboardPages/Tier1/CatatanGuruTier1';
 import SubscriptionTier1 from './pages/DashboardPages/Tier1/SubscriptionTier1';
+import GuruShell from './pages/GuruPages/GuruShell';
+import BerandaGuru from './pages/GuruPages/BerandaGuru';
+import KelasSayaGuru from './pages/GuruPages/KelasSayaGuru';
+import PerkembanganGuru from './pages/GuruPages/PerkembanganGuru';
+import KehadiranGuru from './pages/GuruPages/KehadiranGuru';
+import PortfolioGuru from './pages/GuruPages/PortfolioGuru';
+import AsesmenGuru from './pages/GuruPages/AsesmenGuru';
+import IEPGuru from './pages/GuruPages/IEPGuru';
+import CatatanOrangTuaGuru from './pages/GuruPages/CatatanOrangTuaGuru';
+import StudentProfileGuru from './pages/GuruPages/StudentProfileGuru';
 import AdminShell from './pages/AdminPages/AdminShell';
 import BerandaAdmin from './pages/AdminPages/BerandaAdmin';
 import ResourceLibraryAdmin from './pages/AdminPages/ResourceLibraryAdmin';
@@ -88,10 +98,11 @@ function Layout({ children }: { children: React.ReactNode }) {
   const isMemberDashboard =
     location.pathname.startsWith('/dashboard/tier2') || location.pathname.startsWith('/dashboard/tier1');
   const isAdminShell = ADMIN_SHELL_PATHS.some(p => location.pathname === p || location.pathname.startsWith(`${p}/`));
+  const isGuruShell = location.pathname === '/guru' || location.pathname.startsWith('/guru/');
 
   return (
     <div className="flex min-h-screen flex-col">
-      {!isMemberDashboard && !isAdminShell && <Navbar />}
+      {!isMemberDashboard && !isAdminShell && !isGuruShell && <Navbar />}
       <main className="flex-1">{children}</main>
       <Footer />
     </div>
@@ -351,6 +362,31 @@ export default function App() {
                 </TeacherRoute>
               }
             />
+
+            {/* Guru dashboard — input area for teachers managing student data.
+                What teachers write here (daily updates, attendance, portfolio,
+                assessments, IEP) flows as read-only data to the Tier 1 parent
+                dashboard. Parent "Catatan untuk Guru" notes are readable here.
+                TODO: role-guard will expand once backend auth includes a more
+                granular teacher/staff role model. */}
+            <Route
+              path="/guru"
+              element={
+                <TeacherRoute>
+                  <GuruShell />
+                </TeacherRoute>
+              }
+            >
+              <Route index element={<BerandaGuru />} />
+              <Route path="kelas" element={<KelasSayaGuru />} />
+              <Route path="kelas/:id" element={<StudentProfileGuru />} />
+              <Route path="perkembangan" element={<PerkembanganGuru />} />
+              <Route path="kehadiran" element={<KehadiranGuru />} />
+              <Route path="portfolio" element={<PortfolioGuru />} />
+              <Route path="asesmen" element={<AsesmenGuru />} />
+              <Route path="iep" element={<IEPGuru />} />
+              <Route path="catatan-orang-tua" element={<CatatanOrangTuaGuru />} />
+            </Route>
             <Route
               path="/dashboard/child/:id"
               element={

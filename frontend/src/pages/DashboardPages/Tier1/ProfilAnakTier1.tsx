@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  HandHeart, ArrowRight, TrendingUp, CalendarCheck, FolderOpen, FileText, Sparkles,
+  HandHeart, ArrowRight, TrendingUp, CalendarCheck, FolderOpen, FileText, Sparkles, GraduationCap,
 } from 'lucide-react';
 import { useDashboardTier1, DiagnosisTag } from './DashboardTier1Context';
 import { FEATURE_COLORS } from './featureColors';
@@ -36,8 +36,14 @@ export default function ProfilAnakTier1() {
         </div>
         <div>
           <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">{child.name}</h2>
-          <p className="mt-0.5 text-[14px] text-stv-body">{child.age} tahun &middot; {child.kelas}</p>
-          <p className="mt-1 text-[13px] text-stv-muted">Wali Kelas: <strong className="text-stv-navy">{child.waliKelas}</strong></p>
+          <p className="mt-0.5 text-[14px] text-stv-body">{child.age} tahun</p>
+          <div className="mt-1.5 flex flex-wrap items-center gap-2">
+            <span className="flex items-center gap-1.5 rounded-full bg-stv-sky-tint px-3 py-1 text-[12px] font-bold text-stv-sky-stroke">
+              <GraduationCap className="h-3.5 w-3.5" />
+              {child.kelas}
+            </span>
+          </div>
+          <p className="mt-1.5 text-[13px] text-stv-muted">Wali Kelas: <strong className="text-stv-navy">{child.waliKelas}</strong></p>
         </div>
       </div>
 

@@ -29,7 +29,7 @@ export default function Navbar() {
 
   const dashboardPath =
     user?.role === 'teacher'
-      ? '/dashboard/teacher'
+      ? '/guru'
       : user?.role === 'parent'
       ? tier === 'tier2'
         ? '/dashboard/tier2'

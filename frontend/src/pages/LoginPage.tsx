@@ -35,7 +35,7 @@ export default function LoginPage() {
     }
 
     if (user.role === 'teacher') {
-      navigate('/dashboard/teacher');
+      navigate('/guru');
       setSubmitting(false);
       return;
     }

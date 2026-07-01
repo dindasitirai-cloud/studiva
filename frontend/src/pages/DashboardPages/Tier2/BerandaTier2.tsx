@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Library, GraduationCap, Lightbulb, CalendarCheck, Baby, Plus, ArrowRight,
-  BookOpen, Star, Clock, Sparkles, TrendingUp, Zap,
+  BookOpen, Star, Clock, Sparkles, TrendingUp, Zap, Eye, MessageCircle, Video,
 } from 'lucide-react';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
 
@@ -18,7 +18,7 @@ const MOTIVATIONS = [
 ];
 
 // ---------------------------------------------------------------------------
-// Shortcut cards (more vivid colors)
+// Shortcut cards
 // ---------------------------------------------------------------------------
 const SHORTCUTS = [
   {
@@ -27,8 +27,6 @@ const SHORTCUTS = [
     label: 'Resource Library',
     desc: 'Rangkuman materi pendidikan anak',
     gradient: 'from-amber-400 to-orange-500',
-    iconBg: 'bg-white/20',
-    emoji: '📚',
   },
   {
     to: '/dashboard/tier2/courses',
@@ -36,8 +34,6 @@ const SHORTCUTS = [
     label: 'Courses & Webinar',
     desc: 'Kelas live & video rekaman psikolog',
     gradient: 'from-sky-400 to-blue-600',
-    iconBg: 'bg-white/20',
-    emoji: '🎓',
   },
   {
     to: '/dashboard/tier2/strategies',
@@ -45,8 +41,6 @@ const SHORTCUTS = [
     label: 'Learning Strategies',
     desc: 'Tips & aktivitas edukatif di rumah',
     gradient: 'from-emerald-400 to-teal-600',
-    iconBg: 'bg-white/20',
-    emoji: '💡',
   },
   {
     to: '/dashboard/tier2/konsultasi',
@@ -54,44 +48,30 @@ const SHORTCUTS = [
     label: 'Konsultasi',
     desc: 'Booking sesi dengan psikolog',
     gradient: 'from-violet-500 to-purple-600',
-    iconBg: 'bg-white/20',
-    emoji: '🧠',
   },
 ];
 
 // ---------------------------------------------------------------------------
 // Recommendations
 // ---------------------------------------------------------------------------
-const RECOMMENDATIONS = [
+const RECOMMENDATIONS: {
+  id: string; type: 'article' | 'webinar'; title: string; category: string;
+  readTime: string; to: string; accent: string; icon: typeof Eye;
+}[] = [
   {
-    id: 'rec-1',
-    type: 'article' as const,
-    title: 'Mengenal Gaya Belajar Visual pada Anak',
-    category: 'Gaya Belajar',
-    readTime: '5 menit',
-    to: '/dashboard/tier2/resources',
-    accent: 'from-amber-400 to-orange-400',
-    emoji: '👁️',
+    id: 'rec-1', type: 'article', title: 'Mengenal Gaya Belajar Visual pada Anak',
+    category: 'Gaya Belajar', readTime: '5 menit', to: '/dashboard/tier2/resources',
+    accent: 'from-amber-400 to-orange-400', icon: Eye,
   },
   {
-    id: 'rec-2',
-    type: 'article' as const,
-    title: 'Strategi Komunikasi Positif dengan Anak Sensorik',
-    category: 'Komunikasi',
-    readTime: '7 menit',
-    to: '/dashboard/tier2/resources',
-    accent: 'from-emerald-400 to-teal-500',
-    emoji: '💬',
+    id: 'rec-2', type: 'article', title: 'Strategi Komunikasi Positif dengan Anak Sensorik',
+    category: 'Komunikasi', readTime: '7 menit', to: '/dashboard/tier2/resources',
+    accent: 'from-emerald-400 to-teal-500', icon: MessageCircle,
   },
   {
-    id: 'rec-3',
-    type: 'webinar' as const,
-    title: 'Live Webinar: Mendampingi Anak dengan ADHD',
-    category: 'Webinar',
-    readTime: '60 menit',
-    to: '/dashboard/tier2/courses',
-    accent: 'from-sky-400 to-blue-500',
-    emoji: '🎤',
+    id: 'rec-3', type: 'webinar', title: 'Live Webinar: Mendampingi Anak dengan ADHD',
+    category: 'Webinar', readTime: '60 menit', to: '/dashboard/tier2/courses',
+    accent: 'from-sky-400 to-blue-500', icon: Video,
   },
 ];
 
@@ -148,7 +128,7 @@ export default function BerandaTier2() {
               <span className="text-[12px] font-bold text-amber-200">Studiva Digital</span>
             </div>
             <h2 className="font-baloo text-[24px] font-extrabold text-white sm:text-[28px]">
-              Selamat datang kembali! 👋
+              Selamat datang kembali!
             </h2>
             <p
               key={motivIdx}
@@ -232,20 +212,21 @@ export default function BerandaTier2() {
           Akses Cepat
         </h3>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {SHORTCUTS.map(({ to, icon: Icon, label, desc, gradient, emoji }) => (
+          {SHORTCUTS.map(({ to, icon: Icon, label, desc, gradient }) => (
             <Link
               key={to}
               to={to}
               className={`group relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-br ${gradient} p-5 no-underline shadow-[0_8px_24px_rgba(0,0,0,.12)] transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(0,0,0,.18)]`}
             >
-              {/* background decoration */}
               <div className="pointer-events-none absolute -right-4 -top-4 h-16 w-16 rounded-full bg-white/10" />
-              <div className="text-[28px] leading-none">{emoji}</div>
-              <div className="mt-auto pt-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,.3)]">
+                <Icon className="h-5 w-5 text-white" strokeWidth={2} />
+              </div>
+              <div className="mt-auto pt-4">
                 <div className="font-baloo text-[14px] font-bold text-white">{label}</div>
                 <div className="mt-0.5 text-[11px] leading-[1.4] text-white/75">{desc}</div>
               </div>
-              <ArrowRight className="absolute bottom-4 right-4 h-4 w-4 text-white/50 transition group-hover:text-white/90 group-hover:translate-x-0.5" />
+              <ArrowRight className="absolute bottom-4 right-4 h-4 w-4 text-white/50 transition group-hover:translate-x-0.5 group-hover:text-white/90" />
             </Link>
           ))}
         </div>
@@ -275,30 +256,35 @@ export default function BerandaTier2() {
           Rekomendasi untuk Anda
         </h3>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {RECOMMENDATIONS.map(rec => (
-            <Link
-              key={rec.id}
-              to={rec.to}
-              className="group flex flex-col gap-3 overflow-hidden rounded-2xl bg-white no-underline shadow-[0_4px_16px_rgba(16,58,107,.06)] transition hover:-translate-y-1 hover:shadow-[0_12px_28px_rgba(16,58,107,.12)]"
-            >
-              <div className={`h-2 w-full bg-gradient-to-r ${rec.accent}`} />
-              <div className="flex flex-col gap-2 px-5 pb-5">
-                <div className="flex items-center gap-2">
-                  <span className="text-[20px]">{rec.emoji}</span>
-                  {rec.type === 'webinar' ? (
-                    <span className="rounded-full bg-sky-100 px-2.5 py-0.5 text-[11px] font-bold text-sky-700">Webinar</span>
-                  ) : (
-                    <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-700">{rec.category}</span>
-                  )}
+          {RECOMMENDATIONS.map(rec => {
+            const RecIcon = rec.icon;
+            return (
+              <Link
+                key={rec.id}
+                to={rec.to}
+                className="group flex flex-col gap-3 overflow-hidden rounded-2xl bg-white no-underline shadow-[0_4px_16px_rgba(16,58,107,.06)] transition hover:-translate-y-1 hover:shadow-[0_12px_28px_rgba(16,58,107,.12)]"
+              >
+                <div className={`h-1.5 w-full bg-gradient-to-r ${rec.accent}`} />
+                <div className="flex flex-col gap-2 px-5 pb-5">
+                  <div className="flex items-center gap-2">
+                    <div className={`flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br ${rec.accent}`}>
+                      <RecIcon className="h-3.5 w-3.5 text-white" strokeWidth={2} />
+                    </div>
+                    {rec.type === 'webinar' ? (
+                      <span className="rounded-full bg-sky-100 px-2.5 py-0.5 text-[11px] font-bold text-sky-700">Webinar</span>
+                    ) : (
+                      <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-700">{rec.category}</span>
+                    )}
+                  </div>
+                  <p className="flex-1 text-[14px] font-bold leading-[1.4] text-stv-navy">{rec.title}</p>
+                  <div className="flex items-center gap-1.5 text-[12px] text-stv-muted">
+                    <Clock className="h-3.5 w-3.5" />
+                    {rec.readTime}
+                  </div>
                 </div>
-                <p className="flex-1 text-[14px] font-bold leading-[1.4] text-stv-navy">{rec.title}</p>
-                <div className="flex items-center gap-1.5 text-[12px] text-stv-muted">
-                  <Clock className="h-3.5 w-3.5" />
-                  {rec.readTime}
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </div>
 

@@ -48,7 +48,7 @@ const STATUS_STYLE: Record<Course['status'], string> = {
 function CourseCard({ course, isEnrolled, onAction }: { course: Course; isEnrolled: boolean; onAction: () => void }) {
   const asVideo = isVideoLike(course);
   const Icon = asVideo ? Video : Radio;
-  const actionLabel = asVideo ? 'Tonton' : isEnrolled ? 'Detail Webinar' : 'Daftar Webinar';
+  const actionLabel = asVideo ? 'Tonton' : isEnrolled ? 'Detail Webinar' : 'Lihat Detail';
 
   return (
     <div
@@ -106,39 +106,34 @@ function CourseCard({ course, isEnrolled, onAction }: { course: Course; isEnroll
   );
 }
 
-function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnrolled: boolean; onClose: () => void }) {
+function CourseModal({ course, isEnrolled: initialEnrolled, onClose }: { course: Course; isEnrolled: boolean; onClose: () => void }) {
   const { enrollCourse, unenrollCourse, isCourseEnrolledByChild, notifyWebinarRegistered } = useDashboardTier2();
   const { singleChild, pickerChildren } = useActivityChild();
+
+  // Track enrollment state locally so the button updates in real time
+  // without closing and reopening the modal.
+  const [enrolled, setEnrolled] = useState(initialEnrolled);
   const taggedChildIds = pickerChildren.filter(c => isCourseEnrolledByChild(c.id, course.id)).map(c => c.id);
 
-  // Frozen at the moment this modal opens, on purpose: registering for a
-  // webinar and seeing its join-link detail are two separate steps. Without
-  // freezing this, auto-enrolling a single child (below) would flip this
-  // modal into "detail" mode instantly and reveal the link in the same
-  // click - the parent never actually gets a distinct "you're registered"
-  // moment. Closing and reopening via the card's "Detail Webinar" button is
-  // what unlocks the detail view, matching a real registration flow.
-  const [wasEnrolledAtOpen] = useState(isEnrolled);
-  const showWebinarDetail = course.type === 'webinar' && course.status !== 'completed' && wasEnrolledAtOpen;
-  const isRegistrationMode = course.type === 'webinar' && course.status !== 'completed' && !wasEnrolledAtOpen;
   const isCompleted = course.status === 'completed';
+  const isUpcomingWebinar = course.type === 'webinar' && !isCompleted;
+  const isVideo = isVideoLike(course);
 
-  // Notify exactly once per registration session.
   const notifiedRef = React.useRef(false);
-  React.useEffect(() => {
-    if (course.type === 'webinar' && isRegistrationMode && isEnrolled && !notifiedRef.current) {
+
+  function handleEnroll() {
+    if (singleChild) {
+      enrollCourse(singleChild.id, course.id);
+    } else {
+      // Multi-child: enroll all existing tagged ones or just mark as enrolled
+      // via the ChildPicker below. Mark enrolled so button changes.
+    }
+    setEnrolled(true);
+    if (!notifiedRef.current) {
       notifiedRef.current = true;
       notifyWebinarRegistered(course.title);
     }
-  }, [isEnrolled, isRegistrationMode, course.type, course.title, notifyWebinarRegistered]);
-
-  // Single child: enroll immediately, no need to ask.
-  React.useEffect(() => {
-    if (singleChild && !isCourseEnrolledByChild(singleChild.id, course.id)) {
-      enrollCourse(singleChild.id, course.id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-stv-navy/30 px-4 py-8">
@@ -151,7 +146,7 @@ function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnroll
           <span className={`w-fit rounded-full bg-white/70 px-2.5 py-0.5 text-[11px] font-bold ${THEME_ICON_COLOR[course.colorTheme]}`}>
             {course.type === 'webinar' ? (isCompleted ? 'Rekaman Webinar' : 'Live Webinar') : 'Video Kelas'}
           </span>
-          <h2 className="font-baloo text-[19px] font-extrabold leading-[1.25] text-stv-navy pr-8">{course.title}</h2>
+          <h2 className="pr-8 font-baloo text-[19px] font-extrabold leading-[1.25] text-stv-navy">{course.title}</h2>
           <p className="flex items-center gap-1.5 text-[13px] font-semibold text-stv-navy/80">
             <User className="h-3.5 w-3.5 shrink-0" />
             {course.psychologist}
@@ -159,7 +154,7 @@ function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnroll
         </div>
 
         <div className="flex flex-col gap-4 p-6">
-          {/* Description */}
+          {/* Description + meta */}
           <div>
             <h3 className="mb-1.5 text-[13px] font-bold text-stv-navy">Tentang Sesi Ini</h3>
             <p className="text-[14px] leading-[1.65] text-stv-body">{course.description}</p>
@@ -184,19 +179,14 @@ function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnroll
             </div>
           )}
 
-          {/* Separator */}
           <div className="border-t border-stv-border" />
 
-          {/* Completed webinar: recording + attachments */}
+          {/* ── Completed webinar: recording + attachments ── */}
           {isCompleted && (
             <div className="flex flex-col gap-3">
               {course.recordingUrl ? (
-                <a
-                  href={course.recordingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 rounded-full bg-amber-500 px-4 py-2.5 text-[14px] font-bold text-white no-underline transition hover:bg-amber-600"
-                >
+                <a href={course.recordingUrl} target="_blank" rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 rounded-full bg-amber-500 px-4 py-2.5 text-[14px] font-bold text-white no-underline transition hover:bg-amber-600">
                   <PlayCircle className="h-4 w-4" />
                   Tonton Video Rekaman
                 </a>
@@ -205,7 +195,6 @@ function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnroll
                   Video rekaman sedang diproses. Silakan cek kembali nanti.
                 </p>
               )}
-
               {course.attachments && course.attachments.length > 0 && (
                 <div>
                   <h3 className="mb-2 flex items-center gap-1.5 text-[13px] font-bold text-stv-navy">
@@ -214,13 +203,8 @@ function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnroll
                   </h3>
                   <div className="flex flex-col gap-1.5">
                     {course.attachments.map((att, i) => (
-                      <a
-                        key={i}
-                        href={att.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2.5 rounded-xl bg-amber-50 px-3.5 py-2.5 no-underline transition hover:bg-amber-100"
-                      >
+                      <a key={i} href={att.url} target="_blank" rel="noopener noreferrer"
+                        className="flex items-center gap-2.5 rounded-xl bg-amber-50 px-3.5 py-2.5 no-underline transition hover:bg-amber-100">
                         <Download className="h-4 w-4 shrink-0 text-amber-600" />
                         <span className="flex-1 text-[13px] font-semibold text-stv-navy">{att.name}</span>
                         {att.size && <span className="text-[11px] text-stv-muted">{att.size}</span>}
@@ -232,70 +216,100 @@ function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnroll
             </div>
           )}
 
-          {/* Registration confirmation */}
-          {isRegistrationMode && isEnrolled && (
-            <div className="flex items-center gap-2 rounded-xl bg-stv-green-tint px-4 py-3 text-[13px] font-semibold text-stv-green">
-              <CircleCheck className="h-4 w-4 shrink-0" />
-              Pendaftaran berhasil! Tutup ini, lalu buka &quot;Detail Webinar&quot; pada kartu untuk melihat link.
-            </div>
-          )}
+          {/* ── Upcoming webinar: detail for enrolled parents ── */}
+          {isUpcomingWebinar && enrolled && (
+            <>
+              <div className="flex flex-col gap-2.5 rounded-xl bg-amber-50 p-4">
+                <div className="flex items-center gap-2 text-[13px] text-stv-navy">
+                  <CalendarDays className="h-4 w-4 shrink-0 text-amber-600" />
+                  <span className="font-semibold">{course.date}</span>
+                </div>
+                <div className="flex items-center gap-2 text-[13px] text-stv-navy">
+                  <Clock className="h-4 w-4 shrink-0 text-amber-600" />
+                  <span className="font-semibold">{course.duration} menit</span>
+                </div>
+                {course.webinarLink && (
+                  <a href={course.webinarLink} target="_blank" rel="noopener noreferrer"
+                    className="mt-1 flex items-center justify-center gap-1.5 rounded-full bg-amber-500 px-4 py-2 text-[13px] font-bold text-white no-underline transition hover:bg-amber-600">
+                    <Link2 className="h-3.5 w-3.5" />
+                    Gabung Live Webinar
+                  </a>
+                )}
+                <p className="text-[11px] text-stv-muted">Tautan aktif saat jadwal webinar dimulai.</p>
+              </div>
 
-          {/* Webinar detail: date/time/link */}
-          {showWebinarDetail && (
-            <div className="flex flex-col gap-2.5 rounded-xl bg-amber-50 p-4">
-              <div className="flex items-center gap-2 text-[13px] text-stv-navy">
-                <CalendarDays className="h-4 w-4 shrink-0 text-amber-600" />
-                <span className="font-semibold">{course.date}</span>
-              </div>
-              <div className="flex items-center gap-2 text-[13px] text-stv-navy">
-                <Clock className="h-4 w-4 shrink-0 text-amber-600" />
-                <span className="font-semibold">{course.duration} menit</span>
-              </div>
-              {course.webinarLink && (
-                <a
-                  href={course.webinarLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-1 flex items-center justify-center gap-1.5 rounded-full bg-amber-500 px-4 py-2 text-[13px] font-bold text-white no-underline transition hover:bg-amber-600"
-                >
-                  <Link2 className="h-3.5 w-3.5" />
-                  Gabung Live Webinar
-                </a>
+              {/* Child tracker for enrolled state */}
+              {singleChild ? (
+                <div className="flex items-center gap-2 rounded-xl bg-stv-green-tint px-4 py-3 text-[13px] font-semibold text-stv-green">
+                  <CircleCheck className="h-4 w-4 shrink-0" />
+                  Terdaftar untuk {singleChild.name}.
+                </div>
+              ) : pickerChildren.length > 0 && (
+                <ChildPicker
+                  children={pickerChildren}
+                  taggedIds={taggedChildIds}
+                  onToggle={(childId, isCurrentlyTagged) =>
+                    isCurrentlyTagged ? unenrollCourse(childId, course.id) : enrollCourse(childId, course.id)
+                  }
+                  label="Diikuti untuk anak:"
+                />
               )}
-              <p className="text-[11px] text-stv-muted">Tautan aktif saat jadwal webinar dimulai.</p>
-            </div>
+            </>
           )}
 
-          {/* Perjalanan Pembelajaran tracking (only for non-completed) */}
-          {!isCompleted && (
+          {/* ── Video: child tracker ── */}
+          {isVideo && (
             singleChild ? (
               <div className="flex items-center gap-2 rounded-xl bg-stv-green-tint px-4 py-3 text-[13px] font-semibold text-stv-green">
                 <CircleCheck className="h-4 w-4 shrink-0" />
                 Tercatat di Perjalanan Pembelajaran {singleChild.name}.
               </div>
-            ) : pickerChildren.length === 0 ? (
-              <p className="rounded-xl bg-amber-50 px-4 py-3 text-[13px] text-stv-muted">
-                Tambahkan profil anak terlebih dahulu agar aktivitas ini tercatat di Perjalanan Pembelajaran.
-              </p>
-            ) : (
+            ) : pickerChildren.length > 0 ? (
               <ChildPicker
                 children={pickerChildren}
                 taggedIds={taggedChildIds}
                 onToggle={(childId, isCurrentlyTagged) =>
                   isCurrentlyTagged ? unenrollCourse(childId, course.id) : enrollCourse(childId, course.id)
                 }
-                label={showWebinarDetail ? 'Diikuti untuk anak:' : 'Catat course ini untuk anak:'}
+                label="Catat video ini untuk anak:"
               />
+            ) : (
+              <p className="rounded-xl bg-amber-50 px-4 py-3 text-[13px] text-stv-muted">
+                Tambahkan profil anak terlebih dahulu agar aktivitas ini tercatat.
+              </p>
             )
           )}
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="w-full rounded-full bg-amber-500 px-5 py-2.5 text-[14px] font-bold text-white transition hover:bg-amber-600"
-          >
-            Selesai
-          </button>
+          {/* ── Bottom CTA buttons ── */}
+          {isUpcomingWebinar && !enrolled && (
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={handleEnroll}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-amber-500 px-5 py-2.5 text-[14px] font-bold text-white transition hover:bg-amber-600"
+              >
+                <CircleCheck className="h-4 w-4" />
+                Daftar Webinar
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-full border border-stv-border px-5 py-2.5 text-[14px] font-semibold text-stv-body transition hover:bg-slate-50"
+              >
+                Tutup
+              </button>
+            </div>
+          )}
+
+          {(isCompleted || isVideo || (isUpcomingWebinar && enrolled)) && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-full rounded-full bg-amber-500 px-5 py-2.5 text-[14px] font-bold text-white transition hover:bg-amber-600"
+            >
+              Selesai
+            </button>
+          )}
         </div>
       </div>
     </div>

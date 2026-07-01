@@ -10,6 +10,15 @@ export type CourseStatus = 'upcoming' | 'available' | 'completed';
 // publish control (draft = not shown to parents yet).
 export type CourseVisibility = 'draft' | 'published';
 
+export interface CourseAttachment {
+  /** Display name of the file/resource */
+  name: string;
+  /** URL or data-URL (TODO: real storage backend) */
+  url: string;
+  /** Human-readable file size, e.g. "2.4 MB" */
+  size?: string;
+}
+
 export interface Course {
   id: string;
   type: CourseType;
@@ -22,6 +31,12 @@ export interface Course {
   duration: number;     // minutes (webinar duration or video length)
   webinarLink?: string; // join link, only relevant while the webinar hasn't happened yet
   colorTheme: 'amber' | 'sky' | 'coral' | 'green';
+  /** Key takeaways / what participants will gain from this course. */
+  benefits?: string[];
+  /** Post-event recording URL uploaded by admin after the webinar ends. */
+  recordingUrl?: string;
+  /** Supporting files admin uploaded after the event (slides, handout, etc.). */
+  attachments?: CourseAttachment[];
   /** Registered parents (webinar) or total plays (video) - admin-facing only. */
   participantCount: number;
   /** Admin-uploaded thumbnail (data URL for now). TODO: real file storage backend. */
@@ -48,6 +63,12 @@ export const COURSES: Course[] = [
     duration: 60,
     webinarLink: 'https://meet.studiva.id/webinar/w1',
     colorTheme: 'amber',
+    benefits: [
+      'Memahami profil dan kebutuhan unik anak dengan ADHD sehari-hari',
+      'Menguasai 5 strategi praktis mendampingi anak ADHD di rumah',
+      'Bisa mengidentifikasi pemicu dan mengelola situasi sulit dengan tenang',
+      'Mendapat kesempatan tanya-jawab langsung dengan psikolog',
+    ],
     participantCount: 34,
   },
   {
@@ -62,6 +83,12 @@ export const COURSES: Course[] = [
     duration: 50,
     webinarLink: 'https://meet.studiva.id/webinar/w2',
     colorTheme: 'sky',
+    benefits: [
+      'Mengenal sistem AAC (Augmentative & Alternative Communication) secara menyeluruh',
+      'Mengetahui kapan dan bagaimana memulai AAC bersama anak di rumah',
+      'Mendapat panduan praktis memilih media komunikasi yang sesuai anak',
+      'Membangun strategi komunikasi yang konsisten antara rumah dan sekolah',
+    ],
     participantCount: 21,
   },
   {
@@ -75,6 +102,18 @@ export const COURSES: Course[] = [
     date: 'Sabtu, 14 Juni 2026 · 19.00 WIB',
     duration: 60,
     colorTheme: 'coral',
+    benefits: [
+      'Mengenali tanda-tanda burnout pengasuhan sebelum semakin parah',
+      'Memahami siklus kecemasan orang tua dan cara memutusnya',
+      'Mendapat 6 teknik self-care realistis yang bisa dipraktikkan hari ini',
+      'Mengelola rasa bersalah tanpa mengorbankan kesejahteraan diri sendiri',
+    ],
+    recordingUrl: 'https://drive.studiva.id/webinar/w3-rekaman',
+    attachments: [
+      { name: 'Slide Presentasi — Mengelola Kecemasan Orang Tua', url: 'https://drive.studiva.id/webinar/w3-slides.pdf', size: '3.2 MB' },
+      { name: 'Lembar Kerja Self-Care Check-in Mingguan', url: 'https://drive.studiva.id/webinar/w3-worksheet.pdf', size: '540 KB' },
+      { name: 'Daftar Referensi & Bacaan Tambahan', url: 'https://drive.studiva.id/webinar/w3-referensi.pdf', size: '210 KB' },
+    ],
     participantCount: 58,
   },
   // ---- Video Rekaman ----
@@ -88,6 +127,12 @@ export const COURSES: Course[] = [
     visibility: 'published',
     duration: 35,
     colorTheme: 'amber',
+    benefits: [
+      'Memahami apa itu terapi okupasi dan manfaatnya untuk anak',
+      'Mengenali tanda-tanda anak yang mungkin perlu terapi okupasi',
+      'Mengetahui cara mendukung latihan motorik anak di rumah',
+      'Bisa berkolaborasi lebih efektif dengan terapis anak',
+    ],
     participantCount: 142,
   },
   {
@@ -100,6 +145,12 @@ export const COURSES: Course[] = [
     visibility: 'published',
     duration: 22,
     colorTheme: 'green',
+    benefits: [
+      'Contoh step-by-step rutinitas pagi yang terbukti efektif',
+      'Cara menyesuaikan rutinitas dengan kebutuhan spesifik anak',
+      'Teknik transisi antar aktivitas agar anak tidak tantrum',
+      'Tips menjaga konsistensi rutinitas saat hari sibuk',
+    ],
     participantCount: 97,
   },
   {
@@ -112,6 +163,12 @@ export const COURSES: Course[] = [
     visibility: 'published',
     duration: 28,
     colorTheme: 'sky',
+    benefits: [
+      'Memahami konsep sensory diet dan mengapa penting bagi anak sensorik',
+      'Mendapat 10+ contoh aktivitas sensory diet yang bisa dilakukan di rumah',
+      'Mengetahui cara menyusun jadwal sensory diet harian yang realistis',
+      'Mampu membedakan sensory seeking dan sensory avoiding pada anak',
+    ],
     participantCount: 76,
   },
   {
@@ -124,6 +181,12 @@ export const COURSES: Course[] = [
     visibility: 'published',
     duration: 18,
     colorTheme: 'coral',
+    benefits: [
+      'Menguasai 8 aktivitas latihan motorik halus berbahan rumah tangga',
+      'Memahami tanda perkembangan motorik halus yang sesuai usia',
+      'Cara menjadikan latihan motorik sebagai kegiatan bermain yang menyenangkan',
+      'Teknik motivasi agar anak mau berlatih secara konsisten',
+    ],
     participantCount: 63,
   },
   {

@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import {
   Plus, Pencil, Trash2, Eye, EyeOff, Video, PlayCircle, Users2, X, Save, Download, CalendarDays, Clock,
+  Upload, Paperclip,
 } from 'lucide-react';
 import { useDashboardTier2, Course } from '../../context/DashboardTier2Context';
-import { isVideoLike } from '../DashboardPages/Tier2/courseData';
+import { isVideoLike, CourseAttachment } from '../DashboardPages/Tier2/courseData';
 import ThumbnailUpload from './ThumbnailUpload';
 
 const THEME_OPTIONS: Course['colorTheme'][] = ['amber', 'sky', 'coral', 'green'];
@@ -288,11 +289,113 @@ function ParticipantsModal({ course, onClose }: { course: Course; onClose: () =>
   );
 }
 
+// ─── Upload Hasil Webinar (recording + attachments) ────────────────────────
+function UploadHasilModal({ course, onClose, onSave }: {
+  course: Course;
+  onClose: () => void;
+  onSave: (recordingUrl: string, attachments: CourseAttachment[]) => void;
+}) {
+  const [recordingUrl, setRecordingUrl] = useState(course.recordingUrl ?? '');
+  const [attachments, setAttachments] = useState<CourseAttachment[]>(
+    course.attachments?.length ? course.attachments : [{ name: '', url: '', size: '' }]
+  );
+
+  function addRow() { setAttachments(prev => [...prev, { name: '', url: '', size: '' }]); }
+  function removeRow(i: number) { setAttachments(prev => prev.filter((_, idx) => idx !== i)); }
+  function setField(i: number, field: keyof CourseAttachment, value: string) {
+    setAttachments(prev => prev.map((a, idx) => idx === i ? { ...a, [field]: value } : a));
+  }
+
+  function handleSave() {
+    const cleanAttachments = attachments.filter(a => a.name.trim() && a.url.trim()).map(a => ({ ...a, size: a.size?.trim() || undefined })) as CourseAttachment[];
+    onSave(recordingUrl.trim(), cleanAttachments);
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-stv-navy/30 px-4 py-8">
+      <div className="w-full max-w-[520px] rounded-2xl bg-white p-6 shadow-[0_20px_60px_rgba(16,58,107,.2)]">
+        <div className="mb-1 flex items-center justify-between">
+          <h2 className="font-baloo text-[18px] font-bold text-stv-navy">Upload Hasil Webinar</h2>
+          <button type="button" onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-50 text-stv-muted hover:text-stv-navy">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <p className="mb-4 text-[13px] text-stv-muted">{course.title}</p>
+
+        {/* Recording URL */}
+        <div className="mb-4">
+          <label className="mb-1 block text-[13px] font-semibold text-stv-navy">
+            <span className="flex items-center gap-1.5"><Video className="h-3.5 w-3.5 text-purple-600" />Link Video Rekaman</span>
+          </label>
+          <input
+            value={recordingUrl}
+            onChange={e => setRecordingUrl(e.target.value)}
+            placeholder="https://youtube.com/... atau link drive"
+            className="w-full rounded-xl border border-stv-border px-4 py-2.5 text-[14px] focus:border-purple-400 focus:outline-none"
+          />
+          <p className="mt-1 text-[11px] text-stv-muted">Bisa link YouTube, Google Drive, atau platform video lainnya.</p>
+        </div>
+
+        {/* Attachments */}
+        <div>
+          <div className="mb-2 flex items-center justify-between">
+            <label className="flex items-center gap-1.5 text-[13px] font-semibold text-stv-navy">
+              <Paperclip className="h-3.5 w-3.5 text-purple-600" />Lampiran & Materi Pendukung
+            </label>
+            <button type="button" onClick={addRow} className="flex items-center gap-1 rounded-full bg-purple-50 px-3 py-1 text-[12px] font-semibold text-purple-700 hover:opacity-80">
+              <Plus className="h-3.5 w-3.5" />Tambah File
+            </button>
+          </div>
+          <div className="flex flex-col gap-2">
+            {attachments.map((att, i) => (
+              <div key={i} className="rounded-xl bg-slate-50 p-3">
+                <div className="mb-1.5 flex items-center gap-2">
+                  <input
+                    value={att.name}
+                    onChange={e => setField(i, 'name', e.target.value)}
+                    placeholder="Nama file (mis. Slide Presentasi)"
+                    className="flex-1 rounded-lg border border-stv-border px-3 py-1.5 text-[13px] focus:border-purple-400 focus:outline-none"
+                  />
+                  <button type="button" onClick={() => removeRow(i)} className="text-red-400 hover:text-red-600">
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    value={att.url}
+                    onChange={e => setField(i, 'url', e.target.value)}
+                    placeholder="URL file / link download"
+                    className="flex-1 rounded-lg border border-stv-border px-3 py-1.5 text-[13px] focus:border-purple-400 focus:outline-none"
+                  />
+                  <input
+                    value={att.size ?? ''}
+                    onChange={e => setField(i, 'size', e.target.value)}
+                    placeholder="Ukuran"
+                    className="w-20 rounded-lg border border-stv-border px-2 py-1.5 text-[13px] focus:border-purple-400 focus:outline-none"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-5 flex justify-end gap-3">
+          <button type="button" onClick={onClose} className="rounded-full border border-stv-border px-5 py-2 text-[14px] font-semibold text-stv-body hover:bg-slate-50">Batal</button>
+          <button type="button" onClick={handleSave} className="flex items-center gap-1.5 rounded-full bg-purple-600 px-5 py-2 text-[14px] font-bold text-white transition hover:bg-purple-700">
+            <Save className="h-4 w-4" />Simpan & Publish
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function CoursesAdmin() {
   const { courses, addCourse, updateCourse, deleteCourse } = useDashboardTier2();
   const [tab, setTab] = useState<'webinar' | 'video'>('webinar');
   const [modalCourse, setModalCourse] = useState<Course | 'new' | null>(null);
   const [participantsCourse, setParticipantsCourse] = useState<Course | null>(null);
+  const [uploadHasilCourse, setUploadHasilCourse] = useState<Course | null>(null);
 
   const filtered = useMemo(
     () => courses.filter(c => (tab === 'webinar' ? !isVideoLike(c) : isVideoLike(c))),
@@ -417,6 +520,17 @@ export default function CoursesAdmin() {
                     <Users2 className="h-4 w-4" />
                   </button>
                 )}
+                {/* Upload hasil — only for completed webinars */}
+                {c.type === 'webinar' && c.status === 'completed' && (
+                  <button
+                    type="button"
+                    onClick={() => setUploadHasilCourse(c)}
+                    title="Upload Hasil Webinar"
+                    className={`flex h-9 w-9 items-center justify-center rounded-xl transition ${c.recordingUrl ? 'bg-stv-green-tint text-stv-green hover:bg-stv-green hover:text-white' : 'bg-purple-50 text-purple-600 hover:bg-purple-100'}`}
+                  >
+                    <Upload className="h-4 w-4" />
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => updateCourse(c.id, { visibility: c.visibility === 'published' ? 'draft' : 'published' })}
@@ -457,6 +571,17 @@ export default function CoursesAdmin() {
 
       {participantsCourse && (
         <ParticipantsModal course={participantsCourse} onClose={() => setParticipantsCourse(null)} />
+      )}
+
+      {uploadHasilCourse && (
+        <UploadHasilModal
+          course={uploadHasilCourse}
+          onClose={() => setUploadHasilCourse(null)}
+          onSave={(recordingUrl, attachments) => {
+            updateCourse(uploadHasilCourse.id, { recordingUrl: recordingUrl || undefined, attachments: attachments.length > 0 ? attachments : undefined });
+            setUploadHasilCourse(null);
+          }}
+        />
       )}
     </div>
   );

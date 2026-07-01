@@ -9,6 +9,10 @@ import {
   X,
   GraduationCap,
   Link2,
+  CheckCircle2,
+  Paperclip,
+  Download,
+  User,
 } from 'lucide-react';
 import { Course, isVideoLike } from './courseData';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
@@ -47,7 +51,13 @@ function CourseCard({ course, isEnrolled, onAction }: { course: Course; isEnroll
   const actionLabel = asVideo ? 'Tonton' : isEnrolled ? 'Detail Webinar' : 'Daftar Webinar';
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_4px_16px_rgba(16,58,107,.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(217,119,6,.14)]">
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onAction}
+      onKeyDown={e => e.key === 'Enter' && onAction()}
+      className="flex cursor-pointer flex-col overflow-hidden rounded-2xl bg-white shadow-[0_4px_16px_rgba(16,58,107,.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(217,119,6,.14)]"
+    >
       {/* Thumbnail */}
       <div className={`relative flex h-32 items-center justify-center bg-gradient-to-br ${THEME_GRADIENT[course.colorTheme]}`}>
         <Icon className={`h-10 w-10 ${THEME_ICON_COLOR[course.colorTheme]}`} strokeWidth={1.5} />
@@ -83,7 +93,7 @@ function CourseCard({ course, isEnrolled, onAction }: { course: Course; isEnroll
 
         <button
           type="button"
-          onClick={onAction}
+          onClick={e => { e.stopPropagation(); onAction(); }}
           className={`mt-auto flex items-center justify-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-bold text-white transition ${
             !asVideo && isEnrolled ? 'bg-stv-green hover:bg-stv-green/90' : 'bg-amber-500 hover:bg-amber-600'
           }`}
@@ -111,9 +121,9 @@ function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnroll
   const [wasEnrolledAtOpen] = useState(isEnrolled);
   const showWebinarDetail = course.type === 'webinar' && course.status !== 'completed' && wasEnrolledAtOpen;
   const isRegistrationMode = course.type === 'webinar' && course.status !== 'completed' && !wasEnrolledAtOpen;
+  const isCompleted = course.status === 'completed';
 
-  // Notify exactly once per registration session - regardless of whether it
-  // came from the single-child auto-enroll below or a ChildPicker tag.
+  // Notify exactly once per registration session.
   const notifiedRef = React.useRef(false);
   React.useEffect(() => {
     if (course.type === 'webinar' && isRegistrationMode && isEnrolled && !notifiedRef.current) {
@@ -122,8 +132,7 @@ function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnroll
     }
   }, [isEnrolled, isRegistrationMode, course.type, course.title, notifyWebinarRegistered]);
 
-  // Single child (always true for Tier 1, or a Tier 2 parent with exactly
-  // one child profile): enroll immediately, no need to ask.
+  // Single child: enroll immediately, no need to ask.
   React.useEffect(() => {
     if (singleChild && !isCourseEnrolledByChild(singleChild.id, course.id)) {
       enrollCourse(singleChild.id, course.id);
@@ -132,80 +141,162 @@ function CourseModal({ course, isEnrolled, onClose }: { course: Course; isEnroll
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-stv-navy/30 px-4">
-      <div className="w-full max-w-[440px] rounded-2xl bg-white p-6 shadow-[0_20px_60px_rgba(16,58,107,.2)]">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-baloo text-[18px] font-bold text-stv-navy">
-            {showWebinarDetail ? 'Detail Webinar' : course.type === 'webinar' ? 'Daftar Webinar' : 'Tandai Ditonton'}
-          </h2>
-          <button type="button" onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-50 text-stv-muted hover:text-stv-navy">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-stv-navy/30 px-4 py-8">
+      <div className="w-full max-w-[480px] rounded-2xl bg-white shadow-[0_20px_60px_rgba(16,58,107,.2)]">
+        {/* Header gradient */}
+        <div className={`relative flex flex-col gap-2 rounded-t-2xl bg-gradient-to-br ${THEME_GRADIENT[course.colorTheme]} p-6`}>
+          <button type="button" onClick={onClose} className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-stv-muted hover:bg-white">
             <X className="h-4 w-4" />
           </button>
+          <span className={`w-fit rounded-full bg-white/70 px-2.5 py-0.5 text-[11px] font-bold ${THEME_ICON_COLOR[course.colorTheme]}`}>
+            {course.type === 'webinar' ? (isCompleted ? 'Rekaman Webinar' : 'Live Webinar') : 'Video Kelas'}
+          </span>
+          <h2 className="font-baloo text-[19px] font-extrabold leading-[1.25] text-stv-navy pr-8">{course.title}</h2>
+          <p className="flex items-center gap-1.5 text-[13px] font-semibold text-stv-navy/80">
+            <User className="h-3.5 w-3.5 shrink-0" />
+            {course.psychologist}
+          </p>
         </div>
 
-        <p className="mb-4 text-[14px] font-semibold text-stv-navy">{course.title}</p>
-
-        {/* Registration confirmation - tells the parent to come back for the link, without showing it yet */}
-        {isRegistrationMode && isEnrolled && (
-          <div className="mb-4 flex items-center gap-2 rounded-xl bg-stv-green-tint px-4 py-3 text-[13px] font-semibold text-stv-green">
-            <CircleCheck className="h-4 w-4 shrink-0" />
-            Pendaftaran berhasil! Tutup ini, lalu buka &quot;Detail Webinar&quot; pada kartu untuk melihat link.
-          </div>
-        )}
-
-        {/* Webinar detail info: only in a session opened via "Detail Webinar" */}
-        {showWebinarDetail && (
-          <div className="mb-4 flex flex-col gap-2.5 rounded-xl bg-amber-50 p-4">
-            <div className="flex items-center gap-2 text-[13px] text-stv-navy">
-              <CalendarDays className="h-4 w-4 shrink-0 text-amber-600" />
-              <span className="font-semibold">{course.date}</span>
+        <div className="flex flex-col gap-4 p-6">
+          {/* Description */}
+          <div>
+            <h3 className="mb-1.5 text-[13px] font-bold text-stv-navy">Tentang Sesi Ini</h3>
+            <p className="text-[14px] leading-[1.65] text-stv-body">{course.description}</p>
+            <div className="mt-2 flex items-center gap-3 text-[12px] text-stv-muted">
+              <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{course.duration} menit</span>
+              {course.date && <span className="flex items-center gap-1"><CalendarDays className="h-3.5 w-3.5" />{course.date}</span>}
             </div>
-            <div className="flex items-center gap-2 text-[13px] text-stv-navy">
-              <Clock className="h-4 w-4 shrink-0 text-amber-600" />
-              <span className="font-semibold">{course.duration} menit</span>
+          </div>
+
+          {/* Benefits */}
+          {course.benefits && course.benefits.length > 0 && (
+            <div>
+              <h3 className="mb-2 text-[13px] font-bold text-stv-navy">Yang Akan Anda Dapatkan</h3>
+              <ul className="flex flex-col gap-1.5">
+                {course.benefits.map((b, i) => (
+                  <li key={i} className="flex items-start gap-2 text-[13px] leading-[1.5] text-stv-body">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" />
+                    {b}
+                  </li>
+                ))}
+              </ul>
             </div>
-            {course.webinarLink && (
-              <a
-                href={course.webinarLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-1 flex items-center justify-center gap-1.5 rounded-full bg-amber-500 px-4 py-2 text-[13px] font-bold text-white no-underline transition hover:bg-amber-600"
-              >
-                <Link2 className="h-3.5 w-3.5" />
-                Gabung Live Webinar
-              </a>
-            )}
-            <p className="text-[11px] text-stv-muted">Tautan aktif saat jadwal webinar dimulai.</p>
-          </div>
-        )}
+          )}
 
-        {singleChild ? (
-          <div className="flex items-center gap-2 rounded-xl bg-stv-green-tint px-4 py-3 text-[13px] font-semibold text-stv-green">
-            <CircleCheck className="h-4 w-4 shrink-0" />
-            Tercatat di Perjalanan Pembelajaran {singleChild.name}.
-          </div>
-        ) : pickerChildren.length === 0 ? (
-          <p className="rounded-xl bg-amber-50 px-4 py-3 text-[13px] text-stv-muted">
-            Tambahkan profil anak terlebih dahulu agar aktivitas ini tercatat di Perjalanan Pembelajaran.
-          </p>
-        ) : (
-          <ChildPicker
-            children={pickerChildren}
-            taggedIds={taggedChildIds}
-            onToggle={(childId, isCurrentlyTagged) =>
-              isCurrentlyTagged ? unenrollCourse(childId, course.id) : enrollCourse(childId, course.id)
-            }
-            label={showWebinarDetail ? 'Diikuti untuk anak:' : 'Catat course ini untuk anak:'}
-          />
-        )}
+          {/* Separator */}
+          <div className="border-t border-stv-border" />
 
-        <button
-          type="button"
-          onClick={onClose}
-          className="mt-5 w-full rounded-full bg-amber-500 px-5 py-2.5 text-[14px] font-bold text-white transition hover:bg-amber-600"
-        >
-          Selesai
-        </button>
+          {/* Completed webinar: recording + attachments */}
+          {isCompleted && (
+            <div className="flex flex-col gap-3">
+              {course.recordingUrl ? (
+                <a
+                  href={course.recordingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 rounded-full bg-amber-500 px-4 py-2.5 text-[14px] font-bold text-white no-underline transition hover:bg-amber-600"
+                >
+                  <PlayCircle className="h-4 w-4" />
+                  Tonton Video Rekaman
+                </a>
+              ) : (
+                <p className="rounded-xl bg-amber-50 px-4 py-3 text-center text-[13px] text-stv-muted">
+                  Video rekaman sedang diproses. Silakan cek kembali nanti.
+                </p>
+              )}
+
+              {course.attachments && course.attachments.length > 0 && (
+                <div>
+                  <h3 className="mb-2 flex items-center gap-1.5 text-[13px] font-bold text-stv-navy">
+                    <Paperclip className="h-3.5 w-3.5" />
+                    Materi & Lampiran
+                  </h3>
+                  <div className="flex flex-col gap-1.5">
+                    {course.attachments.map((att, i) => (
+                      <a
+                        key={i}
+                        href={att.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2.5 rounded-xl bg-amber-50 px-3.5 py-2.5 no-underline transition hover:bg-amber-100"
+                      >
+                        <Download className="h-4 w-4 shrink-0 text-amber-600" />
+                        <span className="flex-1 text-[13px] font-semibold text-stv-navy">{att.name}</span>
+                        {att.size && <span className="text-[11px] text-stv-muted">{att.size}</span>}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Registration confirmation */}
+          {isRegistrationMode && isEnrolled && (
+            <div className="flex items-center gap-2 rounded-xl bg-stv-green-tint px-4 py-3 text-[13px] font-semibold text-stv-green">
+              <CircleCheck className="h-4 w-4 shrink-0" />
+              Pendaftaran berhasil! Tutup ini, lalu buka &quot;Detail Webinar&quot; pada kartu untuk melihat link.
+            </div>
+          )}
+
+          {/* Webinar detail: date/time/link */}
+          {showWebinarDetail && (
+            <div className="flex flex-col gap-2.5 rounded-xl bg-amber-50 p-4">
+              <div className="flex items-center gap-2 text-[13px] text-stv-navy">
+                <CalendarDays className="h-4 w-4 shrink-0 text-amber-600" />
+                <span className="font-semibold">{course.date}</span>
+              </div>
+              <div className="flex items-center gap-2 text-[13px] text-stv-navy">
+                <Clock className="h-4 w-4 shrink-0 text-amber-600" />
+                <span className="font-semibold">{course.duration} menit</span>
+              </div>
+              {course.webinarLink && (
+                <a
+                  href={course.webinarLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 flex items-center justify-center gap-1.5 rounded-full bg-amber-500 px-4 py-2 text-[13px] font-bold text-white no-underline transition hover:bg-amber-600"
+                >
+                  <Link2 className="h-3.5 w-3.5" />
+                  Gabung Live Webinar
+                </a>
+              )}
+              <p className="text-[11px] text-stv-muted">Tautan aktif saat jadwal webinar dimulai.</p>
+            </div>
+          )}
+
+          {/* Perjalanan Pembelajaran tracking (only for non-completed) */}
+          {!isCompleted && (
+            singleChild ? (
+              <div className="flex items-center gap-2 rounded-xl bg-stv-green-tint px-4 py-3 text-[13px] font-semibold text-stv-green">
+                <CircleCheck className="h-4 w-4 shrink-0" />
+                Tercatat di Perjalanan Pembelajaran {singleChild.name}.
+              </div>
+            ) : pickerChildren.length === 0 ? (
+              <p className="rounded-xl bg-amber-50 px-4 py-3 text-[13px] text-stv-muted">
+                Tambahkan profil anak terlebih dahulu agar aktivitas ini tercatat di Perjalanan Pembelajaran.
+              </p>
+            ) : (
+              <ChildPicker
+                children={pickerChildren}
+                taggedIds={taggedChildIds}
+                onToggle={(childId, isCurrentlyTagged) =>
+                  isCurrentlyTagged ? unenrollCourse(childId, course.id) : enrollCourse(childId, course.id)
+                }
+                label={showWebinarDetail ? 'Diikuti untuk anak:' : 'Catat course ini untuk anak:'}
+              />
+            )
+          )}
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full rounded-full bg-amber-500 px-5 py-2.5 text-[14px] font-bold text-white transition hover:bg-amber-600"
+          >
+            Selesai
+          </button>
+        </div>
       </div>
     </div>
   );

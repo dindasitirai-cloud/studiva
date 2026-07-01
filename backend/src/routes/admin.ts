@@ -16,7 +16,7 @@ import {
 import { enrollChildInTier1 } from '../models/Child';
 import { createSubscription, findActiveSubscriptionByUserId } from '../models/Subscription';
 import { getPlanInfo, computeEndDate } from '../lib/pricing';
-import { findTeachers, toPublicUser, findAllUsers, countAllUsers } from '../models/User';
+import { findTeachers, toPublicUser, findAllUsers, countAllUsers, findUserByEmail } from '../models/User';
 import {
   findDiscussionById,
   togglePin,
@@ -289,6 +289,42 @@ router.get(
       totalRevenue: revenue?.total ?? 0,
       upcomingConsultations: upcomingConsultations.length,
     });
+  })
+);
+
+// Admin creates a Tier 1 parent account (offline registration) — assigns an
+// active Tier 1 subscription so the parent lands on /dashboard/tier1 instead
+// of the pricing page when they first log in.
+router.post(
+  '/assign-tier1-subscription',
+  asyncHandler(async (req: Request, res: Response) => {
+    const { email } = req.body as { email?: string };
+    if (!email) throw new ApiError(400, 'email is required');
+
+    const user = await findUserByEmail(email);
+    if (!user) throw new ApiError(404, 'User not found');
+    if (user.role !== 'parent') throw new ApiError(400, 'User is not a parent');
+
+    const existing = await findActiveSubscriptionByUserId(user.id);
+    if (existing && existing.tier === 'tier1') {
+      res.json({ message: 'Tier 1 subscription already active' });
+      return;
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+    await createSubscription(
+      user.id,
+      'tier1',
+      'monthly',
+      'active',
+      today,
+      computeEndDate('monthly', new Date(today)),
+      'manual',
+      null,
+      0,
+    );
+
+    res.json({ message: 'Tier 1 subscription assigned' });
   })
 );
 

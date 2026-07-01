@@ -123,6 +123,7 @@ export function SekolahStudivaProvider({ children }: { children: React.ReactNode
   const { showFullscreenNotif } = useFullscreenNotif();
 
   const addAccount = useCallback(async (data: NewAccountData): Promise<{ success: boolean; error?: string }> => {
+    // Step 1: Create the user account in the backend
     try {
       await api.post('/auth/signup', {
         email: data.email,
@@ -134,6 +135,15 @@ export function SekolahStudivaProvider({ children }: { children: React.ReactNode
       });
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error ?? 'Terjadi kesalahan saat membuat akun.';
+      return { success: false, error: msg };
+    }
+
+    // Step 2: Assign an active Tier 1 subscription so the parent lands on
+    // /dashboard/tier1 when they log in instead of being sent to /pricing.
+    try {
+      await api.post('/admin/assign-tier1-subscription', { email: data.email });
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error ?? 'Akun dibuat, namun gagal mengaktifkan akses Tier 1. Hubungi pengembang.';
       return { success: false, error: msg };
     }
     const newAcc: Tier1ParentAccount = {

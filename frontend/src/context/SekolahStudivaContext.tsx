@@ -129,9 +129,11 @@ export function SekolahStudivaProvider({ children }: { children: React.ReactNode
         password: data.password,
         name: data.parentName,
         role: 'parent',
+        childName: data.child.name,
+        childAge: data.child.age || undefined,
       });
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Terjadi kesalahan saat membuat akun.';
+      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error ?? 'Terjadi kesalahan saat membuat akun.';
       return { success: false, error: msg };
     }
     const newAcc: Tier1ParentAccount = {

@@ -1,19 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle, Clock, AlertCircle, CreditCard, FileText, ChevronDown, ChevronUp } from 'lucide-react';
-
-type BillingStatus = 'menunggu' | 'lunas' | 'terlambat';
-
-interface SppBill {
-  id: string;
-  description: string;
-  amount: number;
-  dueDate: string;
-  paidDate?: string;
-  status: BillingStatus;
-  type: 'monthly' | 'one-time';
-  month?: string;
-  receiptUrl?: string;
-}
+import { useSekolahStudiva, SppBilling, BillingStatus } from '../../../context/SekolahStudivaContext';
+import { useAuth } from '../../../context/AuthContext';
 
 function formatIDR(amount: number) {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
@@ -23,23 +11,16 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-const BILLS: SppBill[] = [
-  { id: 'b1', description: 'SPP Bulan Juli 2026', amount: 1_500_000, dueDate: '2026-07-10', status: 'menunggu', type: 'monthly', month: 'Juli 2026' },
-  { id: 'b2', description: 'Seragam Sekolah (2 set)', amount: 350_000, dueDate: '2026-07-15', status: 'menunggu', type: 'one-time' },
-  { id: 'b3', description: 'SPP Bulan Juni 2026', amount: 1_500_000, dueDate: '2026-06-10', paidDate: '2026-06-08', status: 'lunas', type: 'monthly', month: 'Juni 2026', receiptUrl: '#' },
-  { id: 'b4', description: 'SPP Bulan Mei 2026', amount: 1_500_000, dueDate: '2026-05-10', paidDate: '2026-05-07', status: 'lunas', type: 'monthly', month: 'Mei 2026', receiptUrl: '#' },
-  { id: 'b5', description: 'Biaya Asesmen Awal', amount: 500_000, dueDate: '2026-04-20', paidDate: '2026-04-18', status: 'lunas', type: 'one-time', receiptUrl: '#' },
-];
-
 const STATUS_META: Record<BillingStatus, { bg: string; text: string; label: string; icon: typeof CheckCircle }> = {
-  lunas:     { bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'Lunas', icon: CheckCircle },
-  menunggu:  { bg: 'bg-amber-50',   text: 'text-amber-700',   label: 'Belum Dibayar', icon: Clock },
-  terlambat: { bg: 'bg-red-50',     text: 'text-red-700',     label: 'Terlambat', icon: AlertCircle },
+  lunas:      { bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'Lunas',          icon: CheckCircle },
+  menunggu:   { bg: 'bg-amber-50',   text: 'text-amber-700',   label: 'Belum Dibayar',  icon: Clock },
+  terlambat:  { bg: 'bg-red-50',     text: 'text-red-700',     label: 'Terlambat',      icon: AlertCircle },
+  dibatalkan: { bg: 'bg-slate-100',  text: 'text-slate-500',   label: 'Dibatalkan',     icon: Clock },
 };
 
-function BillCard({ bill, onPay }: { bill: SppBill; onPay: (id: string) => void }) {
+function BillCard({ bill, onPay }: { bill: SppBilling; onPay: (id: string) => void }) {
   const { bg, text, label, icon: StatusIcon } = STATUS_META[bill.status];
-  const isUnpaid = bill.status !== 'lunas';
+  const isUnpaid = bill.status === 'menunggu' || bill.status === 'terlambat';
 
   return (
     <div className={`rounded-2xl border bg-white p-5 shadow-[0_4px_16px_rgba(16,58,107,.06)] ${bill.status === 'terlambat' ? 'border-red-200' : 'border-stv-border'}`}>
@@ -92,15 +73,23 @@ function BillCard({ bill, onPay }: { bill: SppBill; onPay: (id: string) => void 
 }
 
 export default function PembayaranSPPTier1() {
-  const [bills] = useState<SppBill[]>(BILLS);
+  const { billings } = useSekolahStudiva();
+  const { user } = useAuth();
   const [historyOpen, setHistoryOpen] = useState(false);
+
+  // Filter bills for the current logged-in parent by email.
+  // If no match (demo user has no matching email), fall back to first account's bills.
+  const myBills = billings.filter(b => b.parentEmail === user?.email);
+  const displayBills = myBills.length > 0
+    ? myBills
+    : billings.filter(b => b.parentAccountId === 'ta-1'); // demo fallback
 
   function handlePay(id: string) {
     alert(`TODO: Stripe Checkout untuk tagihan ${id}. Integrasi backend diperlukan.`);
   }
 
-  const unpaidBills = bills.filter(b => b.status !== 'lunas');
-  const paidBills = bills.filter(b => b.status === 'lunas');
+  const unpaidBills = displayBills.filter(b => b.status === 'menunggu' || b.status === 'terlambat');
+  const paidBills = displayBills.filter(b => b.status === 'lunas');
   const totalUnpaid = unpaidBills.reduce((s, b) => s + b.amount, 0);
 
   return (

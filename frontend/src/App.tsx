@@ -2,7 +2,9 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { DashboardTier2Provider } from './context/DashboardTier2Context';
+import { SekolahStudivaProvider } from './context/SekolahStudivaContext';
 import { ToastProvider } from './components/ToastProvider';
+import { FullscreenNotificationProvider } from './components/FullscreenNotificationProvider';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PrivateRoute, { AdminRoute, ParentRoute, TeacherRoute } from './components/PrivateRoute';
@@ -91,6 +93,7 @@ const CONSULTATION_UPGRADE_MESSAGE =
 const ADMIN_SHELL_PATHS = [
   '/admin', '/admin/resource-library', '/admin/courses', '/admin/strategies',
   '/admin/forum', '/admin/konsultasi', '/admin/members', '/admin/payments', '/admin/settings',
+  '/admin/spp-billing', '/admin/sekolah-akun',
 ];
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -122,6 +125,8 @@ export default function App() {
             wraps it so DashboardTier2Provider can pop up a toast the moment
             a notification is created, not just add it to the bell list. */}
         <ToastProvider>
+        <FullscreenNotificationProvider>
+        <SekolahStudivaProvider>
         <DashboardTier2Provider>
         <Layout>
           <Routes>
@@ -406,6 +411,8 @@ export default function App() {
           </Routes>
         </Layout>
         </DashboardTier2Provider>
+        </SekolahStudivaProvider>
+        </FullscreenNotificationProvider>
         </ToastProvider>
       </BrowserRouter>
     </AuthProvider>

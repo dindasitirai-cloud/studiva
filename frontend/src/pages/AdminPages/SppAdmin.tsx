@@ -2,21 +2,7 @@ import React, { useState } from 'react';
 import {
   Plus, Search, Send, Pencil, X, CheckCircle, Clock, AlertCircle, Trash2, Receipt,
 } from 'lucide-react';
-
-type BillingType = 'monthly' | 'one-time';
-type BillingStatus = 'menunggu' | 'lunas' | 'terlambat' | 'dibatalkan';
-
-interface SppBilling {
-  id: string;
-  parentName: string;
-  childName: string;
-  type: BillingType;
-  description: string;
-  amount: number;
-  dueDate: string;
-  status: BillingStatus;
-  month?: string;
-}
+import { useSekolahStudiva, SppBilling, BillingStatus, BillingType } from '../../context/SekolahStudivaContext';
 
 function formatIDR(amount: number) {
   return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
@@ -26,25 +12,15 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-const SEED_BILLINGS: SppBilling[] = [
-  { id: 'spp-1', parentName: 'Andi Saputra', childName: 'Bima Saputra', type: 'monthly', description: 'SPP Bulan Juli 2026', amount: 1_500_000, dueDate: '2026-07-10', status: 'menunggu', month: 'Juli 2026' },
-  { id: 'spp-2', parentName: 'Joko Prasetyo', childName: 'Arka Prasetyo', type: 'monthly', description: 'SPP Bulan Juli 2026', amount: 1_500_000, dueDate: '2026-07-10', status: 'lunas', month: 'Juli 2026' },
-  { id: 'spp-3', parentName: 'Hendra Gunawan', childName: 'Dafa Gunawan', type: 'monthly', description: 'SPP Bulan Juli 2026', amount: 1_500_000, dueDate: '2026-07-10', status: 'terlambat', month: 'Juli 2026' },
-  { id: 'spp-4', parentName: 'Ayu Permatasari', childName: 'Kenzo Permatasari', type: 'monthly', description: 'SPP Bulan Juni 2026', amount: 1_500_000, dueDate: '2026-06-10', status: 'lunas', month: 'Juni 2026' },
-  { id: 'spp-5', parentName: 'Bambang Hidayat', childName: 'Citra Hidayat', type: 'one-time', description: 'Biaya Asesmen Awal', amount: 500_000, dueDate: '2026-06-20', status: 'lunas' },
-  { id: 'spp-6', parentName: 'Andi Saputra', childName: 'Bima Saputra', type: 'one-time', description: 'Seragam Sekolah (2 set)', amount: 350_000, dueDate: '2026-07-15', status: 'menunggu' },
-];
-
 const STATUS_STYLE: Record<BillingStatus, { bg: string; text: string; label: string; icon: typeof CheckCircle }> = {
-  lunas:      { bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'Lunas', icon: CheckCircle },
-  menunggu:   { bg: 'bg-amber-50',   text: 'text-amber-700',   label: 'Menunggu',  icon: Clock },
-  terlambat:  { bg: 'bg-red-50',     text: 'text-red-700',     label: 'Terlambat', icon: AlertCircle },
+  lunas:      { bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'Lunas',      icon: CheckCircle },
+  menunggu:   { bg: 'bg-amber-50',   text: 'text-amber-700',   label: 'Menunggu',   icon: Clock },
+  terlambat:  { bg: 'bg-red-50',     text: 'text-red-700',     label: 'Terlambat',  icon: AlertCircle },
   dibatalkan: { bg: 'bg-slate-100',  text: 'text-slate-500',   label: 'Dibatalkan', icon: X },
 };
 
-interface BillingFormState {
-  parentName: string;
-  childName: string;
+interface FormState {
+  parentAccountId: string;
   type: BillingType;
   description: string;
   amount: string;
@@ -52,56 +28,97 @@ interface BillingFormState {
   month: string;
 }
 
-const EMPTY_FORM: BillingFormState = {
-  parentName: '', childName: '', type: 'monthly',
-  description: '', amount: '', dueDate: '', month: '',
+const EMPTY_FORM: FormState = {
+  parentAccountId: '', type: 'monthly', description: '', amount: '', dueDate: '', month: '',
 };
 
-function BillingFormModal({ initial, onClose, onSave }: {
-  initial?: SppBilling;
+function BillingFormModal({ editing, onClose }: {
+  editing: SppBilling | null;
   onClose: () => void;
-  onSave: (data: BillingFormState) => void;
 }) {
-  const [form, setForm] = useState<BillingFormState>(
-    initial
-      ? { parentName: initial.parentName, childName: initial.childName, type: initial.type, description: initial.description, amount: String(initial.amount), dueDate: initial.dueDate, month: initial.month ?? '' }
+  const { accounts, addBilling, updateBilling } = useSekolahStudiva();
+  const activeAccounts = accounts.filter(a => a.status === 'aktif');
+
+  const [form, setForm] = useState<FormState>(() =>
+    editing
+      ? { parentAccountId: editing.parentAccountId, type: editing.type, description: editing.description, amount: String(editing.amount), dueDate: editing.dueDate, month: editing.month ?? '' }
       : EMPTY_FORM,
   );
   const [error, setError] = useState('');
 
+  const selectedAccount = activeAccounts.find(a => a.id === form.parentAccountId);
+
+  const f = (key: keyof FormState, val: string) => setForm(p => ({ ...p, [key]: val }));
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.parentName.trim() || !form.childName.trim()) { setError('Nama orang tua dan anak wajib diisi.'); return; }
-    if (!form.description.trim()) { setError('Keterangan tagihan wajib diisi.'); return; }
+    if (!form.parentAccountId) { setError('Pilih akun orang tua.'); return; }
+    if (!form.description.trim()) { setError('Keterangan wajib diisi.'); return; }
     if (!form.amount || isNaN(Number(form.amount)) || Number(form.amount) <= 0) { setError('Nominal tidak valid.'); return; }
     if (!form.dueDate) { setError('Tanggal jatuh tempo wajib diisi.'); return; }
-    onSave(form);
-  }
 
-  const f = (key: keyof BillingFormState, val: string) => setForm(p => ({ ...p, [key]: val }));
+    if (editing) {
+      updateBilling(editing.id, {
+        type: form.type,
+        description: form.description,
+        amount: Number(form.amount),
+        dueDate: form.dueDate,
+        month: form.month || undefined,
+      });
+    } else {
+      addBilling({
+        parentAccountId: form.parentAccountId,
+        type: form.type,
+        description: form.description,
+        amount: Number(form.amount),
+        dueDate: form.dueDate,
+        month: form.month || undefined,
+      });
+    }
+    onClose();
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-stv-navy/30 px-4 py-10">
       <div className="w-full max-w-[520px] rounded-2xl bg-white p-6 shadow-[0_20px_60px_rgba(16,58,107,.2)]">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="font-baloo text-[18px] font-bold text-stv-navy">
-            {initial ? 'Edit Tagihan' : 'Tambah Tagihan SPP'}
+            {editing ? 'Edit Tagihan' : 'Tambah Tagihan SPP'}
           </h2>
           <button type="button" onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-stv-muted hover:text-stv-navy">
             <X className="h-4 w-4" />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <div className="grid grid-cols-2 gap-3">
+          {/* Parent selector (read-only when editing) */}
+          {!editing ? (
             <div>
-              <label className="mb-1 block text-[13px] font-semibold text-stv-navy">Nama Orang Tua *</label>
-              <input value={form.parentName} onChange={e => f('parentName', e.target.value)} className="w-full rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:border-emerald-400 focus:outline-none" placeholder="contoh: Andi Saputra" />
+              <label className="mb-1 block text-[13px] font-semibold text-stv-navy">Orang Tua *</label>
+              <select
+                value={form.parentAccountId}
+                onChange={e => f('parentAccountId', e.target.value)}
+                className="w-full rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:border-emerald-400 focus:outline-none"
+              >
+                <option value="">— Pilih orang tua —</option>
+                {activeAccounts.map(a => (
+                  <option key={a.id} value={a.id}>{a.parentName} ({a.child.name})</option>
+                ))}
+              </select>
             </div>
-            <div>
-              <label className="mb-1 block text-[13px] font-semibold text-stv-navy">Nama Anak *</label>
-              <input value={form.childName} onChange={e => f('childName', e.target.value)} className="w-full rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:border-emerald-400 focus:outline-none" placeholder="contoh: Bima Saputra" />
+          ) : (
+            <div className="rounded-xl bg-slate-50 p-3">
+              <p className="text-[13px] font-semibold text-stv-navy">{editing.parentName}</p>
+              <p className="text-[12px] text-stv-muted">Anak: {editing.childName}</p>
             </div>
-          </div>
+          )}
+
+          {/* Auto-filled child info */}
+          {selectedAccount && !editing && (
+            <div className="rounded-xl bg-emerald-50 p-3">
+              <p className="text-[12px] font-semibold text-emerald-700">Anak: {selectedAccount.child.name}</p>
+              <p className="text-[12px] text-emerald-600">{selectedAccount.child.kelas} &middot; {selectedAccount.child.age} tahun</p>
+            </div>
+          )}
 
           <div>
             <label className="mb-1 block text-[13px] font-semibold text-stv-navy">Jenis Tagihan</label>
@@ -139,7 +156,7 @@ function BillingFormModal({ initial, onClose, onSave }: {
           <div className="mt-2 flex justify-end gap-3">
             <button type="button" onClick={onClose} className="rounded-full border border-stv-border px-5 py-2 text-[13px] font-semibold text-stv-body hover:bg-slate-50">Batal</button>
             <button type="submit" className="rounded-full bg-emerald-600 px-5 py-2 text-[13px] font-bold text-white hover:bg-emerald-700">
-              {initial ? 'Simpan Perubahan' : 'Buat Tagihan'}
+              {editing ? 'Simpan' : 'Buat Tagihan'}
             </button>
           </div>
         </form>
@@ -148,10 +165,8 @@ function BillingFormModal({ initial, onClose, onSave }: {
   );
 }
 
-let idCtr = 100;
-
 export default function SppAdmin() {
-  const [billings, setBillings] = useState<SppBilling[]>(SEED_BILLINGS);
+  const { billings, cancelBilling, markLunas } = useSekolahStudiva();
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState<BillingStatus | 'semua'>('semua');
   const [showForm, setShowForm] = useState(false);
@@ -164,31 +179,8 @@ export default function SppAdmin() {
     return matchSearch && matchStatus;
   });
 
-  function handleSave(data: BillingFormState) {
-    if (editing) {
-      setBillings(prev => prev.map(b => b.id === editing.id
-        ? { ...b, parentName: data.parentName, childName: data.childName, type: data.type, description: data.description, amount: Number(data.amount), dueDate: data.dueDate, month: data.month }
-        : b));
-      setEditing(null);
-    } else {
-      const newBilling: SppBilling = {
-        id: `spp-new-${idCtr++}`, parentName: data.parentName, childName: data.childName, type: data.type, description: data.description, amount: Number(data.amount), dueDate: data.dueDate, status: 'menunggu', month: data.month || undefined,
-      };
-      setBillings(prev => [newBilling, ...prev]);
-      setShowForm(false);
-    }
-  }
-
-  function handleCancel(id: string) {
-    setBillings(prev => prev.map(b => b.id === id ? { ...b, status: 'dibatalkan' } : b));
-  }
-
-  function handleMarkLunas(id: string) {
-    setBillings(prev => prev.map(b => b.id === id ? { ...b, status: 'lunas' } : b));
-  }
-
   function handleSendReminder(billing: SppBilling) {
-    const msg = encodeURIComponent(`Halo, ini pengingat pembayaran SPP: ${billing.description} sebesar ${formatIDR(billing.amount)}. Jatuh tempo: ${formatDate(billing.dueDate)}. Terima kasih.`);
+    const msg = encodeURIComponent(`Halo ${billing.parentName}, ini pengingat pembayaran ${billing.description} sebesar ${formatIDR(billing.amount)}. Jatuh tempo: ${formatDate(billing.dueDate)}. Terima kasih.`);
     window.open(`https://wa.me/6281211470407?text=${msg}`, '_blank');
   }
 
@@ -220,29 +212,16 @@ export default function SppAdmin() {
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stv-muted" />
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Cari nama orang tua, anak, atau keterangan..."
-            className="w-full rounded-xl border border-stv-border py-2.5 pl-9 pr-4 text-[14px] focus:border-emerald-400 focus:outline-none"
-          />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cari nama orang tua, anak, atau keterangan..." className="w-full rounded-xl border border-stv-border py-2.5 pl-9 pr-4 text-[14px] focus:border-emerald-400 focus:outline-none" />
         </div>
-        <select
-          value={filterStatus}
-          onChange={e => setFilterStatus(e.target.value as BillingStatus | 'semua')}
-          className="rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:outline-none"
-        >
+        <select value={filterStatus} onChange={e => setFilterStatus(e.target.value as BillingStatus | 'semua')} className="rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:outline-none">
           <option value="semua">Semua Status</option>
           <option value="menunggu">Menunggu</option>
           <option value="lunas">Lunas</option>
           <option value="terlambat">Terlambat</option>
           <option value="dibatalkan">Dibatalkan</option>
         </select>
-        <button
-          type="button"
-          onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-[14px] font-bold text-white transition hover:bg-emerald-700"
-        >
+        <button type="button" onClick={() => setShowForm(true)} className="flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-[14px] font-bold text-white transition hover:bg-emerald-700">
           <Plus className="h-4 w-4" />
           Tambah Tagihan
         </button>
@@ -293,23 +272,23 @@ export default function SppAdmin() {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center justify-end gap-1.5">
-                          {b.status === 'menunggu' || b.status === 'terlambat' ? (
+                          {(b.status === 'menunggu' || b.status === 'terlambat') && (
                             <>
-                              <button type="button" onClick={() => handleMarkLunas(b.id)} title="Tandai Lunas" className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 transition hover:bg-emerald-100">
+                              <button type="button" onClick={() => markLunas(b.id)} title="Tandai Lunas" className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 transition hover:bg-emerald-100">
                                 <CheckCircle className="h-4 w-4" />
                               </button>
                               <button type="button" onClick={() => handleSendReminder(b)} title="Kirim Pengingat WA" className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-50 text-green-600 transition hover:bg-green-100">
                                 <Send className="h-4 w-4" />
                               </button>
                             </>
-                          ) : null}
+                          )}
                           {b.status !== 'dibatalkan' && b.status !== 'lunas' && (
                             <button type="button" onClick={() => setEditing(b)} title="Edit" className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-stv-muted transition hover:text-stv-navy">
                               <Pencil className="h-4 w-4" />
                             </button>
                           )}
                           {b.status !== 'dibatalkan' && b.status !== 'lunas' && (
-                            <button type="button" onClick={() => handleCancel(b.id)} title="Batalkan Tagihan" className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-50 text-red-400 transition hover:text-red-600">
+                            <button type="button" onClick={() => cancelBilling(b.id)} title="Batalkan" className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-50 text-red-400 transition hover:text-red-600">
                               <Trash2 className="h-4 w-4" />
                             </button>
                           )}
@@ -326,9 +305,8 @@ export default function SppAdmin() {
 
       {(showForm || editing) && (
         <BillingFormModal
-          initial={editing ?? undefined}
+          editing={editing}
           onClose={() => { setShowForm(false); setEditing(null); }}
-          onSave={handleSave}
         />
       )}
     </div>

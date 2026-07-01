@@ -1,59 +1,82 @@
 import React, { useState } from 'react';
 import {
-  Plus, Search, Pencil, X, UserCheck, UserX, Mail, Phone, Baby,
+  Plus, Search, Pencil, X, UserCheck, UserX, Mail, Phone, Baby, CheckCircle, Eye, EyeOff,
 } from 'lucide-react';
+import { useSekolahStudiva, Tier1ParentAccount, Tier1Child } from '../../context/SekolahStudivaContext';
 
 type AccountStatus = 'aktif' | 'nonaktif';
-
-interface Tier1Child {
-  name: string;
-  age: number;
-  kelas: string;
-  diagnosis: string;
-  waliKelas: string;
-}
-
-interface Tier1ParentAccount {
-  id: string;
-  parentName: string;
-  email: string;
-  phone: string;
-  status: AccountStatus;
-  createdAt: string;
-  sendCredentials: boolean;
-  child: Tier1Child;
-}
-
-function daysAgo(n: number) {
-  const d = new Date();
-  d.setDate(d.getDate() - n);
-  return d.toISOString();
-}
-
-const SEED_ACCOUNTS: Tier1ParentAccount[] = [
-  { id: 'ta-1', parentName: 'Andi Saputra', email: 'andi.saputra@gmail.com', phone: '081234567890', status: 'aktif', createdAt: daysAgo(8), sendCredentials: true, child: { name: 'Bima Saputra', age: 8, kelas: 'Kelompok Merah', diagnosis: 'ASD', waliKelas: 'Bu Rini' } },
-  { id: 'ta-2', parentName: 'Joko Prasetyo', email: 'joko.prasetyo@gmail.com', phone: '082345678901', status: 'aktif', createdAt: daysAgo(40), sendCredentials: true, child: { name: 'Arka Prasetyo', age: 7, kelas: 'Kelompok Biru', diagnosis: 'ADHD', waliKelas: 'Bu Sari' } },
-  { id: 'ta-3', parentName: 'Hendra Gunawan', email: 'hendra.gunawan@gmail.com', phone: '083456789012', status: 'aktif', createdAt: daysAgo(11), sendCredentials: false, child: { name: 'Dafa Gunawan', age: 9, kelas: 'Kelompok Hijau', diagnosis: 'Down Syndrome', waliKelas: 'Bu Leni' } },
-  { id: 'ta-4', parentName: 'Ayu Permatasari', email: 'ayu.permatasari@gmail.com', phone: '084567890123', status: 'aktif', createdAt: daysAgo(28), sendCredentials: true, child: { name: 'Kenzo Permatasari', age: 6, kelas: 'Kelompok Kuning', diagnosis: 'ASD, Tantangan Sensorik', waliKelas: 'Bu Rini' } },
-  { id: 'ta-5', parentName: 'Bambang Hidayat', email: 'bambang.hidayat@gmail.com', phone: '085678901234', status: 'nonaktif', createdAt: daysAgo(150), sendCredentials: true, child: { name: 'Citra Hidayat', age: 10, kelas: 'Kelompok Merah', diagnosis: 'Tantangan Belajar', waliKelas: 'Bu Sari' } },
-];
 
 interface AccountFormState {
   parentName: string;
   email: string;
+  password: string;
   phone: string;
   childName: string;
   childAge: string;
   childKelas: string;
   childDiagnosis: string;
   childWaliKelas: string;
-  sendCredentials: boolean;
 }
 
 const EMPTY_FORM: AccountFormState = {
-  parentName: '', email: '', phone: '', childName: '', childAge: '',
-  childKelas: '', childDiagnosis: '', childWaliKelas: '', sendCredentials: true,
+  parentName: '', email: '', password: '', phone: '', childName: '', childAge: '',
+  childKelas: '', childDiagnosis: '', childWaliKelas: '',
 };
+
+function CredentialsModal({ email, password, name, onClose }: {
+  email: string; password: string; name: string; onClose: () => void;
+}) {
+  const [copied, setCopied] = useState<string | null>(null);
+  function copy(text: string, key: string) {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(key);
+      setTimeout(() => setCopied(null), 2000);
+    });
+  }
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+      <div className="absolute inset-0 bg-stv-navy/50 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full max-w-[420px] overflow-hidden rounded-2xl bg-white shadow-[0_32px_80px_rgba(16,58,107,.25)]">
+        <div className="bg-gradient-to-br from-sky-500 to-indigo-600 px-6 py-8 text-center text-white">
+          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20">
+            <CheckCircle className="h-8 w-8 text-white" />
+          </div>
+          <h2 className="font-baloo text-[22px] font-extrabold">Akun Berhasil Dibuat!</h2>
+          <p className="mt-1 text-[14px] text-white/80">Untuk: {name}</p>
+        </div>
+        <div className="px-6 py-5">
+          <p className="mb-4 text-[13px] text-stv-muted">Bagikan kredensial ini kepada orang tua untuk login pertama kali:</p>
+          {[{ label: 'Email', value: email, key: 'email' }, { label: 'Password', value: password, key: 'pass' }].map(item => (
+            <div key={item.key} className="mb-3">
+              <label className="mb-1 block text-[12px] font-bold uppercase tracking-wide text-stv-muted">{item.label}</label>
+              <div className="flex items-center gap-2 rounded-xl border border-stv-border bg-slate-50 px-4 py-2.5">
+                <span className="flex-1 font-mono text-[14px] text-stv-navy">{item.value}</span>
+                <button
+                  type="button"
+                  onClick={() => copy(item.value, item.key)}
+                  className="text-[12px] font-semibold text-sky-600 transition hover:text-sky-700"
+                >
+                  {copied === item.key ? 'Tersalin!' : 'Salin'}
+                </button>
+              </div>
+            </div>
+          ))}
+          <p className="mb-4 rounded-xl bg-amber-50 p-3 text-[12px] text-amber-700">
+            Orang tua dapat login di halaman <strong>/login</strong>. Akses Tier 1 akan diaktifkan setelah proses administrasi selesai.
+          </p>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full rounded-xl bg-sky-600 py-2.5 font-bold text-white transition hover:bg-sky-700"
+          >
+            Selesai
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function AccountFormModal({ initial, onClose, onSave }: {
   initial?: Tier1ParentAccount;
@@ -62,16 +85,19 @@ function AccountFormModal({ initial, onClose, onSave }: {
 }) {
   const [form, setForm] = useState<AccountFormState>(
     initial
-      ? { parentName: initial.parentName, email: initial.email, phone: initial.phone, childName: initial.child.name, childAge: String(initial.child.age), childKelas: initial.child.kelas, childDiagnosis: initial.child.diagnosis, childWaliKelas: initial.child.waliKelas, sendCredentials: initial.sendCredentials }
+      ? { parentName: initial.parentName, email: initial.email, password: '', phone: initial.phone, childName: initial.child.name, childAge: String(initial.child.age), childKelas: initial.child.kelas, childDiagnosis: initial.child.diagnosis, childWaliKelas: initial.child.waliKelas }
       : EMPTY_FORM,
   );
   const [error, setError] = useState('');
+  const [showPass, setShowPass] = useState(false);
 
-  const f = (key: keyof AccountFormState, val: string | boolean) => setForm(p => ({ ...p, [key]: val }));
+  const f = (key: keyof AccountFormState, val: string) => setForm(p => ({ ...p, [key]: val }));
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.parentName.trim() || !form.email.trim()) { setError('Nama orang tua dan email wajib diisi.'); return; }
+    if (!initial && !form.password.trim()) { setError('Password wajib diisi untuk akun baru.'); return; }
+    if (!initial && form.password.length < 6) { setError('Password minimal 6 karakter.'); return; }
     if (!form.childName.trim()) { setError('Nama anak wajib diisi.'); return; }
     onSave(form);
   }
@@ -99,13 +125,30 @@ function AccountFormModal({ initial, onClose, onSave }: {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="mb-1 block text-[13px] font-semibold text-stv-navy">Email *</label>
-                  <input type="email" value={form.email} onChange={e => f('email', e.target.value)} className="w-full rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:border-sky-400 focus:outline-none" placeholder="nama@email.com" />
+                  <input type="email" value={form.email} onChange={e => f('email', e.target.value)} disabled={!!initial} className="w-full rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:border-sky-400 focus:outline-none disabled:bg-slate-50 disabled:text-stv-muted" placeholder="nama@email.com" />
                 </div>
                 <div>
                   <label className="mb-1 block text-[13px] font-semibold text-stv-navy">No. WhatsApp</label>
                   <input value={form.phone} onChange={e => f('phone', e.target.value)} className="w-full rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:border-sky-400 focus:outline-none" placeholder="08xxxxxxxxxx" />
                 </div>
               </div>
+              {!initial && (
+                <div>
+                  <label className="mb-1 block text-[13px] font-semibold text-stv-navy">Password *</label>
+                  <div className="relative">
+                    <input
+                      type={showPass ? 'text' : 'password'}
+                      value={form.password}
+                      onChange={e => f('password', e.target.value)}
+                      className="w-full rounded-xl border border-stv-border px-3 py-2.5 pr-10 text-[14px] focus:border-sky-400 focus:outline-none"
+                      placeholder="Minimal 6 karakter"
+                    />
+                    <button type="button" onClick={() => setShowPass(s => !s)} className="absolute right-3 top-1/2 -translate-y-1/2 text-stv-muted hover:text-stv-navy">
+                      {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -139,19 +182,6 @@ function AccountFormModal({ initial, onClose, onSave }: {
             </div>
           </div>
 
-          <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-stv-border p-3">
-            <input
-              type="checkbox"
-              checked={form.sendCredentials}
-              onChange={e => f('sendCredentials', e.target.checked)}
-              className="h-4 w-4 rounded accent-sky-600"
-            />
-            <span className="text-[14px] text-stv-body">
-              Kirim email kredensial ke orang tua setelah akun dibuat
-              <span className="ml-1 text-[12px] text-stv-muted">(TODO: backend)</span>
-            </span>
-          </label>
-
           {error && <p className="text-[13px] text-red-500">{error}</p>}
 
           <div className="mt-1 flex justify-end gap-3">
@@ -166,14 +196,15 @@ function AccountFormModal({ initial, onClose, onSave }: {
   );
 }
 
-let idCtr = 100;
-
 export default function SekolahAkunAdmin() {
-  const [accounts, setAccounts] = useState<Tier1ParentAccount[]>(SEED_ACCOUNTS);
+  const { accounts, addAccount, updateAccount, toggleAccountStatus } = useSekolahStudiva();
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState<AccountStatus | 'semua'>('semua');
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Tier1ParentAccount | null>(null);
+  const [createdCreds, setCreatedCreds] = useState<{ email: string; password: string; name: string } | null>(null);
+  const [apiError, setApiError] = useState('');
+  const [saving, setSaving] = useState(false);
 
   const filtered = accounts.filter(a => {
     const q = search.toLowerCase();
@@ -182,25 +213,25 @@ export default function SekolahAkunAdmin() {
     return matchSearch && matchStatus;
   });
 
-  function handleSave(data: AccountFormState) {
-    if (editing) {
-      setAccounts(prev => prev.map(a => a.id === editing.id ? {
-        ...a, parentName: data.parentName, email: data.email, phone: data.phone, sendCredentials: data.sendCredentials,
-        child: { name: data.childName, age: Number(data.childAge) || 0, kelas: data.childKelas, diagnosis: data.childDiagnosis, waliKelas: data.childWaliKelas },
-      } : a));
-      setEditing(null);
-    } else {
-      const newAcc: Tier1ParentAccount = {
-        id: `ta-new-${idCtr++}`, parentName: data.parentName, email: data.email, phone: data.phone, status: 'aktif', createdAt: new Date().toISOString(), sendCredentials: data.sendCredentials,
-        child: { name: data.childName, age: Number(data.childAge) || 0, kelas: data.childKelas, diagnosis: data.childDiagnosis, waliKelas: data.childWaliKelas },
-      };
-      setAccounts(prev => [newAcc, ...prev]);
-      setShowForm(false);
+  async function handleSaveNew(data: AccountFormState) {
+    setSaving(true);
+    setApiError('');
+    const child: Tier1Child = { name: data.childName, age: Number(data.childAge) || 0, kelas: data.childKelas, diagnosis: data.childDiagnosis, waliKelas: data.childWaliKelas };
+    const result = await addAccount({ parentName: data.parentName, email: data.email, password: data.password, phone: data.phone, child });
+    setSaving(false);
+    if (!result.success) {
+      setApiError(result.error ?? 'Terjadi kesalahan.');
+      return;
     }
+    setShowForm(false);
+    setCreatedCreds({ email: data.email, password: data.password, name: data.parentName });
   }
 
-  function toggleStatus(id: string) {
-    setAccounts(prev => prev.map(a => a.id === id ? { ...a, status: a.status === 'aktif' ? 'nonaktif' : 'aktif' } : a));
+  function handleSaveEdit(data: AccountFormState) {
+    if (!editing) return;
+    const child: Tier1Child = { name: data.childName, age: Number(data.childAge) || 0, kelas: data.childKelas, diagnosis: data.childDiagnosis, waliKelas: data.childWaliKelas };
+    updateAccount(editing.id, { parentName: data.parentName, phone: data.phone, child });
+    setEditing(null);
   }
 
   return (
@@ -208,35 +239,26 @@ export default function SekolahAkunAdmin() {
       {/* Header note */}
       <div className="rounded-2xl border border-sky-200 bg-sky-50 p-4">
         <p className="text-[14px] text-sky-800">
-          <strong>Pendaftaran Offline:</strong> Akun orang tua untuk Sekolah Studiva dibuat oleh admin setelah proses pendaftaran offline selesai. Orang tua tidak bisa mendaftar sendiri.
+          <strong>Pendaftaran Offline:</strong> Akun orang tua Sekolah Studiva dibuat oleh admin setelah proses pendaftaran offline selesai. Orang tua tidak bisa mendaftar sendiri.
         </p>
       </div>
+
+      {apiError && (
+        <div className="rounded-xl bg-red-50 p-3 text-[13px] text-red-700">{apiError}</div>
+      )}
 
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stv-muted" />
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Cari nama orang tua, email, atau nama anak..."
-            className="w-full rounded-xl border border-stv-border py-2.5 pl-9 pr-4 text-[14px] focus:border-sky-400 focus:outline-none"
-          />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Cari nama orang tua, email, atau nama anak..." className="w-full rounded-xl border border-stv-border py-2.5 pl-9 pr-4 text-[14px] focus:border-sky-400 focus:outline-none" />
         </div>
-        <select
-          value={filterStatus}
-          onChange={e => setFilterStatus(e.target.value as AccountStatus | 'semua')}
-          className="rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:outline-none"
-        >
+        <select value={filterStatus} onChange={e => setFilterStatus(e.target.value as AccountStatus | 'semua')} className="rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:outline-none">
           <option value="semua">Semua Status</option>
           <option value="aktif">Aktif</option>
           <option value="nonaktif">Nonaktif</option>
         </select>
-        <button
-          type="button"
-          onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 rounded-xl bg-sky-600 px-4 py-2.5 text-[14px] font-bold text-white transition hover:bg-sky-700"
-        >
+        <button type="button" onClick={() => { setApiError(''); setShowForm(true); }} className="flex items-center gap-2 rounded-xl bg-sky-600 px-4 py-2.5 text-[14px] font-bold text-white transition hover:bg-sky-700">
           <Plus className="h-4 w-4" />
           Buat Akun Orang Tua
         </button>
@@ -252,7 +274,6 @@ export default function SekolahAkunAdmin() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map(a => (
             <div key={a.id} className={`rounded-2xl border bg-white p-5 shadow-[0_4px_16px_rgba(16,58,107,.05)] transition hover:shadow-[0_8px_24px_rgba(16,58,107,.09)] ${a.status === 'nonaktif' ? 'opacity-60 border-slate-200' : 'border-stv-border'}`}>
-              {/* Header */}
               <div className="mb-3 flex items-start justify-between gap-2">
                 <div>
                   <p className="font-baloo text-[16px] font-bold text-stv-navy">{a.parentName}</p>
@@ -264,13 +285,12 @@ export default function SekolahAkunAdmin() {
                   <button type="button" onClick={() => setEditing(a)} className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-stv-muted transition hover:text-stv-navy" title="Edit">
                     <Pencil className="h-4 w-4" />
                   </button>
-                  <button type="button" onClick={() => toggleStatus(a.id)} className={`flex h-8 w-8 items-center justify-center rounded-lg transition ${a.status === 'aktif' ? 'bg-red-50 text-red-400 hover:text-red-600' : 'bg-emerald-50 text-emerald-500 hover:text-emerald-700'}`} title={a.status === 'aktif' ? 'Nonaktifkan' : 'Aktifkan kembali'}>
+                  <button type="button" onClick={() => toggleAccountStatus(a.id)} className={`flex h-8 w-8 items-center justify-center rounded-lg transition ${a.status === 'aktif' ? 'bg-red-50 text-red-400 hover:text-red-600' : 'bg-emerald-50 text-emerald-500 hover:text-emerald-700'}`} title={a.status === 'aktif' ? 'Nonaktifkan' : 'Aktifkan'}>
                     {a.status === 'aktif' ? <UserX className="h-4 w-4" /> : <UserCheck className="h-4 w-4" />}
                   </button>
                 </div>
               </div>
 
-              {/* Contact */}
               <div className="mb-3 flex flex-col gap-1.5">
                 <div className="flex items-center gap-2 text-[13px] text-stv-muted">
                   <Mail className="h-3.5 w-3.5 shrink-0" />
@@ -284,7 +304,6 @@ export default function SekolahAkunAdmin() {
                 )}
               </div>
 
-              {/* Child */}
               <div className="rounded-xl bg-sky-50 p-3">
                 <div className="mb-1 flex items-center gap-1.5 text-[12px] font-bold text-sky-700">
                   <Baby className="h-3.5 w-3.5" />
@@ -295,21 +314,32 @@ export default function SekolahAkunAdmin() {
                 {a.child.diagnosis && <p className="mt-0.5 text-[12px] text-stv-muted">{a.child.diagnosis}</p>}
                 <p className="mt-0.5 text-[12px] text-stv-muted">Wali Kelas: {a.child.waliKelas}</p>
               </div>
-
-              {/* Credentials note */}
-              {a.sendCredentials && (
-                <p className="mt-2 text-[11px] text-emerald-600">Email kredensial dikirim saat akun dibuat</p>
-              )}
             </div>
           ))}
         </div>
       )}
 
-      {(showForm || editing) && (
+      {showForm && (
         <AccountFormModal
-          initial={editing ?? undefined}
-          onClose={() => { setShowForm(false); setEditing(null); }}
-          onSave={handleSave}
+          onClose={() => setShowForm(false)}
+          onSave={data => { if (!saving) handleSaveNew(data); }}
+        />
+      )}
+
+      {editing && (
+        <AccountFormModal
+          initial={editing}
+          onClose={() => setEditing(null)}
+          onSave={handleSaveEdit}
+        />
+      )}
+
+      {createdCreds && (
+        <CredentialsModal
+          email={createdCreds.email}
+          password={createdCreds.password}
+          name={createdCreds.name}
+          onClose={() => setCreatedCreds(null)}
         />
       )}
     </div>

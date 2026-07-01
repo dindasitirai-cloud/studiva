@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
 import { useToast } from '../components/ToastProvider';
+import { useFullscreenNotif } from '../components/FullscreenNotificationProvider';
 import { ARTICLES, Article, CATEGORIES } from '../pages/DashboardPages/Tier2/articleData';
 import { COURSES, Course } from '../pages/DashboardPages/Tier2/courseData';
 import { STRATEGIES, Strategy, AGE_GROUPS } from '../pages/DashboardPages/Tier2/strategyData';
@@ -310,6 +311,7 @@ function removeActivity(prev: ActivityRecord[], childId: string, itemId: string)
 
 export function DashboardTier2Provider({ children: providerChildren }: { children: React.ReactNode }) {
   const { showToast } = useToast();
+  const { showFullscreenNotif } = useFullscreenNotif();
   const [articleActivity, setArticleActivity] = useState<ActivityRecord[]>([]);
   const [courseActivity, setCourseActivity] = useState<ActivityRecord[]>([]);
   const [strategyActivity, setStrategyActivity] = useState<ActivityRecord[]>([]);
@@ -552,8 +554,15 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
         ...prev,
       ]);
       showToast({ kind: 'webinar-reminder', title: reminderTitle, message: reminderMessage });
+      showFullscreenNotif({
+        kind: 'webinar-reminder-h1',
+        title: reminderTitle,
+        message: reminderMessage,
+        ctaLabel: 'Lihat Courses',
+        ctaTo: '/dashboard/tier2/courses',
+      });
     }, reminderDelay);
-  }, [showToast]);
+  }, [showToast, showFullscreenNotif]);
 
   const markNotificationRead = useCallback((id: string) =>
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n)), []);

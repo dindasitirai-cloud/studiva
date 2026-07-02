@@ -314,7 +314,7 @@ type TabId = 'tentang' | 'fitur' | 'sorotan' | 'cara-kerja' | 'kenapa';
 const tabs: { id: TabId; label: string }[] = [
   { id: 'tentang', label: 'Tentang' },
   { id: 'fitur', label: 'Fitur Unggulan' },
-  { id: 'sorotan', label: 'Lihat Lebih Dekat' },
+  { id: 'sorotan', label: 'Intip Dashboard' },
   { id: 'cara-kerja', label: 'Cara Kerja' },
   { id: 'kenapa', label: 'Kenapa Kami' },
 ];
@@ -390,7 +390,7 @@ function SorotanPanel() {
     <div className="mx-auto max-w-[1100px]">
       <Reveal>
         <div className="mb-10 text-center">
-          <h2 className="font-baloo text-[28px] font-extrabold text-stv-navy sm:text-[36px]">Lihat Lebih Dekat</h2>
+          <h2 className="font-baloo text-[28px] font-extrabold text-stv-navy sm:text-[36px]">Intip Dashboard</h2>
           <p className="mx-auto mt-3 max-w-[560px] text-[15px] text-stv-body">
             Intip tampilan setiap fitur dashboard Studiva Digital yang akan Anda gunakan sehari-hari.
           </p>

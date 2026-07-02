@@ -188,7 +188,7 @@ function T2MockupCourses() {
             <span className="text-[9px] text-stv-muted">Sabtu 19.00</span>
           </div>
           <p className="text-[11px] font-bold text-stv-navy">Mendampingi Anak dengan ADHD</p>
-          <p className="mt-0.5 text-[9px] text-stv-muted">Psikolog Fitri Effendy, S.Psi</p>
+          <p className="mt-0.5 text-[9px] text-stv-muted">Psikolog Fitri Effendy</p>
           <button type="button" className="mt-1.5 w-full rounded-full bg-amber-500 py-1 text-[9px] font-bold text-white">Daftar Webinar</button>
         </div>
         {/* Video recording */}

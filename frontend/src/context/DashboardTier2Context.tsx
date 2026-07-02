@@ -105,7 +105,7 @@ export interface AppNotification {
 const MOCK_REPLIERS = ['Ibu Siti', 'Bapak Andi', 'Ibu Dewi', 'Ibu Maya'];
 
 const SEED_PSYCHOLOGIST: PsychologistProfile = {
-  name: 'Psikolog Fitri Effendy, S.Psi',
+  name: 'Psikolog Fitri Effendy',
   specialization: 'Psikologi Anak & Tumbuh Kembang, Spesialisasi ASD/ADHD',
   bio: 'Founder Studiva. Berpengalaman mendampingi orang tua dan anak dengan kebutuhan belajar khusus selama lebih dari 10 tahun.',
 };

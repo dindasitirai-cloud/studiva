@@ -105,7 +105,7 @@ export default function TentangPage() {
                 </h2>
                 <div className="space-y-4 text-[16px] leading-[1.8] text-stv-body">
                   <p>
-                    Studiva didirikan oleh <strong className="text-stv-navy">Psikolog Fitri Effendy, S.Psi</strong> di
+                    Studiva didirikan oleh <strong className="text-stv-navy">Psikolog Fitri Effendy</strong> di
                     Bukittinggi, Sumatera Barat. Perjalanan ini berawal dari pengalaman pribadinya mendampingi anak-anak
                     dengan kebutuhan belajar yang berbeda, dan menyaksikan langsung betapa banyak orang tua merasa
                     sendirian, bingung, dan kelelahan dalam perjalanan tersebut.
@@ -316,7 +316,7 @@ export default function TentangPage() {
                 </div>
               </div>
               <div className="px-8 pb-8 pt-12 text-center">
-                <h3 className="font-baloo text-[22px] font-extrabold text-stv-navy">Psikolog Fitri Effendy, S.Psi</h3>
+                <h3 className="font-baloo text-[22px] font-extrabold text-stv-navy">Psikolog Fitri Effendy</h3>
                 <p className="mt-1 text-[14px] font-semibold text-stv-sky-stroke">Pendiri & Direktur Studiva</p>
                 <div className="my-5 h-px bg-stv-border" />
                 <p className="text-[15px] leading-[1.75] text-stv-body">

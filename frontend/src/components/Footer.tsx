@@ -20,7 +20,7 @@ export default function Footer() {
         <div>
           <div className="mb-[18px] font-baloo text-[26px] font-extrabold tracking-wide text-white">STUDIVA</div>
           <p className="mb-[18px] text-[15px] leading-[1.7] text-white/[.66]">
-            Pendidikan inklusif untuk setiap anak. Led by Psikolog Fitri Effendy, S.Psi.
+            Pendidikan inklusif untuk setiap anak. Led by Psikolog Fitri Effendy
           </p>
           <div className="flex items-start gap-[9px] text-[15px] text-white/[.66]">
             <MapPin className="mt-0.5 h-[18px] w-[18px] shrink-0 text-stv-yellow" strokeWidth={2} />

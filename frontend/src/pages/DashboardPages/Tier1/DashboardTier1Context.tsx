@@ -240,7 +240,7 @@ const ASSESSMENTS: AssessmentTier1[] = [
     childId: CHILD.id,
     title: 'Asesmen Awal Masuk Sekolah',
     date: daysAgoISO(180),
-    assessor: 'Psikolog Fitri Effendy, S.Psi',
+    assessor: 'Psikolog Fitri Effendy',
     assessorRole: 'Psikolog',
     summary:
       'Pada saat masuk, Raka menunjukkan kebutuhan dukungan signifikan terutama pada komunikasi dua arah dan kemandirian bina diri. Ia merespons positif terhadap pendekatan visual dan rutinitas terstruktur, sehingga ini menjadi dasar strategi pembelajaran yang disusun.',
@@ -367,7 +367,7 @@ const IEP_DATA: IEPDataTier1 = {
   nextReviewDate: (() => { const d = new Date(); d.setDate(d.getDate() + 60); return d.toISOString(); })(),
   team: [
     { name: 'Bu Ratna Sari, S.Pd', role: 'Wali Kelas' },
-    { name: 'Psikolog Fitri Effendy, S.Psi', role: 'Psikolog' },
+    { name: 'Psikolog Fitri Effendy', role: 'Psikolog' },
     { name: 'Pak Joko Widodo', role: 'Terapis Okupasi' },
   ],
   goals: [

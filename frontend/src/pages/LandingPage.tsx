@@ -41,7 +41,7 @@ const whyStudiva = [
     badgeColor: 'text-stv-navy',
     title: 'Expertise',
     description:
-      'Dipimpin oleh Psikolog Fitri Effendy, S.Psi dengan pengalaman puluhan tahun di bidang pendidikan inklusif.',
+      'Dipimpin oleh Psikolog Fitri Effendy dengan pengalaman puluhan tahun di bidang pendidikan inklusif.',
     sparkle: true,
   },
   {
@@ -410,7 +410,7 @@ export default function LandingPage() {
               Psikolog Fitri Effendy
             </h2>
             <p className="mb-7 font-baloo text-[19px] font-semibold text-stv-yellow-deep md:text-[21px]">
-              S.Psi, Founder &amp; Head Psychologist
+              Founder &amp; Head Psychologist
             </p>
             <p className="mb-8 max-w-[520px] font-nunito-sans text-[18px] italic leading-[1.7] text-stv-quote md:text-[19px]">
               &ldquo;Setiap anak memiliki potensi. Misi saya adalah membantu setiap anak mengembangkan potensi mereka

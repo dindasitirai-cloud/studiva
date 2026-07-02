@@ -266,7 +266,7 @@ const SEED_IEPS: IEPGuru[] = [
     nextReviewDate: (() => { const d = new Date(); d.setDate(d.getDate() + 60); return d.toISOString().slice(0, 10); })(),
     team: [
       { name: 'Bu Ratna Sari, S.Pd', role: 'Wali Kelas' },
-      { name: 'Psikolog Fitri Effendy, S.Psi', role: 'Psikolog' },
+      { name: 'Psikolog Fitri Effendy', role: 'Psikolog' },
       { name: 'Pak Joko Widodo', role: 'Terapis Okupasi' },
     ],
     goals: [
@@ -314,7 +314,7 @@ export const DEFAULT_ASSESSMENT_AREAS: AssessmentAreaGuru[] = [
 
 const SEED_ASSESSMENTS: AssessmentGuru[] = [
   {
-    id: 'as-1', studentId: 'sg-1', title: 'Asesmen Awal Masuk Sekolah', date: daysAgoISO(180).slice(0, 10), assessor: 'Psikolog Fitri Effendy, S.Psi', assessorRole: 'Psikolog',
+    id: 'as-1', studentId: 'sg-1', title: 'Asesmen Awal Masuk Sekolah', date: daysAgoISO(180).slice(0, 10), assessor: 'Psikolog Fitri Effendy', assessorRole: 'Psikolog',
     summary: 'Raka menunjukkan kebutuhan dukungan signifikan terutama pada komunikasi dua arah dan kemandirian bina diri. Merespons positif terhadap pendekatan visual dan rutinitas terstruktur.',
     areas: [
       { name: 'Komunikasi', score: 35, note: 'Bergantung pada komunikasi non-verbal, perlu bantuan kartu bantu (PECS).' },

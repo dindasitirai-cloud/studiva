@@ -18,7 +18,7 @@ const benefitCards = [
   },
   {
     title: 'Expert Support',
-    description: 'Led by Psikolog Fitri Effendy, S.Psi - Founder Studiva',
+    description: 'Led by Psikolog Fitri Effendy - Founder Studiva',
   },
 ];
 
@@ -83,7 +83,7 @@ export default function ConsultationPage() {
     <div>
       <section className="bg-navy px-4 py-16 text-center text-white md:px-8">
         <div className="text-5xl">📞</div>
-        <h1 className="mt-4 text-h1 font-bold">Book Consultation with Psikolog Fitri Effendy, S.Psi</h1>
+        <h1 className="mt-4 text-h1 font-bold">Book Consultation with Psikolog Fitri Effendy</h1>
         <p className="mt-4 text-white/85">
           Dapatkan panduan personal untuk perkembangan anak Anda
         </p>

@@ -42,7 +42,7 @@ type FormState = {
 };
 
 const EMPTY_FORM: FormState = {
-  type: 'webinar', title: '', psychologist: 'Psikolog Fitri Effendy, S.Psi', description: '', date: '', duration: 60, webinarLink: '', colorTheme: 'amber', status: 'upcoming', visibility: 'draft',
+  type: 'webinar', title: '', psychologist: 'Psikolog Fitri Effendy', description: '', date: '', duration: 60, webinarLink: '', colorTheme: 'amber', status: 'upcoming', visibility: 'draft',
 };
 
 function CourseFormModal({ initial, onClose, onSave }: { initial: FormState; onClose: () => void; onSave: (form: FormState) => void }) {

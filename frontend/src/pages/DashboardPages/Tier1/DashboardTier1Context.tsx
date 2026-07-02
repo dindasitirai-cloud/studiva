@@ -436,6 +436,9 @@ export interface ParentNoteTier1 {
   urgency: ParentNoteUrgency;
   createdAt: string;
   readByTeacher: boolean;
+  teacherResponse?: string;
+  teacherResponseAt?: string;
+  teacherName?: string;
 }
 
 let nextId = 1;
@@ -466,7 +469,24 @@ export function DashboardTier1Provider({ children }: { children: React.ReactNode
   const [portfolioItems] = useState<PortfolioItemTier1[]>(PORTFOLIO);
   const [assessments] = useState<AssessmentTier1[]>(ASSESSMENTS);
   const [iep] = useState<IEPDataTier1>(IEP_DATA);
-  const [parentNotes, setParentNotes] = useState<ParentNoteTier1[]>([]);
+  const [parentNotes, setParentNotes] = useState<ParentNoteTier1[]>([
+    {
+      id: 'pn-seed-1', childId: CHILD.id, date: daysAgoISO(3).slice(0, 10),
+      category: 'kesehatan', message: 'Raka terlihat lebih mudah lelah minggu ini. Ada info dari sekolah?',
+      urgency: 'normal', createdAt: daysAgoISO(3), readByTeacher: true,
+      teacherName: 'Bu Ratna Sari',
+      teacherResponse: 'Terima kasih infonya. Kami perhatikan hal yang sama, sedang kami amati lebih lanjut.',
+      teacherResponseAt: new Date(new Date(daysAgoISO(3)).getTime() + 2 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+      id: 'pn-seed-2', childId: CHILD.id, date: daysAgoISO(7).slice(0, 10),
+      category: 'info-umum', message: 'Besok Raka mungkin datang sedikit terlambat karena ada janji dokter pagi.',
+      urgency: 'normal', createdAt: daysAgoISO(7), readByTeacher: true,
+      teacherName: 'Bu Ratna Sari',
+      teacherResponse: 'Baik, terima kasih sudah memberi tahu sebelumnya. Kami siapkan kursinya.',
+      teacherResponseAt: new Date(new Date(daysAgoISO(7)).getTime() + 30 * 60 * 1000).toISOString(),
+    },
+  ]);
   const [teacherNotifications, setTeacherNotifications] = useState<TeacherNotificationTier1[]>(TEACHER_NOTIFICATIONS);
 
   const markTeacherNotificationRead = useCallback((id: string) =>
@@ -486,14 +506,11 @@ export function DashboardTier1Provider({ children }: { children: React.ReactNode
       { ...note, id, childId: CHILD.id, createdAt: new Date().toISOString(), readByTeacher: false },
       ...prev,
     ]);
-
-    // TODO: remove once a real teacher panel with read-receipts exists -
-    // this simulates the teacher opening and reading the note shortly after
-    // it's sent, so the "Sudah Dibaca Guru" status is demonstrable.
-    const delay = 8000 + Math.random() * 7000;
+    // Simulate teacher reading the note after a short delay
+    // TODO: replace with real read-receipt from backend once teacher panel exists.
     setTimeout(() => {
       setParentNotes(prev => prev.map(n => n.id === id ? { ...n, readByTeacher: true } : n));
-    }, delay);
+    }, 5000);
   }, []);
 
   return (

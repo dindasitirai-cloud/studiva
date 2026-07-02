@@ -26,7 +26,6 @@ import {
   LucideIcon,
 } from 'lucide-react';
 import Reveal from '../components/Reveal';
-import Lightbox from '../components/Lightbox';
 
 interface IconCard {
   icon: LucideIcon;
@@ -241,19 +240,196 @@ const benefits: IconCard[] = [
   },
 ];
 
-interface GalleryImage {
-  src: string;
-  alt: string;
-  caption: string;
+// ── Dashboard mockup sub-components ─────────────────────────────────────────
+
+function MockupShell({ title, accent, children }: { title: string; accent: string; children: React.ReactNode }) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-stv-border bg-white shadow-[0_8px_28px_rgba(16,58,107,.10)]">
+      {/* Mini browser chrome */}
+      <div className={`flex items-center gap-2 px-3 py-2.5 ${accent}`}>
+        <span className="h-2.5 w-2.5 rounded-full bg-white/40" />
+        <span className="h-2.5 w-2.5 rounded-full bg-white/30" />
+        <span className="h-2.5 w-2.5 rounded-full bg-white/20" />
+        <span className="ml-2 flex-1 truncate font-baloo text-[11px] font-bold text-white/90">{title}</span>
+      </div>
+      <div className="p-3">{children}</div>
+    </div>
+  );
 }
 
-const galleryImages: GalleryImage[] = [
-  { src: '/images/dashboard/dashboard-overview.png', alt: 'Tampilan ringkasan perkembangan anak', caption: 'Ringkasan perkembangan anak' },
-  { src: '/images/dashboard/dashboard-attendance.png', alt: 'Tampilan ringkasan kehadiran anak', caption: 'Kehadiran & jadwal' },
-  { src: '/images/dashboard/dashboard-therapy.png', alt: 'Tampilan catatan sesi terapi', caption: 'Catatan sesi terapi' },
-  { src: '/images/dashboard/dashboard-progress.png', alt: 'Tampilan grafik progres belajar', caption: 'Grafik progres belajar' },
-  { src: '/images/dashboard/dashboard-iep.png', alt: 'Tampilan target IEP anak', caption: 'Target IEP anak' },
-  { src: '/images/dashboard/dashboard-reports.png', alt: 'Tampilan laporan berkala digital', caption: 'Laporan berkala digital' },
+// 1. Perkembangan Harian
+function MockupPerkembangan() {
+  return (
+    <MockupShell title="Perkembangan Harian" accent="bg-orange-500">
+      <div className="flex flex-col gap-2">
+        {[
+          { date: 'Hari ini', teacher: 'Bu Ratna Sari', cat: 'Sosial-Emosional', catColor: 'bg-sky-100 text-sky-700', mood: '😊', note: 'Raka berhasil berbagi mainan tanpa diingatkan.' },
+          { date: 'Kemarin', teacher: 'Pak Joko', cat: 'Motorik', catColor: 'bg-purple-100 text-purple-700', mood: '🙂', note: 'Latihan menggunting garis lurus sudah cukup rapi.' },
+        ].map(u => (
+          <div key={u.date} className="rounded-xl border border-stv-border bg-slate-50 p-2.5">
+            <div className="mb-1.5 flex items-center justify-between gap-1">
+              <span className="text-[10px] font-semibold text-stv-muted">{u.date} · {u.teacher}</span>
+              <span className="text-[13px]">{u.mood}</span>
+            </div>
+            <span className={`mb-1.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${u.catColor}`}>{u.cat}</span>
+            <p className="text-[11px] leading-[1.5] text-stv-body">{u.note}</p>
+          </div>
+        ))}
+      </div>
+    </MockupShell>
+  );
+}
+
+// 2. Rekap Kehadiran
+function MockupKehadiran() {
+  const days = ['S','S','R','K','J'];
+  const rows = [
+    ['H','H','I','H','H'],
+    ['H','S','H','H','H'],
+    ['H','H','H','H','·'],
+  ];
+  const color: Record<string, string> = { H: 'bg-stv-green text-white', I: 'bg-amber-400 text-white', S: 'bg-red-400 text-white', '·': 'bg-slate-100 text-stv-muted' };
+  const label: Record<string, string> = { H: 'H', I: 'I', S: 'S', '·': '·' };
+  return (
+    <MockupShell title="Rekap Kehadiran" accent="bg-stv-green">
+      <div>
+        <p className="mb-2 text-center text-[11px] font-bold text-stv-navy">Juli 2026</p>
+        <div className="grid grid-cols-5 gap-1">
+          {days.map(d => <div key={d} className="text-center text-[10px] font-bold text-stv-muted">{d}</div>)}
+          {rows.flat().map((cell, i) => (
+            <div key={i} className={`flex h-7 items-center justify-center rounded-lg text-[10px] font-bold ${color[cell]}`}>{label[cell]}</div>
+          ))}
+        </div>
+        <div className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1">
+          {[['bg-stv-green', 'Hadir'], ['bg-amber-400', 'Izin'], ['bg-red-400', 'Sakit']].map(([bg, label]) => (
+            <div key={label} className="flex items-center gap-1"><span className={`h-2 w-2 rounded-full ${bg}`}/><span className="text-[10px] text-stv-muted">{label}</span></div>
+          ))}
+        </div>
+      </div>
+    </MockupShell>
+  );
+}
+
+// 3. Portfolio & Asesmen
+function MockupPortfolio() {
+  const items = [
+    { emoji: '🎨', label: 'Seni', color: 'bg-rose-50 border-rose-200' },
+    { emoji: '✏️', label: 'Akademik', color: 'bg-blue-50 border-blue-200' },
+    { emoji: '🏃', label: 'Motorik', color: 'bg-green-50 border-green-200' },
+    { emoji: '📁', label: 'Proyek', color: 'bg-amber-50 border-amber-200' },
+  ];
+  return (
+    <MockupShell title="Portfolio Anak" accent="bg-purple-600">
+      <div className="grid grid-cols-2 gap-2">
+        {items.map(item => (
+          <div key={item.label} className={`rounded-xl border p-2.5 text-center ${item.color}`}>
+            <div className="mb-1 text-[20px]">{item.emoji}</div>
+            <p className="text-[10px] font-bold text-stv-navy">{item.label}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-2 rounded-xl bg-indigo-50 p-2">
+        <p className="text-[10px] font-bold text-indigo-700">Asesmen Terbaru</p>
+        <div className="mt-1 flex items-center justify-between">
+          <span className="text-[10px] text-stv-body">Komunikasi Verbal</span>
+          <span className="rounded-full bg-indigo-600 px-2 py-0.5 text-[9px] font-bold text-white">Berjalan</span>
+        </div>
+      </div>
+    </MockupShell>
+  );
+}
+
+// 4. IEP
+function MockupIEP() {
+  return (
+    <MockupShell title="IEP Anak" accent="bg-stv-sky-stroke">
+      <div className="flex flex-col gap-2">
+        {[
+          { area: 'Komunikasi', pct: 70, status: 'Berjalan', statusColor: 'bg-stv-sky-tint text-stv-sky-stroke', barColor: 'bg-stv-sky-stroke', goal: 'Menggunakan PECS tanpa bantuan' },
+          { area: 'Motorik Halus', pct: 95, status: 'Tercapai', statusColor: 'bg-stv-green-tint text-stv-green', barColor: 'bg-stv-green', goal: 'Menulis nama sendiri' },
+          { area: 'Sensorik', pct: 20, status: 'Perlu Perhatian', statusColor: 'bg-rose-50 text-rose-600', barColor: 'bg-rose-400', goal: 'Toleransi suara keras' },
+        ].map(g => (
+          <div key={g.area} className="rounded-xl border border-stv-border p-2.5">
+            <div className="mb-1 flex items-center justify-between gap-1">
+              <span className="text-[10px] font-bold text-stv-navy">{g.area}</span>
+              <span className={`rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${g.statusColor}`}>{g.status}</span>
+            </div>
+            <p className="mb-1.5 text-[10px] text-stv-muted">{g.goal}</p>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+              <div className={`h-full rounded-full ${g.barColor}`} style={{ width: `${g.pct}%` }} />
+            </div>
+            <p className="mt-0.5 text-right text-[9px] font-semibold text-stv-muted">{g.pct}%</p>
+          </div>
+        ))}
+      </div>
+    </MockupShell>
+  );
+}
+
+// 5. Catatan untuk Guru
+function MockupCatatanGuru() {
+  return (
+    <MockupShell title="Catatan untuk Guru" accent="bg-teal-600">
+      <div className="flex flex-col gap-2">
+        {/* Parent message (right) */}
+        <div className="flex justify-end">
+          <div className="max-w-[85%] rounded-xl rounded-tr-sm bg-stv-sky-tint px-3 py-2">
+            <p className="mb-0.5 text-[9px] font-bold text-stv-sky-stroke">Orang Tua</p>
+            <p className="text-[10px] leading-[1.5] text-stv-navy">Raka terlihat lebih mudah lelah minggu ini. Ada info dari sekolah?</p>
+            <p className="mt-0.5 text-right text-[9px] text-stv-muted">Senin, 09.15</p>
+          </div>
+        </div>
+        {/* Teacher reply (left) */}
+        <div className="flex justify-start">
+          <div className="max-w-[85%] rounded-xl rounded-tl-sm bg-stv-green-tint px-3 py-2">
+            <p className="mb-0.5 text-[9px] font-bold text-stv-green">Bu Ratna Sari</p>
+            <p className="text-[10px] leading-[1.5] text-stv-navy">Terima kasih infonya. Kami perhatikan hal yang sama, sedang kami amati lebih lanjut.</p>
+            <p className="mt-0.5 text-[9px] text-stv-muted">Senin, 11.30</p>
+          </div>
+        </div>
+        {/* Input stub */}
+        <div className="mt-1 flex items-center gap-1.5 rounded-xl border border-stv-border bg-slate-50 px-3 py-2">
+          <span className="flex-1 text-[10px] text-stv-muted">Tulis catatan...</span>
+          <span className="h-5 w-5 rounded-full bg-teal-600 text-center text-[10px] font-bold leading-5 text-white">↑</span>
+        </div>
+      </div>
+    </MockupShell>
+  );
+}
+
+// 6. Pembayaran SPP
+function MockupSPP() {
+  return (
+    <MockupShell title="Pembayaran SPP" accent="bg-emerald-600">
+      <div>
+        <div className="mb-3 rounded-xl bg-emerald-600 px-3 py-2.5 text-white">
+          <p className="text-[10px] text-white/75">Total Belum Dibayar</p>
+          <p className="font-baloo text-[18px] font-extrabold">Rp 1.500.000</p>
+          <p className="text-[9px] text-white/70">1 tagihan menunggu</p>
+        </div>
+        <div className="rounded-xl border-2 border-amber-300 bg-amber-50 p-2.5">
+          <div className="mb-1.5 flex items-center justify-between">
+            <p className="text-[11px] font-bold text-stv-navy">SPP Bulan Juli 2026</p>
+            <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold text-amber-700">Menunggu</span>
+          </div>
+          <p className="mb-2 text-[10px] text-stv-muted">Jatuh tempo: 10 Juli 2026</p>
+          <div className="flex items-center justify-between">
+            <span className="font-baloo text-[13px] font-bold text-stv-navy">Rp 1.500.000</span>
+            <button type="button" className="rounded-full bg-emerald-600 px-2.5 py-1 text-[10px] font-bold text-white">Bayar Sekarang</button>
+          </div>
+        </div>
+      </div>
+    </MockupShell>
+  );
+}
+
+const DASHBOARD_MOCKUPS: { component: React.FC; caption: string }[] = [
+  { component: MockupPerkembangan, caption: 'Perkembangan Harian' },
+  { component: MockupKehadiran,    caption: 'Rekap Kehadiran' },
+  { component: MockupPortfolio,    caption: 'Portfolio & Asesmen' },
+  { component: MockupIEP,          caption: 'IEP Transparan' },
+  { component: MockupCatatanGuru,  caption: 'Catatan untuk Guru' },
+  { component: MockupSPP,          caption: 'Pembayaran SPP' },
 ];
 
 type TabId = 'tentang' | 'kurikulum' | 'riset' | 'tim' | 'asesmen' | 'fitur';
@@ -310,31 +486,6 @@ function IconCardGrid({ items, columns = 'sm:grid-cols-2 lg:grid-cols-5' }: { it
   );
 }
 
-function DashboardGalleryItem({ image, onOpen }: { image: GalleryImage; onOpen: () => void }) {
-  const [failed, setFailed] = useState(false);
-
-  return (
-    <button type="button" onClick={onOpen} disabled={failed} className="group w-full text-left disabled:cursor-default">
-      <div className="overflow-hidden rounded-xl border border-stv-sky-tint bg-stv-sky-tint/40 shadow-[0_10px_30px_rgba(16,58,107,.08)]">
-        {failed ? (
-          <div className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 bg-stv-sky-tint/60 text-stv-muted">
-            <LayoutDashboard className="h-8 w-8" strokeWidth={1.5} />
-            <span className="text-[13px] font-semibold">Pratinjau segera hadir</span>
-          </div>
-        ) : (
-          <img
-            src={image.src}
-            alt={image.alt}
-            loading="lazy"
-            onError={() => setFailed(true)}
-            className="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-          />
-        )}
-      </div>
-      <p className="mt-2 text-center text-[14px] font-semibold text-stv-navy">{image.caption}</p>
-    </button>
-  );
-}
 
 function TentangPanel() {
   return (
@@ -549,7 +700,7 @@ function AsesmenPanel() {
   );
 }
 
-function FiturPanel({ onOpenGallery }: { onOpenGallery: (index: number) => void }) {
+function FiturPanel() {
   return (
     <div className="mx-auto max-w-[1100px]">
       <SectionHeading intro="Selain pembelajaran di kelas, orang tua mendapat akses dashboard digital yang transparan dan lengkap.">
@@ -562,13 +713,16 @@ function FiturPanel({ onOpenGallery }: { onOpenGallery: (index: number) => void 
           Intip dashboard yang akan Anda gunakan
         </h3>
         <p className="mx-auto mt-2 max-w-[560px] text-center text-[15px] text-stv-body">
-          Pantau perkembangan anak Anda dalam satu tampilan yang jelas dan ramah.
+          Setiap fitur di dashboard didesain agar mudah dibaca dan digunakan oleh orang tua.
         </p>
 
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {galleryImages.map((image, i) => (
-            <Reveal key={image.src}>
-              <DashboardGalleryItem image={image} onOpen={() => onOpenGallery(i)} />
+          {DASHBOARD_MOCKUPS.map(({ component: Mockup, caption }) => (
+            <Reveal key={caption}>
+              <div>
+                <Mockup />
+                <p className="mt-2.5 text-center text-[14px] font-semibold text-stv-navy">{caption}</p>
+              </div>
             </Reveal>
           ))}
         </div>
@@ -579,7 +733,6 @@ function FiturPanel({ onOpenGallery }: { onOpenGallery: (index: number) => void 
 
 export default function SekolahStudivaPage() {
   const [activeTab, setActiveTab] = useState<TabId>('tentang');
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   return (
     <div className="bg-white font-nunito-sans text-stv-body">
@@ -668,18 +821,9 @@ export default function SekolahStudivaPage() {
             {activeTab === 'riset' && <RisetPanel />}
             {activeTab === 'tim' && <TimPanel />}
             {activeTab === 'asesmen' && <AsesmenPanel />}
-            {activeTab === 'fitur' && <FiturPanel onOpenGallery={setLightboxIndex} />}
+            {activeTab === 'fitur' && <FiturPanel />}
           </Reveal>
         </section>
-      )}
-
-      {lightboxIndex !== null && (
-        <Lightbox
-          images={galleryImages}
-          index={lightboxIndex}
-          onClose={() => setLightboxIndex(null)}
-          onNavigate={setLightboxIndex}
-        />
       )}
 
       {/* ============ CTA PENUTUP ============ */}

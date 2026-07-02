@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  MessageCircle, Mail, Phone, MapPin, Clock, Send, CheckCircle,
-  AlertCircle, ArrowRight, ExternalLink,
+  MessageCircle, Mail, Phone, MapPin, Clock, CheckCircle,
+  ArrowRight, ExternalLink,
 } from 'lucide-react';
 import Reveal from '../components/Reveal';
 
@@ -19,9 +19,9 @@ const HOURS           = 'Senin – Jumat, 08.00 – 16.00 WIB';
 // TODO: ganti src embed di bawah dengan iframe URL Google Maps yang valid untuk
 // alamat sekolah. Cara mendapatkannya: buka Google Maps → cari alamat → klik
 // "Bagikan" → "Sematkan peta" → salin URL dari atribut src iframe.
-const MAPS_EMBED_URL  =
+const MAPS_EMBED_URL =
   'https://maps.google.com/maps?q=Jl.+Mandiangin+No.+65,+Bukittinggi,+Sumatera+Barat&output=embed&z=15';
-const MAPS_OPEN_URL   =
+const MAPS_OPEN_URL =
   'https://www.google.com/maps/search/?api=1&query=Jl.+Mandiangin+No.+65+Bukittinggi+Sumatera+Barat';
 
 // ── Kartu kontak ────────────────────────────────────────────────────────────
@@ -40,11 +40,7 @@ const CONTACT_CARDS: ContactCardProps[] = [
     icon: MessageCircle,
     label: 'WhatsApp',
     value: '+62 812-1147-0407',
-    action: {
-      label: 'Chat Sekarang',
-      href: `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MSG}`,
-      external: true,
-    },
+    action: { label: 'Chat Sekarang', href: `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MSG}`, external: true },
     gradient: 'from-emerald-50 to-teal-50',
     iconColor: 'text-emerald-600',
   },
@@ -106,163 +102,6 @@ function ContactCard({ icon: Icon, label, value, action, gradient, iconColor }: 
   );
 }
 
-// ── Form kontak ─────────────────────────────────────────────────────────────
-
-const TOPICS = [
-  'Informasi Sekolah Studiva (Tier 1)',
-  'Informasi Studiva Digital (Tier 2)',
-  'Pertanyaan Umum',
-  'Kerjasama / Partnership',
-  'Lainnya',
-];
-
-interface FormState {
-  name: string;
-  email: string;
-  topic: string;
-  message: string;
-}
-
-type SubmitStatus = 'idle' | 'success' | 'error';
-
-function ContactForm() {
-  const [form, setForm] = useState<FormState>({ name: '', email: '', topic: '', message: '' });
-  const [errors, setErrors] = useState<Partial<FormState>>({});
-  const [status, setStatus] = useState<SubmitStatus>('idle');
-
-  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  function validate(): boolean {
-    const e: Partial<FormState> = {};
-    if (!form.name.trim()) e.name = 'Nama wajib diisi.';
-    if (!form.email.trim()) e.email = 'Email wajib diisi.';
-    else if (!EMAIL_RE.test(form.email)) e.email = 'Format email tidak valid.';
-    if (!form.topic) e.topic = 'Pilih topik pertanyaan.';
-    if (!form.message.trim()) e.message = 'Pesan wajib diisi.';
-    else if (form.message.trim().length < 10) e.message = 'Pesan terlalu singkat (min. 10 karakter).';
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  }
-
-  function handleChange(key: keyof FormState, value: string) {
-    setForm(prev => ({ ...prev, [key]: value }));
-    if (errors[key]) setErrors(prev => ({ ...prev, [key]: undefined }));
-  }
-
-  function handleSubmit() {
-    if (!validate()) return;
-    // TODO: integrasikan dengan backend — kirim email notifikasi ke halo@studiva.id
-    // atau simpan ke tabel `contact_messages` di database.
-    // Contoh endpoint: POST /api/contact { name, email, topic, message }
-    setStatus('success');
-    setForm({ name: '', email: '', topic: '', message: '' });
-  }
-
-  if (status === 'success') {
-    return (
-      <div className="flex flex-col items-center gap-4 rounded-2xl bg-emerald-50 px-8 py-14 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-          <CheckCircle className="h-8 w-8 text-emerald-600" />
-        </div>
-        <h3 className="font-baloo text-[22px] font-bold text-stv-navy">Pesan Terkirim!</h3>
-        <p className="max-w-[360px] text-[15px] leading-[1.7] text-stv-body">
-          Terima kasih sudah menghubungi Studiva. Tim kami akan membalas dalam 1–2 hari kerja melalui
-          email atau WhatsApp yang Anda berikan.
-        </p>
-        <button
-          type="button"
-          onClick={() => setStatus('idle')}
-          className="mt-2 rounded-full border border-emerald-300 px-6 py-2.5 text-[14px] font-semibold text-emerald-700 transition hover:bg-emerald-100"
-        >
-          Kirim Pesan Lain
-        </button>
-      </div>
-    );
-  }
-
-  const inputCls = (field: keyof FormState) =>
-    `w-full rounded-xl border px-4 py-3 text-[15px] text-stv-navy placeholder:text-stv-muted-2 focus:outline-none focus:ring-2 focus:ring-stv-sky-stroke/30 transition ${
-      errors[field] ? 'border-red-400 bg-red-50' : 'border-stv-border bg-white focus:border-stv-sky-stroke'
-    }`;
-
-  return (
-    <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div>
-          <label className="mb-1.5 block text-[13px] font-semibold text-stv-navy">
-            Nama Lengkap <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            value={form.name}
-            onChange={e => handleChange('name', e.target.value)}
-            placeholder="Nama Anda"
-            className={inputCls('name')}
-          />
-          {errors.name && <p className="mt-1 flex items-center gap-1 text-[12px] text-red-500"><AlertCircle className="h-3 w-3" />{errors.name}</p>}
-        </div>
-        <div>
-          <label className="mb-1.5 block text-[13px] font-semibold text-stv-navy">
-            Email <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="email"
-            value={form.email}
-            onChange={e => handleChange('email', e.target.value)}
-            placeholder="nama@email.com"
-            className={inputCls('email')}
-          />
-          {errors.email && <p className="mt-1 flex items-center gap-1 text-[12px] text-red-500"><AlertCircle className="h-3 w-3" />{errors.email}</p>}
-        </div>
-      </div>
-
-      <div>
-        <label className="mb-1.5 block text-[13px] font-semibold text-stv-navy">
-          Topik <span className="text-red-500">*</span>
-        </label>
-        <select
-          value={form.topic}
-          onChange={e => handleChange('topic', e.target.value)}
-          className={inputCls('topic')}
-        >
-          <option value="">— Pilih topik —</option>
-          {TOPICS.map(t => <option key={t} value={t}>{t}</option>)}
-        </select>
-        {errors.topic && <p className="mt-1 flex items-center gap-1 text-[12px] text-red-500"><AlertCircle className="h-3 w-3" />{errors.topic}</p>}
-      </div>
-
-      <div>
-        <label className="mb-1.5 block text-[13px] font-semibold text-stv-navy">
-          Pesan <span className="text-red-500">*</span>
-        </label>
-        <textarea
-          value={form.message}
-          onChange={e => handleChange('message', e.target.value)}
-          placeholder="Tuliskan pertanyaan atau pesan Anda di sini..."
-          rows={5}
-          className={`resize-none ${inputCls('message')}`}
-        />
-        {errors.message && <p className="mt-1 flex items-center gap-1 text-[12px] text-red-500"><AlertCircle className="h-3 w-3" />{errors.message}</p>}
-      </div>
-
-      <button
-        type="button"
-        onClick={handleSubmit}
-        className="flex items-center justify-center gap-2 rounded-full bg-stv-navy px-8 py-4 font-baloo text-[16px] font-bold text-white shadow-[0_6px_20px_rgba(16,58,107,.25)] transition hover:-translate-y-0.5 hover:bg-stv-navy-dark"
-      >
-        <Send className="h-4 w-4" />
-        Kirim Pesan
-      </button>
-
-      {status === 'error' && (
-        <p className="rounded-xl bg-red-50 px-4 py-3 text-[13px] text-red-600">
-          Terjadi kesalahan. Silakan coba lagi atau hubungi kami langsung via WhatsApp.
-        </p>
-      )}
-    </div>
-  );
-}
-
 // ── Halaman Utama ───────────────────────────────────────────────────────────
 
 export default function KontakPage() {
@@ -305,37 +144,22 @@ export default function KontakPage() {
         </div>
       </section>
 
-      {/* ── FORM + PETA ──────────────────────────────────────────────────── */}
+      {/* ── PETA LOKASI ──────────────────────────────────────────────────── */}
       <section className="bg-slate-50 px-4 py-16 sm:px-8 sm:py-20">
-        <div className="mx-auto grid max-w-[1100px] grid-cols-1 gap-10 lg:grid-cols-2">
-
-          {/* Form */}
+        <div className="mx-auto max-w-[1100px]">
           <Reveal>
-            <div className="rounded-2xl bg-white p-6 shadow-[0_8px_32px_rgba(16,58,107,.08)] sm:p-8">
-              <h2 className="mb-2 font-baloo text-[26px] font-extrabold text-stv-navy">Kirim Pesan</h2>
-              <p className="mb-6 text-[14px] text-stv-body">
-                Isi form di bawah dan kami akan menghubungi Anda dalam 1–2 hari kerja.
-              </p>
-              <ContactForm />
-            </div>
-          </Reveal>
-
-          {/* Peta */}
-          <Reveal delayMs={80}>
             <div className="flex flex-col gap-4">
               <div className="overflow-hidden rounded-2xl bg-white shadow-[0_8px_32px_rgba(16,58,107,.08)]">
-                <div className="relative">
-                  <iframe
-                    title="Lokasi Sekolah Studiva"
-                    src={MAPS_EMBED_URL}
-                    width="100%"
-                    height="340"
-                    style={{ border: 0, display: 'block' }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  />
-                </div>
+                <iframe
+                  title="Lokasi Sekolah Studiva"
+                  src={MAPS_EMBED_URL}
+                  width="100%"
+                  height="380"
+                  style={{ border: 0, display: 'block' }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
                 <div className="flex items-center justify-between gap-4 px-5 py-4">
                   <div>
                     <p className="font-baloo text-[15px] font-bold text-stv-navy">Sekolah Studiva</p>
@@ -353,7 +177,6 @@ export default function KontakPage() {
                 </div>
               </div>
 
-              {/* Jam operasional */}
               <div className="rounded-2xl bg-white p-5 shadow-[0_4px_16px_rgba(16,58,107,.06)]">
                 <div className="mb-3 flex items-center gap-2">
                   <Clock className="h-5 w-5 text-amber-500" />
@@ -361,7 +184,7 @@ export default function KontakPage() {
                 </div>
                 <div className="space-y-1.5 text-[14px] text-stv-body">
                   <p><span className="font-semibold">Senin – Jumat</span> · 08.00 – 16.00 WIB</p>
-                  <p className="text-stv-muted">Sabtu & Minggu: Tutup</p>
+                  <p className="text-stv-muted">Sabtu &amp; Minggu: Tutup</p>
                   <p className="mt-2 text-[13px] text-stv-muted">
                     Di luar jam operasional, Anda tetap dapat mengirim pesan via WhatsApp dan kami
                     akan membalas pada hari kerja berikutnya.
@@ -370,11 +193,10 @@ export default function KontakPage() {
               </div>
             </div>
           </Reveal>
-
         </div>
       </section>
 
-      {/* ── CATATAN PENDAFTARAN ───────────────────────────────────────────── */}
+      {/* ── INFORMASI PENDAFTARAN ─────────────────────────────────────────── */}
       <section className="px-4 py-16 sm:px-8 sm:py-20">
         <div className="mx-auto max-w-[1100px]">
           <Reveal>
@@ -398,22 +220,20 @@ export default function KontakPage() {
                 </div>
                 <p className="mb-4 text-[14px] leading-[1.7] text-stv-body">
                   Pendaftaran Sekolah Studiva dilakukan secara <strong className="text-stv-navy">offline</strong>,
-                  langsung melalui tim kami. Tidak ada pendaftaran online atau pembayaran di website — kami
-                  ingin memastikan setiap anak mendapat pendampingan yang tepat sejak awal.
+                  langsung melalui tim kami. Kami ingin memastikan setiap anak mendapat pendampingan
+                  yang tepat sejak awal.
                 </p>
                 <ul className="mb-5 space-y-2">
-                  <li className="flex items-center gap-2 text-[13px] text-stv-body">
-                    <CheckCircle className="h-4 w-4 shrink-0 text-stv-sky-stroke" />
-                    Hubungi via WhatsApp untuk sesi perkenalan
-                  </li>
-                  <li className="flex items-center gap-2 text-[13px] text-stv-body">
-                    <CheckCircle className="h-4 w-4 shrink-0 text-stv-sky-stroke" />
-                    Asesmen awal bersama tim psikolog
-                  </li>
-                  <li className="flex items-center gap-2 text-[13px] text-stv-body">
-                    <CheckCircle className="h-4 w-4 shrink-0 text-stv-sky-stroke" />
-                    Akun orang tua dibuatkan oleh admin
-                  </li>
+                  {[
+                    'Hubungi via WhatsApp untuk sesi perkenalan',
+                    'Asesmen awal bersama tim psikolog',
+                    'Akun orang tua dibuatkan oleh admin',
+                  ].map(item => (
+                    <li key={item} className="flex items-center gap-2 text-[13px] text-stv-body">
+                      <CheckCircle className="h-4 w-4 shrink-0 text-stv-sky-stroke" />
+                      {item}
+                    </li>
+                  ))}
                 </ul>
                 <a
                   href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Halo Studiva, saya ingin mendaftarkan anak saya ke Sekolah Studiva.')}`}
@@ -441,22 +261,20 @@ export default function KontakPage() {
                 </div>
                 <p className="mb-4 text-[14px] leading-[1.7] text-stv-body">
                   Pendaftaran Studiva Digital dilakukan <strong className="text-stv-navy">sepenuhnya online</strong>.
-                  Buat akun, pilih paket berlangganan, dan akses langsung semua fitur platform — dari
+                  Buat akun, pilih paket berlangganan, dan akses langsung semua fitur platform dari
                   mana saja di Indonesia.
                 </p>
                 <ul className="mb-5 space-y-2">
-                  <li className="flex items-center gap-2 text-[13px] text-stv-body">
-                    <CheckCircle className="h-4 w-4 shrink-0 text-amber-500" />
-                    Daftar mandiri di website — tak perlu menghubungi tim
-                  </li>
-                  <li className="flex items-center gap-2 text-[13px] text-stv-body">
-                    <CheckCircle className="h-4 w-4 shrink-0 text-amber-500" />
-                    Pilih paket bulanan, 3 bulan, atau tahunan
-                  </li>
-                  <li className="flex items-center gap-2 text-[13px] text-stv-body">
-                    <CheckCircle className="h-4 w-4 shrink-0 text-amber-500" />
-                    Akses langsung setelah pembayaran berhasil
-                  </li>
+                  {[
+                    'Daftar mandiri di website — tak perlu menghubungi tim',
+                    'Pilih paket bulanan, 3 bulan, atau tahunan',
+                    'Akses langsung setelah pembayaran berhasil',
+                  ].map(item => (
+                    <li key={item} className="flex items-center gap-2 text-[13px] text-stv-body">
+                      <CheckCircle className="h-4 w-4 shrink-0 text-amber-500" />
+                      {item}
+                    </li>
+                  ))}
                 </ul>
                 <Link
                   to="/signup"

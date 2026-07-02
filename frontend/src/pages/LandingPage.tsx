@@ -562,8 +562,7 @@ export default function LandingPage() {
               Daftar Sekolah Studiva
             </a>
             <Link
-              to="/signup"
-              state={{ presetTier: 'tier2' }}
+              to="/daftar"
               className="rounded-full border-2 border-white/[.55] bg-transparent px-10 py-[18px] font-baloo text-[19px] font-bold text-white no-underline transition hover:border-white hover:bg-white/[.08]"
             >
               Daftar Tier 2

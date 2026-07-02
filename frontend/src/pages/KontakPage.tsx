@@ -277,7 +277,7 @@ export default function KontakPage() {
                   ))}
                 </ul>
                 <Link
-                  to="/signup"
+                  to="/daftar"
                   className="inline-flex items-center gap-1.5 rounded-full bg-amber-500 px-5 py-2.5 text-[14px] font-bold text-white no-underline transition hover:bg-amber-600"
                 >
                   Daftar Sekarang <ArrowRight className="h-4 w-4" />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { DashboardTier2Provider } from './context/DashboardTier2Context';
 import { SekolahStudivaProvider } from './context/SekolahStudivaContext';
@@ -20,6 +20,7 @@ import PricingPage from './pages/PricingPage';
 import ResourcesPage from './pages/ResourcesPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import DaftarPage from './pages/DaftarPage';
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import PaymentFailedPage from './pages/PaymentFailedPage';
 import SubscriptionSettingsPage from './pages/SubscriptionSettingsPage';
@@ -84,6 +85,7 @@ import PaymentsAdmin from './pages/AdminPages/PaymentsAdmin';
 import SettingsAdmin from './pages/AdminPages/SettingsAdmin';
 import SppAdmin from './pages/AdminPages/SppAdmin';
 import SekolahAkunAdmin from './pages/AdminPages/SekolahAkunAdmin';
+import GuruAkunAdmin from './pages/AdminPages/GuruAkunAdmin';
 
 const CONSULTATION_UPGRADE_MESSAGE =
   'Anda perlu upgrade ke Tier 1 atau Tier 2 untuk melakukan booking konsultasi. Silakan pilih plan yang sesuai untuk mulai berkonsultasi.';
@@ -95,7 +97,7 @@ const CONSULTATION_UPGRADE_MESSAGE =
 const ADMIN_SHELL_PATHS = [
   '/admin', '/admin/resource-library', '/admin/courses', '/admin/strategies',
   '/admin/forum', '/admin/konsultasi', '/admin/members', '/admin/payments', '/admin/settings',
-  '/admin/spp-billing', '/admin/sekolah-akun',
+  '/admin/spp-billing', '/admin/sekolah-akun', '/admin/guru-akun',
 ];
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -136,6 +138,8 @@ export default function App() {
             <Route path="/sekolah-studiva" element={<SekolahStudivaPage />} />
             <Route path="/studiva-digital" element={<StudivaDigitalPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/signup" element={<Navigate to="/daftar" replace />} />
+            <Route path="/daftar" element={<DaftarPage />} />
             <Route path="/tentang" element={<TentangPage />} />
             <Route path="/kontak" element={<KontakPage />} />
             <Route path="/pricing" element={<PricingPage />} />
@@ -355,6 +359,7 @@ export default function App() {
               <Route path="settings" element={<SettingsAdmin />} />
               <Route path="spp-billing" element={<SppAdmin />} />
               <Route path="sekolah-akun" element={<SekolahAkunAdmin />} />
+              <Route path="guru-akun" element={<GuruAkunAdmin />} />
             </Route>
 
             <Route

@@ -407,7 +407,7 @@ export default function StudivaDigitalPage() {
               komunitas, dan konsultasi langsung dengan psikolog — semua dalam satu tempat.
             </p>
             <Link
-              to="/signup"
+              to="/daftar"
               state={{ presetTier: 'tier2' }}
               className="inline-flex items-center rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 px-10 py-[16px] font-baloo text-[17px] font-bold text-stv-navy no-underline shadow-[0_10px_28px_rgba(245,158,11,.4)] transition hover:-translate-y-[3px] hover:shadow-[0_16px_36px_rgba(245,158,11,.5)]"
             >
@@ -473,7 +473,7 @@ export default function StudivaDigitalPage() {
               konsultasi dengan psikolog.
             </p>
             <Link
-              to="/signup"
+              to="/daftar"
               state={{ presetTier: 'tier2' }}
               className="inline-flex items-center gap-2 rounded-full bg-white px-10 py-[16px] font-baloo text-[18px] font-bold text-amber-600 no-underline shadow-[0_14px_30px_rgba(0,0,0,.15)] transition hover:-translate-y-[3px]"
             >

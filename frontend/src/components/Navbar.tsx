@@ -140,10 +140,10 @@ export default function Navbar() {
           ) : (
             <>
               <Link to="/login" className="text-[16px] font-bold text-stv-navy no-underline transition hover:text-stv-yellow-deep">
-                Login
+                Masuk
               </Link>
               <Link
-                to="/signup"
+                to="/daftar"
                 className="rounded-full bg-stv-yellow px-6 py-3 font-baloo text-[16px] font-bold text-stv-navy no-underline shadow-[0_6px_16px_rgba(251,208,10,.4)] transition hover:-translate-y-px hover:bg-stv-yellow-hover"
               >
                 Daftar Sekarang
@@ -268,10 +268,10 @@ export default function Navbar() {
                 onClick={() => setOpen(false)}
                 className="w-full rounded-full border-2 border-stv-navy px-5 py-2 text-center font-bold text-stv-navy"
               >
-                Login
+                Masuk
               </Link>
               <Link
-                to="/signup"
+                to="/daftar"
                 onClick={() => setOpen(false)}
                 className="w-full rounded-full bg-stv-yellow px-6 py-3 text-center font-baloo font-bold text-stv-navy"
               >

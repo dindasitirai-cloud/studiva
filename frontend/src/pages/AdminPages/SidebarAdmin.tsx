@@ -14,6 +14,7 @@ import {
   X,
   Receipt,
   UserPlus,
+  BookUser,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { ADMIN_COLORS, AdminModuleKey } from './adminFeatureColors';
@@ -40,8 +41,9 @@ const managementNav: { to: string; label: string; icon: typeof UserCog; key: Adm
 ];
 
 const sekolahNav: { to: string; label: string; icon: typeof UserCog; key: AdminModuleKey }[] = [
-  { to: '/admin/spp-billing', label: 'Tagihan SPP', icon: Receipt, key: 'spp-billing' },
+  { to: '/admin/spp-billing',  label: 'Tagihan SPP',    icon: Receipt,  key: 'spp-billing'  },
   { to: '/admin/sekolah-akun', label: 'Akun Orang Tua', icon: UserPlus, key: 'sekolah-akun' },
+  { to: '/admin/guru-akun',    label: 'Akun Guru',      icon: BookUser, key: 'guru-akun'    },
 ];
 
 function NavSection({ title, items, onClose }: {

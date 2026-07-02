@@ -313,7 +313,7 @@ type TabId = 'tentang' | 'fitur' | 'sorotan' | 'cara-kerja' | 'kenapa';
 
 const tabs: { id: TabId; label: string }[] = [
   { id: 'tentang', label: 'Tentang' },
-  { id: 'fitur', label: 'Fitur Unggulan' },
+  { id: 'fitur', label: 'Fitur Dashboard' },
   { id: 'sorotan', label: 'Intip Dashboard' },
   { id: 'cara-kerja', label: 'Cara Kerja' },
   { id: 'kenapa', label: 'Kenapa Kami' },
@@ -355,7 +355,7 @@ function FiturPanel() {
     <div className="mx-auto max-w-[1160px]">
       <Reveal>
         <div className="mx-auto mb-12 max-w-[680px] text-center">
-          <h2 className="font-baloo text-[28px] font-extrabold leading-[1.15] text-stv-navy sm:text-[36px]">Fitur Unggulan</h2>
+          <h2 className="font-baloo text-[28px] font-extrabold leading-[1.15] text-stv-navy sm:text-[36px]">Fitur Dashboard</h2>
           <p className="mt-3 text-[16px] leading-[1.6] text-stv-body sm:text-[17px]">
             Semua yang Anda butuhkan untuk mendampingi tumbuh kembang anak, dalam satu platform.
           </p>

@@ -432,7 +432,7 @@ const DASHBOARD_MOCKUPS: { component: React.FC; caption: string }[] = [
   { component: MockupSPP,          caption: 'Pembayaran SPP' },
 ];
 
-type TabId = 'tentang' | 'kurikulum' | 'riset' | 'tim' | 'asesmen' | 'fitur';
+type TabId = 'tentang' | 'kurikulum' | 'riset' | 'tim' | 'asesmen' | 'fitur' | 'dashboard';
 
 const tabs: { id: TabId; label: string }[] = [
   { id: 'tentang', label: 'Tentang' },
@@ -440,7 +440,8 @@ const tabs: { id: TabId; label: string }[] = [
   { id: 'riset', label: 'Hasil Riset' },
   { id: 'tim', label: 'Tim' },
   { id: 'asesmen', label: 'Asesmen' },
-  { id: 'fitur', label: 'Fitur Sekolah Studiva' },
+  { id: 'fitur', label: 'Fitur Dashboard' },
+  { id: 'dashboard', label: 'Intip Dashboard' },
 ];
 
 function SectionHeading({ children, intro }: { children: React.ReactNode; intro?: string }) {
@@ -707,25 +708,28 @@ function FiturPanel() {
         Fitur Dashboard Orang Tua
       </SectionHeading>
       <IconCardGrid items={benefits} columns="sm:grid-cols-2 lg:grid-cols-4" />
+    </div>
+  );
+}
 
-      <div className="mt-16">
-        <h3 className="text-center font-baloo text-[20px] font-bold text-stv-navy sm:text-[22px]">
-          Intip dashboard yang akan Anda gunakan
-        </h3>
-        <p className="mx-auto mt-2 max-w-[560px] text-center text-[15px] text-stv-body">
-          Setiap fitur di dashboard didesain agar mudah dibaca dan digunakan oleh orang tua.
+function IntipDashboardPanel() {
+  return (
+    <div className="mx-auto max-w-[1100px]">
+      <div className="mb-10 text-center">
+        <h2 className="font-baloo text-[28px] font-extrabold text-stv-navy sm:text-[36px]">Intip Dashboard</h2>
+        <p className="mx-auto mt-3 max-w-[560px] text-[15px] text-stv-body">
+          Intip tampilan setiap fitur dashboard yang akan Anda gunakan sebagai orang tua di Sekolah Studiva.
         </p>
-
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {DASHBOARD_MOCKUPS.map(({ component: Mockup, caption }) => (
-            <Reveal key={caption}>
-              <div>
-                <Mockup />
-                <p className="mt-2.5 text-center text-[14px] font-semibold text-stv-navy">{caption}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {DASHBOARD_MOCKUPS.map(({ component: Mockup, caption }) => (
+          <Reveal key={caption}>
+            <div>
+              <Mockup />
+              <p className="mt-2.5 text-center text-[14px] font-semibold text-stv-navy">{caption}</p>
+            </div>
+          </Reveal>
+        ))}
       </div>
     </div>
   );
@@ -822,6 +826,7 @@ export default function SekolahStudivaPage() {
             {activeTab === 'tim' && <TimPanel />}
             {activeTab === 'asesmen' && <AsesmenPanel />}
             {activeTab === 'fitur' && <FiturPanel />}
+            {activeTab === 'dashboard' && <IntipDashboardPanel />}
           </Reveal>
         </section>
       )}

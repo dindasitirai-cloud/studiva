@@ -219,6 +219,20 @@ interface DashboardTier2ContextValue {
   totalCoursesEnrolled: number;
   totalStrategiesSaved: number;
 
+  // User-level bookmarks + favorites (not per-child)
+  bookmarkedArticles: Set<string>;
+  favoritedArticles: Set<string>;
+  bookmarkedStrategies: Set<string>;
+  favoritedStrategies: Set<string>;
+  toggleArticleBookmark: (id: string) => void;
+  toggleArticleFavorite: (id: string) => void;
+  toggleStrategyBookmark: (id: string) => void;
+  toggleStrategyFavorite: (id: string) => void;
+  isArticleBookmarked: (id: string) => boolean;
+  isArticleFavorited: (id: string) => boolean;
+  isStrategyBookmarked: (id: string) => boolean;
+  isStrategyFavorited: (id: string) => boolean;
+
   // Child profiles (filled manually by parent)
   children: ChildProfile[];
   addChild: (profile: Omit<ChildProfile, 'id'>) => void;
@@ -326,6 +340,12 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
   const [psychologist, setPsychologist] = useState<PsychologistProfile>(SEED_PSYCHOLOGIST);
   const [categories, setCategories] = useState<string[]>(CATEGORIES.filter(c => c !== 'Semua'));
   const [ageGroups, setAgeGroups] = useState<string[]>(AGE_GROUPS.filter(g => g !== 'Semua usia'));
+
+  // User-level bookmark + favorite sets (not per-child — these are personal preferences)
+  const [bookmarkedArticles, setBookmarkedArticles] = useState<Set<string>>(new Set());
+  const [favoritedArticles, setFavoritedArticles]   = useState<Set<string>>(new Set());
+  const [bookmarkedStrategies, setBookmarkedStrategies] = useState<Set<string>>(new Set());
+  const [favoritedStrategies, setFavoritedStrategies]   = useState<Set<string>>(new Set());
 
   // addReply is called from a setTimeout scheduled inside addThread (to
   // simulate someone else replying). By the time it fires, a plain closure
@@ -572,6 +592,16 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
 
   const unreadNotificationCount = notifications.filter(n => !n.read).length;
 
+  const toggleArticleBookmark  = useCallback((id: string) => setBookmarkedArticles(prev => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s; }), []);
+  const toggleArticleFavorite  = useCallback((id: string) => setFavoritedArticles(prev  => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s; }), []);
+  const toggleStrategyBookmark = useCallback((id: string) => setBookmarkedStrategies(prev => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s; }), []);
+  const toggleStrategyFavorite = useCallback((id: string) => setFavoritedStrategies(prev  => { const s = new Set(prev); s.has(id) ? s.delete(id) : s.add(id); return s; }), []);
+
+  const isArticleBookmarked   = useCallback((id: string) => bookmarkedArticles.has(id),   [bookmarkedArticles]);
+  const isArticleFavorited    = useCallback((id: string) => favoritedArticles.has(id),    [favoritedArticles]);
+  const isStrategyBookmarked  = useCallback((id: string) => bookmarkedStrategies.has(id), [bookmarkedStrategies]);
+  const isStrategyFavorited   = useCallback((id: string) => favoritedStrategies.has(id),  [favoritedStrategies]);
+
   return (
     <DashboardTier2Context.Provider value={{
       markArticleRead, enrollCourse, saveStrategy,
@@ -590,6 +620,9 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
       categories, addCategory, removeCategory, ageGroups, addAgeGroup, removeAgeGroup,
       threads, addThread, addReply, reportThread, updateThreadStatus, togglePinThread, deleteThread, deleteReply,
       notifications, unreadNotificationCount, markNotificationRead, markAllNotificationsRead, notifyWebinarRegistered,
+      bookmarkedArticles, favoritedArticles, bookmarkedStrategies, favoritedStrategies,
+      toggleArticleBookmark, toggleArticleFavorite, toggleStrategyBookmark, toggleStrategyFavorite,
+      isArticleBookmarked, isArticleFavorited, isStrategyBookmarked, isStrategyFavorited,
     }}>
       {providerChildren}
     </DashboardTier2Context.Provider>

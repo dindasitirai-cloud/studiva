@@ -1,20 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Search,
-  Clock,
-  BookmarkCheck,
-  Dumbbell,
-  Sparkles,
-  HandHeart,
-  BookOpen,
-  MessageCircle,
-  Puzzle,
-  LucideIcon,
+  Search, Clock, Dumbbell, Sparkles, HandHeart, BookOpen, MessageCircle,
+  Puzzle, Bookmark, Heart, CheckCircle2, LucideIcon,
 } from 'lucide-react';
 import { ACTIVITY_TYPES, Strategy } from './strategyData';
 import { useDashboardTier2, LearningStyle } from '../../../context/DashboardTier2Context';
 import { useDashboardBasePath } from '../useDashboardBasePath';
+import { useActivityChild } from '../useActivityChild';
 
 const TYPE_ICON: Record<Strategy['activityType'], LucideIcon> = {
   Motorik: Dumbbell,
@@ -40,24 +33,38 @@ const THEME_ICON_COLOR: Record<Strategy['colorTheme'], string> = {
 
 const LEARNING_STYLES: LearningStyle[] = ['Visual', 'Auditori', 'Kinestetik', 'Membaca/Menulis'];
 
-function StrategyCard({ strategy, isSaved, onClick }: { strategy: Strategy; isSaved: boolean; onClick: () => void }) {
+function StrategyCard({
+  strategy, isSaved, isBookmarked, isFavorited,
+  onOpen, onToggleDone, onToggleBookmark, onToggleFavorite,
+}: {
+  strategy: Strategy;
+  isSaved: boolean;
+  isBookmarked: boolean;
+  isFavorited: boolean;
+  onOpen: () => void;
+  onToggleDone: () => void;
+  onToggleBookmark: () => void;
+  onToggleFavorite: () => void;
+}) {
   const Icon = TYPE_ICON[strategy.activityType];
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group flex flex-col overflow-hidden rounded-2xl bg-white text-left shadow-[0_4px_16px_rgba(16,58,107,.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(217,119,6,.14)]"
-    >
-      <div className={`relative flex h-32 items-center justify-center bg-gradient-to-br ${THEME_GRADIENT[strategy.colorTheme]}`}>
-        <Icon className={`h-10 w-10 ${THEME_ICON_COLOR[strategy.colorTheme]}`} strokeWidth={1.5} />
-        {isSaved && (
-          <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 text-[11px] font-bold text-stv-green shadow">
-            <BookmarkCheck className="h-3.5 w-3.5" />
-            Disimpan
-          </span>
-        )}
-      </div>
-      <div className="flex flex-1 flex-col gap-2 p-4">
+    <div className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_4px_16px_rgba(16,58,107,.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_rgba(217,119,6,.14)]">
+      {/* Thumbnail */}
+      <button type="button" onClick={onOpen} className="relative focus:outline-none">
+        <div className={`flex h-32 items-center justify-center bg-gradient-to-br ${THEME_GRADIENT[strategy.colorTheme]}`}>
+          <Icon className={`h-10 w-10 ${THEME_ICON_COLOR[strategy.colorTheme]}`} strokeWidth={1.5} />
+          {isSaved && (
+            <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 text-[11px] font-bold text-stv-green shadow">
+              <CheckCircle2 className="h-3.5 w-3.5" />
+              Selesai
+            </span>
+          )}
+        </div>
+      </button>
+
+      {/* Body */}
+      <button type="button" onClick={onOpen} className="flex flex-1 flex-col gap-2 p-4 text-left focus:outline-none">
         <div className="flex flex-wrap gap-1.5">
           <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-bold text-amber-700">{strategy.activityType}</span>
           <span className="rounded-full bg-stv-border px-2.5 py-0.5 text-[11px] font-semibold text-stv-muted">{strategy.ageGroup}</span>
@@ -68,33 +75,114 @@ function StrategyCard({ strategy, isSaved, onClick }: { strategy: Strategy; isSa
           <Clock className="h-3.5 w-3.5" />
           {strategy.duration}
         </div>
+      </button>
+
+      {/* Action bar */}
+      <div className="flex items-center gap-1 border-t border-stv-border px-3 py-2">
+        {/* Sudah Dilakukan */}
+        <button
+          type="button"
+          onClick={e => { e.stopPropagation(); onToggleDone(); }}
+          aria-pressed={isSaved}
+          title={isSaved ? 'Batalkan penandaan' : 'Tandai sudah dilakukan'}
+          className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-1.5 text-[12px] font-semibold transition ${
+            isSaved
+              ? 'bg-stv-green-tint text-stv-green hover:bg-stv-green hover:text-white'
+              : 'text-stv-muted hover:bg-slate-50 hover:text-stv-green'
+          }`}
+        >
+          <CheckCircle2 className="h-3.5 w-3.5" />
+          {isSaved ? 'Selesai' : 'Sudah Dilakukan'}
+        </button>
+
+        <div className="h-4 w-px bg-stv-border" />
+
+        {/* Bookmark */}
+        <button
+          type="button"
+          onClick={e => { e.stopPropagation(); onToggleBookmark(); }}
+          aria-pressed={isBookmarked}
+          title={isBookmarked ? 'Hapus bookmark' : 'Bookmark'}
+          className={`flex h-8 w-8 items-center justify-center rounded-xl transition ${
+            isBookmarked ? 'text-amber-500 hover:text-amber-600' : 'text-stv-muted hover:text-amber-500'
+          }`}
+        >
+          <Bookmark className="h-4 w-4" fill={isBookmarked ? 'currentColor' : 'none'} />
+        </button>
+
+        {/* Favorite */}
+        <button
+          type="button"
+          onClick={e => { e.stopPropagation(); onToggleFavorite(); }}
+          aria-pressed={isFavorited}
+          title={isFavorited ? 'Hapus dari favorit' : 'Tambah ke favorit'}
+          className={`flex h-8 w-8 items-center justify-center rounded-xl transition ${
+            isFavorited ? 'text-rose-500 hover:text-rose-600' : 'text-stv-muted hover:text-rose-500'
+          }`}
+        >
+          <Heart className="h-4 w-4" fill={isFavorited ? 'currentColor' : 'none'} />
+        </button>
       </div>
-    </button>
+    </div>
   );
 }
+
+type FilterTab = 'semua' | 'bookmark' | 'favorit' | 'sudah-dilakukan';
 
 export default function LearningStrategiesTier2() {
   const navigate = useNavigate();
   const basePath = useDashboardBasePath();
-  const { strategies, ageGroups, isStrategySavedByAnyChild } = useDashboardTier2();
-  const [search, setSearch] = useState('');
+  const {
+    strategies, ageGroups, isStrategySavedByAnyChild,
+    saveStrategy, unsaveStrategy,
+    isStrategyBookmarked, isStrategyFavorited,
+    toggleStrategyBookmark, toggleStrategyFavorite,
+  } = useDashboardTier2();
+  const { singleChild } = useActivityChild();
+
+  const [search, setSearch]       = useState('');
   const [activityType, setActivityType] = useState('Semua');
-  const [ageGroup, setAgeGroup] = useState('Semua usia');
+  const [ageGroup, setAgeGroup]   = useState('Semua usia');
   const [learningStyle, setLearningStyle] = useState('Semua');
-  const [savedOnly, setSavedOnly] = useState(false);
+  const [filterTab, setFilterTab] = useState<FilterTab>('semua');
+
+  function handleToggleDone(strategyId: string) {
+    if (!singleChild) {
+      navigate(`${basePath}/strategies/${strategyId}`);
+      return;
+    }
+    if (isStrategySavedByAnyChild(strategyId)) {
+      unsaveStrategy(singleChild.id, strategyId);
+    } else {
+      saveStrategy(singleChild.id, strategyId);
+    }
+  }
 
   const filtered = useMemo(() => {
     return strategies.filter(s => {
       if (s.status !== 'published') return false;
-      const matchesType = activityType === 'Semua' || s.activityType === activityType;
-      const matchesAge = ageGroup === 'Semua usia' || s.ageGroup === ageGroup || s.ageGroup === 'Semua usia';
-      const matchesStyle = learningStyle === 'Semua' || s.learningStyles.includes(learningStyle as LearningStyle);
-      const matchesSaved = !savedOnly || isStrategySavedByAnyChild(s.id);
-      const matchesSearch = s.title.toLowerCase().includes(search.toLowerCase()) ||
+      const matchType  = activityType === 'Semua' || s.activityType === activityType;
+      const matchAge   = ageGroup === 'Semua usia' || s.ageGroup === ageGroup || s.ageGroup === 'Semua usia';
+      const matchStyle = learningStyle === 'Semua' || s.learningStyles.includes(learningStyle as LearningStyle);
+      const matchSearch = s.title.toLowerCase().includes(search.toLowerCase()) ||
         s.summary.toLowerCase().includes(search.toLowerCase());
-      return matchesType && matchesAge && matchesStyle && matchesSaved && matchesSearch;
+      const matchTab =
+        filterTab === 'semua'           ? true :
+        filterTab === 'bookmark'        ? isStrategyBookmarked(s.id) :
+        filterTab === 'favorit'         ? isStrategyFavorited(s.id) :
+        filterTab === 'sudah-dilakukan' ? isStrategySavedByAnyChild(s.id) :
+        true;
+      return matchType && matchAge && matchStyle && matchSearch && matchTab;
     });
-  }, [strategies, search, activityType, ageGroup, learningStyle, savedOnly, isStrategySavedByAnyChild]);
+  }, [strategies, search, activityType, ageGroup, learningStyle, filterTab,
+      isStrategyBookmarked, isStrategyFavorited, isStrategySavedByAnyChild]);
+
+  const FILTER_TABS: { id: FilterTab; label: string; icon: LucideIcon }[] = [
+    { id: 'semua',           label: 'Semua',           icon: Puzzle },
+    { id: 'bookmark',        label: 'Disimpan',         icon: Bookmark },
+    { id: 'favorit',         label: 'Favorit',          icon: Heart },
+    { id: 'sudah-dilakukan', label: 'Sudah Dilakukan',  icon: CheckCircle2 },
+  ];
 
   return (
     <div className="flex flex-col gap-5">
@@ -114,6 +202,29 @@ export default function LearningStrategiesTier2() {
         />
       </div>
 
+      {/* Filter tabs */}
+      <div className="flex flex-wrap gap-2">
+        {FILTER_TABS.map(tab => {
+          const TabIcon = tab.icon;
+          const active = filterTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setFilterTab(tab.id)}
+              className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[13px] font-semibold transition ${
+                active
+                  ? 'bg-amber-500 text-white shadow-sm'
+                  : 'border border-amber-200 bg-white text-stv-body hover:bg-amber-50'
+              }`}
+            >
+              <TabIcon className="h-3.5 w-3.5" />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
       {/* Activity type chips */}
       <div className="flex flex-wrap gap-2">
         {ACTIVITY_TYPES.map(type => (
@@ -121,8 +232,8 @@ export default function LearningStrategiesTier2() {
             key={type}
             type="button"
             onClick={() => setActivityType(type)}
-            className={`rounded-full px-4 py-1.5 text-[13px] font-semibold transition ${
-              activityType === type ? 'bg-amber-500 text-white' : 'border border-amber-200 bg-white text-stv-body hover:bg-amber-50'
+            className={`rounded-full px-3.5 py-1 text-[12px] font-semibold transition ${
+              activityType === type ? 'bg-stv-navy text-white' : 'border border-stv-border bg-white text-stv-body hover:bg-slate-50'
             }`}
           >
             {type}
@@ -130,34 +241,17 @@ export default function LearningStrategiesTier2() {
         ))}
       </div>
 
-      {/* Secondary filters: age group + learning style */}
+      {/* Secondary filters */}
       <div className="flex flex-wrap gap-3">
-        <select
-          value={ageGroup}
-          onChange={e => setAgeGroup(e.target.value)}
-          className="rounded-full border border-amber-200 bg-white px-4 py-2 text-[13px] font-semibold text-stv-body focus:border-amber-500 focus:outline-none"
-        >
+        <select value={ageGroup} onChange={e => setAgeGroup(e.target.value)}
+          className="rounded-full border border-amber-200 bg-white px-4 py-2 text-[13px] font-semibold text-stv-body focus:border-amber-500 focus:outline-none">
           {['Semua usia', ...ageGroups].map(g => <option key={g} value={g}>{g}</option>)}
         </select>
-        <select
-          value={learningStyle}
-          onChange={e => setLearningStyle(e.target.value)}
-          className="rounded-full border border-amber-200 bg-white px-4 py-2 text-[13px] font-semibold text-stv-body focus:border-amber-500 focus:outline-none"
-        >
+        <select value={learningStyle} onChange={e => setLearningStyle(e.target.value)}
+          className="rounded-full border border-amber-200 bg-white px-4 py-2 text-[13px] font-semibold text-stv-body focus:border-amber-500 focus:outline-none">
           <option value="Semua">Semua Tipe Belajar</option>
           {LEARNING_STYLES.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
-        <button
-          type="button"
-          onClick={() => setSavedOnly(v => !v)}
-          aria-pressed={savedOnly}
-          className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold transition ${
-            savedOnly ? 'bg-stv-green text-white' : 'border border-amber-200 bg-white text-stv-body hover:bg-amber-50'
-          }`}
-        >
-          <BookmarkCheck className="h-3.5 w-3.5" />
-          Sudah Dilakukan
-        </button>
       </div>
 
       {/* Grid */}
@@ -165,11 +259,11 @@ export default function LearningStrategiesTier2() {
         <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-amber-200 py-14 text-center">
           <Puzzle className="h-10 w-10 text-amber-300" strokeWidth={1.5} />
           <p className="mt-3 font-semibold text-stv-navy">
-            {savedOnly ? 'Belum ada strategi yang sudah dilakukan' : 'Tidak ada strategi ditemukan'}
+            {filterTab !== 'semua' ? 'Belum ada strategi di tab ini' : 'Tidak ada strategi ditemukan'}
           </p>
           <p className="mt-1 text-[13px] text-stv-muted">
-            {savedOnly
-              ? 'Buka salah satu strategi dan klik "Sudah Dilakukan" untuk menandainya di sini.'
+            {filterTab !== 'semua'
+              ? 'Gunakan ikon di kartu strategi untuk menambahkan.'
               : 'Coba ubah filter atau kata kunci pencarian.'}
           </p>
         </div>
@@ -180,7 +274,12 @@ export default function LearningStrategiesTier2() {
               key={strategy.id}
               strategy={strategy}
               isSaved={isStrategySavedByAnyChild(strategy.id)}
-              onClick={() => navigate(`${basePath}/strategies/${strategy.id}`)}
+              isBookmarked={isStrategyBookmarked(strategy.id)}
+              isFavorited={isStrategyFavorited(strategy.id)}
+              onOpen={() => navigate(`${basePath}/strategies/${strategy.id}`)}
+              onToggleDone={() => handleToggleDone(strategy.id)}
+              onToggleBookmark={() => toggleStrategyBookmark(strategy.id)}
+              onToggleFavorite={() => toggleStrategyFavorite(strategy.id)}
             />
           ))}
         </div>

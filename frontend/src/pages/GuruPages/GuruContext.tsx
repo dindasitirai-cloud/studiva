@@ -70,7 +70,7 @@ export interface ParentNoteGuru {
   message: string;
   urgency: ParentNoteUrgency;
   readByTeacher: boolean;
-  /** Teacher's internal follow-up note — not visible to parent. */
+  /** Teacher's internal follow-up note, not visible to parent. */
   teacherResponse?: string;
 }
 
@@ -136,7 +136,7 @@ function daysAgoISO(days: number): string {
   return d.toISOString();
 }
 
-// Seed daily updates — mirrors what the parent sees as read-only in
+// Seed daily updates, mirrors what the parent sees as read-only in
 // DashboardTier1Context. TODO: in production these share one backend source.
 export type AttendanceStatusGuru = 'hadir' | 'izin' | 'sakit' | 'alfa';
 
@@ -410,7 +410,7 @@ const MOCK_PARENT_NOTES: ParentNoteGuru[] = [
     studentId: 'sg-5',
     date: new Date(Date.now() - 7 * 86400000).toISOString(),
     category: 'info-umum',
-    message: 'Farhan sangat antusias setelah sesi pertama di Studiva minggu lalu. Ia bercerita tentang aktivitasnya di sekolah kepada kami di rumah — pertanda baik untuk proses adaptasinya!',
+    message: 'Farhan sangat antusias setelah sesi pertama di Studiva minggu lalu. Ia bercerita tentang aktivitasnya di sekolah kepada kami di rumah, pertanda baik untuk proses adaptasinya!',
     urgency: 'normal',
     readByTeacher: true,
   },

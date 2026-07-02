@@ -520,7 +520,7 @@ export default function CoursesAdmin() {
                     <Users2 className="h-4 w-4" />
                   </button>
                 )}
-                {/* Upload hasil — only for completed webinars */}
+                {/* Upload hasil, only for completed webinars */}
                 {c.type === 'webinar' && c.status === 'completed' && (
                   <button
                     type="button"

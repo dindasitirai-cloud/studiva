@@ -19,19 +19,19 @@ import {
 } from 'lucide-react';
 
 const tier1Features = [
-  'Daily updates dari guru',
-  'Therapy progress tracking',
-  'Parent-teacher communication',
-  'School calendar & activities',
-  'Community forum',
+  'Perkembangan harian dari guru',
+  'Kehadiran & portfolio anak',
+  'IEP & asesmen transparan',
+  'Catatan langsung ke wali kelas',
+  'Pembayaran SPP via dashboard',
 ];
 
 const tier2Features = [
-  'Resource library (1000+ guides)',
-  'Self-paced courses',
-  'Learning strategies',
-  'Community forum & support',
-  'Consultation dengan Psikolog Fitri',
+  'Resource library berbasis riset',
+  'Live webinar & video rekaman',
+  'Learning strategies praktis',
+  'Community forum orang tua',
+  'Konsultasi dengan Psikolog Fitri',
 ];
 
 const whyStudiva = [
@@ -75,20 +75,20 @@ const testimonials = [
     quote:
       'Anak saya sangat berkembang sejak bergabung dengan Studiva. Psikolog Fitri benar-benar memahami kebutuhan anak-anak dengan special needs.',
     author: 'Ibu Siti',
-    role: 'Parent Tier 1',
+    role: 'Orang Tua Sekolah Studiva',
     avatarBg: 'bg-stv-navy',
   },
   {
-    quote: 'Resources di Tier 2 sangat membantu saya memahami anak saya lebih baik. Komunitas juga sangat supportive.',
+    quote: 'Panduan di Studiva Digital sangat membantu saya memahami anak saya lebih baik. Komunitasnya juga sangat supportive.',
     author: 'Ibu Rina',
-    role: 'Parent Tier 2',
+    role: 'Orang Tua Studiva Digital',
     avatarBg: 'bg-stv-sky-stroke',
   },
   {
     quote:
       'Terima kasih Studiva! Konsultasi dengan Psikolog Fitri memberikan perspektif baru dalam pendekatan saya.',
     author: 'Ibu Devi',
-    role: 'Parent Tier 1',
+    role: 'Orang Tua Sekolah Studiva',
     avatarBg: 'bg-stv-coral',
   },
 ];
@@ -102,8 +102,8 @@ const steps = [
     circleBg: 'bg-stv-navy',
     circleText: 'text-white',
     circleShadow: 'shadow-[0_8px_20px_rgba(16,58,107,.2)]',
-    title: 'Pilih Tier',
-    description: 'Tier 1 (School) atau Tier 2 (Digital). Sesuaikan dengan kebutuhan keluarga Anda.',
+    title: 'Pilih Program',
+    description: 'Sekolah Studiva (sekolah fisik) atau Studiva Digital (online). Sesuaikan dengan kebutuhan keluarga Anda.',
   },
   {
     icon: ClipboardCheck,
@@ -246,7 +246,7 @@ export default function LandingPage() {
           />
           <img
             src="/images/logo-studiva-bordered.png"
-            alt="Studiva — Rumah Belajar Istimewa"
+            alt="Studiva, Rumah Belajar Istimewa"
             className="absolute left-1/2 top-[9%] w-[150px] -translate-x-1/2 drop-shadow-[0_12px_26px_rgba(16,58,107,.4)] sm:w-[190px] md:w-[224px]"
           />
           <div className="absolute inset-x-0 bottom-0 px-7 pb-10 pt-10 sm:px-10 md:px-[52px] md:pb-14">
@@ -277,7 +277,7 @@ export default function LandingPage() {
             </div>
             <Link
               to="/sekolah-studiva"
-              className="flex items-center justify-between no-underline transition hover:opacity-90"
+              className="flex items-center justify-end gap-2 no-underline transition hover:opacity-90"
             >
               <span className="font-baloo text-[18px] font-bold text-stv-navy">Pelajari lebih lanjut</span>
               <ArrowCircle bgClass="bg-white" arrowClass="text-stv-navy" />
@@ -303,7 +303,7 @@ export default function LandingPage() {
             </div>
             <Link
               to="/studiva-digital"
-              className="flex items-center justify-between no-underline transition hover:opacity-90"
+              className="flex items-center justify-end gap-2 no-underline transition hover:opacity-90"
             >
               <span className="font-baloo text-[18px] font-bold text-stv-navy">Pelajari lebih lanjut</span>
               <ArrowCircle bgClass="bg-stv-navy" arrowClass="text-white" />
@@ -565,7 +565,7 @@ export default function LandingPage() {
               to="/daftar"
               className="rounded-full border-2 border-white/[.55] bg-transparent px-10 py-[18px] font-baloo text-[19px] font-bold text-white no-underline transition hover:border-white hover:bg-white/[.08]"
             >
-              Daftar Tier 2
+              Daftar Studiva Digital
             </Link>
           </div>
         </div>

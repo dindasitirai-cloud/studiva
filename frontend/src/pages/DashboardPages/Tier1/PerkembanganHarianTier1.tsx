@@ -138,7 +138,7 @@ export default function PerkembanganHarianTier1() {
                 </div>
                 <p className="mt-3 text-[14px] leading-[1.7] text-stv-body">{update.note}</p>
                 <div className="mt-3 flex items-center justify-between">
-                  <p className="text-[12px] text-stv-muted">— {update.teacherName}</p>
+                  <p className="text-[12px] text-stv-muted">,  {update.teacherName}</p>
                   {MoodIcon && <MoodIcon className={`h-4 w-4 ${MOOD_COLOR[update.mood!]}`} />}
                 </div>
               </div>

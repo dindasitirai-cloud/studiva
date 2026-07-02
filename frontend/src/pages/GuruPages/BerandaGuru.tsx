@@ -49,7 +49,7 @@ export default function BerandaGuru() {
   const firstName = user?.name?.split(' ')[0] ?? 'Guru';
   const kelasList = [...new Set(students.map(s => s.kelompok))];
 
-  // Mock: IEP review approaching (static for Phase 1 — full IEP module in Phase 7)
+  // Mock: IEP review approaching (static for Phase 1, full IEP module in Phase 7)
   const iepReview = [
     { studentName: 'Raka Pratama', reviewDate: 'Minggu, 6 Juli 2026' },
   ];

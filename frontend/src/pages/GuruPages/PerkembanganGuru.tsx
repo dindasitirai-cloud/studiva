@@ -192,7 +192,7 @@ export default function PerkembanganGuru() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Perkembangan Harian</h2>
-          <p className="text-[14px] text-stv-muted">Catat perkembangan setiap siswa — data ini tampil read-only di dashboard orang tua.</p>
+          <p className="text-[14px] text-stv-muted">Catat perkembangan setiap siswa, data ini tampil read-only di dashboard orang tua.</p>
         </div>
         {!showForm && !editingId && (
           <button
@@ -340,7 +340,7 @@ export default function PerkembanganGuru() {
                     <img src={update.photo} alt="Lampiran" className="h-full w-full object-cover" />
                   </div>
                 )}
-                <p className="mt-2.5 text-[12px] text-stv-muted">— {update.teacherName}</p>
+                <p className="mt-2.5 text-[12px] text-stv-muted">,  {update.teacherName}</p>
               </div>
             );
           })}

@@ -26,7 +26,7 @@ const features: Feature[] = [
   {
     icon: UserPlus,
     title: 'Profil Anak & Perjalanan Belajar',
-    description: 'Tambahkan profil anak (bisa lebih dari satu) dan pantau perjalanan belajarnya — terakumulasi otomatis dari semua aktivitas di platform.',
+    description: 'Tambahkan profil anak (bisa lebih dari satu) dan pantau perjalanan belajarnya, terakumulasi otomatis dari semua aktivitas di platform.',
   },
   {
     icon: Library,
@@ -36,7 +36,7 @@ const features: Feature[] = [
   {
     icon: GraduationCap,
     title: 'Courses & Webinar',
-    description: 'Live webinar bersama Psikolog Fitri Effendy untuk sesi interaktif langsung, plus video rekaman webinar yang sudah selesai — bisa ditonton kapan saja.',
+    description: 'Live webinar bersama Psikolog Fitri Effendy untuk sesi interaktif langsung, plus video rekaman webinar yang sudah selesai, bisa ditonton kapan saja.',
   },
   {
     icon: Lightbulb,
@@ -79,7 +79,7 @@ const highlights = [
   {
     icon: Sparkles,
     title: 'Fleksibel & Praktis',
-    description: 'Akses kapan saja, di mana saja — disesuaikan dengan jadwal dan kebutuhan keluarga Anda.',
+    description: 'Akses kapan saja, di mana saja, disesuaikan dengan jadwal dan kebutuhan keluarga Anda.',
   },
   {
     icon: Heart,
@@ -192,7 +192,7 @@ const deepDives = [
   {
     title: 'Resource Library',
     description:
-      'Artikel singkat dan praktis yang bisa langsung diterapkan di rumah. Filter berdasarkan kategori (ASD, ADHD, sensorik, dll.) atau usia anak — progres membaca Anda tercatat otomatis.',
+      'Artikel singkat dan praktis yang bisa langsung diterapkan di rumah. Filter berdasarkan kategori (ASD, ADHD, sensorik, dll.) atau usia anak, progres membaca Anda tercatat otomatis.',
   },
   {
     title: 'Courses & Webinar',
@@ -212,13 +212,10 @@ const deepDives = [
   {
     title: 'Konsultasi dengan Psikolog',
     description:
-      'Ajukan permintaan konsultasi, dan tim kami akan menghubungi Anda untuk menentukan jadwal sesuai ketersediaan psikolog — tidak ada booking otomatis, setiap sesi dikonfirmasi secara personal.',
+      'Ajukan permintaan konsultasi, dan tim kami akan menghubungi Anda untuk menentukan jadwal sesuai ketersediaan psikolog, tidak ada booking otomatis, setiap sesi dikonfirmasi secara personal.',
   },
 ];
 
-function StepConnector() {
-  return <div className="absolute left-1/2 top-7 hidden h-[3px] w-full -translate-y-1/2 bg-amber-200 lg:block" />;
-}
 
 type TabId = 'tentang' | 'fitur' | 'sorotan' | 'cara-kerja' | 'kenapa';
 
@@ -249,12 +246,12 @@ function TentangPanel() {
         </h2>
         <p className="mb-4 text-[16px] leading-[1.75] text-stv-body sm:text-[17px]">
           Sebagai orang tua, Anda tidak harus menghadapi setiap tantangan tumbuh kembang anak sendirian. Studiva
-          Digital menghadirkan pendampingan dari psikolog profesional, langsung ke ponsel Anda — praktis, inklusif,
+          Digital menghadirkan pendampingan dari psikolog profesional, langsung ke ponsel Anda, praktis, inklusif,
           dan bisa diakses kapan saja.
         </p>
         <p className="text-[16px] leading-[1.75] text-stv-body sm:text-[17px]">
           Mulai dari rangkuman materi yang mudah dipahami, kelas bersama psikolog, hingga konsultasi langsung untuk
-          kebutuhan spesifik anak Anda — semua dirancang agar Anda merasa lebih siap dan tidak sendirian.
+          kebutuhan spesifik anak Anda, semua dirancang agar Anda merasa lebih siap dan tidak sendirian.
         </p>
       </Reveal>
     </div>
@@ -332,7 +329,6 @@ function CaraKerjaPanel() {
       </Reveal>
 
       <div className="relative grid grid-cols-1 gap-10 lg:grid-cols-4 lg:gap-6">
-        <StepConnector />
         {steps.map((step, i) => {
           const Icon = step.icon;
           const badge = BADGE_PALETTE[i % BADGE_PALETTE.length];
@@ -405,14 +401,14 @@ export default function StudivaDigitalPage() {
           <Reveal>
             <span className="inline-flex items-center gap-2 rounded-full bg-white px-[18px] py-[9px] text-[13px] font-extrabold uppercase tracking-[2px] text-stv-navy shadow-sm">
               <span className="h-2 w-2 rounded-full bg-amber-500" />
-              Tier 2 · Studiva Digital
+              Platform Digital
             </span>
             <h1 className="mb-6 mt-6 font-baloo text-[34px] font-extrabold leading-[1.12] text-stv-navy sm:text-[46px] md:text-[58px]">
               Pendampingan Cerdas untuk Tumbuh Kembang Anak
             </h1>
             <p className="mx-auto mb-9 max-w-[620px] text-[16px] leading-[1.7] text-stv-body sm:text-[18px]">
               Studiva Digital adalah platform langganan yang memberi Anda akses ke materi, kelas, strategi belajar,
-              komunitas, dan konsultasi langsung dengan psikolog — semua dalam satu tempat.
+              komunitas, dan konsultasi langsung dengan psikolog, semua dalam satu tempat.
             </p>
             <Link
               to="/daftar"
@@ -452,7 +448,12 @@ export default function StudivaDigitalPage() {
       </div>
 
       {/* ============ TAB CONTENT ============ */}
-      <section className={`px-4 py-14 sm:px-8 sm:py-16 ${activeTab === 'fitur' || activeTab === 'cara-kerja' ? 'bg-amber-50/40' : ''}`}>
+      <section className={`relative overflow-hidden px-4 py-14 sm:px-8 sm:py-16 ${activeTab === 'fitur' || activeTab === 'cara-kerja' ? 'bg-amber-50/40' : ''}`}>
+        <span className="pointer-events-none absolute left-[2%] top-[8%] h-[11px] w-[11px] rounded-full bg-amber-400 opacity-40" />
+        <span className="pointer-events-none absolute right-[3%] top-[16%] h-[8px] w-[8px] rounded-full bg-stv-coral opacity-45" />
+        <span className="pointer-events-none absolute bottom-[12%] left-[4%] h-[9px] w-[9px] rounded-full bg-stv-green opacity-40" />
+        <span className="pointer-events-none absolute bottom-[9%] right-[5%] h-[10px] w-[10px] rounded-full bg-stv-sky-stroke opacity-35" />
+        <Sparkles className="pointer-events-none absolute right-[7%] top-[5%] h-[14px] w-[14px] text-amber-500 opacity-50" fill="currentColor" strokeWidth={0} />
         <Reveal key={activeTab}>
           {activeTab === 'tentang' && <TentangPanel />}
           {activeTab === 'fitur' && <FiturPanel />}

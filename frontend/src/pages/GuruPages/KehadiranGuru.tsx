@@ -259,7 +259,7 @@ function RekapTab() {
         <div className="mb-3 flex items-center justify-between">
           <h3 className="font-baloo text-[15px] font-bold text-stv-navy capitalize">
             {viewMonth.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}
-            {student && <span className="ml-2 text-stv-muted">— {student.name}</span>}
+            {student && <span className="ml-2 text-stv-muted">,  {student.name}</span>}
           </h3>
           <div className="flex items-center gap-2">
             <button type="button" onClick={() => setViewMonth(new Date(year, month - 1, 1))} className="flex h-8 w-8 items-center justify-center rounded-full bg-stv-sky-tint text-stv-sky-stroke hover:bg-stv-sky-tint/80">

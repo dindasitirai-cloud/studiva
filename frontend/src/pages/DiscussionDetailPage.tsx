@@ -194,7 +194,7 @@ export default function DiscussionDetailPage() {
           <Card className="mt-6">
             {discussion.category === 'fitri' && !isAdmin ? (
               <p className="text-textlight">
-                💬 Ini adalah forum Ask Psikolog Fitri — hanya Psikolog Fitri yang dapat menjawab
+                💬 Ini adalah forum Ask Psikolog Fitri, hanya Psikolog Fitri yang dapat menjawab
                 pertanyaan di sini. Beliau akan merespons sesegera mungkin.
               </p>
             ) : (

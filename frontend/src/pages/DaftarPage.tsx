@@ -198,7 +198,7 @@ export default function DaftarPage() {
     if (!validate()) return;
     setSubmitting(true); setApiError(null);
     try {
-      // TODO: POST /api/auth/signup — backend buat Stripe customer & kembalikan checkoutSessionUrl
+      // TODO: POST /api/auth/signup, backend buat Stripe customer & kembalikan checkoutSessionUrl
       await signup({ email: form.email, password: form.password, name: form.namaLengkap, role: 'parent', childName: form.namaAnak, childAge: Number(form.usiaAnak) });
       if (selectedPlan) setSelection({ tier: 'tier2', plan: selectedPlan });
     } catch (e: unknown) {
@@ -213,11 +213,11 @@ export default function DaftarPage() {
   return (
     <div className="font-nunito-sans">
 
-      {/* Step bar — sticky below nav */}
+      {/* Step bar, sticky below nav */}
       <StepperBar current={step} />
 
       {/* ════════════════════════════════════════════════════════════════
-          STEP 1 — PILIH JALUR
+          STEP 1, PILIH JALUR
       ════════════════════════════════════════════════════════════════ */}
       {step === 'info' && (
         <section className="px-4 py-14 sm:px-8 sm:py-20">
@@ -229,20 +229,20 @@ export default function DaftarPage() {
               <p className="text-[16px] text-stv-body">Pilih jalur yang sesuai untuk anak dan keluarga Anda.</p>
             </div>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              {/* Tier 1 */}
+              {/* Sekolah Studiva */}
               <div className="flex flex-col rounded-2xl border-2 border-stv-sky-tint bg-stv-sky-tint/40 p-6">
                 <div className="mb-4 flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-stv-sky-stroke">
                     <MapPin className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-stv-sky-stroke">Tier 1</p>
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-stv-sky-stroke">Sekolah Studiva</p>
                     <h2 className="font-baloo text-[18px] font-bold text-stv-navy">Sekolah Studiva</h2>
                   </div>
                 </div>
                 <p className="mb-4 text-[14px] leading-[1.7] text-stv-body">
                   Sekolah fisik inklusif di Bukittinggi untuk anak berkebutuhan khusus usia 5–10 tahun.
-                  Pendaftaran dilakukan secara <strong className="text-stv-navy">offline</strong> — kami ingin memastikan setiap anak mendapat pendampingan yang tepat.
+                  Pendaftaran dilakukan secara <strong className="text-stv-navy">offline</strong>, kami ingin memastikan setiap anak mendapat pendampingan yang tepat.
                 </p>
                 <ul className="mb-6 flex-1 space-y-2">
                   {['Hubungi via WhatsApp untuk sesi perkenalan','Asesmen awal bersama tim psikolog','Akun orang tua dibuatkan oleh admin'].map(item => (
@@ -256,20 +256,20 @@ export default function DaftarPage() {
                   <MessageCircle className="h-4 w-4" />Hubungi via WhatsApp
                 </a>
               </div>
-              {/* Tier 2 */}
+              {/* Studiva Digital */}
               <div className="flex flex-col rounded-2xl border-2 border-amber-300 bg-amber-50/40 p-6 shadow-[0_4px_20px_rgba(251,146,60,.12)]">
                 <div className="mb-4 flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500">
                     <MailIcon className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-amber-600">Tier 2</p>
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-amber-600">Studiva Digital</p>
                     <h2 className="font-baloo text-[18px] font-bold text-stv-navy">Studiva Digital</h2>
                   </div>
                 </div>
                 <p className="mb-4 text-[14px] leading-[1.7] text-stv-body">
                   Platform berlangganan online untuk orang tua di seluruh Indonesia. Akses ribuan panduan,
-                  webinar psikolog, komunitas, dan konsultasi — <strong className="text-stv-navy">kapan saja, di mana saja</strong>.
+                  webinar psikolog, komunitas, dan konsultasi, <strong className="text-stv-navy">kapan saja, di mana saja</strong>.
                 </p>
                 <ul className="mb-6 flex-1 space-y-2">
                   {TIER2_FEATURES.map(f => (
@@ -293,7 +293,7 @@ export default function DaftarPage() {
       )}
 
       {/* ════════════════════════════════════════════════════════════════
-          STEP 2 — PILIH PAKET  (design handoff exact)
+          STEP 2, PILIH PAKET  (design handoff exact)
       ════════════════════════════════════════════════════════════════ */}
       {step === 'pricing' && (
         <main className="relative min-h-screen overflow-hidden" style={{ background: '#FCF4DE' }}>
@@ -479,7 +479,7 @@ export default function DaftarPage() {
       )}
 
       {/* ════════════════════════════════════════════════════════════════
-          STEP 3 — BUAT AKUN
+          STEP 3, BUAT AKUN
       ════════════════════════════════════════════════════════════════ */}
       {step === 'form' && (
         <section className="px-4 py-14 sm:px-8 sm:py-20">

@@ -99,7 +99,7 @@ function BillingFormModal({ editing, onClose }: {
                 onChange={e => f('parentAccountId', e.target.value)}
                 className="w-full rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:border-emerald-400 focus:outline-none"
               >
-                <option value="">— Pilih orang tua —</option>
+                <option value="">,  Pilih orang tua , </option>
                 {activeAccounts.map(a => (
                   <option key={a.id} value={a.id}>{a.parentName} ({a.child.name})</option>
                 ))}

@@ -45,7 +45,7 @@ export default function StudentProfileGuru() {
     );
   }
 
-  // student is guaranteed non-null past the early-return guard above —
+  // student is guaranteed non-null past the early-return guard above , 
   // the non-null assertions below just satisfy the TypeScript narrowing
   // that doesn't propagate into nested function bodies.
   function handleSaveEdit(form: EditFormState) {

@@ -12,7 +12,7 @@ const VALUES = [
   {
     icon: Heart,
     title: 'Inklusif Sungguh-sungguh',
-    desc: 'Tidak ada anak yang ditolak karena kondisinya. Setiap profil kebutuhan khusus — ASD, ADHD, Down Syndrome, hambatan belajar, hambatan sensorik — diterima dan didampingi.',
+    desc: 'Tidak ada anak yang ditolak karena kondisinya. Setiap profil kebutuhan khusus, ASD, ADHD, Down Syndrome, hambatan belajar, hambatan sensorik, diterima dan didampingi.',
     bg: 'bg-rose-50',
     iconColor: 'text-rose-500',
     iconBg: 'bg-rose-100',
@@ -28,7 +28,7 @@ const VALUES = [
   {
     icon: Users,
     title: 'Kolaboratif',
-    desc: 'Orang tua, guru, dan psikolog bekerja sebagai satu tim. Kemajuan anak terbaik terjadi ketika apa yang dipelajari di sekolah diperkuat di rumah — dan sebaliknya.',
+    desc: 'Orang tua, guru, dan psikolog bekerja sebagai satu tim. Kemajuan anak terbaik terjadi ketika apa yang dipelajari di sekolah diperkuat di rumah, dan sebaliknya.',
     bg: 'bg-sky-50',
     iconColor: 'text-stv-sky-stroke',
     iconBg: 'bg-stv-sky-tint',
@@ -36,7 +36,7 @@ const VALUES = [
   {
     icon: BookOpen,
     title: 'Berbasis Ilmu',
-    desc: 'Setiap metode yang kami gunakan berakar pada bukti riset — ABA, PECS, sensory integration, dan pendekatan terapi lain yang terbukti efektif untuk anak berkebutuhan khusus.',
+    desc: 'Setiap metode yang kami gunakan berakar pada bukti riset, ABA, PECS, sensory integration, dan pendekatan terapi lain yang terbukti efektif untuk anak berkebutuhan khusus.',
     bg: 'bg-emerald-50',
     iconColor: 'text-emerald-600',
     iconBg: 'bg-emerald-100',
@@ -85,7 +85,7 @@ export default function TentangPage() {
           </h1>
           <p className="text-[17px] leading-[1.7] text-white/80 sm:text-[19px]">
             Studiva lahir dari keyakinan sederhana: setiap anak berhak mendapatkan pendidikan
-            yang memahami, menghargai, dan merayakan keunikannya — apa pun kondisi atau cara belajarnya.
+            yang memahami, menghargai, dan merayakan keunikannya, apa pun kondisi atau cara belajarnya.
           </p>
         </div>
       </section>
@@ -107,17 +107,17 @@ export default function TentangPage() {
                   <p>
                     Studiva didirikan oleh <strong className="text-stv-navy">Psikolog Fitri Effendy, S.Psi</strong> di
                     Bukittinggi, Sumatera Barat. Perjalanan ini berawal dari pengalaman pribadinya mendampingi anak-anak
-                    dengan kebutuhan belajar yang berbeda — dan menyaksikan langsung betapa banyak orang tua merasa
+                    dengan kebutuhan belajar yang berbeda, dan menyaksikan langsung betapa banyak orang tua merasa
                     sendirian, bingung, dan kelelahan dalam perjalanan tersebut.
                   </p>
                   <p>
                     Ia menyadari bahwa hambatan terbesar bukan hanya kurangnya ahli, melainkan juga kurangnya
-                    <em> jembatan</em> antara sekolah dan rumah. Orang tua yang berdaya — yang memahami kebutuhan anak
-                    dan tahu cara mendampinginya — adalah fondasi terkuat dari tumbuh-kembang anak yang optimal.
+                    <em> jembatan</em> antara sekolah dan rumah. Orang tua yang berdaya, yang memahami kebutuhan anak
+                    dan tahu cara mendampinginya, adalah fondasi terkuat dari tumbuh-kembang anak yang optimal.
                   </p>
                   <p>
                     Dari situ lahirlah Studiva: sebuah sekolah yang merayakan keberagaman cara belajar, sekaligus
-                    platform digital yang menjangkau orang tua di seluruh Indonesia — agar tak ada satu pun keluarga
+                    platform digital yang menjangkau orang tua di seluruh Indonesia, agar tak ada satu pun keluarga
                     yang harus menghadapi perjalanan ini sendirian.
                   </p>
                 </div>
@@ -131,7 +131,7 @@ export default function TentangPage() {
                   <p className="text-[15px] leading-[1.7] text-stv-body">
                     Menjadi pusat pendidikan inklusif terkemuka di Indonesia yang memberdayakan setiap
                     anak berkebutuhan khusus untuk tumbuh, belajar, dan berkontribusi sesuai potensi
-                    uniknya — dengan dukungan keluarga yang kuat dan sistem pendidikan yang adaptif.
+                    uniknya, dengan dukungan keluarga yang kuat dan sistem pendidikan yang adaptif.
                   </p>
                 </div>
                 <div className="rounded-2xl bg-stv-yellow-tint p-6 shadow-[0_4px_16px_rgba(16,58,107,.06)]">
@@ -158,7 +158,13 @@ export default function TentangPage() {
       </section>
 
       {/* ── NILAI-NILAI KAMI ──────────────────────────────────────────────── */}
-      <section className="bg-slate-50 px-4 py-20 sm:px-8 sm:py-24">
+      <section className="relative overflow-hidden bg-slate-50 px-4 py-20 sm:px-8 sm:py-24">
+        <span className="pointer-events-none absolute left-[2%] top-[10%] h-[12px] w-[12px] rounded-full bg-rose-400 opacity-40" />
+        <span className="pointer-events-none absolute right-[3%] top-[20%] h-[8px] w-[8px] rounded-full bg-amber-400 opacity-50" />
+        <span className="pointer-events-none absolute bottom-[15%] left-[5%] h-[9px] w-[9px] rounded-full bg-emerald-400 opacity-40" />
+        <span className="pointer-events-none absolute bottom-[10%] right-[5%] h-[11px] w-[11px] rounded-full bg-stv-sky-stroke opacity-35" />
+        <Sparkles className="pointer-events-none absolute right-[9%] top-[8%] h-[16px] w-[16px] text-amber-400 opacity-45" fill="currentColor" strokeWidth={0} />
+        <Sparkles className="pointer-events-none absolute bottom-[22%] left-[8%] h-[12px] w-[12px] text-stv-sky-stroke opacity-40" fill="currentColor" strokeWidth={0} />
         <div className="mx-auto max-w-[1100px]">
           <Reveal>
             <div className="mb-12 text-center">
@@ -192,7 +198,7 @@ export default function TentangPage() {
                 Dua Cara untuk Mendampingi Anak Anda
               </h2>
               <p className="mx-auto mt-4 max-w-[640px] text-[16px] leading-[1.7] text-stv-body">
-                Studiva hadir dalam dua bentuk yang saling melengkapi — sekolah fisik di Bukittinggi
+                Studiva hadir dalam dua bentuk yang saling melengkapi, sekolah fisik di Bukittinggi
                 dan platform digital yang bisa diakses dari seluruh Indonesia.
               </p>
             </div>
@@ -207,7 +213,7 @@ export default function TentangPage() {
                     <GraduationCap className="h-6 w-6 text-white" strokeWidth={2} />
                   </div>
                   <span className="mb-1 block text-[12px] font-bold uppercase tracking-wider text-stv-sky-stroke">
-                    Tier 1 · Sekolah Fisik
+                    Sekolah Fisik
                   </span>
                   <h3 className="font-baloo text-[24px] font-extrabold text-stv-navy">Sekolah Studiva</h3>
                   <p className="mt-1 text-[13px] text-stv-muted">Bukittinggi, Sumatera Barat</p>
@@ -316,7 +322,7 @@ export default function TentangPage() {
                 <p className="text-[15px] leading-[1.75] text-stv-body">
                   Psikolog klinis dengan spesialisasi di bidang pendidikan anak berkebutuhan khusus.
                   Selama lebih dari satu dekade, Psikolog Fitri telah mendampingi ratusan anak dan
-                  keluarga di Sumatera Barat — membantu mereka menemukan cara belajar yang tepat,
+                  keluarga di Sumatera Barat, membantu mereka menemukan cara belajar yang tepat,
                   membangun kepercayaan diri, dan meraih potensi penuhnya. Ia mendirikan Studiva
                   dengan satu keyakinan: setiap anak berhak dilihat, dipahami, dan didukung.
                 </p>
@@ -339,7 +345,7 @@ export default function TentangPage() {
             </p>
           </Reveal>
 
-          {/* Grid anggota tim lain — TODO: isi dengan data nyata saat tim bertambah */}
+          {/* Grid anggota tim lain, TODO: isi dengan data nyata saat tim bertambah */}
           {TEAM_PLACEHOLDERS.length > 0 && (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {/* TODO: render kartu anggota tim di sini */}

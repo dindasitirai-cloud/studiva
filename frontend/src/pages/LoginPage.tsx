@@ -76,7 +76,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-[calc(100vh-82px)] font-nunito-sans">
 
-      {/* ── Panel kiri — branding ─────────────────────────────────────── */}
+      {/* ── Panel kiri, branding ─────────────────────────────────────── */}
       <div className="relative hidden w-[44%] shrink-0 flex-col justify-between overflow-hidden bg-gradient-to-br from-stv-navy via-[#1a3f6f] to-[#0d2a4d] p-12 lg:flex">
         <div className="pointer-events-none absolute -right-12 -top-12 h-56 w-56 rounded-full bg-stv-yellow/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-8 left-8 h-40 w-40 rounded-full bg-stv-sky/15 blur-2xl" />
@@ -116,7 +116,7 @@ export default function LoginPage() {
         </p>
       </div>
 
-      {/* ── Panel kanan — form ────────────────────────────────────────── */}
+      {/* ── Panel kanan, form ────────────────────────────────────────── */}
       <div className="flex flex-1 items-center justify-center px-4 py-12 sm:px-8">
         <div className="w-full max-w-[420px]">
 
@@ -225,7 +225,7 @@ export default function LoginPage() {
           <div className="mt-5 rounded-2xl bg-slate-50 px-4 py-4">
             <p className="text-[13px] leading-[1.6] text-stv-muted">
               <span className="font-semibold text-stv-body">Akun Sekolah Studiva & Guru</span> dibuat
-              oleh tim kami secara langsung — tidak tersedia pendaftaran mandiri.{' '}
+              oleh tim kami secara langsung, tidak tersedia pendaftaran mandiri.{' '}
               <Link to="/kontak" className="font-semibold text-stv-sky-stroke no-underline hover:underline">
                 Hubungi kami
               </Link>{' '}

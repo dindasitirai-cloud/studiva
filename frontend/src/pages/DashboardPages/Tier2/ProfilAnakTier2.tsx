@@ -541,7 +541,7 @@ function ChildDetail({ child }: { child: ChildProfile }) {
 
       {editOpen && (
         <ChildForm
-          title={`Edit Profil — ${child.name}`}
+          title={`Edit Profil, ${child.name}`}
           initial={child}
           onSave={handleEdit}
           onCancel={() => setEditOpen(false)}

@@ -9,18 +9,18 @@ const tier1Features = [
   'Pembelajaran di kelas dengan guru bersertifikat',
   'Terapi profesional (speech, OT, behavioral)',
   'Dashboard orang tua real-time',
-  'Komunikasi daily dengan guru',
-  'Personalized learning plan',
-  'Akses TIER 2 gratis',
+  'Komunikasi harian dengan guru',
+  'Personalized learning plan (IEP)',
+  'Akses Studiva Digital gratis',
 ];
 
 const tier2Features = [
-  'Ribuan panduan parenting berbasis research',
-  'Kursus self-paced untuk orang tua',
-  'Komunitas forum moderated',
-  'Konsultasi 1-on-1 dengan expert',
-  'Resource library (printables, templates)',
-  'Webinar bulanan dengan Psikolog Fitri Effendy',
+  'Ribuan panduan parenting berbasis riset',
+  'Live webinar & video rekaman psikolog',
+  'Komunitas forum orang tua',
+  'Konsultasi 1-on-1 dengan Psikolog Fitri',
+  'Resource library lengkap',
+  'Learning strategies praktis',
 ];
 
 export default function PricingPage() {
@@ -44,7 +44,7 @@ export default function PricingPage() {
       <section className="bg-navy px-4 py-16 text-center text-white md:px-8">
         <h1 className="text-h1 font-bold">Pilih Paket yang Tepat untuk Anak Anda</h1>
         <p className="mt-4 text-white/85">
-          Dua tier yang dirancang untuk mendukung perjalanan pendidikan anak Anda, di sekolah
+          Dua program yang dirancang untuk mendukung perjalanan pendidikan anak Anda, di sekolah
           maupun di rumah.
         </p>
       </section>
@@ -60,23 +60,23 @@ export default function PricingPage() {
           <PricingCard
             tier="tier1"
             icon="🏫"
-            title="Tier 1: Sekolah Studiva"
-            subtitle="Bukittinggi - Kolaborasi Penuh"
+            title="Sekolah Studiva"
+            subtitle="Bukittinggi · Sekolah Fisik Inklusif"
             features={tier1Features}
             onChoosePlan={handleChoosePlan}
           />
           <PricingCard
             tier="tier2"
             icon="💻"
-            title="Tier 2: Studiva Digital"
-            subtitle="Nasional - Pembelajaran Online"
+            title="Studiva Digital"
+            subtitle="Nasional · Platform Online"
             features={tier2Features}
             onChoosePlan={handleChoosePlan}
           />
         </div>
         <p className="mx-auto mt-6 max-w-[1200px] text-center text-sm text-textlight">
-          Tier 2 juga tersedia gratis dengan akses terbatas (5 resource, tanpa kursus dan
-          konsultasi). Hubungi kami via WhatsApp untuk informasi cicilan Tier 1.
+          Studiva Digital juga tersedia gratis dengan akses terbatas (5 resource, tanpa kursus dan
+          konsultasi). Hubungi kami via WhatsApp untuk informasi cicilan Sekolah Studiva.
         </p>
       </section>
 

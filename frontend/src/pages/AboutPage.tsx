@@ -26,7 +26,7 @@ export default function AboutPage() {
         <p className="mt-4 text-textdark">
           Studiva didirikan oleh Psikolog Fitri Effendy di Bukittinggi, lahir dari pengalaman
           pribadinya mendampingi anak dengan kebutuhan belajar berbeda. Psikolog Fitri menyadari
-          bahwa banyak orang tua merasa sendirian dalam perjalanan ini—kurangnya akses ke pendidik
+          bahwa banyak orang tua merasa sendirian dalam perjalanan ini, kurangnya akses ke pendidik
           yang memahami kebutuhan unik anak mereka, serta minimnya kolaborasi antara sekolah dan
           rumah. Dari situ, Studiva lahir sebagai jawaban: sebuah sekolah yang merayakan
           keberagaman cara belajar, sekaligus platform digital yang menjangkau orang tua di
@@ -42,7 +42,7 @@ export default function AboutPage() {
             menggabungkan personalized learning plan, terapi profesional (speech, occupational,
             behavioral), dan komunikasi harian antara guru dan orang tua. Di Tier 2, kami
             memperluas pendekatan ini melalui panduan berbasis riset, kursus self-paced, dan
-            komunitas yang saling mendukung—sehingga setiap orang tua di Indonesia dapat
+            komunitas yang saling mendukung, sehingga setiap orang tua di Indonesia dapat
             menerapkan prinsip pendidikan inklusif di rumah.
           </p>
         </div>

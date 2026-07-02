@@ -90,7 +90,7 @@ export default function BerandaTier1() {
                   {MoodIcon && <MoodIcon className={`h-4 w-4 ${MOOD_COLOR[latestUpdate.mood!]}`} />}
                 </div>
                 <p className="mt-2 text-[14px] leading-[1.6] text-stv-body">{latestUpdate.note}</p>
-                <p className="mt-2 text-[12px] text-stv-muted">— {latestUpdate.teacherName}</p>
+                <p className="mt-2 text-[12px] text-stv-muted">,  {latestUpdate.teacherName}</p>
               </>
             ) : (
               <p className="mt-2 text-[14px] text-stv-muted">Belum ada catatan dari guru.</p>

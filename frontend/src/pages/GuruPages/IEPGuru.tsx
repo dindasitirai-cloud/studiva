@@ -252,7 +252,7 @@ export default function IEPGuru() {
       {/* Header */}
       <div>
         <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">IEP (Individualized Education Program)</h2>
-        <p className="text-[14px] text-stv-muted">Kelola program belajar individual per siswa — tampil transparan & read-only di dashboard orang tua.</p>
+        <p className="text-[14px] text-stv-muted">Kelola program belajar individual per siswa, tampil transparan & read-only di dashboard orang tua.</p>
       </div>
 
       {/* Student tabs */}
@@ -276,7 +276,7 @@ export default function IEPGuru() {
           {/* IEP header info */}
           <div className="animate-fade-in-up rounded-2xl bg-white p-5 shadow-[0_4px_16px_rgba(16,58,107,.06)]">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h3 className="font-baloo text-[16px] font-bold text-stv-navy">IEP — {student?.name}</h3>
+              <h3 className="font-baloo text-[16px] font-bold text-stv-navy">IEP, {student?.name}</h3>
               <div className="flex gap-2">
                 <button type="button" onClick={() => setReviewModalOpen(true)}
                   className="flex items-center gap-1.5 rounded-full bg-indigo-100 px-3.5 py-1.5 text-[12px] font-bold text-indigo-700 hover:opacity-80">
@@ -386,7 +386,7 @@ export default function IEPGuru() {
                   <div key={rev.id} className="rounded-xl bg-indigo-50 p-3.5">
                     <div className="flex items-center justify-between text-[12px] text-stv-muted">
                       <span>{fmtDate(rev.date)}</span>
-                      <span>— {rev.revisedBy}</span>
+                      <span>,  {rev.revisedBy}</span>
                     </div>
                     <p className="mt-1.5 text-[13px] leading-[1.6] text-stv-body">{rev.notes}</p>
                   </div>

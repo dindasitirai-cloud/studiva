@@ -228,7 +228,7 @@ export default function PortfolioGuru() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Portfolio</h2>
-          <p className="text-[14px] text-stv-muted">Dokumentasi hasil karya siswa — tampil sebagai galeri di dashboard orang tua.</p>
+          <p className="text-[14px] text-stv-muted">Dokumentasi hasil karya siswa, tampil sebagai galeri di dashboard orang tua.</p>
         </div>
         <button type="button" onClick={() => setAddModalOpen(true)}
           className="flex items-center gap-1.5 rounded-full bg-purple-500 px-5 py-2.5 text-[14px] font-bold text-white transition hover:bg-purple-600">

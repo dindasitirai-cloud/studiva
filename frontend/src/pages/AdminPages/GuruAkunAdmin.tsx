@@ -4,7 +4,7 @@ import {
 } from 'lucide-react';
 import { api } from '../../api/client';
 
-// Guru (teacher) accounts are created by admin only — no public self-signup.
+// Guru (teacher) accounts are created by admin only, no public self-signup.
 // This mirrors the offline-registration model used for Tier 1 parents
 // (SekolahAkunAdmin.tsx).
 
@@ -306,7 +306,7 @@ export default function GuruAkunAdmin() {
       {/* Info banner */}
       <div className="rounded-2xl border border-teal-200 bg-teal-50 p-4">
         <p className="text-[14px] text-teal-800">
-          <strong>Pendaftaran Offline:</strong> Akun guru dibuat oleh admin — tidak tersedia pendaftaran mandiri untuk guru di halaman publik manapun.
+          <strong>Pendaftaran Offline:</strong> Akun guru dibuat oleh admin, tidak tersedia pendaftaran mandiri untuk guru di halaman publik manapun.
         </p>
       </div>
 
@@ -375,7 +375,7 @@ export default function GuruAkunAdmin() {
                         </div>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-stv-body">{a.kelas || '—'}</td>
+                    <td className="px-4 py-3 text-stv-body">{a.kelas || ', '}</td>
                     <td className="px-4 py-3 text-[13px] text-stv-muted">{formatDate(a.createdAt)}</td>
                     <td className="px-4 py-3">
                       <span className={`rounded-full px-2.5 py-1 text-[12px] font-semibold ${a.status === 'aktif' ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>

@@ -337,7 +337,7 @@ export default function AsesmenGuru() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Asesmen</h2>
-          <p className="text-[14px] text-stv-muted">Buat dan kelola hasil asesmen per siswa — tampil read-only di dashboard orang tua.</p>
+          <p className="text-[14px] text-stv-muted">Buat dan kelola hasil asesmen per siswa, tampil read-only di dashboard orang tua.</p>
         </div>
         {mode === 'list' && (
           <button type="button" onClick={() => setMode('create')}

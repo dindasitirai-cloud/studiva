@@ -114,7 +114,7 @@ export default function BerandaTier2() {
   return (
     <div className="flex flex-col gap-5">
 
-      {/* ── 1. Greeting — gradient hero card ─────────────────── */}
+      {/* ── 1. Greeting, gradient hero card ─────────────────── */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-stv-navy via-[#1a3f6f] to-[#0d2a4d] p-6 sm:p-8">
         {/* decorative blobs */}
         <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-amber-400/20 blur-2xl" />
@@ -205,7 +205,7 @@ export default function BerandaTier2() {
         )}
       </div>
 
-      {/* ── 3. Akses Cepat — gradient shortcut cards ──────────── */}
+      {/* ── 3. Akses Cepat, gradient shortcut cards ──────────── */}
       <div>
         <h3 className="mb-3 flex items-center gap-2 font-baloo text-[17px] font-bold text-stv-navy">
           <TrendingUp className="h-5 w-5 text-amber-500" />
@@ -288,7 +288,7 @@ export default function BerandaTier2() {
         </div>
       </div>
 
-      {/* ── 6. CTA Konsultasi — colorful gradient banner ──────── */}
+      {/* ── 6. CTA Konsultasi, colorful gradient banner ──────── */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-600 p-6 sm:p-7">
         <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-white/10" />
         <div className="pointer-events-none absolute -bottom-4 left-20 h-16 w-16 rounded-full bg-white/10" />

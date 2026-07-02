@@ -80,7 +80,7 @@ const principles: BadgedIconCard[] = [
 const curriculum: IconCard[] = [
   {
     icon: FileText,
-    title: 'IEP — Individualized Education Plan',
+    title: 'IEP, Individualized Education Plan',
     description: 'Rencana belajar individual yang disusun bersama guru, orang tua, dan tenaga ahli.',
   },
   {
@@ -131,7 +131,7 @@ const researchCards: ResearchCard[] = [
   {
     title: 'Rencana belajar individual & terstruktur membuahkan hasil',
     body:
-      'Tinjauan sistematis menemukan pengajaran terstruktur dan dipersonalisasi dikaitkan dengan kemajuan nyata pada perilaku adaptif, keterampilan hidup sehari-hari, dan bahasa — fondasi dari setiap IEP yang kami susun.',
+      'Tinjauan sistematis menemukan pengajaran terstruktur dan dipersonalisasi dikaitkan dengan kemajuan nyata pada perilaku adaptif, keterampilan hidup sehari-hari, dan bahasa, fondasi dari setiap IEP yang kami susun.',
     sourceLabel:
       'Effectiveness and experiences of early intensive behavioral and naturalistic developmental behavior interventions for ASD: a mixed-methods systematic review and meta-analysis',
     sourceUrl: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12849440/',
@@ -139,7 +139,7 @@ const researchCards: ResearchCard[] = [
   {
     title: 'Keterlibatan orang tua mengubah hasil',
     body:
-      'Riset konsisten menunjukkan keterlibatan orang tua meningkatkan capaian belajar, manajemen perilaku, dan kualitas hubungan orang tua–anak — terutama pada intervensi usia dini. Karena itu orang tua adalah bagian dari tim, bukan penonton.',
+      'Riset konsisten menunjukkan keterlibatan orang tua meningkatkan capaian belajar, manajemen perilaku, dan kualitas hubungan orang tua–anak, terutama pada intervensi usia dini. Karena itu orang tua adalah bagian dari tim, bukan penonton.',
     sourceLabel: 'Family Involvement in Special Education (EBSCO Research Starters)',
     sourceUrl: 'https://www.ebsco.com/research-starters/education/family-involvement-special-education',
   },
@@ -202,12 +202,12 @@ const benefits: IconCard[] = [
   {
     icon: LayoutDashboard,
     title: 'Perkembangan Harian',
-    description: 'Catatan perkembangan harian dari guru dalam 5 area: akademik, sosial-emosional, motorik, komunikasi, dan sensorik — lengkap dengan suasana hati anak hari itu.',
+    description: 'Catatan perkembangan harian dari guru dalam 5 area: akademik, sosial-emosional, motorik, komunikasi, dan sensorik, lengkap dengan suasana hati anak hari itu.',
   },
   {
     icon: CalendarClock,
     title: 'Rekap Kehadiran',
-    description: 'Pantau kehadiran anak setiap hari lewat kalender digital — hadir, izin, sakit, atau alfa — beserta catatan dari guru.',
+    description: 'Pantau kehadiran anak setiap hari lewat kalender digital, hadir, izin, sakit, atau alfa, beserta catatan dari guru.',
   },
   {
     icon: FolderOpen,
@@ -217,7 +217,7 @@ const benefits: IconCard[] = [
   {
     icon: Target,
     title: 'IEP Transparan',
-    description: 'Lihat Rencana Belajar Individual anak, progres tiap tujuan, dan catatan revisi — selalu sinkron dengan yang dikerjakan guru di sekolah.',
+    description: 'Lihat Rencana Belajar Individual anak, progres tiap tujuan, dan catatan revisi, selalu sinkron dengan yang dikerjakan guru di sekolah.',
   },
   {
     icon: MessagesSquare,
@@ -227,7 +227,7 @@ const benefits: IconCard[] = [
   {
     icon: CreditCard,
     title: 'Pembayaran SPP',
-    description: 'Terima tagihan SPP bulanan, bayar via Stripe, dan unduh bukti pembayaran — semua dari dashboard tanpa perlu datang ke sekolah.',
+    description: 'Terima tagihan SPP bulanan, bayar via Stripe, dan unduh bukti pembayaran, semua dari dashboard tanpa perlu datang ke sekolah.',
   },
   {
     icon: FolderHeart,
@@ -237,7 +237,7 @@ const benefits: IconCard[] = [
   {
     icon: Network,
     title: 'Bonus: Akses Studiva Digital',
-    description: 'Orang tua Tier 1 mendapat akses penuh ke platform Studiva Digital: resource library, webinar psikolog, komunitas forum, dan konsultasi online.',
+    description: 'Orang tua Sekolah Studiva mendapat akses penuh ke platform Studiva Digital: resource library, webinar psikolog, komunitas forum, dan konsultasi online.',
   },
 ];
 
@@ -346,8 +346,8 @@ function TentangPanel() {
             Apa itu Sekolah Studiva?
           </h2>
           <p className="mb-8 text-[16px] leading-[1.85] text-stv-body sm:text-[18px]">
-            Sekolah Studiva adalah sekolah khusus bagi anak berkebutuhan khusus. Setiap anak — apa pun jenis atau
-            tingkat hambatannya — memiliki ruang untuk tumbuh dan berkembang secara utuh dalam lingkungan yang aman,
+            Sekolah Studiva adalah sekolah khusus bagi anak berkebutuhan khusus. Setiap anak, apa pun jenis atau
+            tingkat hambatannya, memiliki ruang untuk tumbuh dan berkembang secara utuh dalam lingkungan yang aman,
             suportif, dan penuh makna. Pembelajaran tidak menuntut anak menyesuaikan diri dengan satu standar;
             sebaliknya, kurikulum yang menyesuaikan diri dengan setiap anak.
           </p>
@@ -358,7 +358,7 @@ function TentangPanel() {
             <span className="absolute bottom-4 left-5 h-[9px] w-[9px] rounded-full bg-stv-coral opacity-50" />
             <p className="text-[16px] italic leading-[1.85] text-stv-quote sm:text-[18px]">
               Inklusif di Studiva berarti tidak ada anak yang ditolak karena kondisinya. Semua jenis kebutuhan khusus
-              — dari ASD, ADHD, Down Syndrome, hingga hambatan belajar dan sensorik — diterima dan didampingi sesuai
+             , dari ASD, ADHD, Down Syndrome, hingga hambatan belajar dan sensorik, diterima dan didampingi sesuai
               kebutuhan masing-masing.
             </p>
           </div>
@@ -388,7 +388,7 @@ function TentangPanel() {
         </div>
       </section>
 
-      {/* 4c. Cara Mendaftar — pendaftaran offline lewat admin */}
+      {/* 4c. Cara Mendaftar, pendaftaran offline lewat admin */}
       <section className="bg-[#EDF4FB] px-4 py-16 sm:px-8 sm:py-20">
         <div className="mx-auto max-w-[900px]">
           <div className="mb-12 text-center">
@@ -486,7 +486,7 @@ function RisetPanel() {
   return (
     <div className="mx-auto max-w-[1100px]">
       <SectionHeading intro="Metode yang kami pakai bukan sekadar pilihan nilai, tetapi sejalan dengan bukti riset tentang apa yang benar-benar membantu anak berkebutuhan khusus berkembang.">
-        Mengapa pendekatan Studiva efektif — menurut penelitian
+        Mengapa pendekatan Studiva efektif, menurut penelitian
       </SectionHeading>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -600,14 +600,14 @@ export default function SekolahStudivaPage() {
           <Reveal>
             <span className="inline-flex items-center gap-[10px] rounded-full bg-white px-[26px] py-[10px] text-[13px] font-extrabold uppercase tracking-[2.5px] text-stv-navy shadow-[0_4px_18px_rgba(16,58,107,.1)]">
               <span className="h-2 w-2 rounded-full bg-stv-yellow" />
-              Tier 1 · Sekolah Fisik
+              Sekolah Fisik
             </span>
             <h1 className="mb-7 mt-6 font-baloo text-[40px] font-extrabold leading-[1.06] text-stv-navy sm:text-[56px] md:text-[76px]">
               Sekolah Studiva
             </h1>
             <p className="mb-5 text-[17px] italic leading-[1.72] text-stv-quote sm:text-[21px]">
               Sekolah khusus inklusif tempat setiap anak berkebutuhan khusus tumbuh, belajar, dan berkembang sesuai
-              potensinya — dengan pendampingan yang dirancang khusus untuk kebutuhannya.
+              potensinya, dengan pendampingan yang dirancang khusus untuk kebutuhannya.
             </p>
             <p className="mb-9 text-[15px] leading-[1.6] text-stv-muted sm:text-[16px]">
               Untuk anak berkebutuhan khusus usia 5–10 tahun · ASD, ADHD, Down Syndrome, hambatan belajar & sensorik,
@@ -655,7 +655,14 @@ export default function SekolahStudivaPage() {
       {activeTab === 'tentang' ? (
         <TentangPanel />
       ) : (
-        <section className="px-4 py-14 sm:px-8 sm:py-16">
+        <section className="relative overflow-hidden px-4 py-14 sm:px-8 sm:py-16">
+          {/* Playful section accents */}
+          <span className="pointer-events-none absolute left-[3%] top-[8%] h-[10px] w-[10px] rounded-full bg-stv-yellow opacity-60" />
+          <span className="pointer-events-none absolute right-[4%] top-[15%] h-[7px] w-[7px] rounded-full bg-stv-coral opacity-50" />
+          <span className="pointer-events-none absolute bottom-[12%] left-[6%] h-[8px] w-[8px] rounded-full bg-stv-green opacity-50" />
+          <span className="pointer-events-none absolute bottom-[8%] right-[3%] h-[10px] w-[10px] rounded-full bg-stv-sky-stroke opacity-40" />
+          <Sparkles className="pointer-events-none absolute right-[8%] top-[6%] h-[14px] w-[14px] text-stv-yellow opacity-50" fill="currentColor" strokeWidth={0} />
+          <Sparkles className="pointer-events-none absolute bottom-[18%] left-[9%] h-[11px] w-[11px] text-stv-sky-stroke opacity-40" fill="currentColor" strokeWidth={0} />
           <Reveal key={activeTab}>
             {activeTab === 'kurikulum' && <KurikulumPanel />}
             {activeTab === 'riset' && <RisetPanel />}

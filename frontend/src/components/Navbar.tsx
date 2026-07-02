@@ -6,11 +6,11 @@ import { useAuth } from '../context/AuthContext';
 // the footer instead) but still offered in the mobile dropdown, where there's
 // more room and less competition for attention.
 const navLinks = [
-  { to: '/', label: 'Home' },
+  { to: '/', label: 'Beranda' },
   { to: '/sekolah-studiva', label: 'Sekolah Studiva' },
   { to: '/studiva-digital', label: 'Studiva Digital' },
-  { to: '/about', label: 'About' },
-  { to: '/about#contact', label: 'Contact' },
+  { to: '/tentang', label: 'Tentang Kami' },
+  { to: '/kontak', label: 'Kontak' },
 ];
 
 const mobileOnlyLinks = [{ to: '/community', label: 'Community' }];

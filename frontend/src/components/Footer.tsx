@@ -44,22 +44,22 @@ export default function Footer() {
         </div>
 
         <div>
-          <div className="mb-[18px] font-baloo text-[18px] font-bold text-white">Company</div>
+          <div className="mb-[18px] font-baloo text-[18px] font-bold text-white">Perusahaan</div>
           <div className="flex flex-col gap-[13px]">
-            <Link to="/about" className="text-[15px] text-white/[.66] no-underline transition hover:text-stv-yellow">
-              About
+            <Link to="/tentang" className="text-[15px] text-white/[.66] no-underline transition hover:text-stv-yellow">
+              Tentang Kami
             </Link>
-            <Link to="/about#contact" className="text-[15px] text-white/[.66] no-underline transition hover:text-stv-yellow">
-              Contact
+            <Link to="/kontak" className="text-[15px] text-white/[.66] no-underline transition hover:text-stv-yellow">
+              Kontak
             </Link>
-            <Link to="/about" className="text-[15px] text-white/[.66] no-underline transition hover:text-stv-yellow">
-              Terms &amp; Privacy
+            <Link to="/tentang" className="text-[15px] text-white/[.66] no-underline transition hover:text-stv-yellow">
+              Syarat &amp; Privasi
             </Link>
             <a
-              href="mailto:info@studiva.id"
+              href="mailto:halo@studiva.id"
               className="text-[15px] text-white/[.66] no-underline transition hover:text-stv-yellow"
             >
-              Work With Us
+              Bergabung Bersama Kami
             </a>
           </div>
         </div>

@@ -14,6 +14,8 @@ import LandingPage from './pages/LandingPage';
 import SekolahStudivaPage from './pages/SekolahStudivaPage';
 import StudivaDigitalPage from './pages/StudivaDigitalPage';
 import AboutPage from './pages/AboutPage';
+import TentangPage from './pages/TentangPage';
+import KontakPage from './pages/KontakPage';
 import PricingPage from './pages/PricingPage';
 import ResourcesPage from './pages/ResourcesPage';
 import LoginPage from './pages/LoginPage';
@@ -134,6 +136,8 @@ export default function App() {
             <Route path="/sekolah-studiva" element={<SekolahStudivaPage />} />
             <Route path="/studiva-digital" element={<StudivaDigitalPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/tentang" element={<TentangPage />} />
+            <Route path="/kontak" element={<KontakPage />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/login" element={<LoginPage />} />

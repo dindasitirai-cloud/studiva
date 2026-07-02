@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import {
-  MessageCircle, Mail, Phone, MapPin, Clock, CheckCircle,
+  MessageCircle, Mail, Phone, MapPin, Clock,
   ArrowRight, ExternalLink,
 } from 'lucide-react';
 import Reveal from '../components/Reveal';
@@ -196,98 +195,6 @@ export default function KontakPage() {
         </div>
       </section>
 
-      {/* ── INFORMASI PENDAFTARAN ─────────────────────────────────────────── */}
-      <section className="px-4 py-16 sm:px-8 sm:py-20">
-        <div className="mx-auto max-w-[1100px]">
-          <Reveal>
-            <h2 className="mb-8 text-center font-baloo text-[28px] font-extrabold text-stv-navy sm:text-[34px]">
-              Informasi Pendaftaran
-            </h2>
-          </Reveal>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-
-            {/* Tier 1 */}
-            <Reveal>
-              <div className="rounded-2xl border-2 border-stv-sky-tint bg-stv-sky-tint/40 p-6">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-stv-sky-stroke">
-                    <MapPin className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-stv-sky-stroke">Tier 1</p>
-                    <h3 className="font-baloo text-[17px] font-bold text-stv-navy">Sekolah Studiva</h3>
-                  </div>
-                </div>
-                <p className="mb-4 text-[14px] leading-[1.7] text-stv-body">
-                  Pendaftaran Sekolah Studiva dilakukan secara <strong className="text-stv-navy">offline</strong>,
-                  langsung melalui tim kami. Kami ingin memastikan setiap anak mendapat pendampingan
-                  yang tepat sejak awal.
-                </p>
-                <ul className="mb-5 space-y-2">
-                  {[
-                    'Hubungi via WhatsApp untuk sesi perkenalan',
-                    'Asesmen awal bersama tim psikolog',
-                    'Akun orang tua dibuatkan oleh admin',
-                  ].map(item => (
-                    <li key={item} className="flex items-center gap-2 text-[13px] text-stv-body">
-                      <CheckCircle className="h-4 w-4 shrink-0 text-stv-sky-stroke" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <a
-                  href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Halo Studiva, saya ingin mendaftarkan anak saya ke Sekolah Studiva.')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-stv-sky-stroke px-5 py-2.5 text-[14px] font-bold text-white no-underline transition hover:bg-stv-sky-stroke/90"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                  Hubungi via WhatsApp
-                </a>
-              </div>
-            </Reveal>
-
-            {/* Tier 2 */}
-            <Reveal delayMs={80}>
-              <div className="rounded-2xl border-2 border-amber-100 bg-amber-50/40 p-6">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500">
-                    <Mail className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-amber-600">Tier 2</p>
-                    <h3 className="font-baloo text-[17px] font-bold text-stv-navy">Studiva Digital</h3>
-                  </div>
-                </div>
-                <p className="mb-4 text-[14px] leading-[1.7] text-stv-body">
-                  Pendaftaran Studiva Digital dilakukan <strong className="text-stv-navy">sepenuhnya online</strong>.
-                  Buat akun, pilih paket berlangganan, dan akses langsung semua fitur platform dari
-                  mana saja di Indonesia.
-                </p>
-                <ul className="mb-5 space-y-2">
-                  {[
-                    'Daftar mandiri di website — tak perlu menghubungi tim',
-                    'Pilih paket bulanan, 3 bulan, atau tahunan',
-                    'Akses langsung setelah pembayaran berhasil',
-                  ].map(item => (
-                    <li key={item} className="flex items-center gap-2 text-[13px] text-stv-body">
-                      <CheckCircle className="h-4 w-4 shrink-0 text-amber-500" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  to="/daftar"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-amber-500 px-5 py-2.5 text-[14px] font-bold text-white no-underline transition hover:bg-amber-600"
-                >
-                  Daftar Sekarang <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </Reveal>
-
-          </div>
-        </div>
-      </section>
 
     </div>
   );

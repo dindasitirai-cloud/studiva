@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Eye, EyeOff, AlertCircle, CheckCircle, MessageCircle, Sparkles } from 'lucide-react';
+import { Eye, EyeOff, AlertCircle, CheckCircle, MessageCircle, Sparkles, MapPin, Mail as MailIcon, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import PricingCard from '../components/PricingCard';
 import PlanConfirmModal from '../components/PlanConfirmModal';
@@ -442,6 +442,94 @@ export default function DaftarPage() {
           onClose={() => setSelection(null)}
         />
       )}
+
+      {/* ── INFORMASI PENDAFTARAN ──────────────────────────────────────── */}
+      <section className="border-t border-stv-border bg-slate-50 px-4 py-16 font-nunito-sans sm:px-8 sm:py-20">
+        <div className="mx-auto max-w-[1100px]">
+          <h2 className="mb-8 text-center font-baloo text-[28px] font-extrabold text-stv-navy sm:text-[34px]">
+            Informasi Pendaftaran
+          </h2>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+
+            {/* Tier 1 */}
+            <div className="rounded-2xl border-2 border-stv-sky-tint bg-stv-sky-tint/40 p-6">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-stv-sky-stroke">
+                  <MapPin className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-stv-sky-stroke">Tier 1</p>
+                  <h3 className="font-baloo text-[17px] font-bold text-stv-navy">Sekolah Studiva</h3>
+                </div>
+              </div>
+              <p className="mb-4 text-[14px] leading-[1.7] text-stv-body">
+                Pendaftaran Sekolah Studiva dilakukan secara <strong className="text-stv-navy">offline</strong>,
+                langsung melalui tim kami. Kami ingin memastikan setiap anak mendapat pendampingan
+                yang tepat sejak awal.
+              </p>
+              <ul className="mb-5 space-y-2">
+                {[
+                  'Hubungi via WhatsApp untuk sesi perkenalan',
+                  'Asesmen awal bersama tim psikolog',
+                  'Akun orang tua dibuatkan oleh admin',
+                ].map(item => (
+                  <li key={item} className="flex items-center gap-2 text-[13px] text-stv-body">
+                    <CheckCircle className="h-4 w-4 shrink-0 text-stv-sky-stroke" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Halo Studiva, saya ingin mendaftarkan anak saya ke Sekolah Studiva.')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full bg-stv-sky-stroke px-5 py-2.5 text-[14px] font-bold text-white no-underline transition hover:bg-stv-sky-stroke/90"
+              >
+                <MessageCircle className="h-4 w-4" />
+                Hubungi via WhatsApp
+              </a>
+            </div>
+
+            {/* Tier 2 */}
+            <div className="rounded-2xl border-2 border-amber-100 bg-amber-50/40 p-6">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500">
+                  <MailIcon className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-amber-600">Tier 2</p>
+                  <h3 className="font-baloo text-[17px] font-bold text-stv-navy">Studiva Digital</h3>
+                </div>
+              </div>
+              <p className="mb-4 text-[14px] leading-[1.7] text-stv-body">
+                Pendaftaran Studiva Digital dilakukan <strong className="text-stv-navy">sepenuhnya online</strong>.
+                Buat akun, pilih paket berlangganan, dan akses langsung semua fitur platform dari
+                mana saja di Indonesia.
+              </p>
+              <ul className="mb-5 space-y-2">
+                {[
+                  'Daftar mandiri di website — tak perlu menghubungi tim',
+                  'Pilih paket bulanan, 3 bulan, atau tahunan',
+                  'Akses langsung setelah pembayaran berhasil',
+                ].map(item => (
+                  <li key={item} className="flex items-center gap-2 text-[13px] text-stv-body">
+                    <CheckCircle className="h-4 w-4 shrink-0 text-amber-500" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="inline-flex items-center gap-1.5 rounded-full bg-amber-500 px-5 py-2.5 text-[14px] font-bold text-white transition hover:bg-amber-600"
+              >
+                Daftar Sekarang <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

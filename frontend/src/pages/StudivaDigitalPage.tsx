@@ -24,44 +24,49 @@ interface Feature {
 
 const features: Feature[] = [
   {
+    icon: UserPlus,
+    title: 'Profil Anak & Perjalanan Belajar',
+    description: 'Tambahkan profil anak (bisa lebih dari satu) dan pantau perjalanan belajarnya — terakumulasi otomatis dari semua aktivitas di platform.',
+  },
+  {
     icon: Library,
-    title: 'Rangkuman Materi Pendidikan Anak',
-    description: 'Kumpulan rangkuman materi seputar pendidikan dan pengasuhan anak yang mudah dibaca dan diterapkan orang tua.',
+    title: 'Resource Library',
+    description: 'Artikel dan panduan parenting berbasis riset, dapat difilter berdasarkan kategori dan usia anak. Progres membaca tercatat otomatis per anak.',
   },
   {
     icon: GraduationCap,
-    title: 'Kelas & Webinar Bersama Psikolog',
-    description: 'Akses kelas dalam bentuk live webinar bersama psikolog maupun rekaman video yang bisa ditonton kapan saja.',
+    title: 'Courses & Webinar',
+    description: 'Live webinar bersama Psikolog Fitri Effendy untuk sesi interaktif langsung, plus video rekaman webinar yang sudah selesai — bisa ditonton kapan saja.',
   },
   {
     icon: Lightbulb,
-    title: 'Strategi & Aktivitas Edukatif',
-    description: 'Pilihan kegiatan, sarana edukatif, serta tips and trick praktis untuk mendukung proses belajar anak di rumah.',
+    title: 'Learning Strategies',
+    description: 'Strategi dan aktivitas edukatif praktis yang bisa langsung diterapkan di rumah. Tandai "Sudah Dilakukan" untuk melacak strategi yang sudah dicoba.',
   },
   {
     icon: Users,
-    title: 'Komunitas & Dukungan',
-    description: 'Ruang berbagi dan berdiskusi dengan sesama orang tua serta dukungan dari tim Studiva.',
+    title: 'Community Forum',
+    description: 'Forum diskusi termoderasi untuk berbagi pengalaman dengan sesama orang tua. Dapatkan notifikasi saat ada yang membalas diskusi Anda.',
   },
   {
     icon: CalendarCheck,
-    title: 'Konsultasi Langsung dengan Psikolog',
-    description: 'Pesan jadwal konsultasi langsung (direct booking) dengan psikolog untuk kebutuhan spesifik anak Anda.',
+    title: 'Konsultasi dengan Psikolog',
+    description: 'Ajukan permintaan konsultasi 1-on-1 dengan Psikolog Fitri Effendy. Jadwal dikonfirmasi secara manual oleh tim sesuai ketersediaan psikolog.',
   },
 ];
 
 const steps = [
-  { icon: UserPlus, title: 'Daftar & Berlangganan', description: 'Pilih paket dan selesaikan pembayaran dalam beberapa menit.' },
-  { icon: Compass, title: 'Jelajahi Materi & Kelas', description: 'Akses rangkuman materi, webinar, dan video kapan saja.' },
+  { icon: UserPlus, title: 'Daftar & Berlangganan', description: 'Buat akun, pilih paket, dan selesaikan pembayaran via Stripe dalam beberapa menit.' },
+  { icon: Compass, title: 'Tambah Profil Anak', description: 'Tambahkan satu atau lebih profil anak untuk melacak perjalanan belajarnya secara individual.' },
   {
     icon: Users,
-    title: 'Ikuti Komunitas & Terapkan Strategi',
-    description: 'Diskusi dengan orang tua lain dan terapkan strategi belajar di rumah.',
+    title: 'Eksplorasi & Terapkan',
+    description: 'Baca artikel, ikuti webinar, simpan strategi, dan terapkan di rumah. Semua progres tercatat otomatis.',
   },
   {
     icon: CalendarCheck,
-    title: 'Pesan Konsultasi Saat Dibutuhkan',
-    description: 'Booking sesi langsung dengan psikolog untuk kebutuhan spesifik anak Anda.',
+    title: 'Konsultasi Saat Dibutuhkan',
+    description: 'Ajukan sesi konsultasi dengan psikolog kapan pun ada pertanyaan spesifik tentang anak Anda.',
   },
 ];
 
@@ -187,24 +192,27 @@ const deepDives = [
   {
     title: 'Resource Library',
     description:
-      'Setiap artikel ditulis singkat dan praktis, langsung bisa diterapkan di rumah — tanpa perlu membaca jurnal ilmiah yang panjang.',
+      'Artikel singkat dan praktis yang bisa langsung diterapkan di rumah. Filter berdasarkan kategori (ASD, ADHD, sensorik, dll.) atau usia anak — progres membaca Anda tercatat otomatis.',
   },
   {
-    title: 'Kelas & Webinar',
+    title: 'Courses & Webinar',
     description:
-      'Ikuti sesi live untuk tanya-jawab langsung, atau tonton rekamannya kapan pun Anda punya waktu — semua tersimpan di profil Anda.',
+      'Ikuti sesi live webinar untuk tanya-jawab langsung dengan psikolog, atau tonton rekaman webinar yang sudah selesai kapan pun Anda punya waktu.',
   },
   {
-    title: 'Strategi Belajar',
-    description: 'Aktivitas yang dikurasi sesuai usia dan kebutuhan anak, lengkap dengan langkah-langkah yang mudah diikuti.',
+    title: 'Learning Strategies',
+    description:
+      'Aktivitas yang dikurasi sesuai usia dan kebutuhan anak. Tandai strategi sebagai "Sudah Dilakukan" untuk melacak mana saja yang sudah berhasil dicoba.',
   },
   {
-    title: 'Komunitas & Dukungan',
-    description: 'Tempat aman untuk bertanya dan berbagi pengalaman dengan orang tua lain yang memahami perjalanan Anda.',
+    title: 'Community Forum',
+    description:
+      'Tempat aman untuk bertanya dan berbagi pengalaman dengan orang tua lain. Buat diskusi sendiri dan dapatkan notifikasi setiap ada balasan dari komunitas.',
   },
   {
-    title: 'Konsultasi Langsung',
-    description: 'Pilih slot yang paling sesuai, dan dapatkan masukan langsung dari psikolog untuk situasi spesifik anak Anda.',
+    title: 'Konsultasi dengan Psikolog',
+    description:
+      'Ajukan permintaan konsultasi, dan tim kami akan menghubungi Anda untuk menentukan jadwal sesuai ketersediaan psikolog — tidak ada booking otomatis, setiap sesi dikonfirmasi secara personal.',
   },
 ];
 

@@ -19,7 +19,6 @@ import {
   CalendarClock,
   MessageCircleHeart,
   LayoutDashboard,
-  FileBarChart,
   Target,
   MessagesSquare,
   CreditCard,
@@ -202,33 +201,43 @@ const assessmentPoints: IconCard[] = [
 const benefits: IconCard[] = [
   {
     icon: LayoutDashboard,
-    title: 'Dashboard orang tua',
-    description: 'Pantau kehadiran, sesi terapi, dan progres belajar anak secara real-time.',
+    title: 'Perkembangan Harian',
+    description: 'Catatan perkembangan harian dari guru dalam 5 area: akademik, sosial-emosional, motorik, komunikasi, dan sensorik — lengkap dengan suasana hati anak hari itu.',
   },
   {
-    icon: FileBarChart,
-    title: 'Laporan perkembangan digital',
-    description: 'Portofolio & laporan berkala bisa diakses kapan saja, di mana saja.',
+    icon: CalendarClock,
+    title: 'Rekap Kehadiran',
+    description: 'Pantau kehadiran anak setiap hari lewat kalender digital — hadir, izin, sakit, atau alfa — beserta catatan dari guru.',
+  },
+  {
+    icon: FolderOpen,
+    title: 'Portfolio & Asesmen',
+    description: 'Karya terbaik anak terdokumentasi rapi (seni, motorik, proyek, akademik), ditambah hasil asesmen perkembangan dari tim ahli.',
   },
   {
     icon: Target,
-    title: 'Transparansi IEP',
-    description: 'Lihat rencana belajar individual anak dan target yang sedang dikerjakan.',
+    title: 'IEP Transparan',
+    description: 'Lihat Rencana Belajar Individual anak, progres tiap tujuan, dan catatan revisi — selalu sinkron dengan yang dikerjakan guru di sekolah.',
   },
   {
     icon: MessagesSquare,
-    title: 'Komunikasi langsung',
-    description: 'Terhubung dengan guru, GPK, dan terapis dalam satu tempat.',
+    title: 'Catatan untuk Guru',
+    description: 'Sampaikan pesan, pertanyaan, atau info penting langsung ke wali kelas melalui dashboard. Guru membalas langsung di dalam aplikasi.',
   },
   {
     icon: CreditCard,
-    title: 'Pendaftaran & pembayaran mudah',
-    description: 'Proses pendaftaran dan pembayaran aman dalam hitungan menit.',
+    title: 'Pembayaran SPP',
+    description: 'Terima tagihan SPP bulanan, bayar via Stripe, dan unduh bukti pembayaran — semua dari dashboard tanpa perlu datang ke sekolah.',
   },
   {
     icon: FolderHeart,
-    title: 'Satu profil, semua riwayat',
-    description: 'Semua dokumentasi dan riwayat belajar anak tersimpan rapi di satu profil.',
+    title: 'Satu Profil, Semua Riwayat',
+    description: 'Perkembangan harian, kehadiran, portfolio, asesmen, dan IEP anak tersimpan rapi dalam satu profil digital yang bisa diakses kapan saja.',
+  },
+  {
+    icon: Network,
+    title: 'Bonus: Akses Studiva Digital',
+    description: 'Orang tua Tier 1 mendapat akses penuh ke platform Studiva Digital: resource library, webinar psikolog, komunitas forum, dan konsultasi online.',
   },
 ];
 
@@ -543,10 +552,10 @@ function AsesmenPanel() {
 function FiturPanel({ onOpenGallery }: { onOpenGallery: (index: number) => void }) {
   return (
     <div className="mx-auto max-w-[1100px]">
-      <SectionHeading intro="Mendaftar lewat platform Studiva memberi Anda lebih dari sekadar kursi di kelas.">
-        Fitur Sekolah Studiva
+      <SectionHeading intro="Selain pembelajaran di kelas, orang tua mendapat akses dashboard digital yang transparan dan lengkap.">
+        Fitur Dashboard Orang Tua
       </SectionHeading>
-      <IconCardGrid items={benefits} columns="sm:grid-cols-2 lg:grid-cols-3" />
+      <IconCardGrid items={benefits} columns="sm:grid-cols-2 lg:grid-cols-4" />
 
       <div className="mt-16">
         <h3 className="text-center font-baloo text-[20px] font-bold text-stv-navy sm:text-[22px]">

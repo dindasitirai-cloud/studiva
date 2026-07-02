@@ -70,8 +70,9 @@ export interface ParentNoteGuru {
   message: string;
   urgency: ParentNoteUrgency;
   readByTeacher: boolean;
-  /** Teacher's internal follow-up note, not visible to parent. */
+  /** Teacher's reply, visible to parent in their chat view. */
   teacherResponse?: string;
+  teacherResponseAt?: string;
 }
 
 const STUDENTS: StudentGuru[] = [
@@ -377,6 +378,7 @@ const MOCK_PARENT_NOTES: ParentNoteGuru[] = [
     urgency: 'normal',
     readByTeacher: true,
     teacherResponse: 'Sudah dicatat. Akan saya perhatikan ritme transisi aktivitas Bima hari ini. Terima kasih informasinya!',
+    teacherResponseAt: new Date(Date.now() - 2 * 86400000 + 30 * 60000).toISOString(),
   },
   {
     id: 'pn-4',
@@ -553,7 +555,9 @@ export function GuruProvider({ children }: { children: React.ReactNode }) {
     setParentNotes(prev => prev.map(n => n.id === id ? { ...n, readByTeacher: true } : n)), []);
 
   const addTeacherResponse = useCallback((id: string, response: string) =>
-    setParentNotes(prev => prev.map(n => n.id === id ? { ...n, teacherResponse: response, readByTeacher: true } : n)), []);
+    setParentNotes(prev => prev.map(n => n.id === id
+      ? { ...n, teacherResponse: response, teacherResponseAt: new Date().toISOString(), readByTeacher: true }
+      : n)), []);
 
   return (
     <GuruContext.Provider value={{

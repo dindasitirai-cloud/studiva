@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Search, Clock, Dumbbell, Sparkles, HandHeart, BookOpen, MessageCircle,
-  Puzzle, Bookmark, Heart, CheckCircle2, ChevronDown, ChevronUp, LucideIcon,
+  Puzzle, Bookmark, Heart, CheckCircle2, LucideIcon,
 } from 'lucide-react';
 import { ACTIVITY_TYPES, Strategy } from './strategyData';
 import { useDashboardTier2, LearningStyle } from '../../../context/DashboardTier2Context';
@@ -117,7 +117,7 @@ function StrategyCard({
   );
 }
 
-type FilterTab = 'semua' | 'bookmark' | 'favorit';
+type FilterTab = 'semua' | 'bookmark' | 'favorit' | 'sudah-dilakukan';
 
 export default function LearningStrategiesTier2() {
   const navigate  = useNavigate();
@@ -130,12 +130,11 @@ export default function LearningStrategiesTier2() {
   } = useDashboardTier2();
   const { singleChild } = useActivityChild();
 
-  const [search, setSearch]         = useState('');
-  const [activityType, setActivityType] = useState('Semua');
-  const [ageGroup, setAgeGroup]     = useState('Semua usia');
+  const [search, setSearch]               = useState('');
+  const [activityType, setActivityType]   = useState('Semua');
+  const [ageGroup, setAgeGroup]           = useState('Semua usia');
   const [learningStyle, setLearningStyle] = useState('Semua');
-  const [filterTab, setFilterTab]   = useState<FilterTab>('semua');
-  const [doneSectionOpen, setDoneSectionOpen] = useState(true);
+  const [filterTab, setFilterTab]         = useState<FilterTab>('semua');
 
   function handleToggleDone(strategyId: string) {
     if (!singleChild) { navigate(`${basePath}/strategies/${strategyId}`); return; }
@@ -143,7 +142,7 @@ export default function LearningStrategiesTier2() {
     else                                        saveStrategy(singleChild.id, strategyId);
   }
 
-  const baseFiltered = useMemo(() => strategies.filter(s => {
+  const filtered = useMemo(() => strategies.filter(s => {
     if (s.status !== 'published') return false;
     const matchType   = activityType === 'Semua' || s.activityType === activityType;
     const matchAge    = ageGroup === 'Semua usia' || s.ageGroup === ageGroup || s.ageGroup === 'Semua usia';
@@ -151,20 +150,19 @@ export default function LearningStrategiesTier2() {
     const matchSearch = s.title.toLowerCase().includes(search.toLowerCase()) ||
                         s.summary.toLowerCase().includes(search.toLowerCase());
     const matchTab =
-      filterTab === 'semua'    ? true :
-      filterTab === 'bookmark' ? isStrategyBookmarked(s.id) :
-      filterTab === 'favorit'  ? isStrategyFavorited(s.id)  : true;
+      filterTab === 'semua'           ? true :
+      filterTab === 'bookmark'        ? isStrategyBookmarked(s.id) :
+      filterTab === 'favorit'         ? isStrategyFavorited(s.id) :
+      filterTab === 'sudah-dilakukan' ? isStrategySavedByAnyChild(s.id) : true;
     return matchType && matchAge && matchStyle && matchSearch && matchTab;
   }), [strategies, search, activityType, ageGroup, learningStyle, filterTab,
-       isStrategyBookmarked, isStrategyFavorited]);
-
-  const notDone = baseFiltered.filter(s => !isStrategySavedByAnyChild(s.id));
-  const done    = baseFiltered.filter(s =>  isStrategySavedByAnyChild(s.id));
+       isStrategyBookmarked, isStrategyFavorited, isStrategySavedByAnyChild]);
 
   const FILTER_TABS: { id: FilterTab; label: string; icon: LucideIcon }[] = [
-    { id: 'semua',    label: 'Semua',    icon: Puzzle   },
-    { id: 'bookmark', label: 'Disimpan', icon: Bookmark },
-    { id: 'favorit',  label: 'Favorit',  icon: Heart    },
+    { id: 'semua',           label: 'Semua',           icon: Puzzle      },
+    { id: 'bookmark',        label: 'Disimpan',         icon: Bookmark    },
+    { id: 'favorit',         label: 'Favorit',          icon: Heart       },
+    { id: 'sudah-dilakukan', label: 'Sudah Dilakukan',  icon: CheckCircle2 },
   ];
 
   const cardProps = (strategy: Strategy) => ({
@@ -232,8 +230,7 @@ export default function LearningStrategiesTier2() {
         </select>
       </div>
 
-      {/* ── Belum dilakukan ─────────────────────────────── */}
-      {notDone.length === 0 && done.length === 0 ? (
+      {filtered.length === 0 ? (
         <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-amber-200 py-14 text-center">
           <Puzzle className="h-10 w-10 text-amber-300" strokeWidth={1.5} />
           <p className="mt-3 font-semibold text-stv-navy">
@@ -244,46 +241,11 @@ export default function LearningStrategiesTier2() {
           </p>
         </div>
       ) : (
-        <>
-          {notDone.length > 0 && (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {notDone.map(s => <StrategyCard key={s.id} {...cardProps(s)} />)}
-            </div>
-          )}
-
-          {notDone.length === 0 && done.length > 0 && (
-            <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-stv-green-tint py-10 text-center">
-              <CheckCircle2 className="h-9 w-9 text-stv-green" strokeWidth={1.5} />
-              <p className="mt-2.5 font-semibold text-stv-navy">Semua strategi sudah dilakukan!</p>
-              <p className="mt-0.5 text-[13px] text-stv-muted">Lihat riwayat di bawah.</p>
-            </div>
-          )}
-
-          {/* ── Sudah Dilakukan section ── */}
-          {done.length > 0 && (
-            <div>
-              <button type="button" onClick={() => setDoneSectionOpen(o => !o)}
-                className="flex w-full items-center justify-between rounded-2xl border border-stv-border bg-white px-5 py-3.5 text-left transition hover:bg-slate-50">
-                <div className="flex items-center gap-2.5">
-                  <CheckCircle2 className="h-5 w-5 text-stv-green" />
-                  <span className="font-baloo text-[16px] font-bold text-stv-navy">Sudah Dilakukan</span>
-                  <span className="rounded-full bg-stv-green-tint px-2.5 py-0.5 text-[12px] font-bold text-stv-green">
-                    {done.length}
-                  </span>
-                </div>
-                {doneSectionOpen
-                  ? <ChevronUp className="h-5 w-5 text-stv-muted" />
-                  : <ChevronDown className="h-5 w-5 text-stv-muted" />}
-              </button>
-
-              {doneSectionOpen && (
-                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {done.map(s => <StrategyCard key={s.id} {...cardProps(s)} />)}
-                </div>
-              )}
-            </div>
-          )}
-        </>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map(strategy => (
+            <StrategyCard key={strategy.id} {...cardProps(strategy)} />
+          ))}
+        </div>
       )}
     </div>
   );

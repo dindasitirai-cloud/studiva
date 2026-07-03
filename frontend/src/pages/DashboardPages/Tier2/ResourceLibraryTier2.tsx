@@ -2,8 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Search, Clock, CheckCircle2, Brain, MessageCircle, Activity,
-  Sparkles, BookOpen, Stethoscope, Library, Bookmark, Heart,
-  ChevronDown, ChevronUp, LucideIcon,
+  Sparkles, BookOpen, Stethoscope, Library, Bookmark, Heart, LucideIcon,
 } from 'lucide-react';
 import { Article } from './articleData';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
@@ -116,7 +115,7 @@ function ArticleCard({
   );
 }
 
-type FilterTab = 'semua' | 'bookmark' | 'favorit';
+type FilterTab = 'semua' | 'bookmark' | 'favorit' | 'sudah-dibaca';
 
 export default function ResourceLibraryTier2() {
   const navigate   = useNavigate();
@@ -129,10 +128,9 @@ export default function ResourceLibraryTier2() {
   } = useDashboardTier2();
   const { singleChild } = useActivityChild();
 
-  const [search, setSearch]           = useState('');
-  const [category, setCategory]       = useState('Semua');
-  const [filterTab, setFilterTab]     = useState<FilterTab>('semua');
-  const [readSectionOpen, setReadSectionOpen] = useState(true);
+  const [search, setSearch]       = useState('');
+  const [category, setCategory]   = useState('Semua');
+  const [filterTab, setFilterTab] = useState<FilterTab>('semua');
 
   function handleToggleRead(articleId: string) {
     if (!singleChild) { navigate(`${basePath}/resources/${articleId}`); return; }
@@ -140,26 +138,24 @@ export default function ResourceLibraryTier2() {
     else                                     markArticleRead(singleChild.id, articleId);
   }
 
-  // Base filter (category + search + tab)
-  const baseFiltered = useMemo(() => articles.filter(a => {
+  const filtered = useMemo(() => articles.filter(a => {
     if (a.status !== 'published') return false;
     const matchCat    = category === 'Semua' || a.category === category;
     const matchSearch = a.title.toLowerCase().includes(search.toLowerCase()) ||
                         a.summary.toLowerCase().includes(search.toLowerCase());
     const matchTab =
-      filterTab === 'semua'    ? true :
-      filterTab === 'bookmark' ? isArticleBookmarked(a.id) :
-      filterTab === 'favorit'  ? isArticleFavorited(a.id)  : true;
+      filterTab === 'semua'        ? true :
+      filterTab === 'bookmark'     ? isArticleBookmarked(a.id) :
+      filterTab === 'favorit'      ? isArticleFavorited(a.id) :
+      filterTab === 'sudah-dibaca' ? isArticleReadByAnyChild(a.id) : true;
     return matchCat && matchSearch && matchTab;
-  }), [articles, search, category, filterTab, isArticleBookmarked, isArticleFavorited]);
-
-  const unread  = baseFiltered.filter(a => !isArticleReadByAnyChild(a.id));
-  const read    = baseFiltered.filter(a =>  isArticleReadByAnyChild(a.id));
+  }), [articles, search, category, filterTab, isArticleBookmarked, isArticleFavorited, isArticleReadByAnyChild]);
 
   const FILTER_TABS: { id: FilterTab; label: string; icon: LucideIcon }[] = [
-    { id: 'semua',    label: 'Semua',    icon: Library  },
-    { id: 'bookmark', label: 'Disimpan', icon: Bookmark },
-    { id: 'favorit',  label: 'Favorit',  icon: Heart    },
+    { id: 'semua',        label: 'Semua',        icon: Library      },
+    { id: 'bookmark',     label: 'Disimpan',      icon: Bookmark     },
+    { id: 'favorit',      label: 'Favorit',       icon: Heart        },
+    { id: 'sudah-dibaca', label: 'Sudah Dibaca',  icon: CheckCircle2 },
   ];
 
   const cardProps = (article: Article) => ({
@@ -219,8 +215,7 @@ export default function ResourceLibraryTier2() {
         ))}
       </div>
 
-      {/* ── Belum dibaca ─────────────────────────────── */}
-      {unread.length === 0 && read.length === 0 ? (
+      {filtered.length === 0 ? (
         <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-amber-200 py-14 text-center">
           <Library className="h-10 w-10 text-amber-300" strokeWidth={1.5} />
           <p className="mt-3 font-semibold text-stv-navy">
@@ -231,46 +226,11 @@ export default function ResourceLibraryTier2() {
           </p>
         </div>
       ) : (
-        <>
-          {unread.length > 0 && (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {unread.map(a => <ArticleCard key={a.id} {...cardProps(a)} />)}
-            </div>
-          )}
-
-          {unread.length === 0 && read.length > 0 && (
-            <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-stv-green-tint py-10 text-center">
-              <CheckCircle2 className="h-9 w-9 text-stv-green" strokeWidth={1.5} />
-              <p className="mt-2.5 font-semibold text-stv-navy">Semua artikel sudah dibaca!</p>
-              <p className="mt-0.5 text-[13px] text-stv-muted">Lihat riwayat bacaan di bawah.</p>
-            </div>
-          )}
-
-          {/* ── Sudah Dibaca section ── */}
-          {read.length > 0 && (
-            <div>
-              <button type="button" onClick={() => setReadSectionOpen(o => !o)}
-                className="flex w-full items-center justify-between rounded-2xl border border-stv-border bg-white px-5 py-3.5 text-left transition hover:bg-slate-50">
-                <div className="flex items-center gap-2.5">
-                  <CheckCircle2 className="h-5 w-5 text-stv-green" />
-                  <span className="font-baloo text-[16px] font-bold text-stv-navy">Sudah Dibaca</span>
-                  <span className="rounded-full bg-stv-green-tint px-2.5 py-0.5 text-[12px] font-bold text-stv-green">
-                    {read.length}
-                  </span>
-                </div>
-                {readSectionOpen
-                  ? <ChevronUp className="h-5 w-5 text-stv-muted" />
-                  : <ChevronDown className="h-5 w-5 text-stv-muted" />}
-              </button>
-
-              {readSectionOpen && (
-                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {read.map(a => <ArticleCard key={a.id} {...cardProps(a)} />)}
-                </div>
-              )}
-            </div>
-          )}
-        </>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map(article => (
+            <ArticleCard key={article.id} {...cardProps(article)} />
+          ))}
+        </div>
       )}
     </div>
   );

@@ -110,6 +110,28 @@ export default function ArticleDetailTier2() {
             </p>
           ))}
         </div>
+
+        {/* Sudah Dibaca button — at the bottom after reading the full article */}
+        {singleChild && (
+          <button
+            type="button"
+            onClick={() => {
+              if (isArticleReadByChild(singleChild.id, article.id)) {
+                unmarkArticleRead(singleChild.id, article.id);
+              } else {
+                markArticleRead(singleChild.id, article.id);
+              }
+            }}
+            className={`mt-7 flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-bold text-white transition ${
+              isArticleReadByChild(singleChild.id, article.id)
+                ? 'bg-stv-green hover:bg-stv-green/90'
+                : 'bg-amber-500 hover:bg-amber-600'
+            }`}
+          >
+            <CheckCircle2 className="h-4 w-4" />
+            {isArticleReadByChild(singleChild.id, article.id) ? 'Sudah Dibaca' : 'Tandai Sudah Dibaca'}
+          </button>
+        )}
       </article>
     </div>
   );

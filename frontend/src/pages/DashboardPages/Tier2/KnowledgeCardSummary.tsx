@@ -201,15 +201,17 @@ export default function KnowledgeCardSummary() {
           <p className="text-[14px] leading-relaxed text-red-800">{card.summary.perhatian}</p>
         </div>
 
-        {/* Scientific detail CTA */}
-        <button
-          type="button"
-          onClick={() => navigate(`${basePath}/knowledge/${card.id}/ilmiah`)}
-          className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-[14px] font-bold text-amber-700 transition hover:bg-amber-100"
-        >
-          <FlaskConical className="h-4 w-4" strokeWidth={2} />
-          Detail ilmiah terkait ini
-        </button>
+        {/* Scientific detail CTA — hidden when no paragraphs yet */}
+        {card.scientific.paragraphs.length > 0 && (
+          <button
+            type="button"
+            onClick={() => navigate(`${basePath}/knowledge/${card.id}/ilmiah`)}
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-[14px] font-bold text-amber-700 transition hover:bg-amber-100"
+          >
+            <FlaskConical className="h-4 w-4" strokeWidth={2} />
+            Detail ilmiah terkait ini
+          </button>
+        )}
 
         {/* Sources */}
         {card.sources.length > 0 && (

@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock } from 'lucide-react';
+import { Clock, CheckCircle2, Bookmark } from 'lucide-react';
 import { useDashboardBasePath } from '../useDashboardBasePath';
 import { useAudioPlayer } from '../../../context/AudioPlayerContext';
+import { useKnowledgeLibrary } from '../../../context/KnowledgeLibraryContext';
 import {
   CARDS, AGE_RANGES, DOMAIN_MAP, AgeKey, DomainCode, KnowledgeCard,
 } from './knowledgeCardData';
@@ -197,7 +198,7 @@ export default function KnowledgeGallery() {
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {filteredCards.map(card => (
-              <KnowledgeCardTile
+              <KnowledgeCardTileWrapper
                 key={card.id}
                 card={card}
                 ageRange={ageRange}
@@ -215,9 +216,23 @@ interface TileProps {
   card: KnowledgeCard;
   ageRange?: typeof AGE_RANGES[number];
   onClick: () => void;
+  isRead?: boolean;
+  isBookmarked?: boolean;
 }
 
-function KnowledgeCardTile({ card, ageRange, onClick }: TileProps) {
+// Wrapper reads context so the tile stays a pure component
+function KnowledgeCardTileWrapper(props: Omit<TileProps, 'isRead' | 'isBookmarked'>) {
+  const { isRead, isBookmarked } = useKnowledgeLibrary();
+  return (
+    <KnowledgeCardTile
+      {...props}
+      isRead={isRead(props.card.id)}
+      isBookmarked={isBookmarked(props.card.id)}
+    />
+  );
+}
+
+function KnowledgeCardTile({ card, ageRange, onClick, isRead, isBookmarked }: TileProps) {
   const domainInfo = DOMAIN_MAP[card.domain];
   const Icon = domainInfo.icon;
   const [imgError, setImgError] = useState(false);
@@ -249,6 +264,20 @@ function KnowledgeCardTile({ card, ageRange, onClick }: TileProps) {
             />
           </div>
         )}
+        {/* Read / Bookmark badges */}
+        <div className="absolute right-2 top-2 flex gap-1.5">
+          {isRead && (
+            <span className="flex items-center gap-1 rounded-full bg-white/90 px-2 py-0.5 text-[11px] font-bold text-stv-green shadow">
+              <CheckCircle2 className="h-3 w-3" strokeWidth={2.5} />
+              Dibaca
+            </span>
+          )}
+          {isBookmarked && (
+            <span className="flex items-center justify-center rounded-full bg-amber-400 p-1 shadow">
+              <Bookmark className="h-3 w-3 text-white" fill="white" strokeWidth={0} />
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Card body */}

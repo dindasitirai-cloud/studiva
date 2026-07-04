@@ -65,6 +65,7 @@ import KnowledgeGallery from './pages/DashboardPages/Tier2/KnowledgeGallery';
 import KnowledgeCardSummary from './pages/DashboardPages/Tier2/KnowledgeCardSummary';
 import KnowledgeCardScientific from './pages/DashboardPages/Tier2/KnowledgeCardScientific';
 import { AudioPlayerProvider } from './context/AudioPlayerContext';
+import { KnowledgeLibraryProvider } from './context/KnowledgeLibraryContext';
 import GuruShell from './pages/GuruPages/GuruShell';
 import BerandaGuru from './pages/GuruPages/BerandaGuru';
 import KelasSayaGuru from './pages/GuruPages/KelasSayaGuru';
@@ -135,6 +136,7 @@ export default function App() {
             a notification is created, not just add it to the bell list. */}
         <ToastProvider>
         <AudioPlayerProvider>
+        <KnowledgeLibraryProvider>
         <FullscreenNotificationProvider>
         <SekolahStudivaProvider>
         <DashboardTier2Provider>
@@ -437,6 +439,7 @@ export default function App() {
         </DashboardTier2Provider>
         </SekolahStudivaProvider>
         </FullscreenNotificationProvider>
+        </KnowledgeLibraryProvider>
         </AudioPlayerProvider>
         </ToastProvider>
       </BrowserRouter>

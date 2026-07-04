@@ -12,12 +12,14 @@ import {
   LogOut,
   CreditCard,
   X,
+  BookOpen,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 
 const navItems = [
   { to: '/dashboard/tier2', label: 'Beranda', icon: Home, end: true },
   { to: '/dashboard/tier2/profil-anak', label: 'Profil Anak', icon: Baby },
+  { to: '/dashboard/tier2/knowledge', label: 'Panduan Tumbuh Kembang', icon: BookOpen },
   { to: '/dashboard/tier2/resources', label: 'Resource Library', icon: Library },
   { to: '/dashboard/tier2/courses', label: 'Courses', icon: GraduationCap },
   { to: '/dashboard/tier2/strategies', label: 'Learning Strategies', icon: Lightbulb },

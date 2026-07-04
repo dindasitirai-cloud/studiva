@@ -63,6 +63,10 @@ import IEPTier1 from './pages/DashboardPages/Tier1/IEPTier1';
 import CatatanGuruTier1 from './pages/DashboardPages/Tier1/CatatanGuruTier1';
 import SubscriptionTier1 from './pages/DashboardPages/Tier1/SubscriptionTier1';
 import PembayaranSPPTier1 from './pages/DashboardPages/Tier1/PembayaranSPPTier1';
+import KnowledgeGallery from './pages/DashboardPages/Tier2/KnowledgeGallery';
+import KnowledgeCardSummary from './pages/DashboardPages/Tier2/KnowledgeCardSummary';
+import KnowledgeCardScientific from './pages/DashboardPages/Tier2/KnowledgeCardScientific';
+import { AudioPlayerProvider } from './context/AudioPlayerContext';
 import GuruShell from './pages/GuruPages/GuruShell';
 import BerandaGuru from './pages/GuruPages/BerandaGuru';
 import KelasSayaGuru from './pages/GuruPages/KelasSayaGuru';
@@ -129,6 +133,7 @@ export default function App() {
             wraps it so DashboardTier2Provider can pop up a toast the moment
             a notification is created, not just add it to the bell list. */}
         <ToastProvider>
+        <AudioPlayerProvider>
         <FullscreenNotificationProvider>
         <SekolahStudivaProvider>
         <DashboardTier2Provider>
@@ -284,6 +289,9 @@ export default function App() {
               <Route index element={<BerandaTier2 />} />
               <Route path="profil-anak" element={<ProfilAnakTier2 />} />
               <Route path="subscription" element={<SubscriptionTier2 />} />
+              <Route path="knowledge" element={<KnowledgeGallery />} />
+              <Route path="knowledge/:cardId" element={<KnowledgeCardSummary />} />
+              <Route path="knowledge/:cardId/ilmiah" element={<KnowledgeCardScientific />} />
               <Route path="resources" element={<ResourceLibraryTier2 />} />
               <Route path="resources/:id" element={<ArticleDetailTier2 />} />
               <Route path="courses" element={<CoursesTier2 />} />
@@ -322,6 +330,9 @@ export default function App() {
                   dashboards. Each component resolves its own internal links
                   via useDashboardBasePath() so it stays inside whichever
                   dashboard shell the parent is currently in. */}
+              <Route path="knowledge" element={<KnowledgeGallery />} />
+              <Route path="knowledge/:cardId" element={<KnowledgeCardSummary />} />
+              <Route path="knowledge/:cardId/ilmiah" element={<KnowledgeCardScientific />} />
               <Route path="resources" element={<ResourceLibraryTier2 />} />
               <Route path="resources/:id" element={<ArticleDetailTier2 />} />
               <Route path="courses" element={<CoursesTier2 />} />
@@ -422,6 +433,7 @@ export default function App() {
         </DashboardTier2Provider>
         </SekolahStudivaProvider>
         </FullscreenNotificationProvider>
+        </AudioPlayerProvider>
         </ToastProvider>
       </BrowserRouter>
     </AuthProvider>

@@ -18,6 +18,7 @@ import {
   CreditCard,
   Receipt,
   X,
+  BookOpen,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { FEATURE_COLORS, FeatureKey } from './featureColors';
@@ -35,6 +36,7 @@ const navItems: { to: string; label: string; icon: typeof Home; key: FeatureKey;
 ];
 
 const digitalNavItems = [
+  { to: '/dashboard/tier1/knowledge', label: 'Panduan Tumbuh Kembang', icon: BookOpen },
   { to: '/dashboard/tier1/resources', label: 'Resource Library', icon: Library },
   { to: '/dashboard/tier1/courses', label: 'Courses', icon: GraduationCap },
   { to: '/dashboard/tier1/strategies', label: 'Learning Strategies', icon: Lightbulb },

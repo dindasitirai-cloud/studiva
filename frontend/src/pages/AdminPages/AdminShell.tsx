@@ -20,6 +20,8 @@ const PAGE_TITLES: Record<string, string> = {
   '/admin/spp-billing':  'Tagihan SPP, Sekolah Studiva',
   '/admin/sekolah-akun': 'Akun Orang Tua, Sekolah Studiva',
   '/admin/guru-akun':    'Akun Guru',
+  '/admin/knowledge-cards': 'Panduan Tumbuh Kembang — CMS',
+  '/admin/knowledge-cards/new': 'Tambah Kartu',
 };
 
 const ACTION_ICON: Record<AdminActionKind, typeof Bell> = {

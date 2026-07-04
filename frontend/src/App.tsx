@@ -90,6 +90,8 @@ import SettingsAdmin from './pages/AdminPages/SettingsAdmin';
 import SppAdmin from './pages/AdminPages/SppAdmin';
 import SekolahAkunAdmin from './pages/AdminPages/SekolahAkunAdmin';
 import GuruAkunAdmin from './pages/AdminPages/GuruAkunAdmin';
+import KnowledgeCardsAdmin from './pages/AdminPages/KnowledgeCardsAdmin';
+import KnowledgeCardFormAdmin from './pages/AdminPages/KnowledgeCardFormAdmin';
 
 const CONSULTATION_UPGRADE_MESSAGE =
   'Anda perlu upgrade ke Tier 1 atau Tier 2 untuk melakukan booking konsultasi. Silakan pilih plan yang sesuai untuk mulai berkonsultasi.';
@@ -102,6 +104,7 @@ const ADMIN_SHELL_PATHS = [
   '/admin', '/admin/resource-library', '/admin/courses', '/admin/strategies',
   '/admin/forum', '/admin/konsultasi', '/admin/members', '/admin/payments', '/admin/settings',
   '/admin/spp-billing', '/admin/sekolah-akun', '/admin/guru-akun',
+  '/admin/knowledge-cards',
 ];
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -371,6 +374,9 @@ export default function App() {
               <Route path="spp-billing" element={<SppAdmin />} />
               <Route path="sekolah-akun" element={<SekolahAkunAdmin />} />
               <Route path="guru-akun" element={<GuruAkunAdmin />} />
+              <Route path="knowledge-cards" element={<KnowledgeCardsAdmin />} />
+              <Route path="knowledge-cards/new" element={<KnowledgeCardFormAdmin />} />
+              <Route path="knowledge-cards/:id/edit" element={<KnowledgeCardFormAdmin />} />
             </Route>
 
             <Route

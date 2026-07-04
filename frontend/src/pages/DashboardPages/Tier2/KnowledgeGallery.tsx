@@ -9,6 +9,57 @@ import {
 
 const ALL_DOMAIN = '__all__' as const;
 
+// Shape returned by the API (snake_case, different from static CARDS camelCase)
+interface ApiKnowledgeCard {
+  id: number;
+  slug: string;
+  age_key: string;
+  domain: string;
+  title: string;
+  photo_src: string | null;
+  photo_alt: string | null;
+  photo_credit: string | null;
+  read_minutes: number;
+  is_medical: boolean;
+  terjadi: string;
+  penting: string;
+  lakukan: string[];
+  perhatian: string;
+  sci_title: string | null;
+  sci_read_minutes: number | null;
+  sci_paragraphs: string[];
+  sources: string[];
+}
+
+/** Convert an API card into the local KnowledgeCard shape so existing components work unchanged. */
+function apiToLocal(c: ApiKnowledgeCard): KnowledgeCard {
+  return {
+    id: c.slug,              // use slug as string id to match existing routing (/:cardId)
+    ageKey: c.age_key as AgeKey,
+    domain: c.domain as DomainCode,
+    title: c.title,
+    photo: {
+      src: c.photo_src ?? `/images/rl/${c.slug}.jpg`,
+      alt: c.photo_alt ?? c.title,
+      credit: c.photo_credit ?? undefined,
+    },
+    readMinutes: c.read_minutes,
+    isMedical: c.is_medical,
+    summary: {
+      terjadi: c.terjadi,
+      penting: c.penting,
+      lakukan: c.lakukan,
+      perhatian: c.perhatian,
+    },
+    scientific: {
+      title: c.sci_title ?? '',
+      readMinutes: c.sci_read_minutes ?? 0,
+      paragraphs: c.sci_paragraphs,
+    },
+    sources: c.sources,
+  };
+}
+
 export default function KnowledgeGallery() {
   const navigate = useNavigate();
   const basePath = useDashboardBasePath();
@@ -17,13 +68,40 @@ export default function KnowledgeGallery() {
   const [selectedAge, setSelectedAge] = useState<AgeKey>('0-3m');
   const [selectedDomain, setSelectedDomain] = useState<DomainCode | typeof ALL_DOMAIN>(ALL_DOMAIN);
 
+  // API cards — fetched on mount and merged with static fallback
+  const [apiCards, setApiCards] = useState<KnowledgeCard[] | null>(null);
+
+  useEffect(() => {
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+    fetch(`${API_URL}/api/knowledge-cards`)
+      .then(r => r.json())
+      .then((data: { cards?: ApiKnowledgeCard[] }) => {
+        if (Array.isArray(data.cards) && data.cards.length > 0) {
+          setApiCards(data.cards.map(apiToLocal));
+        }
+      })
+      .catch(() => {
+        // silently fall back to static CARDS
+      });
+  }, []);
+
+  // Merge: replace static cards with API cards when API has them, otherwise keep static
+  const allCards = useMemo<KnowledgeCard[]>(() => {
+    if (!apiCards) return CARDS;
+    // Build a set of slugs returned by the API so we can de-duplicate
+    const apiSlugs = new Set(apiCards.map(c => c.id));
+    // Keep static cards whose id (slug) is NOT returned by the API
+    const staticOnly = CARDS.filter(c => !apiSlugs.has(c.id));
+    return [...apiCards, ...staticOnly];
+  }, [apiCards]);
+
   const filteredCards = useMemo(() => {
-    return CARDS.filter(c => {
+    return allCards.filter(c => {
       const ageMatch = c.ageKey === selectedAge;
       const domainMatch = selectedDomain === ALL_DOMAIN || c.domain === selectedDomain;
       return ageMatch && domainMatch;
     });
-  }, [selectedAge, selectedDomain]);
+  }, [allCards, selectedAge, selectedDomain]);
 
   // Update audio playlist whenever filter changes
   useEffect(() => {

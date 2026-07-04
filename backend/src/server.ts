@@ -16,6 +16,7 @@ import adminRoutes from './routes/admin';
 import enrollmentRoutes from './routes/enrollment';
 import communityRoutes from './routes/community';
 import adminProfilesRoutes from './routes/adminProfiles';
+import knowledgeCardsRouter from './routes/knowledgeCards';
 
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 
@@ -62,6 +63,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/enrollment', enrollmentRoutes);
 app.use('/api/community', communityRoutes);
 app.use('/api/admin-profiles', adminProfilesRoutes);
+app.use('/api/knowledge-cards', knowledgeCardsRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

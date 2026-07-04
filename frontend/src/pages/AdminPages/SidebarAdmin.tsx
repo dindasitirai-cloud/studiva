@@ -15,6 +15,7 @@ import {
   Receipt,
   UserPlus,
   BookUser,
+  BookOpen,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { ADMIN_COLORS, AdminModuleKey } from './adminFeatureColors';
@@ -27,6 +28,7 @@ const contentNav: { to: string; label: string; icon: typeof Library; key: AdminM
   { to: '/admin/resource-library', label: 'Resource Library', icon: Library, key: 'resources' },
   { to: '/admin/courses', label: 'Courses', icon: GraduationCap, key: 'courses' },
   { to: '/admin/strategies', label: 'Learning Strategies', icon: Lightbulb, key: 'strategies' },
+  { to: '/admin/knowledge-cards', label: 'Panduan Tumbuh Kembang', icon: BookOpen, key: 'knowledge-cards' },
 ];
 
 const communityNav: { to: string; label: string; icon: typeof Users; key: AdminModuleKey }[] = [

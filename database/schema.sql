@@ -226,3 +226,32 @@ CREATE TABLE IF NOT EXISTS resources (
   author TEXT NOT NULL,
   published_date DATE NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS knowledge_cards (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  slug TEXT UNIQUE NOT NULL,
+  age_key TEXT NOT NULL,
+  domain TEXT NOT NULL,
+  title TEXT NOT NULL,
+  photo_src TEXT,
+  photo_alt TEXT,
+  photo_credit TEXT,
+  read_minutes INTEGER DEFAULT 2,
+  is_medical INTEGER NOT NULL DEFAULT 0,
+  terjadi TEXT NOT NULL DEFAULT '',
+  penting TEXT NOT NULL DEFAULT '',
+  lakukan TEXT NOT NULL DEFAULT '[]',
+  perhatian TEXT NOT NULL DEFAULT '',
+  sci_title TEXT,
+  sci_read_minutes INTEGER,
+  sci_paragraphs TEXT NOT NULL DEFAULT '[]',
+  sources TEXT NOT NULL DEFAULT '[]',
+  status TEXT NOT NULL DEFAULT 'DRAFT' CHECK (status IN ('DRAFT','IN_REVIEW','APPROVED','PUBLISHED')),
+  reviewer_notes TEXT,
+  reviewed_by INTEGER REFERENCES users(id),
+  reviewed_at DATETIME,
+  created_by INTEGER REFERENCES users(id),
+  updated_by INTEGER REFERENCES users(id),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

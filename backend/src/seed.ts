@@ -10,6 +10,7 @@ import { createSubscription, findActiveSubscriptionByUserId } from './models/Sub
 import { computeEndDate } from './lib/pricing';
 import { upsertAdminProfile, findAdminProfileByUserId } from './models/AdminProfile';
 import { setExpert, setChampion, updateBio } from './models/CommunityProfile';
+import { findAllKnowledgeCards, createKnowledgeCard } from './models/KnowledgeCard';
 
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 
@@ -281,6 +282,97 @@ async function seed(): Promise<void> {
       79_000
     );
     console.log('Created active Tier 2 subscription for tier2@studiva.id');
+  }
+
+  const existingKnowledgeCards = await findAllKnowledgeCards();
+  if (existingKnowledgeCards.length === 0) {
+    const knowledgeCardSeeds = [
+      {
+        slug: '0-3m-fm',
+        age_key: '0-3m',
+        domain: 'FM',
+        title: 'Tummy time: menegakkan kepala',
+        photo_src: '/images/rl/0-3m-fm.jpg',
+        photo_alt: 'Bayi tummy time mengangkat kepala',
+        photo_credit: 'Unsplash',
+        read_minutes: 2,
+        is_medical: false,
+        terjadi: 'Otot leher dan bahu bayi menguat. Saat tengkurap dalam keadaan bangun, ia mulai mengangkat kepala; tangannya sering dibawa ke mulut.',
+        penting: 'Tummy time membangun kekuatan untuk berguling, duduk, dan merangkak, sekaligus mencegah kepala peyang. Prinsipnya: "back to sleep, tummy to play".',
+        lakukan: ['Mulai 3–5 menit, 2–3 kali sehari saat bayi bangun & diawasi.', 'Turun ke lantai; ajak bicara sejajar matanya.', 'Pakai mainan kontras atau cermin bayi.', 'Jika menolak, coba di dada Anda sambil berbaring.'],
+        perhatian: 'Menjelang 3 bulan kepala belum terangkat sama sekali, atau tubuh sangat kaku/lemas.',
+        sci_title: 'Mengapa gerakan membangun otak, bukan hanya otot',
+        sci_read_minutes: 6,
+        sci_paragraphs: [
+          'Perkembangan gerak bayi mengikuti pola yang dapat diprediksi. Kendali tubuh berkembang dari atas ke bawah — bayi menguasai kepala lebih dulu, lalu bahu, badan, dan kaki.',
+          'Tummy time makin penting sejak kampanye "tidur telentang" pada 1990-an berhasil menurunkan angka kematian bayi mendadak (SIDS) secara drastis.',
+          'Manfaatnya melampaui otot. Menurut Piaget, bayi di tahun pertama berada pada tahap sensorimotor: ia membangun pemahaman tentang dunia lewat indra dan gerak.',
+          'Karena itu, beri bayi banyak waktu bergerak bebas di alas aman, dan jangan terlalu lama menaruhnya di kursi pantul atau ayunan.',
+          'Ingat, rentang normal itu lebar. Sebagian bayi berguling di usia 4 bulan, sebagian di usia 6 bulan — keduanya normal.',
+        ],
+        sources: ['AAP HealthyChildren.org', 'CDC Learn the Signs. Act Early.'],
+        status: 'PUBLISHED' as const,
+      },
+      {
+        slug: '0-3m-bh',
+        age_key: '0-3m',
+        domain: 'BH',
+        title: 'Cooing: obrolan pertama sebelum kata',
+        photo_src: '/images/rl/0-3m-bh.jpg',
+        photo_alt: 'Ibu mengajak bayi bicara',
+        photo_credit: 'Unsplash',
+        read_minutes: 2,
+        is_medical: false,
+        terjadi: 'Sekitar 6–8 minggu bayi mengeluarkan suara lembut "ooh/aah" (cooing), menoleh ke sumber suara, dan tenang mendengar suara familiar.',
+        penting: 'Otak bahasa dibangun sebelum kata pertama. Menanggapi suara bayi memperkuat jalur bahasa; makin banyak kata yang ia dengar dalam interaksi hangat, makin kaya bahasanya kelak.',
+        lakukan: ['Ajak bicara sepanjang hari; narasikan aktivitas.', 'Tirukan cooing-nya lalu beri jeda untuk "giliran"-nya.', 'Gunakan nada "parentese" yang lembut & ekspresif.', 'Nyanyikan lagu dan bacakan buku.'],
+        perhatian: 'Menjelang 3 bulan bayi tidak bereaksi pada suara keras, tidak bersuara, atau tidak menoleh ke suara.',
+        sci_title: 'Bagaimana bahasa tumbuh jauh sebelum kata pertama',
+        sci_read_minutes: 6,
+        sci_paragraphs: [
+          'Meski belum bisa bicara, otak bayi sudah mempelajari bahasa sejak hari pertama — bahkan sejak dalam kandungan, saat ia mengenali irama suara ibunya.',
+          'Bayi adalah "ahli statistik" alami. Dari lautan suara yang ia dengar, otaknya menghitung pola: bunyi mana yang sering muncul bersama, di mana satu kata berakhir.',
+          'Satu temuan penting: bayi belajar bahasa dari manusia, bukan dari layar.',
+          'Cara Anda bicara pun berpengaruh. Nada tinggi, lambat, dan ekspresif ("parentese") membantu bayi memisahkan kata dan memperhatikan lebih lama.',
+          'Banyaknya kata yang bayi dengar di tahun awal berkaitan dengan kosakata dan kesiapan sekolahnya kelak.',
+        ],
+        sources: ['ASHA (American Speech-Language-Hearing Association)', 'CDC Learn the Signs. Act Early.'],
+        status: 'PUBLISHED' as const,
+      },
+      {
+        slug: '0-3m-se',
+        age_key: '0-3m',
+        domain: 'SE',
+        title: 'Senyum sosial & rasa aman',
+        photo_src: '/images/rl/0-3m-se.jpg',
+        photo_alt: 'Ibu dan bayi saling tersenyum',
+        photo_credit: 'Unsplash',
+        read_minutes: 2,
+        is_medical: false,
+        terjadi: 'Antara minggu ke-6 hingga ke-8 muncul senyum sosial — senyuman yang membalas wajah dan suara Anda, bukan refleks. Bayi menatap mata lebih lama dan tenang saat digendong.',
+        penting: 'Interaksi bolak-balik ("serve & return") membentuk fondasi otak sosial dan emosi bayi. Menanggapi kebutuhannya secara konsisten membangun rasa aman.',
+        lakukan: ['Tanggapi tangis dengan cepat dan tenang.', 'Balas senyum dan lakukan kontak mata.', 'Tirukan suaranya, beri jeda untuk "giliran"-nya.', 'Perbanyak kontak kulit (skin-to-skin).'],
+        perhatian: 'Menjelang 3 bulan tidak ada senyum sosial, tidak ada kontak mata, atau bayi sangat sulit ditenangkan.',
+        sci_title: 'Bagaimana rasa aman membentuk otak bayi',
+        sci_read_minutes: 8,
+        sci_paragraphs: [
+          'Saat lahir, otak bayi baru memiliki sebagian kecil dari koneksi yang kelak ia miliki. Sebagian besar "kabel" otak dibangun setelah lahir.',
+          'Ilmuwan Harvard menggambarkan proses ini seperti lempar-tangkap. Bayi "melempar" sinyal — menatap, mengoceh, menangis.',
+          'Bowlby dan Ainsworth menunjukkan bahwa bayi yang kebutuhannya ditanggapi secara hangat dan dapat diprediksi cenderung mengembangkan kelekatan aman.',
+          'Apakah sering menggendong memanjakan bayi? Ilmu perkembangan menjawab tidak, setidaknya di tahun pertama.',
+          'Ada sisi biologisnya. Sentuhan dan kontak kulit memicu oksitosin, hormon penumbuh rasa tenang dan ikatan.',
+          'Kabar baiknya, Anda tak perlu sempurna. Yang penting bukan menanggapi tepat 100% dari waktu, melainkan cukup sering dan cukup hangat.',
+          'Ringkasnya: rasa aman bukan lawan kemandirian. Justru dari fondasi rasa aman itulah kemandirian tumbuh.',
+        ],
+        sources: ['Harvard Center on the Developing Child', 'Erik Erikson (trust vs mistrust)', 'Bowlby & Ainsworth (attachment)', 'AAP HealthyChildren.org'],
+        status: 'PUBLISHED' as const,
+      },
+    ];
+
+    for (const seedCard of knowledgeCardSeeds) {
+      await createKnowledgeCard(seedCard);
+    }
+    console.log('Inserted 3 seed knowledge cards (0-3m FM, BH, SE)');
   }
 
   console.log('Seed complete.');

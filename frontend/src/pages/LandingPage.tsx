@@ -27,7 +27,7 @@ const tier1Features = [
 ];
 
 const tier2Features = [
-  'Resource library berbasis riset',
+  'Panduan tumbuh kembang anak 0–6 tahun',
   'Live webinar & video rekaman',
   'Learning strategies praktis',
   'Community forum orang tua',

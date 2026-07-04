@@ -42,8 +42,6 @@ import ChildProfile from './pages/DashboardPages/ChildProfile';
 import DashboardShellTier2 from './pages/DashboardPages/Tier2/DashboardShellTier2';
 import BerandaTier2 from './pages/DashboardPages/Tier2/BerandaTier2';
 import ProfilAnakTier2 from './pages/DashboardPages/Tier2/ProfilAnakTier2';
-import ResourceLibraryTier2 from './pages/DashboardPages/Tier2/ResourceLibraryTier2';
-import ArticleDetailTier2 from './pages/DashboardPages/Tier2/ArticleDetailTier2';
 import CoursesTier2 from './pages/DashboardPages/Tier2/CoursesTier2';
 import LearningStrategiesTier2 from './pages/DashboardPages/Tier2/LearningStrategiesTier2';
 import StrategyDetailTier2 from './pages/DashboardPages/Tier2/StrategyDetailTier2';
@@ -295,8 +293,8 @@ export default function App() {
               <Route path="knowledge" element={<KnowledgeGallery />} />
               <Route path="knowledge/:cardId" element={<KnowledgeCardSummary />} />
               <Route path="knowledge/:cardId/ilmiah" element={<KnowledgeCardScientific />} />
-              <Route path="resources" element={<ResourceLibraryTier2 />} />
-              <Route path="resources/:id" element={<ArticleDetailTier2 />} />
+
+
               <Route path="courses" element={<CoursesTier2 />} />
               <Route path="strategies" element={<LearningStrategiesTier2 />} />
               <Route path="strategies/:id" element={<StrategyDetailTier2 />} />
@@ -336,8 +334,8 @@ export default function App() {
               <Route path="knowledge" element={<KnowledgeGallery />} />
               <Route path="knowledge/:cardId" element={<KnowledgeCardSummary />} />
               <Route path="knowledge/:cardId/ilmiah" element={<KnowledgeCardScientific />} />
-              <Route path="resources" element={<ResourceLibraryTier2 />} />
-              <Route path="resources/:id" element={<ArticleDetailTier2 />} />
+
+
               <Route path="courses" element={<CoursesTier2 />} />
               <Route path="strategies" element={<LearningStrategiesTier2 />} />
               <Route path="strategies/:id" element={<StrategyDetailTier2 />} />

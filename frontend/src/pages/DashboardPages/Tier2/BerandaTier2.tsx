@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Library, GraduationCap, Lightbulb, CalendarCheck, Baby, Plus, ArrowRight,
+  GraduationCap, Lightbulb, CalendarCheck, Baby, Plus, ArrowRight,
   BookOpen, Star, Clock, Sparkles, TrendingUp, Zap, Eye, MessageCircle, Video,
 } from 'lucide-react';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
@@ -22,10 +22,10 @@ const MOTIVATIONS = [
 // ---------------------------------------------------------------------------
 const SHORTCUTS = [
   {
-    to: '/dashboard/tier2/resources',
-    icon: Library,
-    label: 'Resource Library',
-    desc: 'Rangkuman materi pendidikan anak',
+    to: '/dashboard/tier2/knowledge',
+    icon: BookOpen,
+    label: 'Panduan Tumbuh Kembang',
+    desc: 'Kartu pengetahuan pengasuhan anak 0–6 tahun',
     gradient: 'from-amber-400 to-orange-500',
   },
   {
@@ -60,12 +60,12 @@ const RECOMMENDATIONS: {
 }[] = [
   {
     id: 'rec-1', type: 'article', title: 'Mengenal Gaya Belajar Visual pada Anak',
-    category: 'Gaya Belajar', readTime: '5 menit', to: '/dashboard/tier2/resources',
+    category: 'Gaya Belajar', readTime: '5 menit', to: '/dashboard/tier2/knowledge',
     accent: 'from-amber-400 to-orange-400', icon: Eye,
   },
   {
     id: 'rec-2', type: 'article', title: 'Strategi Komunikasi Positif dengan Anak Sensorik',
-    category: 'Komunikasi', readTime: '7 menit', to: '/dashboard/tier2/resources',
+    category: 'Komunikasi', readTime: '7 menit', to: '/dashboard/tier2/knowledge',
     accent: 'from-emerald-400 to-teal-500', icon: MessageCircle,
   },
   {
@@ -238,7 +238,7 @@ export default function BerandaTier2() {
         {totalArticlesRead === 0 && totalCoursesEnrolled === 0 ? (
           <div className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 px-4 py-4 text-[14px] text-stv-muted">
             <BookOpen className="h-5 w-5 shrink-0 text-amber-400" strokeWidth={1.5} />
-            <span>Mulai eksplorasi Resource Library atau Courses untuk melanjutkan dari sini.</span>
+            <span>Mulai eksplorasi Panduan Tumbuh Kembang atau Courses untuk melanjutkan dari sini.</span>
           </div>
         ) : (
           <div className="rounded-xl bg-gradient-to-r from-stv-sky-tint to-blue-50 px-4 py-3 text-[14px] text-stv-body">

@@ -79,7 +79,7 @@ export default function ProfilAnakTier1() {
           <h3 className="font-baloo text-[16px] font-bold text-stv-navy">Status Perjalanan Pembelajaran</h3>
         </div>
         <p className="mb-4 text-[13px] text-stv-muted">
-          Progres ini berasal dari aktivitas {child.name.split(' ')[0]} di fitur Studiva Digital (Resource Library, Courses, Learning Strategies) - tersambung otomatis tanpa perlu memilih nama anak.
+          Progres ini berasal dari aktivitas {child.name.split(' ')[0]} di fitur Studiva Digital (Panduan Tumbuh Kembang, Courses, Learning Strategies) - tersambung otomatis tanpa perlu memilih nama anak.
         </p>
         <PerjalananPembelajaran childId={child.id} />
       </div>

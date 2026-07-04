@@ -47,7 +47,7 @@ export default function ResourcesPage() {
   return (
     <div>
       <section className="bg-navy px-4 py-16 text-center text-white md:px-8">
-        <h1 className="text-h1 font-bold">Resource Library</h1>
+        <h1 className="text-h1 font-bold">Panduan Tumbuh Kembang</h1>
         <p className="mt-4 text-white/85">
           Panduan, checklist, dan materi berbasis riset untuk mendukung perjalanan belajar anak Anda.
         </p>

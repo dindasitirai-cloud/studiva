@@ -16,7 +16,7 @@ const NOTIF_ICON: Record<AppNotification['kind'], typeof MessageSquare> = {
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard/tier2': 'Beranda',
   '/dashboard/tier2/profil-anak': 'Profil Anak',
-  '/dashboard/tier2/resources': 'Resource Library',
+  '/dashboard/tier2/resources': 'Panduan Tumbuh Kembang',
   '/dashboard/tier2/courses': 'Courses',
   '/dashboard/tier2/strategies': 'Learning Strategies',
   '/dashboard/tier2/community': 'Community Forum',

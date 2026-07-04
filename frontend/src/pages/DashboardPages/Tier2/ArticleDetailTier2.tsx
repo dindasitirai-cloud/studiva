@@ -38,7 +38,7 @@ export default function ArticleDetailTier2() {
           to={`${basePath}/resources`}
           className="rounded-full bg-amber-500 px-5 py-2 text-[14px] font-bold text-white no-underline transition hover:bg-amber-600"
         >
-          Kembali ke Resource Library
+          Kembali ke Panduan Tumbuh Kembang
         </Link>
       </div>
     );
@@ -54,7 +54,7 @@ export default function ArticleDetailTier2() {
         className="mb-5 flex items-center gap-1.5 text-[14px] font-semibold text-stv-muted transition hover:text-amber-600"
       >
         <ArrowLeft className="h-4 w-4" />
-        Kembali ke Resource Library
+        Kembali ke Panduan Tumbuh Kembang
       </button>
 
       <article className="rounded-2xl bg-white p-6 shadow-[0_4px_16px_rgba(16,58,107,.06)] sm:p-9">

@@ -30,7 +30,7 @@ const features: Feature[] = [
   },
   {
     icon: Library,
-    title: 'Resource Library',
+    title: 'Panduan Tumbuh Kembang',
     description: 'Artikel dan panduan parenting berbasis riset, dapat difilter berdasarkan kategori dan usia anak. Progres membaca tercatat otomatis per anak.',
   },
   {
@@ -134,7 +134,7 @@ function T2MockupBeranda() {
         </div>
       </div>
       <div className="grid grid-cols-2 gap-1.5">
-        {[['bg-amber-100 text-amber-700', '📚', 'Resource Library'], ['bg-sky-100 text-sky-700', '🎓', 'Courses'], ['bg-emerald-100 text-emerald-700', '💡', 'Strategies'], ['bg-violet-100 text-violet-700', '💬', 'Konsultasi']].map(([cls, icon, label]) => (
+        {[['bg-amber-100 text-amber-700', '📚', 'Panduan Tumbuh Kembang'], ['bg-sky-100 text-sky-700', '🎓', 'Courses'], ['bg-emerald-100 text-emerald-700', '💡', 'Strategies'], ['bg-violet-100 text-violet-700', '💬', 'Konsultasi']].map(([cls, icon, label]) => (
           <div key={label} className={`rounded-xl p-2 text-center ${cls}`}>
             <span className="text-[14px]">{icon}</span>
             <p className="mt-0.5 text-[9px] font-bold">{label}</p>
@@ -145,7 +145,7 @@ function T2MockupBeranda() {
   );
 }
 
-// 2. Resource Library
+// 2. Panduan Tumbuh Kembang
 function T2MockupLibrary() {
   const articles = [
     { title: 'Mengenal Gaya Belajar Visual', cat: 'Gaya Belajar', read: true },
@@ -154,7 +154,7 @@ function T2MockupLibrary() {
     { title: 'Teknik Sensory Break di Rumah', cat: 'Sensorik', read: false },
   ];
   return (
-    <T2Shell title="Resource Library" accent="bg-amber-500">
+    <T2Shell title="Panduan Tumbuh Kembang" accent="bg-amber-500">
       <div className="mb-2 flex gap-1.5 overflow-x-auto pb-1">
         {['Semua', 'ASD', 'ADHD', 'Sensorik'].map((cat, i) => (
           <span key={cat} className={`shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold ${i === 0 ? 'bg-amber-500 text-white' : 'bg-amber-50 text-amber-700'}`}>{cat}</span>
@@ -301,7 +301,7 @@ function T2MockupKonsultasi() {
 
 const TIER2_MOCKUPS: { component: React.FC; caption: string }[] = [
   { component: T2MockupBeranda,    caption: 'Beranda & Ringkasan Aktivitas' },
-  { component: T2MockupLibrary,    caption: 'Resource Library' },
+  { component: T2MockupLibrary,    caption: 'Panduan Tumbuh Kembang' },
   { component: T2MockupCourses,    caption: 'Courses & Webinar' },
   { component: T2MockupStrategies, caption: 'Learning Strategies' },
   { component: T2MockupForum,      caption: 'Community Forum' },

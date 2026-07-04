@@ -25,7 +25,7 @@ import { canAccessModule } from './adminAccess';
 const ROLE_OPTIONS: AdminRole[] = ['Super Admin', 'Pengelola Konten', 'Psikolog', 'Staf Operasional'];
 
 const contentNav: { to: string; label: string; icon: typeof Library; key: AdminModuleKey }[] = [
-  { to: '/admin/resource-library', label: 'Resource Library', icon: Library, key: 'resources' },
+  { to: '/admin/resource-library', label: 'Artikel Digital', icon: Library, key: 'resources' },
   { to: '/admin/courses', label: 'Courses', icon: GraduationCap, key: 'courses' },
   { to: '/admin/strategies', label: 'Learning Strategies', icon: Lightbulb, key: 'strategies' },
   { to: '/admin/knowledge-cards', label: 'Panduan Tumbuh Kembang', icon: BookOpen, key: 'knowledge-cards' },

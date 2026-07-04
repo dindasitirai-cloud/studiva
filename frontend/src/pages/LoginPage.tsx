@@ -100,7 +100,7 @@ export default function LoginPage() {
           <div className="space-y-3">
             {[
               'Pantau perkembangan harian anak',
-              'Akses resource library & webinar psikolog',
+              'Akses panduan tumbuh kembang & webinar psikolog',
               'Terhubung dengan guru dan tim Studiva',
             ].map(item => (
               <div key={item} className="flex items-center gap-3 text-[14px] text-white/80">

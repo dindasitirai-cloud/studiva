@@ -39,7 +39,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/dashboard/tier1/asesmen': 'Asesmen',
   '/dashboard/tier1/iep': 'IEP',
   '/dashboard/tier1/catatan-guru': 'Catatan untuk Guru',
-  '/dashboard/tier1/resources': 'Resource Library',
+  '/dashboard/tier1/resources': 'Panduan Tumbuh Kembang',
   '/dashboard/tier1/courses': 'Courses',
   '/dashboard/tier1/strategies': 'Learning Strategies',
   '/dashboard/tier1/community': 'Community Forum',

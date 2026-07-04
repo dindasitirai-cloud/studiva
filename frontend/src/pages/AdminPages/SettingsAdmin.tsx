@@ -99,10 +99,10 @@ export default function SettingsAdmin() {
           <Tags className="h-4 w-4 text-slate-600" />
           Kategori Konten
         </h3>
-        <p className="mt-1 text-[13px] text-stv-muted">Mengelola daftar ini langsung memengaruhi pilihan kategori di Resource Library dan Learning Strategies.</p>
+        <p className="mt-1 text-[13px] text-stv-muted">Mengelola daftar ini langsung memengaruhi pilihan kategori di Panduan Tumbuh Kembang dan Learning Strategies.</p>
 
         <div className="mt-4">
-          <p className="mb-2 text-[13px] font-semibold text-stv-navy">Kategori Resource Library</p>
+          <p className="mb-2 text-[13px] font-semibold text-stv-navy">Kategori Panduan Tumbuh Kembang</p>
           <ChipList items={categories} onRemove={removeCategory} accent="bg-blue-50 text-blue-700" />
           <form
             onSubmit={e => { e.preventDefault(); if (newCategory.trim()) { addCategory(newCategory.trim()); setNewCategory(''); } }}

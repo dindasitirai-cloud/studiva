@@ -238,7 +238,7 @@ export default function OnboardingModal({ tier, onClose }: OnboardingModalProps)
       content: (
         <div>
           <p className="text-textdark">
-            Jelajahi resource library kami untuk panduan parenting berbasis riset, checklist, dan
+            Jelajahi panduan tumbuh kembang kami untuk panduan parenting berbasis riset, checklist, dan
             video.
           </p>
           <button

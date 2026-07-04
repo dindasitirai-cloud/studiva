@@ -236,7 +236,7 @@ const benefits: IconCard[] = [
   {
     icon: Network,
     title: 'Bonus: Akses Studiva Digital',
-    description: 'Orang tua Sekolah Studiva mendapat akses penuh ke platform Studiva Digital: resource library, webinar psikolog, komunitas forum, dan konsultasi online.',
+    description: 'Orang tua Sekolah Studiva mendapat akses penuh ke platform Studiva Digital: panduan tumbuh kembang, webinar psikolog, komunitas forum, dan konsultasi online.',
   },
 ];
 

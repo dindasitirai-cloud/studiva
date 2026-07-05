@@ -514,7 +514,27 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Beri ruang lantai yang aman dan luas.", "Amankan rumah (baby-proofing): colokan, tangga, sudut tajam, benda kecil.", "Beri benda untuk dipindah-tangan."],
       perhatian: "Di usia 9 bulan bayi belum bisa duduk meski dibantu, tidak menumpu berat pada kaki, atau tidak memindahkan benda antar tangan."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Duduk dan merangkak: dunia yang bisa dijelajahi",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "6–10 bln", label: "rentang normal mulai merangkak, sebagian bayi bahkan melewatinya", ref: 1 },
+        { value: "1 jt+",    label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 2 },
+      ],
+      figure: { id: "motor-sequence", caption: "Kendali badan yang menguat memungkinkan duduk tanpa topangan", afterSectionIndex: 0 },
+      sections: [
+        { judul: "Duduk membebaskan tangan", isi: "Ketika bayi bisa duduk tanpa topangan, kedua tangannya bebas untuk memegang, memindahkan, dan memeriksa benda. Ini melompatkan kemampuan belajar karena ia bisa memanipulasi dunia sambil mengamatinya." },
+        { judul: "Merangkak dan mobilitas mandiri", isi: "Merangkak memberi bayi kendali atas ke mana ia pergi. Kemampuan berpindah sendiri mengubah cara ia belajar tentang ruang dan jarak. Sebagian bayi melewati fase merangkak dan langsung merambat, ini normal [1]." },
+        { judul: "Menuju menjumput", isi: "Genggaman bayi menghalus dari seluruh telapak menuju ujung jari (pincer grasp). Keterampilan ini menyiapkannya untuk makan sendiri dan memegang benda kecil dengan presisi." },
+        { judul: "Amankan lingkungan sekarang", isi: "Karena bayi kini bergerak dan memasukkan segala hal ke mulut, mengamankan rumah (baby-proofing) menjadi wajib: tutup colokan, halangi tangga, jauhkan benda kecil dan cairan berbahaya." },
+        { judul: "Rentang normal itu lebar", isi: "Waktu setiap milestone bervariasi. Yang penting adalah kemajuan yang konsisten dan kesempatan bergerak bebas setiap hari di alas yang aman." },
+      ],
+      references: [
+        { n: 1, text: "CDC, Learn the Signs. Act Early.", url: "https://www.cdc.gov/act-early/" },
+        { n: 2, text: "Center on the Developing Child, Harvard University, Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+      ],
+    },
     sources: ["CDC Learn the Signs. Act Early.", "AAP"]
   },
   {
@@ -526,7 +546,27 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Mainkan ciluk-ba dan sembunyikan mainan sebagian.", "Beri wadah untuk memasukkan-mengeluarkan benda.", "Biarkan mengeksplorasi benda aman."],
       perhatian: "Di usia 9 bulan bayi tidak mencari benda yang disembunyikan atau tidak menunjukkan minat menjelajah."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Object permanence: benda tetap ada meski hilang",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "±8 bln", label: "sekitar usia object permanence mulai berkembang (Piaget)", ref: 1 },
+        { value: "1 jt+",  label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 2 },
+      ],
+      figure: { id: "object-permanence", caption: "Bayi mulai mencari benda yang disembunyikan, tanda ia paham benda tetap ada", afterSectionIndex: 0 },
+      sections: [
+        { judul: "Menemukan bahwa benda tak lenyap", isi: "Bayi mulai mencari benda yang dijatuhkan atau disembunyikan. Ia sedang membangun object permanence, pemahaman bahwa sesuatu tetap ada meski tak terlihat [1]." },
+        { judul: "Mengapa ini tonggak besar", isi: "Object permanence adalah dasar memori dan rasa aman. Pemahaman bahwa ibu tetap ada meski sedang tak terlihat inilah yang juga memunculkan kecemasan berpisah, dua sisi dari kemajuan kognitif yang sama." },
+        { judul: "Ciluk-ba sebagai sains", isi: "Permainan ciluk-ba bukan sekadar hiburan; ia melatih object permanence secara langsung. Bayi belajar bahwa wajah Anda menghilang lalu muncul kembali, dan bisa diandalkan." },
+        { judul: "Wadah, isi, dan kosongkan", isi: "Memasukkan dan mengeluarkan benda dari wadah adalah 'eksperimen' favorit di usia ini. Aktivitas sederhana ini melatih pemahaman ruang, sebab-akibat, dan ketekunan." },
+        { judul: "Eksplorasi tetap lewat indra", isi: "Tangan dan mulut tetap menjadi alat belajar utama. Sediakan benda aman yang beragam bentuk dan tekstur untuk dieksplorasi." },
+      ],
+      references: [
+        { n: 1, text: "Jean Piaget, object permanence (tahap sensorimotor)." },
+        { n: 2, text: "Center on the Developing Child, Harvard University, Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+      ],
+    },
     sources: ["CDC Learn the Signs. Act Early.", "Jean Piaget"]
   },
   {
@@ -538,7 +578,27 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sebut nama benda secara konsisten.", "Tanggapi setiap kali bayi bersuara.", "Gunakan gestur (dadah, menunjuk); bacakan buku."],
       perhatian: "Di usia 9 bulan bayi tidak merespons namanya, tidak mengoceh, atau tidak mengeluarkan beragam suara."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Memahami lebih dulu: bahasa reseptif menguat",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "Reseptif lalu ekspresif", label: "bayi memahami jauh lebih banyak daripada yang bisa ia ucapkan", ref: 1 },
+        { value: "1 jt+",                  label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 2 },
+      ],
+      figure: { id: "serve-return", caption: "Menanggapi suara dan gestur bayi memperkuat pemahaman bahasanya", afterSectionIndex: 2 },
+      sections: [
+        { judul: "Merespons nama dan kata 'tidak'", isi: "Bayi mulai menoleh saat namanya dipanggil dan bereaksi terhadap kata 'tidak'. Ini menunjukkan pemahaman (bahasa reseptif) yang berkembang jauh sebelum ia bisa mengucap kata [1]." },
+        { judul: "Ocehan berantai", isi: "Ocehan berubah menjadi rantai suku kata seperti 'ba-ba-ba' dan 'ma-ma-ma'. Bayi bereksperimen menyusun bunyi, latihan langsung menuju kata pertama." },
+        { judul: "Gestur adalah bahasa", isi: "Menunjuk, melambai, dan mengulurkan tangan adalah komunikasi pra-verbal yang penting. Berbagi perhatian lewat gestur (joint attention) adalah fondasi kuat bagi bahasa." },
+        { judul: "Namai dunianya", isi: "Sebut nama benda dan orang secara konsisten. Setiap kali Anda menanggapi suara atau gestur bayi, jalur bahasanya menguat [2]." },
+        { judul: "Dengar dengan baik", isi: "Mendengar adalah syarat belajar bicara. Bila bayi tampak tidak merespons suara atau namanya menjelang 9 bulan, pemeriksaan pendengaran dini sangat membantu." },
+      ],
+      references: [
+        { n: 1, text: "American Speech-Language-Hearing Association (ASHA).", url: "https://www.asha.org" },
+        { n: 2, text: "Center on the Developing Child, Harvard University, Serve and Return.", url: "https://developingchild.harvard.edu/key-concepts/serve-and-return/" },
+      ],
+    },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
@@ -550,7 +610,27 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Jangan paksa bayi didekati orang asing; beri waktu.", "Berpamitanlah singkat & konsisten, jangan menyelinap pergi.", "Tenangkan dengan pelukan."],
       perhatian: "Di usia 9 bulan bayi tidak menunjukkan kelekatan pada pengasuh mana pun, atau tidak ada kontak mata/ekspresi."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Kecemasan pada orang asing: tanda ikatan yang sehat",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "6–9 bln",   label: "usia khas munculnya kecemasan pada orang asing", ref: 1 },
+        { value: "±50–60%",   label: "bayi membentuk kelekatan aman saat pengasuhan responsif", ref: 2 },
+      ],
+      figure: { id: "serve-return", caption: "Pengasuh yang responsif menjadi 'basis aman' bagi bayi", afterSectionIndex: 1 },
+      sections: [
+        { judul: "Mengapa tiba-tiba takut orang asing", isi: "Kecemasan pada orang asing muncul justru karena kemajuan kognitif: bayi kini bisa membedakan wajah familiar dari yang asing, dan tahu siapa 'orang'-nya [1]." },
+        { judul: "Ini sehat, bukan manja", isi: "Menempel pada pengasuh dan cemas pada orang asing adalah tanda kelekatan yang aman sedang terbentuk. Ini perkembangan normal, bukan sikap yang perlu 'diperbaiki'." },
+        { judul: "Kaitan dengan berpisah", isi: "Kecemasan berpisah muncul bersamaan karena bayi kini paham Anda tetap ada meski pergi (object permanence). Ia belum tahu kapan Anda kembali, karena itu ia protes." },
+        { judul: "Cara membantu", isi: "Jangan memaksa bayi ke orang asing; beri waktu penyesuaian. Saat berpisah, berpamitanlah singkat dan konsisten, jangan menyelinap pergi, karena itu menambah cemas [2]." },
+        { judul: "Anda adalah basis aman", isi: "Kehadiran Anda yang bisa diandalkan justru membuat bayi lebih berani menjelajah. Rasa aman adalah landasan keberanian, bukan lawannya." },
+      ],
+      references: [
+        { n: 1, text: "CDC, Learn the Signs. Act Early.", url: "https://www.cdc.gov/act-early/" },
+        { n: 2, text: "Ainsworth & Bowlby, teori kelekatan.", url: "https://www.simplypsychology.org/mary-ainsworth.html" },
+      ],
+    },
     sources: ["CDC Learn the Signs. Act Early.", "Bowlby & Ainsworth", "AAP"]
   },
   {
@@ -562,7 +642,28 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Mulai ~6 bulan dengan makanan kaya zat besi (hati, daging, kuning telur, kacang halus) + sayur/buah.", "Naikkan tekstur bertahap; kenalkan finger food.", "Kenalkan alergen satu per satu; teruskan ASI."],
       perhatian: "Hindari makanan pemicu tersedak (kacang/anggur utuh) dan madu <1 tahun. Reaksi alergi (ruam/bengkak/sesak), hentikan & ke dokter."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Memulai MPASI: gizi, zat besi, dan keamanan",
+      readMinutes: 7,
+      reviewedBy: { name: "Apoteker Raisha", date: "2026-07" },
+      stats: [
+        { value: "6 bln",    label: "usia umum bayi siap memulai MPASI", ref: 1 },
+        { value: "Zat besi", label: "nutrien paling krusial saat MPASI dimulai", ref: 1 },
+        { value: "<1 thn",   label: "madu harus dihindari sepenuhnya (risiko botulisme)", ref: 2 },
+      ],
+      figure: { id: "mpasi-texture", caption: "Tekstur MPASI dinaikkan bertahap; ASI tetap dilanjutkan", afterSectionIndex: 2 },
+      sections: [
+        { judul: "Tanda siap MPASI", isi: "Sekitar usia 6 bulan, bayi umumnya siap MPASI: bisa duduk dengan topangan, kepala tegak, tertarik pada makanan, dan refleks menjulurkan lidah berkurang [1]." },
+        { judul: "Zat besi jadi prioritas", isi: "Setelah 6 bulan, cadangan dan asupan zat besi dari ASI tidak lagi mencukupi. Karena itu makanan kaya zat besi, seperti hati, daging, kuning telur, dan kacang halus, dianjurkan sejak awal MPASI [1]." },
+        { judul: "Tekstur naik bertahap", isi: "MPASI dimulai dari tekstur lumat/saring lalu makin kasar seiring kemampuan bayi. Pola responsive feeding, mengikuti isyarat lapar dan kenyang bayi, membangun kebiasaan makan yang sehat." },
+        { judul: "Keamanan: tersedak dan madu", isi: "Hindari makanan pemicu tersedak seperti kacang atau anggur utuh dan potongan keras. Madu tidak boleh diberikan sebelum usia 1 tahun karena risiko botulisme [2]. Reaksi alergi (ruam, bengkak, sesak) perlu segera diperiksakan." },
+        { judul: "ASI tetap dilanjutkan", isi: "MPASI melengkapi, bukan menggantikan, ASI. Menyusui tetap dianjurkan berdampingan dengan makanan pendamping. Informasi ini bersifat edukatif dan tidak menggantikan nasihat dokter/ahli gizi." },
+      ],
+      references: [
+        { n: 1, text: "WHO, Complementary feeding of infants and young children 6-23 months (2023).", url: "https://www.who.int/publications/i/item/9789240081864" },
+        { n: 2, text: "American Academy of Pediatrics; IDAI, keamanan MPASI dan madu.", url: "https://www.healthychildren.org" },
+      ],
+    },
     sources: ["WHO, Complementary feeding 6–23 bln (2023)", "IDAI", "AAP", "Kemenkes RI, Buku KIA"]
   },
   {
@@ -574,7 +675,27 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Baby-proof rumah agar bayi bebas menjelajah tanpa 'jangan' terus.", "Sediakan mainan menantang sesuai usia (wadah, balok).", "Jaga rutinitas makan–main–tidur; tetap tanpa layar."],
       perhatian: "Bila Anda kesulitan mengamankan lingkungan atau merasa kewalahan, carilah dukungan."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Rumah sebagai ruang belajar yang aman",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "18–24 bln", label: "usia minimal sebelum layar dianjurkan (kecuali video call)", ref: 1 },
+        { value: "1 jt+",     label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 2 },
+      ],
+      figure: { id: "serve-return", caption: "Menanggapi eksplorasi bayi mengubah rumah jadi ruang belajar", afterSectionIndex: 1 },
+      sections: [
+        { judul: "Menjelajah adalah belajar", isi: "Bayi yang mobile ingin menjelajahi segalanya. Menurut pendekatan Montessori, lingkungan yang disiapkan dengan aman (prepared environment) adalah 'guru' terbaik di usia ini." },
+        { judul: "Baby-proofing membebaskan", isi: "Rumah yang aman berarti Anda tidak perlu terus melarang. Semakin sedikit 'jangan', semakin banyak kesempatan bayi belajar lewat eksplorasi bebas." },
+        { judul: "Rutinitas memberi rasa aman", isi: "Pola makan-main-tidur yang dapat diprediksi membantu bayi merasa aman. Rasa aman ini menopang keberanian bereksplorasi." },
+        { judul: "Mainan yang menantang", isi: "Wadah bertutup, balok, dan mainan sebab-akibat sesuai usia mendorong pemecahan masalah. Mainan sederhana yang bereaksi terhadap tindakan bayi lebih bernilai daripada layar." },
+        { judul: "Tetap tanpa layar", isi: "Layar tetap tidak dianjurkan di bawah 18–24 bulan [1]. Interaksi langsung dan eksplorasi nyata jauh lebih memperkaya otak yang sedang dibangun [2]." },
+      ],
+      references: [
+        { n: 1, text: "American Academy of Pediatrics, Media and Young Minds.", url: "https://www.healthychildren.org" },
+        { n: 2, text: "Center on the Developing Child, Harvard University.", url: "https://developingchild.harvard.edu" },
+      ],
+    },
     sources: ["Harvard Center on the Developing Child", "Montessori", "AAP"]
   },
 

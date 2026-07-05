@@ -163,7 +163,7 @@ export default function KnowledgeGallery() {
         onClose={handleBackToCarousel}
         prevCard={prevCard}
         nextCard={nextCard}
-        onNavigate={(c) => { setSelectedId(c.id); }}
+        onNavigate={(c) => { setSelectedId(c.id); setView('carousel'); }}
       />
     );
   }

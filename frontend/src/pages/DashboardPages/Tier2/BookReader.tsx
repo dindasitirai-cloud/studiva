@@ -66,10 +66,10 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
   const coverRotate = page !== 'cover' ? 'rotateY(-170deg)' : 'rotateY(0deg)';
   const summaryRotate = page === 'scientific' ? 'rotateY(-170deg)' : 'rotateY(0deg)';
 
+  // Navigate to prev/next: go back to carousel with that card selected
   function navigateTo(target: KnowledgeCard) {
-    setPage('cover');
     if (onNavigate) onNavigate(target);
-    setTimeout(() => setPage('summary'), reduced ? 10 : 80);
+    onClose(); // go back to carousel view
   }
 
   return (
@@ -85,26 +85,26 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
       {/* 3D Book + left/right nav arrows */}
       <div className="flex flex-1 items-start justify-center px-4 py-8 sm:px-6">
         <div className="relative w-full max-w-[560px]">
-          {/* Left arrow — prev book */}
+          {/* Left arrow — prev book (vertically centered, larger) */}
           {prevCard && (
             <button
               type="button"
               aria-label={`Buku sebelumnya: ${prevCard.title}`}
               onClick={() => navigateTo(prevCard)}
-              className="absolute -left-3 top-1/4 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_4px_16px_rgba(0,0,0,.16)] transition hover:bg-slate-50 sm:-left-5"
+              className="absolute -left-5 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_6px_20px_rgba(0,0,0,.18)] transition hover:scale-105 hover:bg-slate-50 sm:-left-7"
             >
-              <ChevronLeft className="h-5 w-5 text-stv-navy" strokeWidth={2} />
+              <ChevronLeft className="h-7 w-7 text-stv-navy" strokeWidth={2.5} />
             </button>
           )}
-          {/* Right arrow — next book */}
+          {/* Right arrow — next book (vertically centered, larger) */}
           {nextCard && (
             <button
               type="button"
               aria-label={`Buku berikutnya: ${nextCard.title}`}
               onClick={() => navigateTo(nextCard)}
-              className="absolute -right-3 top-1/4 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_4px_16px_rgba(0,0,0,.16)] transition hover:bg-slate-50 sm:-right-5"
+              className="absolute -right-5 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_6px_20px_rgba(0,0,0,.18)] transition hover:scale-105 hover:bg-slate-50 sm:-right-7"
             >
-              <ChevronRight className="h-5 w-5 text-stv-navy" strokeWidth={2} />
+              <ChevronRight className="h-7 w-7 text-stv-navy" strokeWidth={2.5} />
             </button>
           )}
           <div style={{ perspective: '1400px', perspectiveOrigin: '50% 40%' }}>

@@ -28,9 +28,10 @@ interface BookReaderProps {
   prevCard?: KnowledgeCard | null;
   nextCard?: KnowledgeCard | null;
   onNavigate?: (card: KnowledgeCard) => void;
+  onNavigateInReader?: (card: KnowledgeCard) => void;
 }
 
-export default function BookReader({ card, isRead, onToggleRead, onClose, prevCard, nextCard, onNavigate }: BookReaderProps) {
+export default function BookReader({ card, isRead, onToggleRead, onClose, prevCard, nextCard, onNavigate, onNavigateInReader }: BookReaderProps) {
   const reduced = useReducedMotion();
   const [page, setPage] = useState<'cover' | 'summary' | 'scientific'>('cover');
   const { segments, setCurrentIndex, registerNavigate } = useAudioPlayer();
@@ -67,14 +68,23 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
   const coverRotate = page !== 'cover' ? 'rotateY(-170deg)' : 'rotateY(0deg)';
   const summaryRotate = page === 'scientific' ? 'rotateY(-170deg)' : 'rotateY(0deg)';
 
-  // Navigate to prev/next: go back to carousel with that card selected
+  // Navigate within reader — stay in reader, remount with new card (cover animation plays)
   function navigateTo(target: KnowledgeCard) {
-    if (onNavigate) onNavigate(target);
-    onClose(); // go back to carousel view
+    if (onNavigateInReader) {
+      onNavigateInReader(target);
+    } else {
+      // Fallback: go to carousel
+      if (onNavigate) onNavigate(target);
+      onClose();
+    }
   }
 
   return (
-    <div className="flex min-h-screen flex-col font-nunito-sans" style={{ background: '#FAFAF8' }}>
+    <div
+      className="flex min-h-screen flex-col font-nunito-sans"
+      style={{ background: '#FAFAF8', animation: reduced ? 'none' : 'readerFadeIn 0.32s ease-out both' }}
+    >
+      <style>{`@keyframes readerFadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }`}</style>
       {/* Top bar — only Back button */}
       <div className="sticky top-0 z-50 flex items-center border-b border-stv-border bg-white px-4 py-3 sm:px-6">
         <button type="button" onClick={onClose} className="flex items-center gap-1.5 text-[13px] font-semibold text-stv-muted hover:text-stv-navy">
@@ -94,9 +104,9 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
           {/* Left ghost — prev book sliver */}
           {prevCard && (
             <div style={{ position: 'absolute', top: 0, left: 0, width: '14%', bottom: 0, zIndex: 5, overflow: 'hidden' }}>
-              {/* show right edge of prev cover */}
+              {/* show right edge of prev cover — minimal hides title text */}
               <div style={{ position: 'absolute', top: 0, bottom: 0, right: 0, width: '100%' }}>
-                <CoverImage card={prevCard} />
+                <CoverImage card={prevCard} minimal />
               </div>
               {/* darken + blur overlay */}
               <div style={{ position: 'absolute', inset: 0, background: 'rgba(250,250,248,0.55)', backdropFilter: 'blur(2px)' }} />
@@ -119,7 +129,7 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
           {nextCard && (
             <div style={{ position: 'absolute', top: 0, right: 0, width: '14%', bottom: 0, zIndex: 5, overflow: 'hidden' }}>
               <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: '100%' }}>
-                <CoverImage card={nextCard} />
+                <CoverImage card={nextCard} minimal />
               </div>
               <div style={{ position: 'absolute', inset: 0, background: 'rgba(250,250,248,0.55)', backdropFilter: 'blur(2px)' }} />
               <button

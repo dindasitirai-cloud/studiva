@@ -48,7 +48,7 @@ function splitTitle(raw: string): { pre: string; keyword: string; post: string }
 
 // ── Book cover — typographic, ALL CAPS, yellow keyword highlight ─────────────
 
-export function CoverImage({ card }: { card: KnowledgeCard }) {
+export function CoverImage({ card, minimal }: { card: KnowledgeCard; minimal?: boolean }) {
   const domain = DOMAIN_MAP[card.domain];
   const age    = AGE_RANGES.find(a => a.key === card.ageKey);
   const { pre, keyword, post } = splitTitle(card.title);
@@ -98,11 +98,12 @@ export function CoverImage({ card }: { card: KnowledgeCard }) {
         )}
       </div>
 
-      {/* Main title — ALL CAPS, typographic, centered */}
+      {/* Main title — ALL CAPS, typographic, centered — hidden in minimal mode */}
       <div style={{
         position: 'absolute', top: '18%', bottom: '18%',
         left: 20, right: 14,
-        display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        display: minimal ? 'none' : 'flex',
+        flexDirection: 'column', justifyContent: 'center',
         zIndex: 3,
       }}>
         <p style={{
@@ -137,10 +138,12 @@ export function CoverImage({ card }: { card: KnowledgeCard }) {
       </div>
 
       {/* Bottom thin accent line */}
-      <div style={{
-        position: 'absolute', bottom: 0, left: 12, right: 0, height: 3,
-        background: `${domain.fg}44`, zIndex: 4,
-      }} />
+      {!minimal && (
+        <div style={{
+          position: 'absolute', bottom: 0, left: 12, right: 0, height: 3,
+          background: `${domain.fg}44`, zIndex: 4,
+        }} />
+      )}
     </div>
   );
 }

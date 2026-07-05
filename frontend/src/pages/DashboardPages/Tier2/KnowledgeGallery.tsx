@@ -157,6 +157,7 @@ export default function KnowledgeGallery() {
     const nextCard = idx < carouselCards.length - 1 ? carouselCards[idx + 1] : null;
     return (
       <BookReader
+        key={selectedCard.id}  // remount on card change → cover animation replays
         card={selectedCard}
         isRead={isRead(selectedCard.id)}
         onToggleRead={() => toggleRead(selectedCard.id)}
@@ -164,6 +165,7 @@ export default function KnowledgeGallery() {
         prevCard={prevCard}
         nextCard={nextCard}
         onNavigate={(c) => { setSelectedId(c.id); setView('carousel'); }}
+        onNavigateInReader={(c) => setSelectedId(c.id)}
       />
     );
   }

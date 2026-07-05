@@ -9,6 +9,7 @@ import {
 } from './knowledgeCardData';
 
 const ALL_DOMAIN = '__all__' as const;
+type ViewTab = 'semua' | 'dibaca' | 'disimpan';
 
 // Shape returned by the API (snake_case, different from static CARDS camelCase)
 interface ApiKnowledgeCard {
@@ -65,9 +66,11 @@ export default function KnowledgeGallery() {
   const navigate = useNavigate();
   const basePath = useDashboardBasePath();
   const { setSegments } = useAudioPlayer();
+  const { isRead, isBookmarked } = useKnowledgeLibrary();
 
   const [selectedAge, setSelectedAge] = useState<AgeKey>('0-3m');
   const [selectedDomain, setSelectedDomain] = useState<DomainCode | typeof ALL_DOMAIN>(ALL_DOMAIN);
+  const [viewTab, setViewTab] = useState<ViewTab>('semua');
 
   // API cards — fetched on mount and merged with static fallback
   const [apiCards, setApiCards] = useState<KnowledgeCard[] | null>(null);
@@ -98,11 +101,13 @@ export default function KnowledgeGallery() {
 
   const filteredCards = useMemo(() => {
     return allCards.filter(c => {
-      const ageMatch = c.ageKey === selectedAge;
       const domainMatch = selectedDomain === ALL_DOMAIN || c.domain === selectedDomain;
-      return ageMatch && domainMatch;
+      if (viewTab === 'dibaca')   return isRead(c.id) && domainMatch;
+      if (viewTab === 'disimpan') return isBookmarked(c.id) && domainMatch;
+      // 'semua' — apply age + domain filter
+      return c.ageKey === selectedAge && domainMatch;
     });
-  }, [allCards, selectedAge, selectedDomain]);
+  }, [allCards, selectedAge, selectedDomain, viewTab, isRead, isBookmarked]);
 
   // Update audio playlist whenever filter changes
   useEffect(() => {
@@ -132,7 +137,30 @@ export default function KnowledgeGallery() {
           </p>
         </div>
 
-        {/* Age range pills — horizontally scrollable */}
+        {/* View tabs: Semua / Sudah Dibaca / Disimpan */}
+        <div className="mb-5 flex gap-2">
+          {([
+            { id: 'semua',    label: 'Semua Kartu' },
+            { id: 'dibaca',   label: 'Sudah Dibaca' },
+            { id: 'disimpan', label: 'Disimpan' },
+          ] as { id: ViewTab; label: string }[]).map(tab => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setViewTab(tab.id)}
+              className={`rounded-full border px-4 py-1.5 text-[13px] font-semibold transition ${
+                viewTab === tab.id
+                  ? 'border-stv-navy bg-stv-navy text-white'
+                  : 'border-stv-border bg-white text-stv-body hover:border-stv-navy/40'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Age range pills — only shown when viewing all cards */}
+        {viewTab === 'semua' && (
         <div className="mb-5 -mx-4 px-4 sm:-mx-0 sm:px-0">
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
             {AGE_RANGES.map(ar => {
@@ -154,6 +182,7 @@ export default function KnowledgeGallery() {
             })}
           </div>
         </div>
+        )} {/* end viewTab === 'semua' age pills */}
 
         {/* Domain filter chips */}
         <div className="mb-6 flex flex-wrap gap-2">
@@ -192,8 +221,16 @@ export default function KnowledgeGallery() {
         {/* Cards grid */}
         {filteredCards.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-stv-border bg-white py-16 text-center text-stv-muted">
-            <p className="text-[15px] font-semibold">Belum ada kartu untuk filter ini.</p>
-            <p className="mt-1 text-[13px]">Coba pilih rentang usia atau domain yang berbeda.</p>
+            <p className="text-[15px] font-semibold">
+              {viewTab === 'dibaca'   ? 'Belum ada kartu yang sudah dibaca.' :
+               viewTab === 'disimpan' ? 'Belum ada kartu yang disimpan.' :
+               'Belum ada kartu untuk filter ini.'}
+            </p>
+            <p className="mt-1 text-[13px]">
+              {viewTab === 'semua'
+                ? 'Coba pilih rentang usia atau domain yang berbeda.'
+                : 'Tandai kartu lewat tombol bookmark atau tombol "Tandai Sudah Dibaca" saat membaca.'}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -218,24 +255,30 @@ interface TileProps {
   onClick: () => void;
   isRead?: boolean;
   isBookmarked?: boolean;
+  onToggleBookmark?: (e: React.MouseEvent) => void;
 }
 
 // Wrapper reads context so the tile stays a pure component
-function KnowledgeCardTileWrapper(props: Omit<TileProps, 'isRead' | 'isBookmarked'>) {
-  const { isRead, isBookmarked } = useKnowledgeLibrary();
+function KnowledgeCardTileWrapper(props: Omit<TileProps, 'isRead' | 'isBookmarked' | 'onToggleBookmark'>) {
+  const { isRead, isBookmarked, toggleBookmark } = useKnowledgeLibrary();
   return (
     <KnowledgeCardTile
       {...props}
       isRead={isRead(props.card.id)}
       isBookmarked={isBookmarked(props.card.id)}
+      onToggleBookmark={e => { e.stopPropagation(); toggleBookmark(props.card.id); }}
     />
   );
 }
 
-function KnowledgeCardTile({ card, ageRange, onClick, isRead, isBookmarked }: TileProps) {
+function KnowledgeCardTile({ card, ageRange: ageRangeProp, onClick, isRead, isBookmarked, onToggleBookmark }: TileProps) {
   const domainInfo = DOMAIN_MAP[card.domain];
   const Icon = domainInfo.icon;
   const [imgError, setImgError] = useState(false);
+  // In cross-age tabs (dibaca/disimpan) ageRangeProp may not match the card's age
+  const ageRange = ageRangeProp?.key === card.ageKey
+    ? ageRangeProp
+    : AGE_RANGES.find(a => a.key === card.ageKey);
 
   return (
     <button
@@ -264,19 +307,30 @@ function KnowledgeCardTile({ card, ageRange, onClick, isRead, isBookmarked }: Ti
             />
           </div>
         )}
-        {/* Read / Bookmark badges */}
-        <div className="absolute right-2 top-2 flex gap-1.5">
-          {isRead && (
+        {/* Overlay: read badge (left) + bookmark button (right) */}
+        <div className="absolute inset-x-2 top-2 flex items-start justify-between">
+          {isRead ? (
             <span className="flex items-center gap-1 rounded-full bg-white/90 px-2 py-0.5 text-[11px] font-bold text-stv-green shadow">
               <CheckCircle2 className="h-3 w-3" strokeWidth={2.5} />
               Dibaca
             </span>
-          )}
-          {isBookmarked && (
-            <span className="flex items-center justify-center rounded-full bg-amber-400 p-1 shadow">
-              <Bookmark className="h-3 w-3 text-white" fill="white" strokeWidth={0} />
-            </span>
-          )}
+          ) : <span />}
+          <button
+            type="button"
+            onClick={onToggleBookmark}
+            aria-label={isBookmarked ? 'Hapus bookmark' : 'Simpan bookmark'}
+            className={`flex h-7 w-7 items-center justify-center rounded-full shadow transition ${
+              isBookmarked
+                ? 'bg-amber-400 hover:bg-amber-500'
+                : 'bg-white/85 hover:bg-white'
+            }`}
+          >
+            <Bookmark
+              className={`h-3.5 w-3.5 ${isBookmarked ? 'text-white' : 'text-stv-muted'}`}
+              fill={isBookmarked ? 'currentColor' : 'none'}
+              strokeWidth={2}
+            />
+          </button>
         </div>
       </div>
 

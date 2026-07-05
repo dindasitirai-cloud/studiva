@@ -92,7 +92,7 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
       return;
     }
 
-    // TODO: premium TTS — replace Web Speech API with a paid TTS provider here
+    // TODO: premium TTS, replace Web Speech API with a paid TTS provider here
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'id-ID';

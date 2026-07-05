@@ -142,7 +142,7 @@ export const STRATEGIES: Strategy[] = [
       'Respon segera setiap kali anak menggunakan kartu untuk berkomunikasi.',
       'Tambahkan ikon baru secara bertahap sesuai kebutuhan anak.',
     ],
-    tip: 'Konsistensi adalah kunci — gunakan papan ini di rumah dan minta sekolah/terapis melakukan hal yang sama.',
+    tip: 'Konsistensi adalah kunci, gunakan papan ini di rumah dan minta sekolah/terapis melakukan hal yang sama.',
     colorTheme: 'amber',
     status: 'published',
   },

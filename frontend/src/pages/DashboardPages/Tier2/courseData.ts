@@ -110,7 +110,7 @@ export const COURSES: Course[] = [
     ],
     recordingUrl: 'https://drive.studiva.id/webinar/w3-rekaman',
     attachments: [
-      { name: 'Slide Presentasi — Mengelola Kecemasan Orang Tua', url: 'https://drive.studiva.id/webinar/w3-slides.pdf', size: '3.2 MB' },
+      { name: 'Slide Presentasi, Mengelola Kecemasan Orang Tua', url: 'https://drive.studiva.id/webinar/w3-slides.pdf', size: '3.2 MB' },
       { name: 'Lembar Kerja Self-Care Check-in Mingguan', url: 'https://drive.studiva.id/webinar/w3-worksheet.pdf', size: '540 KB' },
       { name: 'Daftar Referensi & Bacaan Tambahan', url: 'https://drive.studiva.id/webinar/w3-referensi.pdf', size: '210 KB' },
     ],

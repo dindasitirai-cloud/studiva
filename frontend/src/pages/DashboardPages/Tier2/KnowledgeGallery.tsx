@@ -72,7 +72,7 @@ export default function KnowledgeGallery() {
   const [selectedDomain, setSelectedDomain] = useState<DomainCode | typeof ALL_DOMAIN>(ALL_DOMAIN);
   const [viewTab, setViewTab] = useState<ViewTab>('semua');
 
-  // API cards — fetched on mount and merged with static fallback
+  // API cards, fetched on mount and merged with static fallback
   const [apiCards, setApiCards] = useState<KnowledgeCard[] | null>(null);
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export default function KnowledgeGallery() {
       const domainMatch = selectedDomain === ALL_DOMAIN || c.domain === selectedDomain;
       if (viewTab === 'dibaca')   return isRead(c.id) && domainMatch;
       if (viewTab === 'disimpan') return isBookmarked(c.id) && domainMatch;
-      // 'semua' — apply age + domain filter
+      // 'semua', apply age + domain filter
       return c.ageKey === selectedAge && domainMatch;
     });
   }, [allCards, selectedAge, selectedDomain, viewTab, isRead, isBookmarked]);
@@ -159,7 +159,7 @@ export default function KnowledgeGallery() {
           ))}
         </div>
 
-        {/* Age range pills — only shown when viewing all cards */}
+        {/* Age range pills, only shown when viewing all cards */}
         {viewTab === 'semua' && (
         <div className="mb-5 -mx-4 px-4 sm:-mx-0 sm:px-0">
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
@@ -286,7 +286,7 @@ function KnowledgeCardTile({ card, ageRange: ageRangeProp, onClick, isRead, isBo
       onClick={onClick}
       className="group flex w-full flex-col overflow-hidden rounded-2xl border border-stv-border bg-white text-left shadow-[0_4px_16px_rgba(16,58,107,.06)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_12px_28px_rgba(16,58,107,.12)]"
     >
-      {/* Image area — 16:10 ratio */}
+      {/* Image area, 16:10 ratio */}
       <div className="relative w-full overflow-hidden" style={{ paddingBottom: '62.5%' }}>
         {!imgError ? (
           <img

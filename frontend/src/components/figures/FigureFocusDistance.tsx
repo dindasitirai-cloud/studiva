@@ -34,7 +34,7 @@ export function FigureFocusDistance() {
 
       {/* Caption */}
       <text x="250" y="160" textAnchor="middle" fontSize="11" fill="#888">
-        Bayi baru lahir hanya bisa fokus pada jarak ini — persis jarak wajah Anda
+        Bayi baru lahir hanya bisa fokus pada jarak ini, persis jarak wajah Anda
       </text>
     </svg>
   );

@@ -341,7 +341,7 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
   const [categories, setCategories] = useState<string[]>(CATEGORIES.filter(c => c !== 'Semua'));
   const [ageGroups, setAgeGroups] = useState<string[]>(AGE_GROUPS.filter(g => g !== 'Semua usia'));
 
-  // User-level bookmark + favorite sets (not per-child — these are personal preferences)
+  // User-level bookmark + favorite sets (not per-child, these are personal preferences)
   const [bookmarkedArticles, setBookmarkedArticles] = useState<Set<string>>(new Set());
   const [favoritedArticles, setFavoritedArticles]   = useState<Set<string>>(new Set());
   const [bookmarkedStrategies, setBookmarkedStrategies] = useState<Set<string>>(new Set());

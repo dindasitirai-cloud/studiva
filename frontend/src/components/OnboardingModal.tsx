@@ -136,16 +136,16 @@ export default function OnboardingModal({ tier, onClose }: OnboardingModalProps)
       content: (
         <ul className="list-disc space-y-1 pl-5 text-textdark">
           <li>
-            <strong>Academics</strong> — aktivitas belajar terstruktur sesuai gaya belajar anak
+            <strong>Academics</strong>, aktivitas belajar terstruktur sesuai gaya belajar anak
           </li>
           <li>
-            <strong>Behavior</strong> — observasi dan dukungan regulasi emosi
+            <strong>Behavior</strong>, observasi dan dukungan regulasi emosi
           </li>
           <li>
-            <strong>Therapy</strong> — sesi terapi (speech/OT/behavioral) sesuai kebutuhan
+            <strong>Therapy</strong>, sesi terapi (speech/OT/behavioral) sesuai kebutuhan
           </li>
           <li>
-            <strong>Social</strong> — interaksi dan permainan kelompok dengan teman sebaya
+            <strong>Social</strong>, interaksi dan permainan kelompok dengan teman sebaya
           </li>
         </ul>
       ),
@@ -258,7 +258,7 @@ export default function OnboardingModal({ tier, onClose }: OnboardingModalProps)
       content: (
         <div>
           <p className="text-textdark">
-            Studiva Digital belum memiliki kursus/forum berjalan saat ini — namun Anda dapat
+            Studiva Digital belum memiliki kursus/forum berjalan saat ini, namun Anda dapat
             langsung konsultasi 1-on-1 dengan psikolog kami.
           </p>
           <button

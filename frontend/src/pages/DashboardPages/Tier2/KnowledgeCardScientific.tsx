@@ -113,7 +113,7 @@ export default function KnowledgeCardScientific() {
           </p>
         )}
 
-        {/* ── Bookmark button — stays near the top ──────────────────── */}
+        {/* ── Bookmark button, stays near the top ──────────────────── */}
         <div className="mb-5 flex justify-end">
           <button
             type="button"
@@ -225,7 +225,7 @@ export default function KnowledgeCardScientific() {
           </div>
         )}
 
-        {/* ── Sudah Dibaca — after content, before next card ────────── */}
+        {/* ── Sudah Dibaca, after content, before next card ────────── */}
         <button
           type="button"
           onClick={() => toggleRead(card.id)}

@@ -111,7 +111,7 @@ export default function ArticleDetailTier2() {
           ))}
         </div>
 
-        {/* Sudah Dibaca button — at the bottom after reading the full article */}
+        {/* Sudah Dibaca button, at the bottom after reading the full article */}
         {singleChild && (
           <button
             type="button"

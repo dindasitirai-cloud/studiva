@@ -4,7 +4,7 @@ import { api } from '../api/client';
 
 // Shared in-memory state for Sekolah Studiva (Tier 1) offline operations.
 // Hoisted in App.tsx so both admin pages and the Tier 1 parent dashboard read
-// from the same copy — billing records created by admin immediately appear in
+// from the same copy, billing records created by admin immediately appear in
 // the parent's Pembayaran SPP page without a page reload.
 
 // ── Types ───────────────────────────────────────────────────────────────────
@@ -202,7 +202,7 @@ export function SekolahStudivaProvider({ children }: { children: React.ReactNode
       setTimeout(() => {
         showFullscreenNotif({
           kind: 'spp-reminder-h7',
-          title: 'Pengingat Tagihan — 7 Hari Lagi',
+          title: 'Pengingat Tagihan, 7 Hari Lagi',
           message: `${data.description} untuk ${account.child.name} jatuh tempo dalam 7 hari (${formatDate(data.dueDate)}).`,
           amount: data.amount,
           ctaLabel: 'Bayar Sekarang',
@@ -214,7 +214,7 @@ export function SekolahStudivaProvider({ children }: { children: React.ReactNode
       setTimeout(() => {
         showFullscreenNotif({
           kind: 'spp-reminder-h1',
-          title: 'Pengingat Tagihan — Besok Jatuh Tempo!',
+          title: 'Pengingat Tagihan, Besok Jatuh Tempo!',
           message: `${data.description} untuk ${account.child.name} jatuh tempo BESOK (${formatDate(data.dueDate)}). Segera lakukan pembayaran.`,
           amount: data.amount,
           ctaLabel: 'Bayar Sekarang',

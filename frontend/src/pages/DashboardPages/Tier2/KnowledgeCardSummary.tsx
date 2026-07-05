@@ -113,7 +113,7 @@ export default function KnowledgeCardSummary() {
           {card.readMinutes} menit baca
         </p>
 
-        {/* Bookmark button — stays near the top */}
+        {/* Bookmark button, stays near the top */}
         <div className="mb-5 flex justify-end">
           <button
             type="button"
@@ -188,7 +188,7 @@ export default function KnowledgeCardSummary() {
           <p className="text-[14px] leading-relaxed text-red-800">{card.summary.perhatian}</p>
         </div>
 
-        {/* Sudah Dibaca — after content, before next card */}
+        {/* Sudah Dibaca, after content, before next card */}
         <button
           type="button"
           onClick={() => toggleRead(card.id)}
@@ -202,7 +202,7 @@ export default function KnowledgeCardSummary() {
           {read ? 'Sudah Dibaca' : 'Tandai Sudah Dibaca'}
         </button>
 
-        {/* Scientific CTA — shown only when content exists */}
+        {/* Scientific CTA, shown only when content exists */}
         {((card.scientific.sections?.length ?? 0) > 0 || (card.scientific.paragraphs?.length ?? 0) > 0) && (
           <button
             type="button"

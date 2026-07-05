@@ -45,7 +45,7 @@ export const ARTICLES: Article[] = [
       'Anak dengan gaya belajar visual cenderung lebih mudah memahami informasi melalui gambar, diagram, warna, dan simbol dibandingkan penjelasan lisan semata. Mereka sering terlihat memperhatikan detail visual di sekitarnya dan suka menggambar atau mewarnai.',
       'Beberapa ciri yang bisa Anda amati: anak senang melihat buku bergambar, mudah mengingat sesuatu yang pernah dilihat, dan cenderung kesulitan mengikuti instruksi yang hanya disampaikan secara lisan tanpa bantuan visual.',
       'Untuk mendukung anak dengan gaya belajar ini, gunakan kartu bergambar, diagram warna-warni, jadwal visual harian, dan video pembelajaran. Saat memberi instruksi, sertakan gestur atau gambar pendukung agar anak lebih mudah memahami.',
-      'Yang terpenting, setiap anak unik — gaya belajar ini hanyalah salah satu cara untuk memahami bagaimana anak Anda menyerap informasi paling baik, bukan label yang membatasi.',
+      'Yang terpenting, setiap anak unik, gaya belajar ini hanyalah salah satu cara untuk memahami bagaimana anak Anda menyerap informasi paling baik, bukan label yang membatasi.',
     ],
   },
   {
@@ -61,7 +61,7 @@ export const ARTICLES: Article[] = [
     readCount: 356,
     content: [
       'Anak dengan sensitivitas sensorik bisa merasa kewalahan oleh suara keras, cahaya terang, atau sentuhan yang tidak terduga. Komunikasi yang lembut dan dapat diprediksi membantu mereka merasa lebih aman.',
-      'Mulailah dengan menurunkan volume suara Anda dan berbicara di level mata anak. Beri waktu beberapa detik setelah bertanya sebelum mengharapkan jawaban — anak mungkin membutuhkan waktu lebih untuk memproses informasi.',
+      'Mulailah dengan menurunkan volume suara Anda dan berbicara di level mata anak. Beri waktu beberapa detik setelah bertanya sebelum mengharapkan jawaban, anak mungkin membutuhkan waktu lebih untuk memproses informasi.',
       'Gunakan kalimat singkat dan jelas. Hindari memberikan terlalu banyak instruksi sekaligus. Sebagai gantinya, pecah menjadi langkah-langkah kecil yang mudah diikuti satu per satu.',
       'Validasi perasaan anak ketika mereka merasa kewalahan: "Ibu tahu suara ini berisik untukmu. Kita bisa pindah ke tempat yang lebih tenang." Pendekatan ini membangun kepercayaan dan rasa aman.',
     ],
@@ -79,9 +79,9 @@ export const ARTICLES: Article[] = [
     readCount: 411,
     content: [
       'Rutinitas yang konsisten memberikan rasa aman dan dapat diprediksi bagi anak, terutama anak dengan ASD atau kecemasan. Ketika anak tahu apa yang akan terjadi selanjutnya, tingkat stres mereka cenderung menurun.',
-      'Mulailah dengan rutinitas pagi dan malam yang sederhana — bangun, sarapan, gosok gigi, berpakaian — dilakukan dengan urutan yang sama setiap hari. Gunakan jadwal visual jika anak Anda belajar secara visual.',
+      'Mulailah dengan rutinitas pagi dan malam yang sederhana, bangun, sarapan, gosok gigi, berpakaian, dilakukan dengan urutan yang sama setiap hari. Gunakan jadwal visual jika anak Anda belajar secara visual.',
       'Saat ada perubahan rutinitas yang tidak terhindarkan (misalnya bepergian), beri tahu anak sejak jauh-jauh hari dan jelaskan apa yang akan berbeda. Persiapan ini membantu mengurangi kecemasan.',
-      'Konsistensi bukan berarti kaku — tetap beri ruang fleksibilitas, tetapi pertahankan struktur dasar yang membuat anak merasa familiar dengan harinya.',
+      'Konsistensi bukan berarti kaku, tetap beri ruang fleksibilitas, tetapi pertahankan struktur dasar yang membuat anak merasa familiar dengan harinya.',
     ],
   },
   {
@@ -96,10 +96,10 @@ export const ARTICLES: Article[] = [
     publishedDate: daysAgoISO(90),
     readCount: 298,
     content: [
-      'Aktivitas sensorik membantu anak mengeksplorasi tekstur, suara, dan gerakan dengan cara yang menyenangkan sekaligus terapeutik. Anda tidak perlu alat mahal — bahan rumah tangga sudah cukup.',
+      'Aktivitas sensorik membantu anak mengeksplorasi tekstur, suara, dan gerakan dengan cara yang menyenangkan sekaligus terapeutik. Anda tidak perlu alat mahal, bahan rumah tangga sudah cukup.',
       'Coba sediakan baskom berisi beras atau pasta kering untuk anak menggali dan merasakan teksturnya. Tambahkan sendok dan cangkir kecil untuk variasi permainan.',
       'Playdough buatan sendiri (tepung, garam, air, minyak) adalah pilihan klasik yang melatih motorik halus sekaligus memberikan input sensorik melalui tekanan dan peremasan.',
-      'Perhatikan respons anak selama aktivitas — jika mereka terlihat tidak nyaman, hentikan dan coba aktivitas lain. Tujuannya adalah eksplorasi yang menyenangkan, bukan paksaan.',
+      'Perhatikan respons anak selama aktivitas, jika mereka terlihat tidak nyaman, hentikan dan coba aktivitas lain. Tujuannya adalah eksplorasi yang menyenangkan, bukan paksaan.',
     ],
   },
   {
@@ -153,7 +153,7 @@ export const ARTICLES: Article[] = [
       'Tantrum adalah cara anak mengekspresikan emosi yang belum mampu mereka kelola dengan kata-kata. Memahami ini membantu kita merespons dengan empati, bukan kemarahan.',
       'Saat tantrum terjadi, pastikan keselamatan anak terlebih dahulu. Bicara dengan suara tenang dan rendah. Hindari berdebat atau mencoba bernalar saat anak sedang dalam kondisi emosi tinggi.',
       'Setelah anak mulai tenang, validasi perasaannya: "Kamu marah karena harus berhenti bermain. Itu wajar." Baru kemudian bicarakan solusi atau konsekuensi jika diperlukan.',
-      'Konsistensi dalam merespons tantrum — tanpa memberikan apa yang diinginkan anak hanya untuk menghentikan tantrum — penting agar anak belajar cara lain mengekspresikan kebutuhannya.',
+      'Konsistensi dalam merespons tantrum, tanpa memberikan apa yang diinginkan anak hanya untuk menghentikan tantrum, penting agar anak belajar cara lain mengekspresikan kebutuhannya.',
     ],
   },
   {
@@ -171,7 +171,7 @@ export const ARTICLES: Article[] = [
       'Anak dengan gaya belajar kinestetik memahami konsep paling baik melalui gerakan dan pengalaman langsung, bukan hanya mendengar atau melihat. Mereka sering terlihat tidak bisa diam dan suka menyentuh segala sesuatu.',
       'Daripada memintanya duduk diam membaca, coba ajak anak belajar berhitung sambil melompat, atau mengenal huruf dengan membentuknya menggunakan tubuh atau playdough.',
       'Berikan jeda gerak (movement breaks) di antara sesi belajar. Lima menit melompat atau berputar bisa membantu anak kembali fokus setelahnya.',
-      'Jangan anggap ketidakmampuan duduk diam sebagai kekurangan — ini adalah cara unik anak memproses dan menyerap informasi.',
+      'Jangan anggap ketidakmampuan duduk diam sebagai kekurangan, ini adalah cara unik anak memproses dan menyerap informasi.',
     ],
   },
   {

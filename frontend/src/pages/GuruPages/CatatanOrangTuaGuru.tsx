@@ -71,7 +71,7 @@ export default function CatatanOrangTuaGuru() {
       <div>
         <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Catatan dari Orang Tua</h2>
         <p className="text-[14px] text-stv-muted">
-          Pesan dari orang tua tentang kondisi anak — balas langsung di sini.
+          Pesan dari orang tua tentang kondisi anak, balas langsung di sini.
         </p>
       </div>
 

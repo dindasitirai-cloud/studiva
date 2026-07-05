@@ -278,7 +278,7 @@ export default function App() {
               }
             />
 
-            {/* Tier 2 member dashboard — nested routes with shared DashboardShellTier2 layout */}
+            {/* Tier 2 member dashboard, nested routes with shared DashboardShellTier2 layout */}
             <Route
               path="/dashboard/tier2"
               element={
@@ -305,7 +305,7 @@ export default function App() {
               <Route path="konsultasi" element={<KonsultasiTier2 />} />
             </Route>
 
-            {/* Tier 1 (Sekolah Studiva) member dashboard — nested routes with shared DashboardShellTier1 layout */}
+            {/* Tier 1 (Sekolah Studiva) member dashboard, nested routes with shared DashboardShellTier1 layout */}
             <Route
               path="/dashboard/tier1"
               element={
@@ -400,7 +400,7 @@ export default function App() {
               }
             />
 
-            {/* Guru dashboard — input area for teachers managing student data.
+            {/* Guru dashboard, input area for teachers managing student data.
                 What teachers write here (daily updates, attendance, portfolio,
                 assessments, IEP) flows as read-only data to the Tier 1 parent
                 dashboard. Parent "Catatan untuk Guru" notes are readable here.

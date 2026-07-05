@@ -1,5 +1,5 @@
 // ============================================================================
-// Studiva Digital — Resource Library : data 60 kartu (Model A)
+// Studiva Digital, Resource Library : data 60 kartu (Model A)
 // Ringkasan (2 menit) lengkap untuk seluruh 60 kartu.
 // Detail ilmiah PENUH untuk rentang 0–3 bulan (6 kartu) sebagai acuan.
 // Kartu lain: scientific.paragraphs kosong + TODO → diisi per batch (dengan review).
@@ -65,7 +65,7 @@ export interface KnowledgeCard {
     sections?: ScientificSection[];
     /** Numbered reference list */
     references?: ScientificReference[];
-    /** Legacy fallback — still rendered if sections is absent/empty */
+    /** Legacy fallback, still rendered if sections is absent/empty */
     paragraphs?: string[];
   };
   sources: string[];
@@ -123,17 +123,17 @@ export const CARDS: KnowledgeCard[] = [
       ],
       figure: { id: "motor-sequence", caption: "Arah perkembangan gerak: dari kepala ke kaki", afterSectionIndex: 0 },
       sections: [
-        { judul: "Perkembangan yang berurutan", isi: "Kendali tubuh berkembang dari atas ke bawah — bayi menguasai kepala lebih dulu, lalu bahu, badan, dan kaki. Gerak juga berkembang dari tengah tubuh ke arah luar: bahu dulu, baru jari-jari halus. Menegakkan kepala saat tummy time adalah anak tangga pertama menuju berguling, duduk, dan berjalan." },
-        { judul: "Mengapa tummy time penting", isi: "Sejak kampanye tidur telentang pada 1990-an berhasil menurunkan angka kematian bayi mendadak (SIDS) secara tajam [2], bayi menghabiskan lebih banyak waktu telentang. Sebagian lalu mengalami kepala peyang dan otot leher yang lebih lambat menguat. Waktu tengkurap saat bangun mengimbangi hal ini — prinsipnya 'back to sleep, tummy to play'." },
-        { judul: "Gerak adalah cara belajar", isi: "Menurut Piaget, bayi di tahun pertama berada pada tahap sensorimotor: ia membangun pemahaman tentang dunia lewat indra dan gerak [3]. Saat mengangkat kepala atau meraih mainan, bayi mengumpulkan informasi tentang jarak, keseimbangan, dan tubuhnya sendiri — bagian dari lebih dari sejuta koneksi saraf yang terbentuk tiap detik [1]." },
+        { judul: "Perkembangan yang berurutan", isi: "Kendali tubuh berkembang dari atas ke bawah, bayi menguasai kepala lebih dulu, lalu bahu, badan, dan kaki. Gerak juga berkembang dari tengah tubuh ke arah luar: bahu dulu, baru jari-jari halus. Menegakkan kepala saat tummy time adalah anak tangga pertama menuju berguling, duduk, dan berjalan." },
+        { judul: "Mengapa tummy time penting", isi: "Sejak kampanye tidur telentang pada 1990-an berhasil menurunkan angka kematian bayi mendadak (SIDS) secara tajam [2], bayi menghabiskan lebih banyak waktu telentang. Sebagian lalu mengalami kepala peyang dan otot leher yang lebih lambat menguat. Waktu tengkurap saat bangun mengimbangi hal ini, prinsipnya 'back to sleep, tummy to play'." },
+        { judul: "Gerak adalah cara belajar", isi: "Menurut Piaget, bayi di tahun pertama berada pada tahap sensorimotor: ia membangun pemahaman tentang dunia lewat indra dan gerak [3]. Saat mengangkat kepala atau meraih mainan, bayi mengumpulkan informasi tentang jarak, keseimbangan, dan tubuhnya sendiri, bagian dari lebih dari sejuta koneksi saraf yang terbentuk tiap detik [1]." },
         { judul: "Batasi alat penyangga", isi: "Beri bayi banyak waktu bergerak bebas di alas aman, dan jangan terlalu lama menaruhnya di kursi pantul atau ayunan. Baby walker tidak dianjurkan karena berisiko cedera dan tidak membantu bayi belajar berjalan [4]." },
-        { judul: "Rentang normal itu lebar", isi: "Sebagian bayi berguling di usia 4 bulan, sebagian di usia 6 bulan — keduanya normal [4]. Yang penting bukan mengejar tanggal milestone, melainkan memberi kesempatan bergerak setiap hari." },
+        { judul: "Rentang normal itu lebar", isi: "Sebagian bayi berguling di usia 4 bulan, sebagian di usia 6 bulan, keduanya normal [4]. Yang penting bukan mengejar tanggal milestone, melainkan memberi kesempatan bergerak setiap hari." },
       ],
       references: [
-        { n: 1, text: "Center on the Developing Child, Harvard University — Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
-        { n: 2, text: "CDC / AAP — Back to Sleep dan penurunan SIDS.", url: "https://www.cdc.gov/sids/" },
-        { n: 3, text: "Jean Piaget — tahap sensorimotor." },
-        { n: 4, text: "American Academy of Pediatrics — HealthyChildren.org; CDC Learn the Signs.", url: "https://www.healthychildren.org" },
+        { n: 1, text: "Center on the Developing Child, Harvard University, Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+        { n: 2, text: "CDC / AAP, Back to Sleep dan penurunan SIDS.", url: "https://www.cdc.gov/sids/" },
+        { n: 3, text: "Jean Piaget, tahap sensorimotor." },
+        { n: 4, text: "American Academy of Pediatrics, HealthyChildren.org; CDC Learn the Signs.", url: "https://www.healthychildren.org" },
       ],
     },
     sources: ["AAP HealthyChildren.org", "CDC Learn the Signs. Act Early."]
@@ -152,22 +152,22 @@ export const CARDS: KnowledgeCard[] = [
       readMinutes: 6,
       reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
       stats: [
-        { value: "20–30 cm", label: "jarak fokus terbaik bayi baru lahir — persis jarak wajah pengasuh", ref: 1 },
+        { value: "20–30 cm", label: "jarak fokus terbaik bayi baru lahir, persis jarak wajah pengasuh", ref: 1 },
         { value: "1 jt+", label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 2 },
       ],
       figure: { id: "focus-distance", caption: "Jarak fokus bayi baru lahir kira-kira sejauh wajah Anda saat menggendong", afterSectionIndex: 0 },
       sections: [
-        { judul: "Penglihatan yang belum matang", isi: "Penglihatan adalah indra yang paling belum matang saat lahir. Bayi baru lahir hanya bisa memfokuskan pandangan pada jarak sekitar 20–30 cm [1] — persis jarak wajah Anda saat menggendong atau menyusui. Alam seolah merancang agar hal pertama yang jelas ia lihat adalah wajah manusia." },
+        { judul: "Penglihatan yang belum matang", isi: "Penglihatan adalah indra yang paling belum matang saat lahir. Bayi baru lahir hanya bisa memfokuskan pandangan pada jarak sekitar 20–30 cm [1], persis jarak wajah Anda saat menggendong atau menyusui. Alam seolah merancang agar hal pertama yang jelas ia lihat adalah wajah manusia." },
         { judul: "Melatih mata mengikuti", isi: "Di bulan-bulan pertama, otak bayi berlatih menggerakkan kedua mata secara terkoordinasi untuk mengikuti benda bergerak. Kemampuan ini menjadi dasar perhatian dan kelak koordinasi mata-tangan. Pola kontras tinggi paling mudah ditangkap otak yang sedang belajar melihat." },
-        { judul: "Tahap sensorimotor", isi: "Menurut Piaget, bayi membangun pengetahuan langsung dari indra dan gerak, bukan dari kata [3]. Setiap tatapan, sentuhan, dan suara adalah 'data' yang otaknya kumpulkan — bagian dari lebih dari sejuta koneksi saraf yang terbentuk tiap detik [2]." },
+        { judul: "Tahap sensorimotor", isi: "Menurut Piaget, bayi membangun pengetahuan langsung dari indra dan gerak, bukan dari kata [3]. Setiap tatapan, sentuhan, dan suara adalah 'data' yang otaknya kumpulkan, bagian dari lebih dari sejuta koneksi saraf yang terbentuk tiap detik [2]." },
         { judul: "Stimulasi terbaik itu sederhana", isi: "Stimulasi paling bermakna di usia ini bukan mainan mahal atau layar, melainkan wajah Anda, suara Anda, dan benda nyata yang bisa diamati. Menggerakkan mainan perlahan atau mengganti posisi gendong memberi 'pemandangan' baru untuk dipelajari." },
         { judul: "Kapan perlu perhatian", isi: "Bila menjelang 3 bulan mata bayi tidak pernah mengikuti benda atau menatap wajah, sampaikan ke dokter. Otak visual berkembang paling pesat di tahun pertama, sehingga deteksi dini sangat penting [4]." },
       ],
       references: [
-        { n: 1, text: "American Academy of Pediatrics — perkembangan penglihatan bayi.", url: "https://www.healthychildren.org" },
-        { n: 2, text: "Center on the Developing Child, Harvard University — Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
-        { n: 3, text: "Jean Piaget — tahap sensorimotor." },
-        { n: 4, text: "CDC — Learn the Signs. Act Early.", url: "https://www.cdc.gov/act-early/" },
+        { n: 1, text: "American Academy of Pediatrics, perkembangan penglihatan bayi.", url: "https://www.healthychildren.org" },
+        { n: 2, text: "Center on the Developing Child, Harvard University, Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+        { n: 3, text: "Jean Piaget, tahap sensorimotor." },
+        { n: 4, text: "CDC, Learn the Signs. Act Early.", url: "https://www.cdc.gov/act-early/" },
       ],
     },
     sources: ["CDC Learn the Signs. Act Early.", "Jean Piaget (sensorimotor)"]
@@ -191,17 +191,17 @@ export const CARDS: KnowledgeCard[] = [
       ],
       figure: { id: "serve-return", caption: "Percakapan bergantian (serve & return) memperkuat jalur bahasa", afterSectionIndex: 2 },
       sections: [
-        { judul: "Bahasa dimulai sejak lahir", isi: "Meski belum bisa bicara, otak bayi sudah mempelajari bahasa sejak hari pertama — bahkan sejak dalam kandungan, saat mengenali irama suara ibunya. Kemampuan memahami (bahasa reseptif) selalu tumbuh lebih dulu daripada kemampuan bicara [2]." },
+        { judul: "Bahasa dimulai sejak lahir", isi: "Meski belum bisa bicara, otak bayi sudah mempelajari bahasa sejak hari pertama, bahkan sejak dalam kandungan, saat mengenali irama suara ibunya. Kemampuan memahami (bahasa reseptif) selalu tumbuh lebih dulu daripada kemampuan bicara [2]." },
         { judul: "Bayi si ahli statistik", isi: "Dari lautan suara yang ia dengar, otak bayi diam-diam menghitung pola: bunyi mana yang sering muncul bersama, di mana satu kata berakhir. Semakin sering dan kaya bahasa yang ia dengar dalam interaksi nyata, semakin banyak bahan untuk otaknya mengurai pola itu [1]." },
-        { judul: "Belajar dari manusia, bukan layar", isi: "Bayi belajar bahasa dari orang, bukan dari layar. Dalam banyak penelitian, bayi yang mendengar bahasa dari orang sungguhan bisa mempelajarinya, sementara yang mendengar dari video hampir tidak belajar apa pun — fenomena 'video deficit' [3]. Bayi butuh tatapan, giliran bicara, dan tanggapan hangat." },
+        { judul: "Belajar dari manusia, bukan layar", isi: "Bayi belajar bahasa dari orang, bukan dari layar. Dalam banyak penelitian, bayi yang mendengar bahasa dari orang sungguhan bisa mempelajarinya, sementara yang mendengar dari video hampir tidak belajar apa pun, fenomena 'video deficit' [3]. Bayi butuh tatapan, giliran bicara, dan tanggapan hangat." },
         { judul: "Cara bicara Anda berpengaruh", isi: "Nada tinggi, lambat, dan ekspresif ('parentese') membantu bayi memisahkan kata dan memperhatikan lebih lama [3]. Menirukan ocehannya lalu memberi jeda mengajarkan pola dasar percakapan: bergantian bicara." },
         { judul: "Kualitas kata & pendengaran", isi: "Banyaknya kata yang bayi dengar di tahun awal berkaitan dengan kosakata dan kesiapan sekolahnya kelak. Mendengar dengan baik adalah syarat bicara; bila bayi tampak tak merespons suara, pemeriksaan pendengaran dini sangat membantu [4]." },
       ],
       references: [
-        { n: 1, text: "Center on the Developing Child, Harvard University — Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+        { n: 1, text: "Center on the Developing Child, Harvard University, Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
         { n: 2, text: "American Speech-Language-Hearing Association (ASHA).", url: "https://www.asha.org" },
         { n: 3, text: "Riset infant-directed speech & 'video deficit' (mis. Kuhl dkk.)." },
-        { n: 4, text: "CDC — Learn the Signs. Act Early.", url: "https://www.cdc.gov/act-early/" },
+        { n: 4, text: "CDC, Learn the Signs. Act Early.", url: "https://www.cdc.gov/act-early/" },
       ],
     },
     sources: ["ASHA (American Speech-Language-Hearing Association)", "CDC Learn the Signs. Act Early."]
@@ -210,8 +210,8 @@ export const CARDS: KnowledgeCard[] = [
     id: "RL-0-3m-SE", ageKey: "0-3m", domain: "SE", title: "Senyum sosial & rasa aman",
     photo: P("0-3m-se", "Ibu dan bayi saling tersenyum"), readMinutes: 2,
     summary: {
-      terjadi: "Antara minggu ke-6 hingga ke-8 muncul senyum sosial — senyuman yang membalas wajah dan suara Anda, bukan refleks. Bayi menatap mata lebih lama dan tenang saat digendong.",
-      penting: "Interaksi bolak-balik (\"serve & return\") membentuk fondasi otak sosial dan emosi bayi. Menanggapi kebutuhannya secara konsisten membangun rasa aman — dan ingat, bayi baru lahir tidak bisa \"dimanja\".",
+      terjadi: "Antara minggu ke-6 hingga ke-8 muncul senyum sosial, senyuman yang membalas wajah dan suara Anda, bukan refleks. Bayi menatap mata lebih lama dan tenang saat digendong.",
+      penting: "Interaksi bolak-balik (\"serve & return\") membentuk fondasi otak sosial dan emosi bayi. Menanggapi kebutuhannya secara konsisten membangun rasa aman, dan ingat, bayi baru lahir tidak bisa \"dimanja\".",
       lakukan: ["Tanggapi tangis dengan cepat dan tenang.", "Balas senyum dan lakukan kontak mata.", "Tirukan suaranya, beri jeda untuk \"giliran\"-nya.", "Perbanyak kontak kulit (skin-to-skin)."],
       perhatian: "Menjelang 3 bulan tidak ada senyum sosial, tidak ada kontak mata, atau bayi sangat sulit ditenangkan."
     },
@@ -226,18 +226,18 @@ export const CARDS: KnowledgeCard[] = [
       ],
       figure: { id: "serve-return", caption: "Siklus serve & return yang memperkuat arsitektur otak", afterSectionIndex: 1 },
       sections: [
-        { judul: "Otak dibangun oleh pengalaman", isi: "Otak bayi tidak lahir dalam keadaan selesai. Ia dibangun bertahap setelah lahir, dengan lebih dari satu juta koneksi saraf baru terbentuk setiap detik pada tahun-tahun awal [1], hingga mencapai sekitar 90% ukuran otak dewasa pada usia 5 tahun [2]. Pengalaman sehari-hari — terutama interaksi dengan pengasuh — menentukan koneksi mana yang menguat dan mana yang dipangkas." },
+        { judul: "Otak dibangun oleh pengalaman", isi: "Otak bayi tidak lahir dalam keadaan selesai. Ia dibangun bertahap setelah lahir, dengan lebih dari satu juta koneksi saraf baru terbentuk setiap detik pada tahun-tahun awal [1], hingga mencapai sekitar 90% ukuran otak dewasa pada usia 5 tahun [2]. Pengalaman sehari-hari, terutama interaksi dengan pengasuh, menentukan koneksi mana yang menguat dan mana yang dipangkas." },
         { judul: "Mekanisme: serve & return", isi: "Harvard Center on the Developing Child menjelaskan mekanisme utamanya sebagai serve and return [1]: pertukaran bolak-balik antara bayi dan pengasuh. Ketika bayi memberi sinyal dan pengasuh menanggapi secara konsisten, sirkuit saraf untuk bahasa, regulasi emosi, dan hubungan sosial menguat. Ketiadaan respons yang berkepanjangan justru mengaktifkan sistem stres tubuh dan dapat mengganggu proses ini [1]." },
-        { judul: "Bukti: responsivitas & kelekatan aman", isi: "Penelitian klasik Ainsworth melalui prosedur Strange Situation menunjukkan bayi yang pengasuhnya responsif dan konsisten lebih mungkin mengembangkan kelekatan aman [3]. Meta-analisis lintas budaya memperkirakan sekitar separuh hingga dua pertiga bayi tergolong kelekatan aman, dengan responsivitas pengasuh sebagai salah satu prediktor terkuatnya [3]. Erikson menempatkan periode ini sebagai tahap trust vs mistrust — pembentukan rasa percaya dasar [4]." },
+        { judul: "Bukti: responsivitas & kelekatan aman", isi: "Penelitian klasik Ainsworth melalui prosedur Strange Situation menunjukkan bayi yang pengasuhnya responsif dan konsisten lebih mungkin mengembangkan kelekatan aman [3]. Meta-analisis lintas budaya memperkirakan sekitar separuh hingga dua pertiga bayi tergolong kelekatan aman, dengan responsivitas pengasuh sebagai salah satu prediktor terkuatnya [3]. Erikson menempatkan periode ini sebagai tahap trust vs mistrust, pembentukan rasa percaya dasar [4]." },
         { judul: "Menjawab miskonsepsi umum", isi: "Apakah menanggapi setiap tangisan akan memanjakan bayi? Bukti perkembangan menunjukkan tidak, setidaknya pada tahun pertama. Pada bayi, menangis adalah sinyal kebutuhan, bukan manipulasi; respons yang konsisten membangun rasa aman yang menjadi fondasi kemandirian, bukan ketergantungan [5]." },
-        { judul: "Implikasi praktis", isi: "Temuan ini menyederhanakan menjadi satu prinsip: interaksi hangat dan responsif sehari-hari — menanggapi tangis, membalas tatapan, meniru suara — adalah bentuk stimulasi paling bermakna. Yang dibutuhkan bukan kesempurnaan, melainkan respons yang cukup sering dan cukup hangat [5]." },
+        { judul: "Implikasi praktis", isi: "Temuan ini menyederhanakan menjadi satu prinsip: interaksi hangat dan responsif sehari-hari, menanggapi tangis, membalas tatapan, meniru suara, adalah bentuk stimulasi paling bermakna. Yang dibutuhkan bukan kesempurnaan, melainkan respons yang cukup sering dan cukup hangat [5]." },
       ],
       references: [
         { n: 1, text: "Center on the Developing Child, Harvard University. Brain Architecture & Serve and Return.", url: "https://developingchild.harvard.edu/key-concepts/serve-and-return/" },
-        { n: 2, text: "Center on the Developing Child — otak mencapai ~90% ukuran dewasa pada usia 5.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
-        { n: 3, text: "Ainsworth, M. D. S. (1978); van IJzendoorn & Kroonenberg (1988) — distribusi kelekatan lintas budaya.", url: "https://www.simplypsychology.org/mary-ainsworth.html" },
-        { n: 4, text: "Erikson, E. H. Childhood and Society — trust vs mistrust." },
-        { n: 5, text: "American Academy of Pediatrics — Responsive caregiving.", url: "https://www.healthychildren.org" },
+        { n: 2, text: "Center on the Developing Child, otak mencapai ~90% ukuran dewasa pada usia 5.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+        { n: 3, text: "Ainsworth, M. D. S. (1978); van IJzendoorn & Kroonenberg (1988), distribusi kelekatan lintas budaya.", url: "https://www.simplypsychology.org/mary-ainsworth.html" },
+        { n: 4, text: "Erikson, E. H. Childhood and Society, trust vs mistrust." },
+        { n: 5, text: "American Academy of Pediatrics, Responsive caregiving.", url: "https://www.healthychildren.org" },
       ],
     },
     sources: ["Harvard Center on the Developing Child", "Ainsworth & Bowlby (attachment)", "Erik Erikson", "AAP HealthyChildren.org"]
@@ -246,10 +246,10 @@ export const CARDS: KnowledgeCard[] = [
     id: "RL-0-3m-KS", ageKey: "0-3m", domain: "KS", title: "Tidur aman & menyusu di bulan pertama",
     photo: P("0-3m-ks", "Bayi tidur telentang di boks"), readMinutes: 2, isMedical: true,
     summary: {
-      terjadi: "Bayi tidur 14–17 jam per 24 jam dalam potongan pendek dan menyusu sering (ASI 8–12 kali sehari, sesuai permintaan). Pola tidur teratur belum terbentuk — ini normal.",
-      penting: "Posisi & lingkungan tidur yang aman menurunkan risiko SIDS hingga ~50%. ASI eksklusif direkomendasikan untuk 6 bulan pertama. (Edukatif — bukan pengganti nasihat dokter.)",
+      terjadi: "Bayi tidur 14–17 jam per 24 jam dalam potongan pendek dan menyusu sering (ASI 8–12 kali sehari, sesuai permintaan). Pola tidur teratur belum terbentuk, ini normal.",
+      penting: "Posisi & lingkungan tidur yang aman menurunkan risiko SIDS hingga ~50%. ASI eksklusif direkomendasikan untuk 6 bulan pertama. (Edukatif, bukan pengganti nasihat dokter.)",
       lakukan: ["Selalu tidurkan telentang di alas datar & keras, tanpa bantal/selimut/boneka.", "Room-sharing: kamar sama, kasur terpisah, minimal 6 bulan.", "Susui sesuai permintaan; hindari asap rokok & kepanasan."],
-      perhatian: "Demam ≥38°C, malas menyusu, kuning menyebar, napas cepat/sesak, atau popok basah <6x/hari — segera ke dokter."
+      perhatian: "Demam ≥38°C, malas menyusu, kuning menyebar, napas cepat/sesak, atau popok basah <6x/hari, segera ke dokter."
     },
     scientific: {
       title: "Mengapa tidur telentang dan ASI melindungi bayi",
@@ -269,12 +269,12 @@ export const CARDS: KnowledgeCard[] = [
         { judul: "Kapan menghubungi dokter", isi: "Segera hubungi tenaga kesehatan bila bayi demam ≥38°C, malas menyusu, tampak sangat kuning, napas cepat/sesak, atau popok basah kurang dari 6 kali sehari. Informasi ini bersifat edukatif dan tidak menggantikan nasihat dokter." },
       ],
       references: [
-        { n: 1, text: "AAP — Sleep-Related Infant Deaths: Updated 2022 Recommendations.", url: "https://publications.aap.org/pediatrics/article/150/1/e2022057990/188304/" },
-        { n: 2, text: "WHO / UNICEF — Breastfeeding.", url: "https://www.who.int/health-topics/breastfeeding" },
-        { n: 3, text: "CDC — Sudden Infant Death Syndrome.", url: "https://www.cdc.gov/sids/" },
+        { n: 1, text: "AAP, Sleep-Related Infant Deaths: Updated 2022 Recommendations.", url: "https://publications.aap.org/pediatrics/article/150/1/e2022057990/188304/" },
+        { n: 2, text: "WHO / UNICEF, Breastfeeding.", url: "https://www.who.int/health-topics/breastfeeding" },
+        { n: 3, text: "CDC, Sudden Infant Death Syndrome.", url: "https://www.cdc.gov/sids/" },
       ],
     },
-    sources: ["AAP Safe Sleep 2022", "WHO / UNICEF (ASI eksklusif)", "IDAI", "Kemenkes RI — Buku KIA"]
+    sources: ["AAP Safe Sleep 2022", "WHO / UNICEF (ASI eksklusif)", "IDAI", "Kemenkes RI, Buku KIA"]
   },
   {
     id: "RL-0-3m-PS", ageKey: "0-3m", domain: "PS", title: "Stimulasi lewat interaksi (tanpa layar)",
@@ -283,7 +283,7 @@ export const CARDS: KnowledgeCard[] = [
       terjadi: "Bayi belajar paling banyak dari interaksi manusia, bukan mainan mahal. Otaknya berkembang lewat 'serve & return' harian.",
       penting: "Harvard: interaksi responsif membentuk arsitektur otak. AAP menganjurkan hindari layar untuk bayi di bawah 18–24 bulan (kecuali video call).",
       lakukan: ["Bacakan buku/ceritakan gambar meski belum paham.", "Beri kesempatan bergerak bebas di alas aman (Montessori).", "Bicara & bernyanyi saat rutinitas; jauhkan dari layar."],
-      perhatian: "Bila caregiver merasa kewalahan atau tertekan terus-menerus — cari dukungan; kesejahteraan pengasuh memengaruhi bayi."
+      perhatian: "Bila caregiver merasa kewalahan atau tertekan terus-menerus, cari dukungan; kesejahteraan pengasuh memengaruhi bayi."
     },
     scientific: {
       title: "Mengapa interaksi mengalahkan gadget di tahun pertama",
@@ -295,15 +295,15 @@ export const CARDS: KnowledgeCard[] = [
       ],
       figure: { id: "serve-return", caption: "Interaksi bolak-balik sehari-hari membangun arsitektur otak", afterSectionIndex: 1 },
       sections: [
-        { judul: "Kurikulum terbaik: interaksi", isi: "Di tahun pertama, 'kurikulum' terbaik bagi bayi bukan aplikasi atau mainan elektronik, melainkan interaksi hangat sehari-hari. Otak bayi dirancang untuk belajar dari manusia — wajah yang menanggapi, suara yang membalas, sentuhan yang menenangkan." },
-        { judul: "Serve & return membangun otak", isi: "Harvard Center on the Developing Child menyebut interaksi bolak-balik (serve & return) sebagai bahan bangunan arsitektur otak [2]. Setiap kali Anda menanggapi ocehan atau tangis bayi, Anda memperkuat jalur otaknya untuk bahasa, emosi, dan hubungan. Rutinitas biasa — mengganti popok, memandikan — adalah kesempatan emas untuk berbicara dan bernyanyi." },
+        { judul: "Kurikulum terbaik: interaksi", isi: "Di tahun pertama, 'kurikulum' terbaik bagi bayi bukan aplikasi atau mainan elektronik, melainkan interaksi hangat sehari-hari. Otak bayi dirancang untuk belajar dari manusia, wajah yang menanggapi, suara yang membalas, sentuhan yang menenangkan." },
+        { judul: "Serve & return membangun otak", isi: "Harvard Center on the Developing Child menyebut interaksi bolak-balik (serve & return) sebagai bahan bangunan arsitektur otak [2]. Setiap kali Anda menanggapi ocehan atau tangis bayi, Anda memperkuat jalur otaknya untuk bahasa, emosi, dan hubungan. Rutinitas biasa, mengganti popok, memandikan, adalah kesempatan emas untuk berbicara dan bernyanyi." },
         { judul: "Mengapa hindari layar", isi: "AAP menganjurkan menghindari layar (TV, ponsel, tablet) untuk bayi di bawah 18–24 bulan, kecuali panggilan video dengan keluarga [1]. Bayi belum bisa belajar dari layar seperti dari manusia, dan waktu layar menggantikan waktu interaksi yang jauh lebih bernilai." },
         { judul: "Kebebasan bergerak", isi: "Sejalan dengan pendekatan Montessori, beri bayi kebebasan bergerak di lingkungan aman dan amati apa yang menarik minatnya. Anda tak perlu terus menstimulasi; mengikuti isyaratnya adalah bentuk stimulasi yang paling menghormati perkembangannya." },
         { judul: "Kesejahteraan Anda penting", isi: "Bayi menyerap suasana emosi pengasuhnya. Merawat diri dan mencari dukungan saat kewalahan bukan kemewahan, melainkan kebutuhan yang berdampak langsung pada bayi." },
       ],
       references: [
-        { n: 1, text: "American Academy of Pediatrics — Media and Young Minds (screen time).", url: "https://www.healthychildren.org" },
-        { n: 2, text: "Center on the Developing Child, Harvard University — Serve and Return.", url: "https://developingchild.harvard.edu/key-concepts/serve-and-return/" },
+        { n: 1, text: "American Academy of Pediatrics, Media and Young Minds (screen time).", url: "https://www.healthychildren.org" },
+        { n: 2, text: "Center on the Developing Child, Harvard University, Serve and Return.", url: "https://developingchild.harvard.edu/key-concepts/serve-and-return/" },
       ],
     },
     sources: ["Harvard Center on the Developing Child", "AAP (screen time)", "Maria Montessori"]
@@ -316,10 +316,10 @@ export const CARDS: KnowledgeCard[] = [
     summary: {
       terjadi: "Kontrol kepala mantap; bayi mulai berguling, menahan kepala saat didudukkan, serta meraih dan menggenggam benda lalu membawanya ke mulut.",
       penting: "Gerakan ini menguatkan otot untuk duduk dan melatih koordinasi mata-tangan.",
-      lakukan: ["Perpanjang tummy time; taruh mainan sedikit di luar jangkauan.", "Beri benda ringan yang mudah digenggam.", "Jangan tinggalkan di tempat tinggi — bayi bisa berguling jatuh."],
+      lakukan: ["Perpanjang tummy time; taruh mainan sedikit di luar jangkauan.", "Beri benda ringan yang mudah digenggam.", "Jangan tinggalkan di tempat tinggi, bayi bisa berguling jatuh."],
       perhatian: "Di usia 6 bulan bayi belum bisa menahan kepala, tidak meraih benda, atau tubuh sangat kaku/lemas."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "AAP HealthyChildren.org"]
   },
   {
@@ -331,7 +331,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Beri mainan aman untuk dieksplorasi.", "Mainan yang bereaksi (kerincingan) mengajarkan sebab-akibat.", "Mainkan ciluk-ba."],
       perhatian: "Di usia 6 bulan bayi tidak berusaha meraih, tidak merespons suara/wajah."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Jean Piaget"]
   },
   {
@@ -343,7 +343,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Tirukan ocehan lalu beri jeda.", "Sebut nama benda yang ia lihat.", "Bacakan buku bergambar; panggil namanya."],
       perhatian: "Di usia 6 bulan bayi tidak mengoceh, tidak tertawa/memekik, atau tidak merespons suara."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
@@ -355,7 +355,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Ajak bermain interaktif (ciluk-ba, tepuk).", "Tanggapi emosinya dengan menamai.", "Jaga rutinitas yang bisa diprediksi."],
       perhatian: "Di usia 6 bulan bayi tidak tersenyum ke orang atau tidak menunjukkan kasih sayang pada pengasuh."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Bowlby & Ainsworth", "AAP"]
   },
   {
@@ -363,12 +363,12 @@ export const CARDS: KnowledgeCard[] = [
     photo: P("3-6m-ks", "Ibu menyusui bayi"), readMinutes: 2, isMedical: true,
     summary: {
       terjadi: "ASI tetap menjadi satu-satunya makanan (MPASI belum sebelum ~6 bulan). Tidur malam mulai lebih panjang, total ~12–16 jam. Imunisasi terus berjalan.",
-      penting: "Makanan padat terlalu dini tidak dianjurkan; imunisasi tepat waktu melindungi dari penyakit serius. (Edukatif — bukan pengganti nasihat dokter.)",
+      penting: "Makanan padat terlalu dini tidak dianjurkan; imunisasi tepat waktu melindungi dari penyakit serius. (Edukatif, bukan pengganti nasihat dokter.)",
       lakukan: ["Lanjutkan ASI eksklusif hingga ~6 bulan.", "Bangun rutinitas tidur; letakkan saat mengantuk belum tertidur.", "Ikuti jadwal imunisasi sesuai anjuran dokter/IDAI."],
-      perhatian: "Berat badan tidak naik, menolak menyusu, demam tinggi, atau sangat rewel/lemas — konsultasikan."
+      perhatian: "Berat badan tidak naik, menolak menyusu, demam tinggi, atau sangat rewel/lemas, konsultasikan."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
-    sources: ["WHO / UNICEF", "IDAI", "AAP Safe Sleep 2022", "Kemenkes RI — Buku KIA"]
+    scientific: { title: "Detail ilmiah, TODO" },
+    sources: ["WHO / UNICEF", "IDAI", "AAP Safe Sleep 2022", "Kemenkes RI, Buku KIA"]
   },
   {
     id: "RL-3-6m-PS", ageKey: "3-6m", domain: "PS", title: "Bermain & membaca: stimulasi yang tepat",
@@ -379,7 +379,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan mainan aman beragam tekstur/bunyi.", "Bacakan board book setiap hari.", "Beri waktu bermain di lantai; ikuti minat bayi."],
       perhatian: "Bayi tampak tidak tertarik berinteraksi atau bermain sama sekali."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["Harvard Center on the Developing Child", "AAP", "Montessori & Vygotsky"]
   },
 
@@ -393,7 +393,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Beri ruang lantai yang aman dan luas.", "Amankan rumah (baby-proofing): colokan, tangga, sudut tajam, benda kecil.", "Beri benda untuk dipindah-tangan."],
       perhatian: "Di usia 9 bulan bayi belum bisa duduk meski dibantu, tidak menumpu berat pada kaki, atau tidak memindahkan benda antar tangan."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "AAP"]
   },
   {
@@ -401,11 +401,11 @@ export const CARDS: KnowledgeCard[] = [
     photo: P("6-9m-kg", "Bayi mencari mainan tersembunyi"), readMinutes: 2,
     summary: {
       terjadi: "Bayi mulai mencari benda yang dijatuhkan atau disembunyikan (object permanence menguat), serta memindahkan dan membenturkan benda sambil mengamati reaksinya.",
-      penting: "Object permanence adalah tonggak kognitif Piaget — dasar memori dan rasa aman: ibu tetap ada meski tak terlihat.",
+      penting: "Object permanence adalah tonggak kognitif Piaget, dasar memori dan rasa aman: ibu tetap ada meski tak terlihat.",
       lakukan: ["Mainkan ciluk-ba dan sembunyikan mainan sebagian.", "Beri wadah untuk memasukkan-mengeluarkan benda.", "Biarkan mengeksplorasi benda aman."],
       perhatian: "Di usia 9 bulan bayi tidak mencari benda yang disembunyikan atau tidak menunjukkan minat menjelajah."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Jean Piaget"]
   },
   {
@@ -417,7 +417,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sebut nama benda secara konsisten.", "Tanggapi setiap kali bayi bersuara.", "Gunakan gestur (dadah, menunjuk); bacakan buku."],
       perhatian: "Di usia 9 bulan bayi tidak merespons namanya, tidak mengoceh, atau tidak mengeluarkan beragam suara."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
@@ -425,11 +425,11 @@ export const CARDS: KnowledgeCard[] = [
     photo: P("6-9m-se", "Bayi menempel pada ibu"), readMinutes: 2,
     summary: {
       terjadi: "Bayi menempel pada pengasuh familiar, bisa cemas atau menangis pada orang asing (stranger anxiety), dan mulai cemas saat berpisah.",
-      penting: "Stranger anxiety justru tanda kelekatan aman sudah terbentuk — bayi tahu siapa 'orang'-nya. Ini normal dan sehat.",
-      lakukan: ["Jangan paksa bayi didekati orang asing; beri waktu.", "Berpamitanlah singkat & konsisten — jangan menyelinap pergi.", "Tenangkan dengan pelukan."],
+      penting: "Stranger anxiety justru tanda kelekatan aman sudah terbentuk, bayi tahu siapa 'orang'-nya. Ini normal dan sehat.",
+      lakukan: ["Jangan paksa bayi didekati orang asing; beri waktu.", "Berpamitanlah singkat & konsisten, jangan menyelinap pergi.", "Tenangkan dengan pelukan."],
       perhatian: "Di usia 9 bulan bayi tidak menunjukkan kelekatan pada pengasuh mana pun, atau tidak ada kontak mata/ekspresi."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Bowlby & Ainsworth", "AAP"]
   },
   {
@@ -437,12 +437,12 @@ export const CARDS: KnowledgeCard[] = [
     photo: P("6-9m-ks", "Bayi makan MPASI"), readMinutes: 2, isMedical: true,
     summary: {
       terjadi: "Sekitar 6 bulan bayi siap MPASI (bisa duduk dengan topangan, kepala tegak, tertarik makanan). ASI tetap dilanjutkan. Tekstur dimulai lumat lalu makin kasar.",
-      penting: "Setelah 6 bulan, ASI saja tidak cukup zat besi & energi; zat besi sangat krusial. Responsive feeding membangun kebiasaan makan sehat. (Edukatif — bukan pengganti nasihat dokter.)",
+      penting: "Setelah 6 bulan, ASI saja tidak cukup zat besi & energi; zat besi sangat krusial. Responsive feeding membangun kebiasaan makan sehat. (Edukatif, bukan pengganti nasihat dokter.)",
       lakukan: ["Mulai ~6 bulan dengan makanan kaya zat besi (hati, daging, kuning telur, kacang halus) + sayur/buah.", "Naikkan tekstur bertahap; kenalkan finger food.", "Kenalkan alergen satu per satu; teruskan ASI."],
-      perhatian: "Hindari makanan pemicu tersedak (kacang/anggur utuh) dan madu <1 tahun. Reaksi alergi (ruam/bengkak/sesak) — hentikan & ke dokter."
+      perhatian: "Hindari makanan pemicu tersedak (kacang/anggur utuh) dan madu <1 tahun. Reaksi alergi (ruam/bengkak/sesak), hentikan & ke dokter."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
-    sources: ["WHO — Complementary feeding 6–23 bln (2023)", "IDAI", "AAP", "Kemenkes RI — Buku KIA"]
+    scientific: { title: "Detail ilmiah, TODO" },
+    sources: ["WHO, Complementary feeding 6–23 bln (2023)", "IDAI", "AAP", "Kemenkes RI, Buku KIA"]
   },
   {
     id: "RL-6-9m-PS", ageKey: "6-9m", domain: "PS", title: "Eksplorasi aman & rutinitas",
@@ -453,7 +453,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Baby-proof rumah agar bayi bebas menjelajah tanpa 'jangan' terus.", "Sediakan mainan menantang sesuai usia (wadah, balok).", "Jaga rutinitas makan–main–tidur; tetap tanpa layar."],
       perhatian: "Bila Anda kesulitan mengamankan lingkungan atau merasa kewalahan, carilah dukungan."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["Harvard Center on the Developing Child", "Montessori", "AAP"]
   },
 
@@ -467,7 +467,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan furnitur stabil untuk merambat.", "Beri finger food untuk melatih menjumput.", "Hindari baby walker (berisiko cedera)."],
       perhatian: "Di usia 12 bulan bayi tidak menarik badan untuk berdiri, tidak menjumput, atau kehilangan keterampilan."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "AAP"]
   },
   {
@@ -479,7 +479,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Tunjukkan gestur sederhana untuk ditiru.", "Beri mainan sebab-akibat & shape sorter.", "Namai apa pun yang ia tunjuk."],
       perhatian: "Di usia 12 bulan bayi tidak menunjuk, tidak meniru, atau tidak mencari benda yang disembunyikan."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Jean Piaget"]
   },
   {
@@ -491,7 +491,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Beri nama saat bayi menunjuk (\"iya, itu bola\").", "Perluas ocehannya menjadi kata utuh.", "Bacakan buku dan tanya \"mana ...?\"."],
       perhatian: "Di usia 12 bulan bayi tidak mengucap kata, tidak menunjuk, tidak merespons perintah, atau kehilangan kata/kemampuan sosial."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
@@ -503,7 +503,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Buat rutinitas perpisahan yang konsisten & hangat.", "Izinkan objek transisi.", "Tanggapi dengan sabar saat ia 'menguji'."],
       perhatian: "Di usia 12 bulan bayi tidak menunjukkan kelekatan, tidak ada kontak mata atau berbagi perhatian."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Bowlby & Ainsworth", "Winnicott"]
   },
   {
@@ -511,12 +511,12 @@ export const CARDS: KnowledgeCard[] = [
     photo: P("9-12m-ks", "Bayi makan sendiri"), readMinutes: 2, isMedical: true,
     summary: {
       terjadi: "Bayi makan 3 kali sehari plus camilan, tekstur makin kasar, dan mulai makan sendiri (berantakan itu normal). ASI/susu tetap dilanjutkan.",
-      penting: "Variasi makanan dan self-feeding membangun keterampilan & kemandirian. Susu sapi tidak dianjurkan sebagai minuman utama sebelum 12 bulan. (Edukatif — bukan pengganti nasihat dokter.)",
+      penting: "Variasi makanan dan self-feeding membangun keterampilan & kemandirian. Susu sapi tidak dianjurkan sebagai minuman utama sebelum 12 bulan. (Edukatif, bukan pengganti nasihat dokter.)",
       lakukan: ["Tawarkan makanan keluarga yang dilunakkan dan beragam.", "Biarkan bayi makan sendiri.", "Jaga jadwal makan; hindari gula/garam berlebih & madu <1 tahun."],
-      perhatian: "Menolak makan terus-menerus, berat badan turun/stagnan, tanda alergi, atau tersedak — konsultasikan."
+      perhatian: "Menolak makan terus-menerus, berat badan turun/stagnan, tanda alergi, atau tersedak, konsultasikan."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
-    sources: ["WHO — Complementary feeding (2023)", "IDAI", "AAP (susu sapi <1 thn)"]
+    scientific: { title: "Detail ilmiah, TODO" },
+    sources: ["WHO, Complementary feeding (2023)", "IDAI", "AAP (susu sapi <1 thn)"]
   },
   {
     id: "RL-9-12m-PS", ageKey: "9-12m", domain: "PS", title: "Bermain interaktif & menetapkan batas lembut",
@@ -527,7 +527,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Alihkan (redirect) daripada terus melarang.", "Tetapkan sedikit batas jelas demi keamanan.", "Libatkan dalam rutinitas; perbanyak main & baca."],
       perhatian: "Bila Anda merasa perlu sering menghukum atau kewalahan, carilah strategi disiplin positif atau dukungan."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["Harvard Center on the Developing Child", "AAP", "Montessori"]
   },
 
@@ -541,7 +541,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan ruang aman untuk berjalan dan memanjat.", "Beri krayon besar dan balok.", "Dorong anak makan/minum sendiri (kaki telanjang bantu keseimbangan di rumah)."],
       perhatian: "Di usia 18 bulan anak belum berjalan, tidak mencoret, atau kehilangan keterampilan."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "AAP"]
   },
   {
@@ -553,7 +553,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan mainan tiruan kehidupan nyata.", "Libatkan anak dalam kegiatan rumah sederhana.", "Beri puzzle dan shape sorter."],
       perhatian: "Di usia 18 bulan anak tidak meniru, tidak mengenali fungsi benda umum, atau tidak menunjuk untuk berbagi minat."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Piaget", "Vygotsky"]
   },
   {
@@ -565,19 +565,19 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Banyak bicara dan namai benda.", "Perluas kata anak menjadi frasa (\"bola\" → \"bola merah\").", "Bacakan buku tiap hari; batasi layar (menghambat bahasa)."],
       perhatian: "Di usia 18 bulan anak tidak mengucap kata bermakna, tidak mengikuti perintah, tidak menunjuk, atau kehilangan kata."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
     id: "RL-12-18m-SE", ageKey: "12-18m", domain: "SE", title: "Autonomi & tantrum pertama",
     photo: P("12-18m-se", "Batita menunjukkan kemandirian"), readMinutes: 2,
     summary: {
-      terjadi: "Anak ingin mandiri (\"aku sendiri\"), dan tantrum muncul saat frustrasi atau lelah — normal karena otak pengendali emosi belum matang.",
+      terjadi: "Anak ingin mandiri (\"aku sendiri\"), dan tantrum muncul saat frustrasi atau lelah, normal karena otak pengendali emosi belum matang.",
       penting: "Tantrum adalah ketidakmampuan meregulasi emosi, bukan kenakalan. Anak butuh dibantu menenangkan diri (co-regulation). Erikson: autonomy vs shame.",
-      lakukan: ["Tetap tenang saat tantrum — Anda jangkarnya.", "Namai emosinya (\"kamu marah, ya\").", "Beri pilihan terbatas; cukupkan tidur & jaga rutinitas."],
+      lakukan: ["Tetap tenang saat tantrum, Anda jangkarnya.", "Namai emosinya (\"kamu marah, ya\").", "Beri pilihan terbatas; cukupkan tidur & jaga rutinitas."],
       perhatian: "Di usia 18 bulan anak tidak menunjukkan afeksi, tidak ada kontak mata, tidak meniru, atau mengalami kemunduran sosial."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Erikson", "Siegel & Bryson"]
   },
   {
@@ -585,23 +585,23 @@ export const CARDS: KnowledgeCard[] = [
     photo: P("12-18m-ks", "Batita makan bersama keluarga"), readMinutes: 2, isMedical: true,
     summary: {
       terjadi: "Anak makan makanan keluarga; nafsu makan bisa menurun/pilih-pilih (normal, pertumbuhan melambat). Susu sapi boleh setelah 1 tahun. Tidur ~11–14 jam termasuk 1–2 nap.",
-      penting: "Picky eating wajar — memaksa kontraproduktif. Susu berlebih mengganggu penyerapan zat besi. Tidur cukup penting untuk emosi & belajar. (Edukatif — bukan pengganti nasihat dokter.)",
+      penting: "Picky eating wajar, memaksa kontraproduktif. Susu berlebih mengganggu penyerapan zat besi. Tidur cukup penting untuk emosi & belajar. (Edukatif, bukan pengganti nasihat dokter.)",
       lakukan: ["Sajikan variasi; biarkan anak menentukan jumlah (division of responsibility).", "Batasi susu ~2 gelas/hari.", "Jaga rutinitas tidur; ikuti imunisasi."],
-      perhatian: "Berat badan menurun, pilih-pilih sampai berisiko kurang gizi, atau tanda anemia (pucat, lemas) — konsultasikan."
+      perhatian: "Berat badan menurun, pilih-pilih sampai berisiko kurang gizi, atau tanda anemia (pucat, lemas), konsultasikan."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
-    sources: ["WHO", "IDAI", "AAP", "Kemenkes RI — Buku KIA"]
+    scientific: { title: "Detail ilmiah, TODO" },
+    sources: ["WHO", "IDAI", "AAP", "Kemenkes RI, Buku KIA"]
   },
   {
     id: "RL-12-18m-PS", ageKey: "12-18m", domain: "PS", title: "Disiplin positif & batasi layar",
     photo: P("12-18m-ps", "Orang tua membimbing batita dengan tenang"), readMinutes: 2,
     summary: {
-      terjadi: "Anak menguji batas lebih aktif dan meniru segala hal. Ia ingin mandiri tetapi belum mampu — sumber frustrasi dan tantrum.",
+      terjadi: "Anak menguji batas lebih aktif dan meniru segala hal. Ia ingin mandiri tetapi belum mampu, sumber frustrasi dan tantrum.",
       penting: "Disiplin berarti mengajarkan, bukan menghukum; konsistensi dan kehangatan membangun rasa aman. AAP: hindari layar di bawah 18–24 bulan.",
       lakukan: ["Tetapkan sedikit aturan yang jelas dan konsisten.", "Alihkan perhatian dan beri pilihan; puji perilaku baik.", "Jadi teladan; minimalkan layar, perbanyak bermain & membaca."],
       perhatian: "Bila Anda cenderung mengandalkan hukuman fisik atau merasa kewalahan, carilah pendekatan disiplin positif dan dukungan."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["AAP (screen time & disiplin positif)", "Harvard Center on the Developing Child", "Montessori"]
   },
 
@@ -615,7 +615,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Beri ruang untuk gerak aktif: berlari, memanjat rendah, bermain bola.", "Sediakan mainan dorong-tarik dan bola.", "Latih memakai sendok, membuka-menutup wadah, menuang."],
       perhatian: "Di usia 24 bulan anak belum berjalan stabil, tidak menumpuk balok, atau kehilangan keterampilan."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "AAP"]
   },
   {
@@ -627,7 +627,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan properti bermain peran.", "Beri puzzle dan mainan memilah bentuk/warna.", "Beri waktu bermain bebas; ajukan pertanyaan \"apa ini?\"."],
       perhatian: "Di usia 24 bulan anak tidak bermain pura-pura, tidak meniru, atau tidak mengikuti perintah dua langkah."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Piaget", "Vygotsky"]
   },
   {
@@ -637,9 +637,9 @@ export const CARDS: KnowledgeCard[] = [
       terjadi: "Kosakata anak tumbuh ke 50 kata atau lebih menjelang 24 bulan, dan ia mulai menggabungkan dua kata (\"mama pergi\"). Ia mengikuti perintah dua langkah.",
       penting: "Menggabungkan kata adalah lompatan menuju tata bahasa; interaksi dan membaca setiap hari mempercepatnya.",
       lakukan: ["Perluas ucapan anak (\"susu\" → \"kamu mau susu?\").", "Bacakan buku interaktif dan ajukan pertanyaan.", "Deskripsikan kegiatan; batasi layar."],
-      perhatian: "Di usia 24 bulan kosakata di bawah 50 kata atau belum menggabungkan dua kata, tidak mengikuti perintah, atau kehilangan bahasa — pertimbangkan skrining."
+      perhatian: "Di usia 24 bulan kosakata di bawah 50 kata atau belum menggabungkan dua kata, tidak mengikuti perintah, atau kehilangan bahasa, pertimbangkan skrining."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
@@ -651,7 +651,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Tetap tenang dan konsisten.", "Validasi emosi lalu tetapkan batas (\"kamu kesal, tapi tidak boleh memukul\").", "Beri pilihan; ajarkan berbagi lewat contoh & giliran, hindari hukuman saat tantrum."],
       perhatian: "Di usia 24 bulan anak tidak meniru, tidak tertarik pada orang lain, tidak bermain pura-pura, atau kehilangan keterampilan sosial."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Erikson", "Siegel & Bryson"]
   },
   {
@@ -659,23 +659,23 @@ export const CARDS: KnowledgeCard[] = [
     photo: P("18-24m-ks", "Batita menyikat gigi"), readMinutes: 2, isMedical: true,
     summary: {
       terjadi: "Anak makan porsi kecil dan sering; picky eating umum. Ia biasanya beralih ke satu kali tidur siang (total ~11–14 jam), dan banyak gigi mulai tumbuh.",
-      penting: "Kebiasaan makan & tidur sehat terbentuk sekarang. Kesehatan gigi penting sejak gigi pertama — karies bisa muncul sangat dini. (Edukatif — bukan pengganti nasihat dokter.)",
+      penting: "Kebiasaan makan & tidur sehat terbentuk sekarang. Kesehatan gigi penting sejak gigi pertama, karies bisa muncul sangat dini. (Edukatif, bukan pengganti nasihat dokter.)",
       lakukan: ["Tawarkan makanan bervariasi tanpa memaksa (butuh paparan berulang).", "Sikat gigi 2x sehari dengan pasta fluoride seukuran biji beras; kunjungan gigi pertama ~usia 1 tahun.", "Batasi jajanan manis & susu berlebih; jaga rutinitas tidur."],
-      perhatian: "Berat badan tidak naik, tanda gigi berlubang (bercak putih/cokelat), atau pilih-pilih hingga berisiko kurang gizi — konsultasikan."
+      perhatian: "Berat badan tidak naik, tanda gigi berlubang (bercak putih/cokelat), atau pilih-pilih hingga berisiko kurang gizi, konsultasikan."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
-    sources: ["AAP & AAPD (kesehatan gigi)", "IDAI", "WHO", "Kemenkes RI — Buku KIA"]
+    scientific: { title: "Detail ilmiah, TODO" },
+    sources: ["AAP & AAPD (kesehatan gigi)", "IDAI", "WHO", "Kemenkes RI, Buku KIA"]
   },
   {
     id: "RL-18-24m-PS", ageKey: "18-24m", domain: "PS", title: "Konsistensi, contoh & kesiapan toilet",
     photo: P("18-24m-ps", "Batita membantu tugas rumah kecil"), readMinutes: 2,
     summary: {
-      terjadi: "Anak meniru dengan intens dan ingin membantu. Menjelang usia 2 tahun sebagian mulai menunjukkan tanda kesiapan toilet — tetapi belum tentu benar-benar siap.",
-      penting: "Teladan dan rutinitas konsisten paling efektif; toilet training yang terlalu dini atau dipaksa justru kontraproduktif — tunggu tanda kesiapan (umumnya 2–3 tahun).",
+      terjadi: "Anak meniru dengan intens dan ingin membantu. Menjelang usia 2 tahun sebagian mulai menunjukkan tanda kesiapan toilet, tetapi belum tentu benar-benar siap.",
+      penting: "Teladan dan rutinitas konsisten paling efektif; toilet training yang terlalu dini atau dipaksa justru kontraproduktif, tunggu tanda kesiapan (umumnya 2–3 tahun).",
       lakukan: ["Libatkan anak dalam tugas kecil (membuang popok, merapikan mainan).", "Buat rutinitas harian yang jelas.", "Kenalkan konsep toilet tanpa tekanan; batasi layar."],
       perhatian: "Bila tekanan soal toilet atau makan menimbulkan konflik terus-menerus, longgarkan dan tunggu kesiapan anak."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["AAP (kesiapan toilet training)", "Harvard Center on the Developing Child", "Montessori"]
   },
 
@@ -689,7 +689,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan banyak waktu bermain aktif, terutama di luar.", "Beri sepeda roda tiga atau mainan panjat yang aman.", "Latih tangan dengan krayon, playdough, meronce; libatkan berpakaian sendiri."],
       perhatian: "Di usia 3 tahun anak sering jatuh atau sangat kesulitan di tangga, tidak bisa mencoret, atau kehilangan keterampilan."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "AAP"]
   },
   {
@@ -701,7 +701,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan bahan main terbuka (balok, playdough, kostum).", "Jawab pertanyaan \"kenapa\" dengan sabar; hitung benda sehari-hari.", "Beri puzzle dan kegiatan memilah; bacakan cerita lalu bahas."],
       perhatian: "Di usia 3 tahun anak tidak bermain pura-pura, tidak memahami perintah dua langkah, atau tidak tertarik pada anak lain."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Piaget", "Vygotsky"]
   },
   {
@@ -709,11 +709,11 @@ export const CARDS: KnowledgeCard[] = [
     photo: P("2-3y-bh", "Anak bercerita kepada orang tua"), readMinutes: 2,
     summary: {
       terjadi: "Anak berbicara dengan kalimat 2–3 kata atau lebih, memakai kata ganti (aku, kamu), mengikuti perintah dua langkah, dan menjelang 3 tahun ~50–75% ucapannya dimengerti keluarga.",
-      penting: "Bahasa meledak lewat interaksi; percakapan bolak-balik dan membaca setiap hari adalah kuncinya — ini masa kritis bahasa.",
+      penting: "Bahasa meledak lewat interaksi; percakapan bolak-balik dan membaca setiap hari adalah kuncinya, ini masa kritis bahasa.",
       lakukan: ["Ngobrol banyak dan ajukan pertanyaan terbuka.", "Bacakan buku setiap hari dan bahas ceritanya.", "Nyanyikan lagu dan sajak; batasi layar."],
-      perhatian: "Di usia 3 tahun anak belum berbicara dengan kalimat, ucapannya tidak dimengerti keluarga, tidak bertanya, atau kehilangan bahasa — pertimbangkan skrining."
+      perhatian: "Di usia 3 tahun anak belum berbicara dengan kalimat, ucapannya tidak dimengerti keluarga, tidak bertanya, atau kehilangan bahasa, pertimbangkan skrining."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
@@ -725,7 +725,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Namai dan validasi emosi.", "Modelkan empati dan berbagi dalam kehidupan sehari-hari.", "Beri strategi menenangkan (napas, pelukan, tempat tenang)."],
       perhatian: "Di usia 3 tahun anak tidak menunjukkan empati, tidak bisa bermain berdampingan, atau tantrum sangat sering & intens."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Siegel & Bryson", "Erikson"]
   },
   {
@@ -733,11 +733,11 @@ export const CARDS: KnowledgeCard[] = [
     photo: P("2-3y-ks", "Anak makan sayur dan buah"), readMinutes: 2, isMedical: true,
     summary: {
       terjadi: "Anak makan makanan keluarga bervariasi (sayur, protein, karbohidrat). Picky eating masih umum. Toilet training biasanya siap di usia 2–3 tahun.",
-      penting: "Pola makan sehat terbentuk sekarang untuk seumur hidup. Toilet training yang dipaksa berdampak negatif — ikuti tanda kesiapan anak. (Edukatif — bukan pengganti nasihat dokter.)",
+      penting: "Pola makan sehat terbentuk sekarang untuk seumur hidup. Toilet training yang dipaksa berdampak negatif, ikuti tanda kesiapan anak. (Edukatif, bukan pengganti nasihat dokter.)",
       lakukan: ["Sajikan porsi kecil beragam; ekspos berulang tanpa memaksa.", "Tunggu tanda kesiapan toilet (sadar pipis, bisa tahan sebentar, mau duduk di toilet).", "Sikat gigi 2x/hari; imunisasi sesuai jadwal."],
-      perhatian: "Berat badan tidak naik, pilih-pilih hingga berisiko kurang gizi, atau tanda infeksi saluran kemih — konsultasikan."
+      perhatian: "Berat badan tidak naik, pilih-pilih hingga berisiko kurang gizi, atau tanda infeksi saluran kemih, konsultasikan."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["AAP (toilet training)", "IDAI", "WHO", "Kemenkes RI"]
   },
   {
@@ -749,11 +749,11 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Jaga rutinitas makan-main-tidur.", "Beri waktu bermain bebas setiap hari, terutama di luar.", "Batasi layar; pilih konten edukatif dan tonton bersama bila perlu."],
       perhatian: "Bila anak sangat bergantung pada layar atau kesulitan bermain sendiri, kurangi bertahap dan perbanyak aktivitas fisik."
     },
-    scientific: { title: "Detail ilmiah — TODO" },
+    scientific: { title: "Detail ilmiah, TODO" },
     sources: ["AAP (play 2018)", "Harvard Center on the Developing Child", "Montessori"]
   },
 
-  // ===================== 3–4 TAHUN — TODO =====================
+  // ===================== 3–4 TAHUN, TODO =====================
   // TODO: RL-3-4y-FM (Berlari, melompat, bersepeda)
   // TODO: RL-3-4y-KG (Menghitung, mengenali huruf, fungsi eksekutif awal)
   // TODO: RL-3-4y-BH (Kalimat panjang, bertanya terus-menerus)
@@ -761,7 +761,7 @@ export const CARDS: KnowledgeCard[] = [
   // TODO: RL-3-4y-KS (Gizi, tidur, kesehatan gigi isMedical:true)
   // TODO: RL-3-4y-PS (Persiapan sekolah, layar, membaca bersama)
 
-  // ===================== 4–5 TAHUN — TODO =====================
+  // ===================== 4–5 TAHUN, TODO =====================
   // TODO: RL-4-5y-FM (Melompat satu kaki, menulis nama, menggunting)
   // TODO: RL-4-5y-KG (Angka, huruf, memecahkan masalah)
   // TODO: RL-4-5y-BH (Bercerita, kosakata kaya, baca dini)
@@ -769,7 +769,7 @@ export const CARDS: KnowledgeCard[] = [
   // TODO: RL-4-5y-KS (Gizi prasekolah, tidur, imunisasi isMedical:true)
   // TODO: RL-4-5y-PS (Kesiapan sekolah, kemandirian, media digital)
 
-  // ===================== 5–6 TAHUN — TODO =====================
+  // ===================== 5–6 TAHUN, TODO =====================
   // TODO: RL-5-6y-FM (Koordinasi lebih halus, olahraga, menulis)
   // TODO: RL-5-6y-KG (Membaca permulaan, logika, memori kerja)
   // TODO: RL-5-6y-BH (Membaca, bercerita kompleks, bahasa kedua)

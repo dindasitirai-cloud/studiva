@@ -709,7 +709,28 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan furnitur stabil untuk merambat.", "Beri finger food untuk melatih menjumput.", "Hindari baby walker (berisiko cedera)."],
       perhatian: "Di usia 12 bulan bayi tidak menarik badan untuk berdiri, tidak menjumput, atau kehilangan keterampilan."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Bersiap berjalan: berdiri, merambat, dan menjumput",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "9–15 bln", label: "rentang normal bayi mulai berjalan sendiri, sangat bervariasi", ref: 1 },
+        { value: "1 jt+",    label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 2 },
+      ],
+      figure: { id: "motor-sequence", caption: "Kekuatan yang menjalar ke kaki membawa bayi dari duduk ke berdiri", afterSectionIndex: 0 },
+      sections: [
+        { judul: "Menarik badan dan merambat", isi: "Bayi menarik badan untuk berdiri dan merambat sambil berpegangan furnitur (cruising). Ini latihan keseimbangan dan kekuatan kaki, persiapan langsung untuk berjalan." },
+        { judul: "Pincer grasp: presisi jari", isi: "Genggaman kini memakai ujung ibu jari dan telunjuk (pincer grasp), memungkinkan bayi menjumput benda kecil. Keterampilan halus ini menandai kesiapan makan sendiri." },
+        { judul: "Hindari baby walker", isi: "Baby walker tidak dianjurkan karena berisiko cedera dan tidak membantu bayi belajar berjalan [3]. Bayi belajar berjalan paling baik lewat berdiri dan merambat secara alami." },
+        { judul: "Belajar lewat kesempatan", isi: "Sediakan furnitur yang stabil untuk merambat dan ruang lantai yang aman. Finger food juga melatih pincer grasp sekaligus kemandirian makan." },
+        { judul: "Rentang normal itu lebar", isi: "Berjalan bisa muncul kapan saja antara 9 hingga 15 bulan [1]. Yang penting adalah kemajuan yang konsisten, bukan kecocokan dengan tanggal tertentu." },
+      ],
+      references: [
+        { n: 1, text: "CDC, Learn the Signs. Act Early.", url: "https://www.cdc.gov/act-early/" },
+        { n: 2, text: "Center on the Developing Child, Harvard University, Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+        { n: 3, text: "American Academy of Pediatrics, baby walkers.", url: "https://www.healthychildren.org" },
+      ],
+    },
     sources: ["CDC Learn the Signs. Act Early.", "AAP"]
   },
   {
@@ -721,7 +742,27 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Tunjukkan gestur sederhana untuk ditiru.", "Beri mainan sebab-akibat & shape sorter.", "Namai apa pun yang ia tunjuk."],
       perhatian: "Di usia 12 bulan bayi tidak menunjuk, tidak meniru, atau tidak mencari benda yang disembunyikan."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Meniru dan berbagi perhatian: lompatan sosial-kognitif",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "9–12 bln", label: "usia munculnya joint attention, menunjuk untuk berbagi perhatian", ref: 1 },
+        { value: "1 jt+",    label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 2 },
+      ],
+      figure: { id: "joint-attention", caption: "Bayi, benda, dan Anda menatap hal yang sama: fondasi bahasa dan sosial", afterSectionIndex: 1 },
+      sections: [
+        { judul: "Meniru adalah belajar", isi: "Bayi meniru gestur seperti bertepuk dan melambai. Meniru adalah cara utamanya menyerap keterampilan dan kebiasaan dari orang di sekitarnya." },
+        { judul: "Menunjuk untuk berbagi", isi: "Menunjuk bukan sekadar meminta; bayi mulai menunjuk untuk berbagi perhatian, mengajak Anda melihat hal yang sama (joint attention) [1]. Ini tonggak sosial-kognitif yang kuat memprediksi perkembangan bahasa." },
+        { judul: "Memakai benda sesuai fungsi", isi: "Bayi mulai mendekatkan sisir ke rambut atau telepon mainan ke telinga. Ini menunjukkan ia memahami fungsi benda, bentuk awal berpikir simbolik." },
+        { judul: "Memecahkan masalah kecil", isi: "Menarik kain untuk meraih mainan di atasnya adalah pemecahan masalah sederhana (means-end). Bayi belajar merencanakan langkah untuk mencapai tujuan." },
+        { judul: "Mengapa menunjuk penting", isi: "Karena menunjuk dan berbagi perhatian begitu penting bagi bahasa dan sosial, ketiadaannya menjelang 12 bulan termasuk hal yang perlu didiskusikan dengan dokter." },
+      ],
+      references: [
+        { n: 1, text: "CDC, Learn the Signs. Act Early.; riset joint attention.", url: "https://www.cdc.gov/act-early/" },
+        { n: 2, text: "Center on the Developing Child, Harvard University, Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+      ],
+    },
     sources: ["CDC Learn the Signs. Act Early.", "Jean Piaget"]
   },
   {
@@ -733,7 +774,27 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Beri nama saat bayi menunjuk (\"iya, itu bola\").", "Perluas ocehannya menjadi kata utuh.", "Bacakan buku dan tanya \"mana ...?\"."],
       perhatian: "Di usia 12 bulan bayi tidak mengucap kata, tidak menunjuk, tidak merespons perintah, atau kehilangan kata/kemampuan sosial."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Kata pertama dan kekuatan menunjuk",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "±12 bln", label: "usia umum munculnya kata pertama yang bermakna", ref: 1 },
+        { value: "1 jt+",   label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 2 },
+      ],
+      figure: { id: "joint-attention", caption: "Menunjuk sambil menatap Anda: jembatan menuju kata pertama", afterSectionIndex: 1 },
+      sections: [
+        { judul: "Mama/dada dengan arti", isi: "Sekitar usia 12 bulan, banyak bayi mengucap kata pertama yang bermakna seperti 'mama' atau 'dada' [1]. Ini puncak dari setahun mendengarkan dan mengoceh." },
+        { judul: "Menunjuk membuka bahasa", isi: "Menunjuk yang disertai menatap Anda adalah 'jembatan' menuju kata. Bayi yang banyak berbagi perhatian lewat menunjuk cenderung mengembangkan kosakata lebih cepat." },
+        { judul: "Memahami perintah sederhana", isi: "Bayi memahami permintaan seperti 'sini' atau 'dadah' jauh sebelum bisa mengucapkannya. Pemahaman selalu mendahului ucapan." },
+        { judul: "Perluas dan namai", isi: "Saat bayi menunjuk sesuatu, beri namanya ('iya, itu bola'). Memperluas ucapannya menjadi kata utuh memperkaya bahasanya." },
+        { judul: "Waspadai kemunduran", isi: "Kehilangan kata atau kemampuan sosial yang pernah dimiliki adalah tanda penting yang perlu segera dikonsultasikan, terlepas dari usia." },
+      ],
+      references: [
+        { n: 1, text: "American Speech-Language-Hearing Association (ASHA); CDC.", url: "https://www.asha.org" },
+        { n: 2, text: "Center on the Developing Child, Harvard University.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+      ],
+    },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
@@ -745,7 +806,27 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Buat rutinitas perpisahan yang konsisten & hangat.", "Izinkan objek transisi.", "Tanggapi dengan sabar saat ia 'menguji'."],
       perhatian: "Di usia 12 bulan bayi tidak menunjukkan kelekatan, tidak ada kontak mata atau berbagi perhatian."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Puncak kelekatan dan selimut kesayangan",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "6–12 bln",  label: "periode kecemasan berpisah biasanya memuncak", ref: 1 },
+        { value: "±50–60%",   label: "bayi membentuk kelekatan aman saat pengasuhan responsif", ref: 2 },
+      ],
+      figure: { id: "serve-return", caption: "Respons yang konsisten membuat bayi merasa aman untuk mandiri", afterSectionIndex: 1 },
+      sections: [
+        { judul: "Kecemasan berpisah memuncak", isi: "Menjelang usia 1 tahun, kecemasan berpisah sering memuncak [1]. Bayi protes saat ditinggal karena kini ia paham Anda tetap ada meski pergi, tetapi belum tahu kapan kembali." },
+        { judul: "Objek transisi", isi: "Selimut atau boneka kesayangan (objek transisi) membantu bayi merasa aman saat Anda tidak ada. Menurut Winnicott, ini perkembangan yang sehat, bukan tanda ketergantungan." },
+        { judul: "Menguji reaksi", isi: "Menjatuhkan benda berulang kali dan menunggu reaksi Anda adalah cara bayi belajar sebab-akibat sosial. Tanggapi dengan sabar; ini eksplorasi, bukan kenakalan." },
+        { judul: "Perpisahan yang menenangkan", isi: "Buat ritual perpisahan yang singkat, hangat, dan konsisten. Beri kepastian bahwa Anda akan kembali; hindari menyelinap pergi karena justru menambah cemas." },
+        { judul: "Kelekatan aman sama dengan keberanian", isi: "Kelekatan yang kuat bukan penghambat kemandirian. Justru dari basis aman itulah bayi berani menjelajah dunia." },
+      ],
+      references: [
+        { n: 1, text: "CDC, Learn the Signs. Act Early.", url: "https://www.cdc.gov/act-early/" },
+        { n: 2, text: "Bowlby & Ainsworth; Winnicott (objek transisi).", url: "https://www.simplypsychology.org/mary-ainsworth.html" },
+      ],
+    },
     sources: ["CDC Learn the Signs. Act Early.", "Bowlby & Ainsworth", "Winnicott"]
   },
   {
@@ -757,7 +838,27 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Tawarkan makanan keluarga yang dilunakkan dan beragam.", "Biarkan bayi makan sendiri.", "Jaga jadwal makan; hindari gula/garam berlebih & madu <1 tahun."],
       perhatian: "Menolak makan terus-menerus, berat badan turun/stagnan, tanda alergi, atau tersedak, konsultasikan."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Makan mandiri dan aturan susu menjelang usia 1 tahun",
+      readMinutes: 7,
+      reviewedBy: { name: "Apoteker Raisha", date: "2026-07" },
+      stats: [
+        { value: "12 bln",  label: "usia minimal sebelum susu sapi jadi minuman utama", ref: 1 },
+        { value: "<1 thn",  label: "madu harus dihindari sepenuhnya (risiko botulisme)", ref: 2 },
+      ],
+      figure: { id: "mpasi-texture", caption: "Tekstur meningkat menuju makanan keluarga; bayi mulai makan sendiri", afterSectionIndex: 0 },
+      sections: [
+        { judul: "Self-feeding dan berantakan itu baik", isi: "Membiarkan bayi makan sendiri dengan tangan atau sendok, meski berantakan, membangun keterampilan motorik dan kemandirian. Ini investasi kebiasaan makan yang sehat." },
+        { judul: "Susu sapi tunggu 12 bulan", isi: "Susu sapi tidak dianjurkan sebagai minuman utama sebelum usia 12 bulan [1], karena dapat mengganggu penyerapan zat besi dan membebani ginjal bayi. ASI atau formula tetap jadi susu utama hingga usia 1 tahun." },
+        { judul: "Variasi dan zat besi", isi: "Tawarkan makanan keluarga yang dilunakkan dan beragam, dengan tetap mengutamakan sumber zat besi. Variasi rasa dan tekstur sejak dini membantu anak lebih mudah menerima banyak jenis makanan." },
+        { judul: "Hindari gula, garam, madu", isi: "Batasi gula dan garam berlebih, dan jangan berikan madu sebelum usia 1 tahun karena risiko botulisme [2]. Perhatikan pula tanda alergi saat mengenalkan makanan baru." },
+        { judul: "Kapan menghubungi dokter", isi: "Menolak makan terus-menerus, berat badan turun atau stagnan, atau tanda alergi perlu diperiksakan. Informasi ini bersifat edukatif dan tidak menggantikan nasihat dokter/ahli gizi." },
+      ],
+      references: [
+        { n: 1, text: "American Academy of Pediatrics, susu sapi pada bayi < 1 tahun.", url: "https://www.healthychildren.org" },
+        { n: 2, text: "WHO; IDAI, keamanan makanan bayi dan madu.", url: "https://www.idai.or.id" },
+      ],
+    },
     sources: ["WHO, Complementary feeding (2023)", "IDAI", "AAP (susu sapi <1 thn)"]
   },
   {
@@ -769,7 +870,27 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Alihkan (redirect) daripada terus melarang.", "Tetapkan sedikit batas jelas demi keamanan.", "Libatkan dalam rutinitas; perbanyak main & baca."],
       perhatian: "Bila Anda merasa perlu sering menghukum atau kewalahan, carilah strategi disiplin positif atau dukungan."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Batas yang lembut dan bermain yang membangun",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "18–24 bln", label: "usia minimal sebelum layar dianjurkan (kecuali video call)", ref: 1 },
+        { value: "1 jt+",     label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 2 },
+      ],
+      figure: { id: "serve-return", caption: "Menanggapi dan mengalihkan dengan hangat mengajarkan rasa aman", afterSectionIndex: 1 },
+      sections: [
+        { judul: "Menguji batas adalah belajar", isi: "Bayi yang makin mobile mulai menguji batas, bukan untuk menantang, melainkan untuk memahami aturan dunia. Ini bagian normal dari perkembangan." },
+        { judul: "Alihkan, bukan menghukum", isi: "Di usia ini, mengalihkan perhatian (redirection) jauh lebih efektif daripada larangan berulang atau hukuman. Bayi belum mampu memahami konsekuensi abstrak." },
+        { judul: "Sedikit batas yang konsisten", isi: "Tetapkan beberapa batas jelas demi keamanan dan terapkan secara konsisten. Konsistensi yang hangat mengajarkan rasa aman, bukan rasa takut." },
+        { judul: "Bermain interaktif", isi: "Ciluk-ba, tepuk ame-ame, dan meniru pekerjaan rumah adalah permainan yang memperkuat ikatan sekaligus keterampilan. Ini juga latihan serve & return [2]." },
+        { judul: "Tetap tanpa layar", isi: "Layar tetap tidak dianjurkan di bawah 18–24 bulan [1]. Waktu bermain dan membaca bersama jauh lebih bernilai bagi perkembangan." },
+      ],
+      references: [
+        { n: 1, text: "American Academy of Pediatrics, Media and Young Minds.", url: "https://www.healthychildren.org" },
+        { n: 2, text: "Center on the Developing Child, Harvard University, Serve and Return.", url: "https://developingchild.harvard.edu/key-concepts/serve-and-return/" },
+      ],
+    },
     sources: ["Harvard Center on the Developing Child", "AAP", "Montessori"]
   },
 

@@ -6,6 +6,7 @@ import { FigureSafeSleepABC }      from './FigureSafeSleepABC';
 import { FigureCauseEffect }       from './FigureCauseEffect';
 import { FigureObjectPermanence }  from './FigureObjectPermanence';
 import { FigureMpasiTexture }      from './FigureMpasiTexture';
+import { FigureJointAttention }    from './FigureJointAttention';
 
 type FigureComponent = React.FC;
 
@@ -17,4 +18,5 @@ export const FIGURE_REGISTRY: Record<string, FigureComponent> = {
   'cause-effect':       FigureCauseEffect,
   'object-permanence':  FigureObjectPermanence,
   'mpasi-texture':      FigureMpasiTexture,
+  'joint-attention':    FigureJointAttention,
 };

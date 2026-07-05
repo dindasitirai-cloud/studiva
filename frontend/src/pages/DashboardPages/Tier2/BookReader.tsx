@@ -399,6 +399,21 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
                         </ol>
                       </div>
                     )}
+
+                    {/* Tandai Sudah Dibaca — bottom of scientific page */}
+                    <button
+                      type="button"
+                      onClick={onToggleRead}
+                      aria-label={isRead ? 'Sudah dibaca' : 'Tandai sudah dibaca'}
+                      className={`mt-5 flex w-full items-center justify-center gap-1.5 rounded-xl border py-3 text-[13px] font-bold transition ${
+                        isRead
+                          ? 'border-stv-green bg-stv-green-tint text-stv-green hover:bg-stv-green hover:text-white'
+                          : 'border-stv-border bg-white text-stv-muted hover:border-stv-green hover:text-stv-green'
+                      }`}
+                    >
+                      <CheckCircle2 className="h-4 w-4" strokeWidth={2} />
+                      {isRead ? 'Sudah Dibaca' : 'Tandai Sudah Dibaca'}
+                    </button>
                   </div>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { X, CheckCircle2, FlaskConical, AlertTriangle, BookOpen, BadgeCheck, Clock, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { CoverImage } from './BookCarousel';
 import { KnowledgeCard, DOMAIN_MAP, AGE_RANGES, SUMMARY_LABEL_STYLES } from './knowledgeCardData';
 import { FIGURE_REGISTRY } from '../../../components/figures';
 import AudioPlayerWidget from './AudioPlayerWidget';
@@ -82,31 +83,60 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
         </button>
       </div>
 
-      {/* 3D Book + left/right nav arrows */}
-      <div className="flex flex-1 items-start justify-center px-4 py-8 sm:px-6">
-        <div className="relative w-full max-w-[560px]">
-          {/* Left arrow — prev book (vertically centered, larger) */}
+      {/*
+        Layout mirrors carousel exactly:
+        container full-width, book 72% centered (14% margin each side),
+        neighbor covers peek from the sides as ghost elements.
+      */}
+      <div className="flex flex-1 items-start justify-center px-0 py-8">
+        <div className="relative w-full" style={{ maxWidth: 760 }}>
+
+          {/* Left ghost — prev book sliver */}
           {prevCard && (
-            <button
-              type="button"
-              aria-label={`Buku sebelumnya: ${prevCard.title}`}
-              onClick={() => navigateTo(prevCard)}
-              className="absolute -left-5 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_6px_20px_rgba(0,0,0,.18)] transition hover:scale-105 hover:bg-slate-50 sm:-left-7"
-            >
-              <ChevronLeft className="h-7 w-7 text-stv-navy" strokeWidth={2.5} />
-            </button>
+            <div style={{ position: 'absolute', top: 0, left: 0, width: '14%', bottom: 0, zIndex: 5, overflow: 'hidden' }}>
+              {/* show right edge of prev cover */}
+              <div style={{ position: 'absolute', top: 0, bottom: 0, right: 0, width: '100%' }}>
+                <CoverImage card={prevCard} />
+              </div>
+              {/* darken + blur overlay */}
+              <div style={{ position: 'absolute', inset: 0, background: 'rgba(250,250,248,0.55)', backdropFilter: 'blur(2px)' }} />
+              {/* Arrow on top */}
+              <button
+                type="button"
+                aria-label={`Buku sebelumnya: ${prevCard.title}`}
+                onClick={() => navigateTo(prevCard)}
+                style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 10 }}
+                className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[0_6px_20px_rgba(0,0,0,.20)] transition hover:scale-105"
+              >
+                <ChevronLeft className="h-7 w-7 text-stv-navy" strokeWidth={2.5} />
+              </button>
+            </div>
           )}
-          {/* Right arrow — next book (vertically centered, larger) */}
+          {/* Left filler when no prev card */}
+          {!prevCard && <div style={{ position: 'absolute', top: 0, left: 0, width: '14%', bottom: 0 }} />}
+
+          {/* Right ghost — next book sliver */}
           {nextCard && (
-            <button
-              type="button"
-              aria-label={`Buku berikutnya: ${nextCard.title}`}
-              onClick={() => navigateTo(nextCard)}
-              className="absolute -right-5 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_6px_20px_rgba(0,0,0,.18)] transition hover:scale-105 hover:bg-slate-50 sm:-right-7"
-            >
-              <ChevronRight className="h-7 w-7 text-stv-navy" strokeWidth={2.5} />
-            </button>
+            <div style={{ position: 'absolute', top: 0, right: 0, width: '14%', bottom: 0, zIndex: 5, overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: '100%' }}>
+                <CoverImage card={nextCard} />
+              </div>
+              <div style={{ position: 'absolute', inset: 0, background: 'rgba(250,250,248,0.55)', backdropFilter: 'blur(2px)' }} />
+              <button
+                type="button"
+                aria-label={`Buku berikutnya: ${nextCard.title}`}
+                onClick={() => navigateTo(nextCard)}
+                style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 10 }}
+                className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-[0_6px_20px_rgba(0,0,0,.20)] transition hover:scale-105"
+              >
+                <ChevronRight className="h-7 w-7 text-stv-navy" strokeWidth={2.5} />
+              </button>
+            </div>
           )}
+          {!nextCard && <div style={{ position: 'absolute', top: 0, right: 0, width: '14%', bottom: 0 }} />}
+
+          {/* Center book (72% wide, matching carousel) */}
+          <div style={{ margin: '0 14%' }}>
           <div style={{ perspective: '1400px', perspectiveOrigin: '50% 40%' }}>
             <div style={{ position: 'relative', width: '100%', height: 0, paddingBottom: '130%' }}>
 
@@ -365,7 +395,8 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
 
             </div>
           </div>
-        </div>
+          </div> {/* close margin 0 14% center wrapper */}
+        </div> {/* close relative maxWidth-760 */}
       </div>
     </div>
   );

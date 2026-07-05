@@ -17,27 +17,27 @@ interface BookCarouselProps {
   onBack: () => void;
 }
 
-function CoverCard({ card }: { card: KnowledgeCard }) {
+export function CoverImage({ card, style }: { card: KnowledgeCard; style?: React.CSSProperties }) {
   const [imgErr, setImgErr] = useState(false);
   const domain = DOMAIN_MAP[card.domain];
   const Icon = domain.icon;
   return (
-    <div style={{ position: 'absolute', inset: 0, borderRadius: '5px 14px 14px 5px', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 14, background: 'rgba(0,0,0,0.3)', zIndex: 2 }} />
+    <div style={{ position: 'absolute', inset: 0, borderRadius: '5px 14px 14px 5px', overflow: 'hidden', ...style }}>
+      {/* Spine */}
+      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 14, background: 'rgba(0,0,0,0.32)', zIndex: 2 }} />
+      {/* Cover */}
       {!imgErr && card.photo.src ? (
         <img src={card.photo.src} alt={card.photo.alt} onError={() => setImgErr(true)}
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
       ) : (
         <div style={{ position: 'absolute', inset: 0, background: domain.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Icon style={{ width: 72, height: 72, color: domain.fg, opacity: 0.25 }} strokeWidth={1.5} />
+          <Icon style={{ width: 64, height: 64, color: domain.fg, opacity: 0.25 }} strokeWidth={1.5} />
         </div>
       )}
-      <div style={{
-        position: 'absolute', bottom: 0, left: 14, right: 0, padding: '20px 14px',
-        background: 'linear-gradient(to top, rgba(0,0,0,0.78), transparent)', zIndex: 3,
-      }}>
+      {/* Title */}
+      <div style={{ position: 'absolute', bottom: 0, left: 14, right: 0, padding: '18px 14px', background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)', zIndex: 3 }}>
         <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.72)', fontWeight: 600, marginBottom: 3 }}>{domain.label}</p>
-        <p style={{ fontSize: 18, color: 'white', fontWeight: 800, lineHeight: 1.3, fontFamily: "'Baloo 2', sans-serif" }}>{card.title}</p>
+        <p style={{ fontSize: 17, color: 'white', fontWeight: 800, lineHeight: 1.3, fontFamily: "'Baloo 2', sans-serif" }}>{card.title}</p>
       </div>
     </div>
   );
@@ -66,12 +66,26 @@ export default function BookCarousel({ cards, selectedId, onSelect, onOpen, onBa
   function onPointerUp(e: React.PointerEvent) {
     if (pointerStartX.current === null) return;
     const delta = e.clientX - pointerStartX.current;
-    if (delta > 44) shiftLeft();
-    else if (delta < -44) shiftRight();
+    if (delta > 40) shiftLeft();
+    else if (delta < -40) shiftRight();
     pointerStartX.current = null;
   }
 
   const ageRange = AGE_RANGES.find(a => a.key === selected?.ageKey);
+
+  /*
+   * Layout maths:
+   *   Container width = 100%
+   *   Book width = BOOK_W = 72%  →  left margin = (100-72)/2 = 14%
+   *   To show PEEK% of each neighbor: step = BOOK_W + (100% - BOOK_W - PEEK*2) / ...
+   *   Simplified: step = 100% - PEEK*2
+   *   With PEEK = 14%: step = 72%  → right neighbor starts at 14+72=86%, ends at 86+72=158%
+   *                                    visible portion: 86-100 = 14% ✓
+   *                    left neighbor ends at 14-72=-58%+72=14%, visible: 0-14 = 14% ✓
+   */
+  const BOOK_W  = 72;   // % of container
+  const MARGIN  = 14;   // % on each side = (100 - BOOK_W) / 2
+  const STEP    = BOOK_W; // % shift per book — gives ~MARGIN% peek on each side
 
   return (
     <div className="flex flex-col gap-5 font-nunito-sans">
@@ -82,57 +96,51 @@ export default function BookCarousel({ cards, selectedId, onSelect, onOpen, onBa
         Semua buku
       </button>
 
-      {/*
-        Carousel container: same max-w-[560px] as BookReader.
-        Each book is 100% of that container (matching BookReader exactly).
-        overflow: hidden clips neighbors. translateX step ≈ 115%:
-        center at 0%, neighbors at ±115% → ~15% visible on each side.
-      */}
-      <div className="mx-auto w-full max-w-[560px]">
-        <div
-          style={{ position: 'relative', overflow: 'hidden', touchAction: 'pan-y' }}
-          onPointerDown={onPointerDown}
-          onPointerUp={onPointerUp}
-          aria-label="Carousel buku"
-        >
-          {/* Height spacer — same ratio as BookReader (130%) */}
-          <div style={{ paddingBottom: '130%', pointerEvents: 'none' }} />
+      {/* Carousel — overflow:hidden clips the neighbor slivers */}
+      <div
+        style={{ position: 'relative', overflow: 'hidden', touchAction: 'pan-y' }}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        aria-label="Carousel buku"
+      >
+        {/* Height spacer: same ratio as each book (130% of book width = 130% * 72% of container) */}
+        <div style={{ paddingBottom: `${1.30 * BOOK_W}%`, pointerEvents: 'none' }} />
 
-          {/* Book covers — each 100% wide, offset by ±115% steps */}
-          {cards.map((card, i) => {
-            const offset = i - centerIdx;
-            const visible = Math.abs(offset) <= 1;
-            const isCenter = offset === 0;
-            // 115% step: center visible, neighbors show ~(115% - 100%) / 2 ≈ 7-8% per side
-            // but since we want ~15% visible: step = 115% means each neighbor starts at ±115%
-            // neighbor right edge at 115% + 100% = 215% (way off), but left edge at 115% = 15% past right edge
-            // so ~0% of right neighbor visible... let's use 105% step for more peek
-            const tx = `${offset * 107}%`;
-            const opacity = isCenter ? 1 : visible ? 0.6 : 0;
-            const scale = isCenter ? 1 : visible ? 0.97 : 0.9;
-            return (
-              <div
-                key={card.id}
-                onClick={() => isCenter ? onOpen(card) : onSelect(card.id)}
-                style={{
-                  position: 'absolute',
-                  top: 0, bottom: 0, left: 0, right: 0,
-                  transform: `translateX(${tx}) scale(${scale})`,
-                  transformOrigin: 'center center',
-                  opacity,
-                  transition: reduced ? 'none' : 'transform 0.42s ease, opacity 0.42s ease',
-                  cursor: 'pointer',
-                  borderRadius: '5px 14px 14px 5px',
-                  boxShadow: isCenter ? '8px 8px 28px rgba(0,0,0,.24)' : '4px 4px 12px rgba(0,0,0,.14)',
-                  pointerEvents: 'auto',
-                  zIndex: isCenter ? 10 : 5,
-                }}
-              >
-                <CoverCard card={card} />
-              </div>
-            );
-          })}
-        </div>
+        {/* Books: each is BOOK_W wide, offset by ±STEP per step */}
+        {cards.map((card, i) => {
+          const offset = i - centerIdx;
+          const isCenter = offset === 0;
+          const visible = Math.abs(offset) <= 1;
+          const tx = `${offset * STEP}%`;
+          const opacity = isCenter ? 1 : visible ? 0.65 : 0;
+          const scale = isCenter ? 1 : 0.97;
+
+          return (
+            <div
+              key={card.id}
+              onClick={() => isCenter ? onOpen(card) : onSelect(card.id)}
+              style={{
+                position: 'absolute',
+                top: 0, bottom: 0,
+                left: `${MARGIN}%`,
+                width: `${BOOK_W}%`,
+                transform: `translateX(${tx}) scale(${scale})`,
+                transformOrigin: 'center center',
+                opacity,
+                transition: reduced ? 'none' : 'transform 0.42s ease, opacity 0.42s ease',
+                cursor: 'pointer',
+                borderRadius: '5px 14px 14px 5px',
+                boxShadow: isCenter
+                  ? '8px 8px 28px rgba(0,0,0,.25)'
+                  : '4px 4px 12px rgba(0,0,0,.14)',
+                pointerEvents: visible ? 'auto' : 'none',
+                zIndex: isCenter ? 10 : 5,
+              }}
+            >
+              <CoverImage card={card} />
+            </div>
+          );
+        })}
       </div>
 
       {/* Selected book info */}
@@ -149,7 +157,7 @@ export default function BookCarousel({ cards, selectedId, onSelect, onOpen, onBa
         </div>
       )}
 
-      {/* Open + dot indicators */}
+      {/* Open + dots */}
       <div className="flex flex-col items-center gap-3">
         <button
           type="button"

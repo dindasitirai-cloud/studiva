@@ -113,24 +113,12 @@ export default function KnowledgeCardScientific() {
           </p>
         )}
 
-        {/* ── Action bar ────────────────────────────────────────────── */}
-        <div className="mb-5 flex gap-3">
-          <button
-            type="button"
-            onClick={() => toggleRead(card.id)}
-            className={`flex flex-1 items-center justify-center gap-2 rounded-xl border py-2.5 text-[13px] font-bold transition ${
-              read
-                ? 'border-stv-green bg-stv-green-tint text-stv-green hover:bg-stv-green hover:text-white'
-                : 'border-stv-border bg-white text-stv-muted hover:border-stv-green hover:text-stv-green'
-            }`}
-          >
-            <CheckCircle2 className="h-4 w-4" strokeWidth={2} />
-            {read ? 'Sudah Dibaca' : 'Tandai Sudah Dibaca'}
-          </button>
+        {/* ── Bookmark button — stays near the top ──────────────────── */}
+        <div className="mb-5 flex justify-end">
           <button
             type="button"
             onClick={() => toggleBookmark(card.id)}
-            className={`flex items-center gap-2 rounded-xl border px-4 py-2.5 text-[13px] font-bold transition ${
+            className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-[13px] font-bold transition ${
               bookmarked
                 ? 'border-amber-400 bg-amber-50 text-amber-600 hover:bg-amber-100'
                 : 'border-stv-border bg-white text-stv-muted hover:border-amber-400 hover:text-amber-600'
@@ -236,6 +224,20 @@ export default function KnowledgeCardScientific() {
             </ol>
           </div>
         )}
+
+        {/* ── Sudah Dibaca — after content, before next card ────────── */}
+        <button
+          type="button"
+          onClick={() => toggleRead(card.id)}
+          className={`mt-5 flex w-full items-center justify-center gap-2 rounded-xl border py-3 text-[14px] font-bold transition ${
+            read
+              ? 'border-stv-green bg-stv-green-tint text-stv-green hover:bg-stv-green hover:text-white'
+              : 'border-stv-border bg-white text-stv-muted hover:border-stv-green hover:text-stv-green'
+          }`}
+        >
+          <CheckCircle2 className="h-4 w-4" strokeWidth={2} />
+          {read ? 'Sudah Dibaca' : 'Tandai Sudah Dibaca'}
+        </button>
 
         {/* ── Next card ─────────────────────────────────────────────── */}
         {nextCard && (

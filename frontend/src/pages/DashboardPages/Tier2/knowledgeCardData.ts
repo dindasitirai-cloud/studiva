@@ -114,14 +114,27 @@ export const CARDS: KnowledgeCard[] = [
       perhatian: "Menjelang 3 bulan kepala belum terangkat sama sekali, atau tubuh sangat kaku/lemas."
     },
     scientific: {
-      title: "Mengapa gerakan membangun otak, bukan hanya otot", readMinutes: 6,
-      paragraphs: [
-        "Perkembangan gerak bayi mengikuti pola yang dapat diprediksi. Kendali tubuh berkembang dari atas ke bawah — bayi menguasai kepala lebih dulu, lalu bahu, badan, dan kaki. Gerak juga berkembang dari tengah tubuh ke arah luar: bahu dulu, baru jari-jari halus. Itulah sebabnya menegakkan kepala saat tummy time adalah anak tangga pertama menuju berguling, duduk, dan berjalan.",
-        "Tummy time makin penting sejak kampanye \"tidur telentang\" pada 1990-an berhasil menurunkan angka kematian bayi mendadak (SIDS) secara drastis. Efek sampingnya, bayi kini lebih banyak telentang, sehingga sebagian mengalami kepala peyang dan otot leher yang lebih lambat menguat. Waktu tengkurap saat bangun mengimbangi hal ini.",
-        "Manfaatnya melampaui otot. Menurut Piaget, bayi di tahun pertama berada pada tahap sensorimotor: ia membangun pemahaman tentang dunia lewat indra dan gerak. Saat mengangkat kepala atau meraih mainan, bayi sedang mengumpulkan informasi tentang jarak, keseimbangan, dan tubuhnya sendiri.",
-        "Karena itu, beri bayi banyak waktu bergerak bebas di alas aman, dan jangan terlalu lama menaruhnya di kursi pantul atau ayunan. Baby walker bahkan tidak dianjurkan karena berisiko cedera dan tidak membantu bayi belajar berjalan.",
-        "Ingat, rentang normal itu lebar. Sebagian bayi berguling di usia 4 bulan, sebagian di usia 6 bulan — keduanya normal. Yang penting bukan mengejar tanggal, melainkan memberi kesempatan bergerak setiap hari."
-      ]
+      title: "Mengapa gerakan membangun otak, bukan hanya otot",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "1 jt+", label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 1 },
+        { value: ">50%", label: "penurunan tajam angka SIDS sejak kampanye 'tidur telentang' (1990-an)", ref: 2 },
+      ],
+      figure: { id: "motor-sequence", caption: "Arah perkembangan gerak: dari kepala ke kaki", afterSectionIndex: 0 },
+      sections: [
+        { judul: "Perkembangan yang berurutan", isi: "Kendali tubuh berkembang dari atas ke bawah — bayi menguasai kepala lebih dulu, lalu bahu, badan, dan kaki. Gerak juga berkembang dari tengah tubuh ke arah luar: bahu dulu, baru jari-jari halus. Menegakkan kepala saat tummy time adalah anak tangga pertama menuju berguling, duduk, dan berjalan." },
+        { judul: "Mengapa tummy time penting", isi: "Sejak kampanye tidur telentang pada 1990-an berhasil menurunkan angka kematian bayi mendadak (SIDS) secara tajam [2], bayi menghabiskan lebih banyak waktu telentang. Sebagian lalu mengalami kepala peyang dan otot leher yang lebih lambat menguat. Waktu tengkurap saat bangun mengimbangi hal ini — prinsipnya 'back to sleep, tummy to play'." },
+        { judul: "Gerak adalah cara belajar", isi: "Menurut Piaget, bayi di tahun pertama berada pada tahap sensorimotor: ia membangun pemahaman tentang dunia lewat indra dan gerak [3]. Saat mengangkat kepala atau meraih mainan, bayi mengumpulkan informasi tentang jarak, keseimbangan, dan tubuhnya sendiri — bagian dari lebih dari sejuta koneksi saraf yang terbentuk tiap detik [1]." },
+        { judul: "Batasi alat penyangga", isi: "Beri bayi banyak waktu bergerak bebas di alas aman, dan jangan terlalu lama menaruhnya di kursi pantul atau ayunan. Baby walker tidak dianjurkan karena berisiko cedera dan tidak membantu bayi belajar berjalan [4]." },
+        { judul: "Rentang normal itu lebar", isi: "Sebagian bayi berguling di usia 4 bulan, sebagian di usia 6 bulan — keduanya normal [4]. Yang penting bukan mengejar tanggal milestone, melainkan memberi kesempatan bergerak setiap hari." },
+      ],
+      references: [
+        { n: 1, text: "Center on the Developing Child, Harvard University — Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+        { n: 2, text: "CDC / AAP — Back to Sleep dan penurunan SIDS.", url: "https://www.cdc.gov/sids/" },
+        { n: 3, text: "Jean Piaget — tahap sensorimotor." },
+        { n: 4, text: "American Academy of Pediatrics — HealthyChildren.org; CDC Learn the Signs.", url: "https://www.healthychildren.org" },
+      ],
     },
     sources: ["AAP HealthyChildren.org", "CDC Learn the Signs. Act Early."]
   },
@@ -135,14 +148,27 @@ export const CARDS: KnowledgeCard[] = [
       perhatian: "Di usia 2–3 bulan mata tidak mengikuti benda bergerak, atau bayi tidak pernah menatap wajah."
     },
     scientific: {
-      title: "Bagaimana bayi belajar lewat mata dan indra", readMinutes: 6,
-      paragraphs: [
-        "Penglihatan adalah indra yang paling belum matang saat bayi lahir. Bayi baru lahir hanya bisa memfokuskan pandangan pada jarak sekitar 20–30 cm — persis jarak wajah Anda saat menggendong atau menyusui. Alam seolah merancang agar hal pertama yang jelas ia lihat adalah wajah manusia.",
-        "Di bulan-bulan pertama, otak bayi berlatih menggerakkan kedua mata secara terkoordinasi untuk mengikuti benda bergerak (tracking). Kemampuan ini menjadi dasar perhatian dan kelak koordinasi mata-tangan untuk meraih. Pola kontras tinggi paling mudah ditangkap otak yang sedang belajar melihat — itulah mengapa bayi tampak terpaku pada garis tegas atau wajah.",
-        "Menurut Piaget, bayi berada pada tahap sensorimotor: ia tidak berpikir dengan kata, melainkan membangun pengetahuan langsung dari indra dan gerak. Setiap tatapan, sentuhan, dan suara adalah 'data' yang otaknya kumpulkan untuk memahami cara kerja dunia.",
-        "Karena itu, stimulasi terbaik di usia ini sederhana: wajah Anda, suara Anda, dan benda nyata yang bisa diamati. Bayi tidak butuh mainan mahal atau layar; ia butuh kesempatan menatap, mendengar, dan disentuh. Menggerakkan mainan perlahan atau mengganti posisi gendong memberi 'pemandangan' baru untuk dipelajari.",
-        "Bila menjelang 3 bulan mata bayi tidak pernah mengikuti benda atau menatap wajah, sampaikan ke dokter — otak visual berkembang paling pesat di tahun pertama, sehingga deteksi dini sangat penting."
-      ]
+      title: "Bagaimana bayi belajar lewat mata dan indra",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "20–30 cm", label: "jarak fokus terbaik bayi baru lahir — persis jarak wajah pengasuh", ref: 1 },
+        { value: "1 jt+", label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 2 },
+      ],
+      figure: { id: "focus-distance", caption: "Jarak fokus bayi baru lahir kira-kira sejauh wajah Anda saat menggendong", afterSectionIndex: 0 },
+      sections: [
+        { judul: "Penglihatan yang belum matang", isi: "Penglihatan adalah indra yang paling belum matang saat lahir. Bayi baru lahir hanya bisa memfokuskan pandangan pada jarak sekitar 20–30 cm [1] — persis jarak wajah Anda saat menggendong atau menyusui. Alam seolah merancang agar hal pertama yang jelas ia lihat adalah wajah manusia." },
+        { judul: "Melatih mata mengikuti", isi: "Di bulan-bulan pertama, otak bayi berlatih menggerakkan kedua mata secara terkoordinasi untuk mengikuti benda bergerak. Kemampuan ini menjadi dasar perhatian dan kelak koordinasi mata-tangan. Pola kontras tinggi paling mudah ditangkap otak yang sedang belajar melihat." },
+        { judul: "Tahap sensorimotor", isi: "Menurut Piaget, bayi membangun pengetahuan langsung dari indra dan gerak, bukan dari kata [3]. Setiap tatapan, sentuhan, dan suara adalah 'data' yang otaknya kumpulkan — bagian dari lebih dari sejuta koneksi saraf yang terbentuk tiap detik [2]." },
+        { judul: "Stimulasi terbaik itu sederhana", isi: "Stimulasi paling bermakna di usia ini bukan mainan mahal atau layar, melainkan wajah Anda, suara Anda, dan benda nyata yang bisa diamati. Menggerakkan mainan perlahan atau mengganti posisi gendong memberi 'pemandangan' baru untuk dipelajari." },
+        { judul: "Kapan perlu perhatian", isi: "Bila menjelang 3 bulan mata bayi tidak pernah mengikuti benda atau menatap wajah, sampaikan ke dokter. Otak visual berkembang paling pesat di tahun pertama, sehingga deteksi dini sangat penting [4]." },
+      ],
+      references: [
+        { n: 1, text: "American Academy of Pediatrics — perkembangan penglihatan bayi.", url: "https://www.healthychildren.org" },
+        { n: 2, text: "Center on the Developing Child, Harvard University — Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+        { n: 3, text: "Jean Piaget — tahap sensorimotor." },
+        { n: 4, text: "CDC — Learn the Signs. Act Early.", url: "https://www.cdc.gov/act-early/" },
+      ],
     },
     sources: ["CDC Learn the Signs. Act Early.", "Jean Piaget (sensorimotor)"]
   },
@@ -156,14 +182,27 @@ export const CARDS: KnowledgeCard[] = [
       perhatian: "Menjelang 3 bulan bayi tidak bereaksi pada suara keras, tidak bersuara, atau tidak menoleh ke suara."
     },
     scientific: {
-      title: "Bagaimana bahasa tumbuh jauh sebelum kata pertama", readMinutes: 6,
-      paragraphs: [
-        "Meski belum bisa bicara, otak bayi sudah mempelajari bahasa sejak hari pertama — bahkan sejak dalam kandungan, saat ia mengenali irama suara ibunya. Kemampuan memahami (bahasa reseptif) selalu tumbuh lebih dulu daripada kemampuan bicara. Jadi jauh sebelum bisa mengucap \"mama\", bayi sudah menyerap bunyi dan pola dari percakapan di sekitarnya.",
-        "Bayi adalah \"ahli statistik\" alami. Dari lautan suara yang ia dengar, otaknya menghitung pola: bunyi mana yang sering muncul bersama, di mana satu kata berakhir. Semakin sering dan kaya bahasa yang ia dengar dalam interaksi nyata, semakin banyak bahan untuk otaknya mengurai pola itu.",
-        "Satu temuan penting: bayi belajar bahasa dari manusia, bukan dari layar. Dalam banyak penelitian, bayi yang mendengar bahasa dari orang sungguhan bisa mempelajarinya, sementara yang mendengar dari video hampir tidak belajar apa pun — fenomena \"video deficit\". Bayi butuh tatapan, giliran bicara, dan tanggapan hangat yang tak bisa diberikan layar.",
-        "Cara Anda bicara pun berpengaruh. Nada tinggi, lambat, dan ekspresif (\"parentese\") membantu bayi memisahkan kata dan memperhatikan lebih lama. Menirukan ocehannya lalu memberi jeda mengajarkan pola dasar percakapan: bergantian bicara.",
-        "Banyaknya kata yang bayi dengar di tahun awal berkaitan dengan kosakata dan kesiapan sekolahnya kelak. Terakhir, mendengar dengan baik adalah syarat bicara; bila bayi tampak tak merespons suara, pemeriksaan pendengaran dini sangat membantu."
-      ]
+      title: "Bagaimana bahasa tumbuh jauh sebelum kata pertama",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "1 jt+", label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 1 },
+        { value: "Reseptif → ekspresif", label: "kemampuan memahami tumbuh lebih dulu daripada bicara", ref: 2 },
+      ],
+      figure: { id: "serve-return", caption: "Percakapan bergantian (serve & return) memperkuat jalur bahasa", afterSectionIndex: 2 },
+      sections: [
+        { judul: "Bahasa dimulai sejak lahir", isi: "Meski belum bisa bicara, otak bayi sudah mempelajari bahasa sejak hari pertama — bahkan sejak dalam kandungan, saat mengenali irama suara ibunya. Kemampuan memahami (bahasa reseptif) selalu tumbuh lebih dulu daripada kemampuan bicara [2]." },
+        { judul: "Bayi si ahli statistik", isi: "Dari lautan suara yang ia dengar, otak bayi diam-diam menghitung pola: bunyi mana yang sering muncul bersama, di mana satu kata berakhir. Semakin sering dan kaya bahasa yang ia dengar dalam interaksi nyata, semakin banyak bahan untuk otaknya mengurai pola itu [1]." },
+        { judul: "Belajar dari manusia, bukan layar", isi: "Bayi belajar bahasa dari orang, bukan dari layar. Dalam banyak penelitian, bayi yang mendengar bahasa dari orang sungguhan bisa mempelajarinya, sementara yang mendengar dari video hampir tidak belajar apa pun — fenomena 'video deficit' [3]. Bayi butuh tatapan, giliran bicara, dan tanggapan hangat." },
+        { judul: "Cara bicara Anda berpengaruh", isi: "Nada tinggi, lambat, dan ekspresif ('parentese') membantu bayi memisahkan kata dan memperhatikan lebih lama [3]. Menirukan ocehannya lalu memberi jeda mengajarkan pola dasar percakapan: bergantian bicara." },
+        { judul: "Kualitas kata & pendengaran", isi: "Banyaknya kata yang bayi dengar di tahun awal berkaitan dengan kosakata dan kesiapan sekolahnya kelak. Mendengar dengan baik adalah syarat bicara; bila bayi tampak tak merespons suara, pemeriksaan pendengaran dini sangat membantu [4]." },
+      ],
+      references: [
+        { n: 1, text: "Center on the Developing Child, Harvard University — Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+        { n: 2, text: "American Speech-Language-Hearing Association (ASHA).", url: "https://www.asha.org" },
+        { n: 3, text: "Riset infant-directed speech & 'video deficit' (mis. Kuhl dkk.)." },
+        { n: 4, text: "CDC — Learn the Signs. Act Early.", url: "https://www.cdc.gov/act-early/" },
+      ],
     },
     sources: ["ASHA (American Speech-Language-Hearing Association)", "CDC Learn the Signs. Act Early."]
   },
@@ -213,14 +252,27 @@ export const CARDS: KnowledgeCard[] = [
       perhatian: "Demam ≥38°C, malas menyusu, kuning menyebar, napas cepat/sesak, atau popok basah <6x/hari — segera ke dokter."
     },
     scientific: {
-      title: "Mengapa tidur telentang dan ASI melindungi bayi", readMinutes: 6,
-      paragraphs: [
-        "Rekomendasi menidurkan bayi telentang lahir dari salah satu keberhasilan kesehatan masyarakat terbesar. Sejak kampanye 'back to sleep' pada 1990-an, angka kematian bayi mendadak saat tidur (SIDS) turun drastis di banyak negara. Posisi telentang menjaga jalan napas tetap terbuka dan menurunkan risiko bayi menghirup ulang udara yang ia embuskan.",
-        "Lingkungan tidur sama pentingnya dengan posisi. Alas datar dan keras tanpa bantal, selimut tebal, bumper, atau boneka mencegah tersumbatnya napas dan kepanasan. Tidur sekamar namun di kasur terpisah (room-sharing) selama 6 bulan pertama menurunkan risiko lebih jauh sekaligus memudahkan menyusui malam hari.",
-        "ASI eksklusif dianjurkan untuk 6 bulan pertama karena memberi gizi ideal sekaligus antibodi yang melindungi bayi dari infeksi. Menyusui sesuai permintaan — bukan jadwal kaku — sesuai dengan lambung bayi yang kecil dan membantu produksi ASI menyesuaikan kebutuhan. Menyusui juga dikaitkan dengan penurunan risiko SIDS.",
-        "Pola tidur bayi baru memang belum teratur: total 14–17 jam sehari dalam potongan pendek karena ia perlu sering menyusu. Ini normal dan akan matang seiring waktu; jangan memaksa jadwal tidur di minggu-minggu awal.",
-        "Segera hubungi tenaga kesehatan bila bayi demam ≥38°C, malas menyusu, tampak sangat kuning, napas cepat/sesak, atau popok basah kurang dari 6 kali sehari. Informasi ini bersifat edukatif dan tidak menggantikan nasihat dokter."
-      ]
+      title: "Mengapa tidur telentang dan ASI melindungi bayi",
+      readMinutes: 7,
+      reviewedBy: { name: "Apoteker Raisha", date: "2026-07" },
+      stats: [
+        { value: "~50%", label: "penurunan risiko SIDS dengan tidur sekamar (kasur terpisah)", ref: 1 },
+        { value: "6 bln", label: "durasi ASI eksklusif yang direkomendasikan WHO", ref: 2 },
+        { value: ">50%", label: "penurunan tajam angka SIDS sejak kampanye 'tidur telentang'", ref: 3 },
+      ],
+      figure: { id: "safe-sleep-abc", caption: "Prinsip tidur aman: sendiri, telentang, di boks (Alone, Back, Crib)", afterSectionIndex: 1 },
+      sections: [
+        { judul: "Tidur telentang menyelamatkan nyawa", isi: "Rekomendasi menidurkan bayi telentang adalah salah satu keberhasilan kesehatan masyarakat terbesar. Sejak kampanye 'back to sleep' pada 1990-an, angka SIDS turun tajam di banyak negara [3]. Posisi telentang menjaga jalan napas tetap terbuka." },
+        { judul: "Lingkungan tidur yang aman", isi: "Alas datar dan keras tanpa bantal, selimut tebal, bumper, atau boneka mencegah tersumbatnya napas dan kepanasan. Tidur sekamar dengan orang tua namun di kasur terpisah menurunkan risiko SIDS hingga sekitar 50% [1], sekaligus memudahkan menyusui malam hari." },
+        { judul: "ASI eksklusif 6 bulan", isi: "ASI eksklusif dianjurkan untuk 6 bulan pertama karena memberi gizi ideal sekaligus antibodi pelindung [2]. Menyusui sesuai permintaan sesuai dengan lambung bayi yang kecil, dan dikaitkan dengan penurunan risiko SIDS." },
+        { judul: "Pola tidur bayi baru", isi: "Total tidur 14–17 jam sehari dalam potongan pendek adalah normal, karena bayi perlu sering menyusu. Pola akan matang seiring waktu; jangan memaksa jadwal tidur di minggu-minggu awal." },
+        { judul: "Kapan menghubungi dokter", isi: "Segera hubungi tenaga kesehatan bila bayi demam ≥38°C, malas menyusu, tampak sangat kuning, napas cepat/sesak, atau popok basah kurang dari 6 kali sehari. Informasi ini bersifat edukatif dan tidak menggantikan nasihat dokter." },
+      ],
+      references: [
+        { n: 1, text: "AAP — Sleep-Related Infant Deaths: Updated 2022 Recommendations.", url: "https://publications.aap.org/pediatrics/article/150/1/e2022057990/188304/" },
+        { n: 2, text: "WHO / UNICEF — Breastfeeding.", url: "https://www.who.int/health-topics/breastfeeding" },
+        { n: 3, text: "CDC — Sudden Infant Death Syndrome.", url: "https://www.cdc.gov/sids/" },
+      ],
     },
     sources: ["AAP Safe Sleep 2022", "WHO / UNICEF (ASI eksklusif)", "IDAI", "Kemenkes RI — Buku KIA"]
   },
@@ -234,14 +286,25 @@ export const CARDS: KnowledgeCard[] = [
       perhatian: "Bila caregiver merasa kewalahan atau tertekan terus-menerus — cari dukungan; kesejahteraan pengasuh memengaruhi bayi."
     },
     scientific: {
-      title: "Mengapa interaksi mengalahkan gadget di tahun pertama", readMinutes: 6,
-      paragraphs: [
-        "Di tahun pertama, 'kurikulum' terbaik bagi bayi bukan aplikasi atau mainan elektronik, melainkan interaksi hangat sehari-hari. Otak bayi dirancang untuk belajar dari manusia — dari wajah yang menanggapi, suara yang membalas, dan sentuhan yang menenangkan.",
-        "Harvard Center on the Developing Child menyebut interaksi bolak-balik (serve & return) sebagai bahan bangunan arsitektur otak. Setiap kali Anda menanggapi ocehan atau tangis bayi, Anda sedang 'memasang kabel' otaknya untuk bahasa, emosi, dan hubungan. Rutinitas biasa — mengganti popok, memandikan, menyusui — adalah kesempatan emas untuk berbicara dan bernyanyi.",
-        "Karena itulah AAP menganjurkan menghindari layar (TV, ponsel, tablet) untuk bayi di bawah 18–24 bulan, kecuali panggilan video dengan keluarga. Bayi belum bisa belajar dari layar seperti dari manusia, dan waktu di depan layar menggantikan waktu interaksi yang jauh lebih bernilai.",
-        "Sejalan dengan pendekatan Montessori, beri bayi kebebasan bergerak di lingkungan aman dan amati apa yang menarik minatnya. Anda tidak perlu terus menstimulasi; kadang bayi butuh jeda dari rangsangan. Mengikuti isyaratnya adalah bentuk stimulasi yang paling menghormati perkembangannya.",
-        "Terakhir, kesejahteraan Anda adalah bagian dari pengasuhan. Bayi menyerap suasana emosi pengasuhnya; merawat diri dan mencari dukungan saat kewalahan bukan kemewahan, melainkan kebutuhan yang berdampak langsung pada bayi."
-      ]
+      title: "Mengapa interaksi mengalahkan gadget di tahun pertama",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "18–24 bln", label: "usia minimal sebelum layar dianjurkan (kecuali video call)", ref: 1 },
+        { value: "1 jt+", label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 2 },
+      ],
+      figure: { id: "serve-return", caption: "Interaksi bolak-balik sehari-hari membangun arsitektur otak", afterSectionIndex: 1 },
+      sections: [
+        { judul: "Kurikulum terbaik: interaksi", isi: "Di tahun pertama, 'kurikulum' terbaik bagi bayi bukan aplikasi atau mainan elektronik, melainkan interaksi hangat sehari-hari. Otak bayi dirancang untuk belajar dari manusia — wajah yang menanggapi, suara yang membalas, sentuhan yang menenangkan." },
+        { judul: "Serve & return membangun otak", isi: "Harvard Center on the Developing Child menyebut interaksi bolak-balik (serve & return) sebagai bahan bangunan arsitektur otak [2]. Setiap kali Anda menanggapi ocehan atau tangis bayi, Anda memperkuat jalur otaknya untuk bahasa, emosi, dan hubungan. Rutinitas biasa — mengganti popok, memandikan — adalah kesempatan emas untuk berbicara dan bernyanyi." },
+        { judul: "Mengapa hindari layar", isi: "AAP menganjurkan menghindari layar (TV, ponsel, tablet) untuk bayi di bawah 18–24 bulan, kecuali panggilan video dengan keluarga [1]. Bayi belum bisa belajar dari layar seperti dari manusia, dan waktu layar menggantikan waktu interaksi yang jauh lebih bernilai." },
+        { judul: "Kebebasan bergerak", isi: "Sejalan dengan pendekatan Montessori, beri bayi kebebasan bergerak di lingkungan aman dan amati apa yang menarik minatnya. Anda tak perlu terus menstimulasi; mengikuti isyaratnya adalah bentuk stimulasi yang paling menghormati perkembangannya." },
+        { judul: "Kesejahteraan Anda penting", isi: "Bayi menyerap suasana emosi pengasuhnya. Merawat diri dan mencari dukungan saat kewalahan bukan kemewahan, melainkan kebutuhan yang berdampak langsung pada bayi." },
+      ],
+      references: [
+        { n: 1, text: "American Academy of Pediatrics — Media and Young Minds (screen time).", url: "https://www.healthychildren.org" },
+        { n: 2, text: "Center on the Developing Child, Harvard University — Serve and Return.", url: "https://developingchild.harvard.edu/key-concepts/serve-and-return/" },
+      ],
     },
     sources: ["Harvard Center on the Developing Child", "AAP (screen time)", "Maria Montessori"]
   },

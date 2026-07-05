@@ -1,10 +1,14 @@
 import React from 'react';
-import { FigureServeReturn } from './FigureServeReturn';
+import { FigureServeReturn }    from './FigureServeReturn';
+import { FigureMotorSequence }  from './FigureMotorSequence';
+import { FigureFocusDistance }  from './FigureFocusDistance';
+import { FigureSafeSleepABC }   from './FigureSafeSleepABC';
 
 type FigureComponent = React.FC;
 
 export const FIGURE_REGISTRY: Record<string, FigureComponent> = {
-  'serve-return': FigureServeReturn,
-  // Add more figures here as content grows, e.g.:
-  // 'brain-timeline': FigureBrainTimeline,
+  'serve-return':    FigureServeReturn,
+  'motor-sequence':  FigureMotorSequence,
+  'focus-distance':  FigureFocusDistance,
+  'safe-sleep-abc':  FigureSafeSleepABC,
 };

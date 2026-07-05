@@ -319,7 +319,28 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Perpanjang tummy time; taruh mainan sedikit di luar jangkauan.", "Beri benda ringan yang mudah digenggam.", "Jangan tinggalkan di tempat tinggi, bayi bisa berguling jatuh."],
       perhatian: "Di usia 6 bulan bayi belum bisa menahan kepala, tidak meraih benda, atau tubuh sangat kaku/lemas."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Meraih: ketika mata dan tangan mulai bekerja sama",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "4–6 bln", label: "rentang normal bayi mulai berguling, sangat bervariasi", ref: 1 },
+        { value: "1 jt+",   label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 2 },
+      ],
+      figure: { id: "motor-sequence", caption: "Kendali tubuh dari kepala ke bawah membuka kemampuan meraih", afterSectionIndex: 0 },
+      sections: [
+        { judul: "Dari kepala ke tangan", isi: "Kendali otot yang tadinya di kepala kini menjalar ke bahu, lengan, dan tangan. Inilah yang memungkinkan bayi mulai meraih benda dengan sengaja, sebuah lompatan dari gerakan acak menjadi gerakan bertujuan." },
+        { judul: "Koordinasi mata-tangan", isi: "Meraih menggabungkan penglihatan dan gerak dalam satu tindakan. Bayi harus melihat benda, memperkirakan jaraknya, lalu mengarahkan tangan, latihan awal koordinasi yang kelak dipakai untuk makan sendiri dan menulis." },
+        { judul: "Berguling: mobilitas pertama", isi: "Berguling menandai mobilitas pertama dan menguatkan otot inti untuk duduk. Karena bayi kini bisa berpindah, jangan pernah meninggalkannya di permukaan tinggi seperti kasur atau sofa." },
+        { judul: "Mulut sebagai alat belajar", isi: "Membawa benda ke mulut bukan kebiasaan buruk, melainkan cara utama bayi mengenali tekstur dan bentuk pada tahap sensorimotor [3]. Pastikan benda di sekitarnya aman dan cukup besar agar tidak tertelan." },
+        { judul: "Rentang normal itu lebar", isi: "Sebagian bayi berguling lebih awal, sebagian lebih lambat [1]. Yang penting adalah kemajuan yang konsisten dan kesempatan bergerak setiap hari, bukan kecocokan dengan tanggal tertentu." },
+      ],
+      references: [
+        { n: 1, text: "CDC, Learn the Signs. Act Early.", url: "https://www.cdc.gov/act-early/" },
+        { n: 2, text: "Center on the Developing Child, Harvard University, Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+        { n: 3, text: "Jean Piaget, tahap sensorimotor." },
+      ],
+    },
     sources: ["CDC Learn the Signs. Act Early.", "AAP HealthyChildren.org"]
   },
   {
@@ -331,7 +352,26 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Beri mainan aman untuk dieksplorasi.", "Mainan yang bereaksi (kerincingan) mengajarkan sebab-akibat.", "Mainkan ciluk-ba."],
       perhatian: "Di usia 6 bulan bayi tidak berusaha meraih, tidak merespons suara/wajah."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Sebab-akibat: penemuan besar pertama bayi",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "1 jt+", label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 1 },
+      ],
+      figure: { id: "cause-effect", caption: "Aku melakukan, sesuatu terjadi, aku ulangi: bayi belajar sebab-akibat", afterSectionIndex: 0 },
+      sections: [
+        { judul: "Aku melakukan, sesuatu terjadi", isi: "Ketika bayi menggoyang kerincingan dan mendengar bunyi, lalu mengulanginya, ia sedang membuat penemuan besar: tindakannya bisa memengaruhi dunia. Pemahaman sebab-akibat ini adalah fondasi berpikir logis." },
+        { judul: "Awal object permanence", isi: "Bayi mulai memandangi benda yang jatuh atau menghilang. Ini benih dari object permanence, pemahaman bahwa benda (dan orang) tetap ada meski tak terlihat, yang menjadi dasar memori dan rasa aman." },
+        { judul: "Tangan dan mulut sebagai laboratorium", isi: "Menurut Piaget, bayi di tahap sensorimotor membangun pengetahuan lewat indra dan gerak [2]. Mengeksplorasi benda dengan tangan dan mulut adalah 'eksperimen' hariannya untuk memahami cara kerja dunia." },
+        { judul: "Mengapa mainan sederhana menang", isi: "Mainan yang bereaksi terhadap tindakan bayi, kerincingan, tombol berbunyi, mengajarkan sebab-akibat jauh lebih baik daripada layar yang pasif. Interaksi nyata mengalahkan tontonan." },
+        { judul: "Rasa ingin tahu, mesin belajar", isi: "Beri bayi kesempatan mengeksplorasi benda aman dan tanggapi rasa ingin tahunya. Setiap eksplorasi memperkuat sebagian dari lebih dari sejuta koneksi saraf yang terbentuk tiap detik [1]." },
+      ],
+      references: [
+        { n: 1, text: "Center on the Developing Child, Harvard University, Brain Architecture.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+        { n: 2, text: "Jean Piaget, tahap sensorimotor." },
+      ],
+    },
     sources: ["CDC Learn the Signs. Act Early.", "Jean Piaget"]
   },
   {
@@ -343,7 +383,27 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Tirukan ocehan lalu beri jeda.", "Sebut nama benda yang ia lihat.", "Bacakan buku bergambar; panggil namanya."],
       perhatian: "Di usia 6 bulan bayi tidak mengoceh, tidak tertawa/memekik, atau tidak merespons suara."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Babbling: latihan besar sebelum kata pertama",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "Universal", label: "babbling muncul pada semua bayi lintas budaya dan bahasa", ref: 1 },
+        { value: "1 jt+",     label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 2 },
+      ],
+      figure: { id: "serve-return", caption: "Menirukan ocehan lalu memberi jeda melatih pola percakapan", afterSectionIndex: 2 },
+      sections: [
+        { judul: "Babbling itu universal", isi: "Semua bayi di seluruh dunia mulai mengoceh dengan pola serupa, apa pun bahasa di rumahnya [1]. Ini menunjukkan babbling adalah tahap alami yang terprogram dalam perkembangan bicara." },
+        { judul: "Melatih otot dan pola", isi: "Suara 'ba-ba' dan 'ma-ma' adalah latihan bagi otot bibir, lidah, dan pita suara, sekaligus percobaan menyusun bunyi menjadi pola, bahan mentah untuk kata pertama." },
+        { judul: "Serve & return mempercepat", isi: "Ketika Anda menirukan ocehan bayi lalu memberi jeda, Anda mengajarkan inti percakapan: bergantian bicara. Tanggapan hangat memperkuat jalur bahasa di otaknya [2]." },
+        { judul: "Dengar dulu, bicara kemudian", isi: "Kemampuan memahami tumbuh lebih dulu daripada bicara. Karena mendengar adalah syarat belajar bicara, reaksi bayi terhadap suara penting diperhatikan; keraguan sekecil apa pun sebaiknya diperiksakan lebih awal." },
+        { judul: "Batasi layar", isi: "Bayi belajar bahasa dari manusia, bukan dari video. Percakapan langsung, nyanyian, dan buku jauh lebih bernilai daripada tontonan di layar." },
+      ],
+      references: [
+        { n: 1, text: "American Speech-Language-Hearing Association (ASHA), perkembangan bicara dan bahasa.", url: "https://www.asha.org" },
+        { n: 2, text: "Center on the Developing Child, Harvard University, Serve and Return.", url: "https://developingchild.harvard.edu/key-concepts/serve-and-return/" },
+      ],
+    },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
@@ -355,7 +415,27 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Ajak bermain interaktif (ciluk-ba, tepuk).", "Tanggapi emosinya dengan menamai.", "Jaga rutinitas yang bisa diprediksi."],
       perhatian: "Di usia 6 bulan bayi tidak tersenyum ke orang atau tidak menunjukkan kasih sayang pada pengasuh."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Tawa pertama dan awal ikatan sosial",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "±50–60%", label: "bayi membentuk kelekatan aman saat pengasuhan responsif", ref: 1 },
+        { value: "1 jt+",   label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 2 },
+      ],
+      figure: { id: "serve-return", caption: "Bermain interaktif memperkuat ikatan dan regulasi emosi", afterSectionIndex: 1 },
+      sections: [
+        { judul: "Mengenali wajah familiar", isi: "Bayi kini jelas membedakan orang yang dikenal dari orang asing, dan menunjukkan preferensi pada pengasuhnya. Ini tanda ikatan yang sedang menguat, bukan sikap manja." },
+        { judul: "Tawa: bahasa sosial", isi: "Tawa spontan adalah bentuk komunikasi sosial: bayi 'mengajak' Anda berinteraksi. Membalasnya memberi sinyal bahwa dunia sosialnya menyenangkan dan aman." },
+        { judul: "Regulasi lewat co-regulation", isi: "Bayi belum bisa menenangkan diri sendiri. Ketika Anda menenangkannya secara konsisten, ia perlahan belajar bahwa emosi besar bisa mereda, fondasi pengaturan emosi (co-regulation) di kemudian hari." },
+        { judul: "Bermain sama dengan ikatan", isi: "Permainan interaktif seperti ciluk-ba memperkuat kelekatan. Pengasuhan yang responsif dan konsisten dikaitkan dengan kelekatan aman [1], yang membuat anak lebih percaya diri menjelajah." },
+        { judul: "Rutinitas menumbuhkan rasa aman", isi: "Pola harian yang dapat diprediksi membantu bayi merasa aman. Rasa aman inilah yang menopang seluruh perkembangan sosial-emosionalnya." },
+      ],
+      references: [
+        { n: 1, text: "Ainsworth (1978); van IJzendoorn & Kroonenberg (1988), kelekatan dan responsivitas.", url: "https://www.simplypsychology.org/mary-ainsworth.html" },
+        { n: 2, text: "Center on the Developing Child, Harvard University, Serve and Return.", url: "https://developingchild.harvard.edu/key-concepts/serve-and-return/" },
+      ],
+    },
     sources: ["CDC Learn the Signs. Act Early.", "Bowlby & Ainsworth", "AAP"]
   },
   {
@@ -367,7 +447,28 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Lanjutkan ASI eksklusif hingga ~6 bulan.", "Bangun rutinitas tidur; letakkan saat mengantuk belum tertidur.", "Ikuti jadwal imunisasi sesuai anjuran dokter/IDAI."],
       perhatian: "Berat badan tidak naik, menolak menyusu, demam tinggi, atau sangat rewel/lemas, konsultasikan."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Gizi, tidur, dan imunisasi di paruh pertama tahun pertama",
+      readMinutes: 7,
+      reviewedBy: { name: "Apoteker Raisha", date: "2026-07" },
+      stats: [
+        { value: "6 bln",    label: "durasi ASI eksklusif yang direkomendasikan sebelum MPASI", ref: 1 },
+        { value: "12–16 jam", label: "kebutuhan tidur per 24 jam untuk bayi 4–12 bulan (termasuk tidur siang)", ref: 2 },
+      ],
+      figure: { id: "safe-sleep-abc", caption: "Prinsip tidur aman tetap berlaku: sendiri, telentang, di boks", afterSectionIndex: 1 },
+      sections: [
+        { judul: "ASI masih cukup hingga 6 bulan", isi: "Hingga sekitar usia 6 bulan, ASI (atau susu formula) masih memenuhi seluruh kebutuhan gizi bayi [1]. Memberi makanan padat lebih dini tidak dianjurkan karena sistem cerna dan kesiapan menelan bayi belum matang." },
+        { judul: "Tidur yang mulai berpola", isi: "Bayi 4–12 bulan membutuhkan sekitar 12–16 jam tidur per 24 jam termasuk tidur siang [2]. Tidur malam mulai lebih panjang; membangun rutinitas tidur sederhana membantu pola ini terbentuk." },
+        { judul: "Imunisasi tepat waktu", isi: "Jadwal imunisasi berlanjut di masa ini dan melindungi bayi dari penyakit serius pada saat sistem kekebalannya masih berkembang. Ikuti jadwal dari dokter/IDAI dan catat setiap dosis." },
+        { judul: "Tidur aman tetap penting", isi: "Meski bayi makin aktif, prinsip tidur aman tidak berubah: telentang, di alas datar dan keras, tanpa benda empuk, dan idealnya sekamar dengan orang tua di kasur terpisah." },
+        { judul: "Kapan menghubungi dokter", isi: "Berat badan tidak naik, menolak menyusu, demam tinggi, atau sangat rewel/lemas perlu diperiksakan. Informasi ini bersifat edukatif dan tidak menggantikan nasihat dokter." },
+      ],
+      references: [
+        { n: 1, text: "WHO / UNICEF, Breastfeeding.", url: "https://www.who.int/health-topics/breastfeeding" },
+        { n: 2, text: "American Academy of Pediatrics / AASM, rekomendasi durasi tidur anak.", url: "https://www.healthychildren.org" },
+        { n: 3, text: "IDAI, jadwal imunisasi.", url: "https://www.idai.or.id" },
+      ],
+    },
     sources: ["WHO / UNICEF", "IDAI", "AAP Safe Sleep 2022", "Kemenkes RI, Buku KIA"]
   },
   {
@@ -379,7 +480,27 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan mainan aman beragam tekstur/bunyi.", "Bacakan board book setiap hari.", "Beri waktu bermain di lantai; ikuti minat bayi."],
       perhatian: "Bayi tampak tidak tertarik berinteraksi atau bermain sama sekali."
     },
-    scientific: { title: "Detail ilmiah, TODO" },
+    scientific: {
+      title: "Bermain dan membaca: fondasi belajar tanpa layar",
+      readMinutes: 6,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "Sejak lahir", label: "usia yang dianjurkan untuk mulai membacakan buku pada anak", ref: 1 },
+        { value: "18–24 bln",  label: "usia minimal sebelum layar dianjurkan (kecuali video call)", ref: 2 },
+      ],
+      figure: { id: "serve-return", caption: "Bermain dan membaca bersama adalah interaksi yang membangun otak", afterSectionIndex: 1 },
+      sections: [
+        { judul: "Bermain adalah kerja bayi", isi: "Bermain bukan sekadar hiburan; itu cara utama bayi belajar (Vygotsky, Montessori). Mainan bertekstur dan berbunyi memberi masukan sensorik yang memperkaya perkembangannya." },
+        { judul: "Membacakan sejak dini", isi: "Membacakan buku sejak lahir dianjurkan karena menumbuhkan bahasa dan mempererat ikatan [1]. Bayi belum paham cerita, tetapi menyerap suara, irama, dan kedekatan, semuanya bahan bangunan bahasa." },
+        { judul: "Ikuti minat bayi", isi: "Perhatikan apa yang menarik perhatian bayi dan tanggapi (serve & return). Pengalaman yang mengikuti minatnya lebih bermakna daripada aktivitas yang dipaksakan." },
+        { judul: "Mengapa tanpa layar", isi: "AAP menganjurkan menghindari layar untuk bayi di bawah 18–24 bulan, kecuali panggilan video [2]. Waktu layar menggantikan interaksi manusia yang jauh lebih bernilai bagi otak yang sedang dibangun." },
+        { judul: "Sederhana tapi konsisten", isi: "Beberapa menit bermain dan membaca setiap hari, dilakukan konsisten, lebih berdampak daripada sesi panjang sesekali. Kedekatan dan pengulangan adalah kuncinya." },
+      ],
+      references: [
+        { n: 1, text: "American Academy of Pediatrics, literasi dini (membacakan sejak lahir).", url: "https://www.healthychildren.org" },
+        { n: 2, text: "American Academy of Pediatrics, Media and Young Minds (screen time).", url: "https://www.healthychildren.org" },
+      ],
+    },
     sources: ["Harvard Center on the Developing Child", "AAP", "Montessori & Vygotsky"]
   },
 

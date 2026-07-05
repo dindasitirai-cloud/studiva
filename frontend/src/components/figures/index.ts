@@ -3,6 +3,7 @@ import { FigureServeReturn }    from './FigureServeReturn';
 import { FigureMotorSequence }  from './FigureMotorSequence';
 import { FigureFocusDistance }  from './FigureFocusDistance';
 import { FigureSafeSleepABC }   from './FigureSafeSleepABC';
+import { FigureCauseEffect }    from './FigureCauseEffect';
 
 type FigureComponent = React.FC;
 
@@ -11,4 +12,5 @@ export const FIGURE_REGISTRY: Record<string, FigureComponent> = {
   'motor-sequence':  FigureMotorSequence,
   'focus-distance':  FigureFocusDistance,
   'safe-sleep-abc':  FigureSafeSleepABC,
+  'cause-effect':    FigureCauseEffect,
 };

@@ -151,12 +151,19 @@ export default function KnowledgeGallery() {
   // ── Render ──
 
   if (view === 'reader' && selectedCard) {
+    const carouselCards = filteredCards.length > 0 ? filteredCards : allCards.filter(c => c.ageKey === selectedAge);
+    const idx = carouselCards.findIndex(c => c.id === selectedCard.id);
+    const prevCard = idx > 0 ? carouselCards[idx - 1] : null;
+    const nextCard = idx < carouselCards.length - 1 ? carouselCards[idx + 1] : null;
     return (
       <BookReader
         card={selectedCard}
         isRead={isRead(selectedCard.id)}
         onToggleRead={() => toggleRead(selectedCard.id)}
         onClose={handleBackToCarousel}
+        prevCard={prevCard}
+        nextCard={nextCard}
+        onNavigate={(c) => { setSelectedId(c.id); }}
       />
     );
   }

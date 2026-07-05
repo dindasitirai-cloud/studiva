@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, CheckCircle2, FlaskConical, AlertTriangle, BookOpen, BadgeCheck, Clock, ExternalLink } from 'lucide-react';
+import { X, CheckCircle2, FlaskConical, AlertTriangle, BookOpen, BadgeCheck, Clock, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 import { KnowledgeCard, DOMAIN_MAP, AGE_RANGES, SUMMARY_LABEL_STYLES } from './knowledgeCardData';
 import { FIGURE_REGISTRY } from '../../../components/figures';
 import AudioPlayerWidget from './AudioPlayerWidget';
@@ -24,9 +24,12 @@ interface BookReaderProps {
   isRead: boolean;
   onToggleRead: () => void;
   onClose: () => void;
+  prevCard?: KnowledgeCard | null;
+  nextCard?: KnowledgeCard | null;
+  onNavigate?: (card: KnowledgeCard) => void;
 }
 
-export default function BookReader({ card, isRead, onToggleRead, onClose }: BookReaderProps) {
+export default function BookReader({ card, isRead, onToggleRead, onClose, prevCard, nextCard, onNavigate }: BookReaderProps) {
   const reduced = useReducedMotion();
   const [page, setPage] = useState<'cover' | 'summary' | 'scientific'>('cover');
   const { segments, setCurrentIndex, registerNavigate } = useAudioPlayer();
@@ -63,30 +66,47 @@ export default function BookReader({ card, isRead, onToggleRead, onClose }: Book
   const coverRotate = page !== 'cover' ? 'rotateY(-170deg)' : 'rotateY(0deg)';
   const summaryRotate = page === 'scientific' ? 'rotateY(-170deg)' : 'rotateY(0deg)';
 
+  function navigateTo(target: KnowledgeCard) {
+    setPage('cover');
+    if (onNavigate) onNavigate(target);
+    setTimeout(() => setPage('summary'), reduced ? 10 : 80);
+  }
+
   return (
     <div className="flex min-h-screen flex-col font-nunito-sans" style={{ background: '#FAFAF8' }}>
-      {/* Top bar */}
-      <div className="sticky top-0 z-50 flex items-center justify-between border-b border-stv-border bg-white px-4 py-3 sm:px-6">
+      {/* Top bar — only Back button */}
+      <div className="sticky top-0 z-50 flex items-center border-b border-stv-border bg-white px-4 py-3 sm:px-6">
         <button type="button" onClick={onClose} className="flex items-center gap-1.5 text-[13px] font-semibold text-stv-muted hover:text-stv-navy">
           <X className="h-4 w-4" strokeWidth={2} />
           Kembali
         </button>
-        <button
-          type="button"
-          onClick={onToggleRead}
-          aria-label={isRead ? 'Sudah dibaca' : 'Tandai sudah dibaca'}
-          className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-bold transition ${
-            isRead ? 'border-stv-green bg-stv-green-tint text-stv-green' : 'border-stv-border bg-white text-stv-muted hover:border-stv-green hover:text-stv-green'
-          }`}
-        >
-          <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={2} />
-          {isRead ? 'Sudah Dibaca' : 'Tandai Sudah Dibaca'}
-        </button>
       </div>
 
-      {/* 3D Book */}
+      {/* 3D Book + left/right nav arrows */}
       <div className="flex flex-1 items-start justify-center px-4 py-8 sm:px-6">
-        <div className="w-full max-w-[560px]">
+        <div className="relative w-full max-w-[560px]">
+          {/* Left arrow — prev book */}
+          {prevCard && (
+            <button
+              type="button"
+              aria-label={`Buku sebelumnya: ${prevCard.title}`}
+              onClick={() => navigateTo(prevCard)}
+              className="absolute -left-3 top-1/4 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_4px_16px_rgba(0,0,0,.16)] transition hover:bg-slate-50 sm:-left-5"
+            >
+              <ChevronLeft className="h-5 w-5 text-stv-navy" strokeWidth={2} />
+            </button>
+          )}
+          {/* Right arrow — next book */}
+          {nextCard && (
+            <button
+              type="button"
+              aria-label={`Buku berikutnya: ${nextCard.title}`}
+              onClick={() => navigateTo(nextCard)}
+              className="absolute -right-3 top-1/4 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_4px_16px_rgba(0,0,0,.16)] transition hover:bg-slate-50 sm:-right-5"
+            >
+              <ChevronRight className="h-5 w-5 text-stv-navy" strokeWidth={2} />
+            </button>
+          )}
           <div style={{ perspective: '1400px', perspectiveOrigin: '50% 40%' }}>
             <div style={{ position: 'relative', width: '100%', height: 0, paddingBottom: '130%' }}>
 
@@ -215,6 +235,21 @@ export default function BookReader({ card, isRead, onToggleRead, onClose }: Book
                         Lanjut ke detail ilmiah
                       </button>
                     )}
+
+                    {/* Tandai Sudah Dibaca — below Lanjut button */}
+                    <button
+                      type="button"
+                      onClick={onToggleRead}
+                      aria-label={isRead ? 'Sudah dibaca' : 'Tandai sudah dibaca'}
+                      className={`mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border py-2.5 text-[13px] font-bold transition ${
+                        isRead
+                          ? 'border-stv-green bg-stv-green-tint text-stv-green hover:bg-stv-green hover:text-white'
+                          : 'border-stv-border bg-white text-stv-muted hover:border-stv-green hover:text-stv-green'
+                      }`}
+                    >
+                      <CheckCircle2 className="h-4 w-4" strokeWidth={2} />
+                      {isRead ? 'Sudah Dibaca' : 'Tandai Sudah Dibaca'}
+                    </button>
                   </div>
                 </div>
               </div>

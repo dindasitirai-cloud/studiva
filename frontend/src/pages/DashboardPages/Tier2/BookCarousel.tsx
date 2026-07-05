@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { KnowledgeCard, DOMAIN_MAP, AGE_RANGES } from './knowledgeCardData';
 
 function useReducedMotion() {
-  const [reduced] = useState(() =>
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const [r] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
-  return reduced;
+  return r;
 }
 
 interface BookCarouselProps {
@@ -18,79 +17,40 @@ interface BookCarouselProps {
   onBack: () => void;
 }
 
-function CoverMini({ card, scale, opacity, onClick, zIndex, translateX, reducedMotion }: {
-  card: KnowledgeCard; scale: number; opacity: number; onClick: () => void;
-  zIndex: number; translateX: number; reducedMotion: boolean;
-}) {
+function CoverCard({ card }: { card: KnowledgeCard }) {
   const [imgErr, setImgErr] = useState(false);
   const domain = DOMAIN_MAP[card.domain];
   const Icon = domain.icon;
-
   return (
-    <div
-      onClick={onClick}
-      style={{
-        position: 'absolute',
-        left: '50%',
-        top: '50%',
-        width: 160,
-        height: 213,
-        marginLeft: -80,
-        marginTop: -106,
-        transform: reducedMotion
-          ? `translateX(${translateX}px) scale(${scale})`
-          : `translateX(${translateX}px) translateY(-50%) translateY(106px) scale(${scale})`,
-        opacity,
-        zIndex,
-        cursor: 'pointer',
-        transition: reducedMotion ? 'none' : 'transform 0.42s ease, opacity 0.42s ease',
-        borderRadius: '5px 11px 11px 5px',
-        boxShadow: scale > 1 ? '6px 6px 20px rgba(0,0,0,.25)' : '3px 3px 10px rgba(0,0,0,.15)',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Spine */}
-      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 10, background: 'rgba(0,0,0,0.28)', zIndex: 2 }} />
-      {/* Image or fallback */}
+    <div style={{ position: 'absolute', inset: 0, borderRadius: '5px 14px 14px 5px', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 14, background: 'rgba(0,0,0,0.3)', zIndex: 2 }} />
       {!imgErr && card.photo.src ? (
         <img src={card.photo.src} alt={card.photo.alt} onError={() => setImgErr(true)}
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
       ) : (
         <div style={{ position: 'absolute', inset: 0, background: domain.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Icon style={{ width: 40, height: 40, color: domain.fg, opacity: 0.3 }} strokeWidth={1.5} />
+          <Icon style={{ width: 72, height: 72, color: domain.fg, opacity: 0.25 }} strokeWidth={1.5} />
         </div>
       )}
-      {/* Title */}
-      <div style={{
-        position: 'absolute', bottom: 0, left: 10, right: 0, padding: '6px 8px',
-        background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)',
-        zIndex: 3,
-      }}>
-        <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.85)', fontWeight: 700, lineHeight: 1.3,
-          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-          {card.title}
-        </p>
+      <div style={{ position: 'absolute', bottom: 0, left: 14, right: 0, padding: '20px 14px', background: 'linear-gradient(to top, rgba(0,0,0,0.78), transparent)', zIndex: 3 }}>
+        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.72)', fontWeight: 600, marginBottom: 3 }}>{domain.label}</p>
+        <p style={{ fontSize: 18, color: 'white', fontWeight: 800, lineHeight: 1.3, fontFamily: "'Baloo 2', sans-serif" }}>{card.title}</p>
       </div>
     </div>
   );
 }
 
 export default function BookCarousel({ cards, selectedId, onSelect, onOpen, onBack }: BookCarouselProps) {
-  const reducedMotion = useReducedMotion();
-  const containerRef = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
   const pointerStartX = useRef<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const centerIdx = cards.findIndex(c => c.id === selectedId);
+  const centerIdx = Math.max(0, cards.findIndex(c => c.id === selectedId));
   const selected = cards[centerIdx] ?? cards[0];
 
-  function shiftLeft() {
-    if (centerIdx > 0) onSelect(cards[centerIdx - 1].id);
-  }
-  function shiftRight() {
-    if (centerIdx < cards.length - 1) onSelect(cards[centerIdx + 1].id);
-  }
+  function shiftLeft() { if (centerIdx > 0) onSelect(cards[centerIdx - 1].id); }
+  function shiftRight() { if (centerIdx < cards.length - 1) onSelect(cards[centerIdx + 1].id); }
 
-  // Keyboard navigation
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === 'ArrowLeft') shiftLeft();
@@ -100,26 +60,19 @@ export default function BookCarousel({ cards, selectedId, onSelect, onOpen, onBa
     return () => window.removeEventListener('keydown', onKey);
   });
 
-  // Touch/pointer swipe
   function onPointerDown(e: React.PointerEvent) { pointerStartX.current = e.clientX; }
   function onPointerUp(e: React.PointerEvent) {
     if (pointerStartX.current === null) return;
     const delta = e.clientX - pointerStartX.current;
-    if (delta > 40) shiftLeft();
-    else if (delta < -40) shiftRight();
+    if (delta > 44) shiftLeft();
+    else if (delta < -44) shiftRight();
     pointerStartX.current = null;
   }
 
-  const OFFSETS: Record<number, { scale: number; opacity: number; tx: number }> = {
-    "-2": { scale: 0.62, opacity: 0.15, tx: -268 },
-    "-1": { scale: 0.82, opacity: 0.55, tx: -155 },
-    "0":  { scale: 1.08, opacity: 1,    tx: 0    },
-    "1":  { scale: 0.82, opacity: 0.55, tx: 155  },
-    "2":  { scale: 0.62, opacity: 0.15, tx: 268  },
-  };
+  const ageRange = AGE_RANGES.find(a => a.key === selected?.ageKey);
 
   return (
-    <div className="flex flex-col gap-6 font-nunito-sans">
+    <div className="flex flex-col gap-5 font-nunito-sans">
       {/* Back */}
       <button type="button" onClick={onBack}
         className="flex items-center gap-1.5 self-start text-[13px] font-semibold text-stv-muted transition hover:text-stv-navy">
@@ -127,51 +80,47 @@ export default function BookCarousel({ cards, selectedId, onSelect, onOpen, onBa
         Semua buku
       </button>
 
-      {/* Carousel area */}
+      {/* Carousel — overflow hidden, each book positioned via transform */}
       <div
         ref={containerRef}
-        style={{ position: 'relative', height: 300, overflow: 'hidden', userSelect: 'none' }}
+        style={{ position: 'relative', overflow: 'hidden', touchAction: 'pan-y' }}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
         aria-label="Carousel buku"
       >
-        {/* Left arrow */}
-        <button
-          type="button"
-          aria-label="Sebelumnya"
-          onClick={shiftLeft}
-          disabled={centerIdx === 0}
-          className="absolute left-0 top-1/2 z-50 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow transition hover:bg-slate-50 disabled:opacity-30"
-        >
-          <ChevronLeft className="h-5 w-5 text-stv-navy" strokeWidth={2} />
-        </button>
-
-        {/* Right arrow */}
-        <button
-          type="button"
-          aria-label="Berikutnya"
-          onClick={shiftRight}
-          disabled={centerIdx === cards.length - 1}
-          className="absolute right-0 top-1/2 z-50 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow transition hover:bg-slate-50 disabled:opacity-30"
-        >
-          <ChevronRight className="h-5 w-5 text-stv-navy" strokeWidth={2} />
-        </button>
-
-        {/* Book covers */}
+        {/* The track container — full height determined by the book aspect */}
+        {/* Each book: 82% width, centered at 9% left, offset by ±92% per step */}
+        <div style={{ position: 'relative', paddingBottom: 'calc(130% * 0.82)', pointerEvents: 'none' }} />
         {cards.map((card, i) => {
-          const offset = Math.max(-2, Math.min(2, i - centerIdx));
-          const cfg = OFFSETS[offset] ?? { scale: 0, opacity: 0, tx: offset < 0 ? -400 : 400 };
+          const offset = i - centerIdx;
+          const isCenter = offset === 0;
+          // Only render -1, 0, +1 for perf; others invisible
+          const visible = Math.abs(offset) <= 1;
+          // translateX: each step = 91% of container (book width 82% + gap ~9%)
+          const tx = `calc(${offset * 91}% + ${offset * 8}px)`;
+          const opacity = isCenter ? 1 : visible ? 0.55 : 0;
+          const scale = isCenter ? 1 : visible ? 0.96 : 0.8;
           return (
-            <CoverMini
+            <div
               key={card.id}
-              card={card}
-              scale={cfg.scale}
-              opacity={cfg.opacity}
-              translateX={cfg.tx}
-              zIndex={offset === 0 ? 10 : Math.abs(offset) === 1 ? 5 : 1}
-              reducedMotion={reducedMotion}
-              onClick={() => offset !== 0 ? onSelect(card.id) : onOpen(card)}
-            />
+              onClick={() => isCenter ? onOpen(card) : onSelect(card.id)}
+              style={{
+                position: 'absolute',
+                top: 0, bottom: 0,
+                left: '9%', width: '82%',
+                transform: `translateX(${tx}) scale(${scale})`,
+                transformOrigin: 'center center',
+                opacity,
+                transition: reduced ? 'none' : 'transform 0.42s ease, opacity 0.42s ease',
+                cursor: 'pointer',
+                borderRadius: '5px 14px 14px 5px',
+                boxShadow: isCenter ? '8px 8px 28px rgba(0,0,0,.24)' : '4px 4px 12px rgba(0,0,0,.14)',
+                pointerEvents: 'auto',
+                zIndex: isCenter ? 10 : 5,
+              }}
+            >
+              <CoverCard card={card} />
+            </div>
           );
         })}
       </div>
@@ -180,21 +129,18 @@ export default function BookCarousel({ cards, selectedId, onSelect, onOpen, onBa
       {selected && (
         <div className="text-center">
           <p className="font-baloo text-[20px] font-extrabold text-stv-navy">{selected.title}</p>
-          <p className="mt-1 text-[13px] text-stv-muted">{DOMAIN_MAP[selected.domain].label}</p>
-          {AGE_RANGES.find(a => a.key === selected.ageKey) && (
-            <span
-              className="mt-2 inline-block rounded-full px-3 py-1 text-[12px] font-bold"
-              style={{ background: AGE_RANGES.find(a => a.key === selected.ageKey)!.fill,
-                       color: AGE_RANGES.find(a => a.key === selected.ageKey)!.ink }}
-            >
-              {AGE_RANGES.find(a => a.key === selected.ageKey)!.label}
+          <p className="mt-0.5 text-[13px] text-stv-muted">{DOMAIN_MAP[selected.domain].label}</p>
+          {ageRange && (
+            <span className="mt-2 inline-block rounded-full px-3 py-1 text-[12px] font-bold"
+              style={{ background: ageRange.fill, color: ageRange.ink }}>
+              {ageRange.label}
             </span>
           )}
         </div>
       )}
 
-      {/* Open button */}
-      <div className="flex justify-center">
+      {/* Open + dot indicators */}
+      <div className="flex flex-col items-center gap-3">
         <button
           type="button"
           onClick={() => selected && onOpen(selected)}
@@ -202,20 +148,13 @@ export default function BookCarousel({ cards, selectedId, onSelect, onOpen, onBa
         >
           Buka buku ini
         </button>
-      </div>
-
-      {/* Dot indicators */}
-      <div className="flex justify-center gap-1.5">
-        {cards.map((c, i) => (
-          <button
-            key={c.id}
-            type="button"
-            aria-label={`Buka buku ${i + 1}`}
-            onClick={() => onSelect(c.id)}
-            className="h-2 rounded-full transition-all"
-            style={{ width: i === centerIdx ? 20 : 8, background: i === centerIdx ? '#103A6B' : '#D1D9E6' }}
-          />
-        ))}
+        <div className="flex gap-1.5">
+          {cards.map((c, i) => (
+            <button key={c.id} type="button" aria-label={`Buku ${i + 1}`} onClick={() => onSelect(c.id)}
+              className="h-2 rounded-full transition-all"
+              style={{ width: i === centerIdx ? 20 : 8, background: i === centerIdx ? '#103A6B' : '#D1D9E6' }} />
+          ))}
+        </div>
       </div>
     </div>
   );

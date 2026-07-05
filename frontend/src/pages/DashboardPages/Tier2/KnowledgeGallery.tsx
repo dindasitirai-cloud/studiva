@@ -42,7 +42,7 @@ function apiToLocal(c: ApiKnowledgeCard): KnowledgeCard {
 
 export default function KnowledgeGallery() {
   const { setSegments } = useAudioPlayer();
-  const { isBookmarked } = useKnowledgeLibrary();
+  const { isBookmarked, toggleBookmark } = useKnowledgeLibrary();
 
   // View state machine
   const [view, setView]                   = useState<View>('grid');
@@ -193,6 +193,7 @@ export default function KnowledgeGallery() {
       setViewTab={setViewTab}
       isRead={isRead}
       isBookmarked={isBookmarked}
+      toggleBookmark={toggleBookmark}
       onBookClick={handleBookClick}
     />
   );

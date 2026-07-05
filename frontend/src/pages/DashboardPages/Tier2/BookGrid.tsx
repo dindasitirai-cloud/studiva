@@ -16,54 +16,64 @@ interface BookGridProps {
   setViewTab: (t: ViewTab) => void;
   isRead: (id: string) => boolean;
   isBookmarked: (id: string) => boolean;
+  toggleBookmark: (id: string) => void;
   onBookClick: (card: KnowledgeCard) => void;
 }
 
-function BookCover({ card, isRead, isBookmarked, onClick }: {
+function BookCover({ card, isRead, isBookmarked, onToggleBookmark, onClick }: {
   card: KnowledgeCard;
   isRead: boolean;
   isBookmarked: boolean;
+  onToggleBookmark: (e: React.MouseEvent) => void;
   onClick: () => void;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group relative w-full text-left"
-      style={{ fontFamily: 'inherit' }}
-    >
+    <div className="group relative w-full">
       <div
         className="relative w-full overflow-hidden transition-transform duration-300 group-hover:-translate-y-1"
         style={{
           paddingBottom: '133%',
           borderRadius: '5px 11px 11px 5px',
           boxShadow: '4px 4px 14px rgba(0,0,0,.18), inset -2px 0 4px rgba(0,0,0,.08)',
+          cursor: 'pointer',
         }}
+        onClick={onClick}
       >
         {/* Typographic illustrated cover (same as carousel) */}
         <CoverImage card={card} />
 
-        {/* Read badge */}
+        {/* Read indicator (non-interactive badge, button is inside BookReader) */}
         {isRead && (
-          <div className="absolute right-2 top-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-stv-green shadow">
-            <CheckCircle2 className="h-3.5 w-3.5 text-white" strokeWidth={2.5} />
-          </div>
-        )}
-
-        {/* Bookmark badge */}
-        {isBookmarked && !isRead && (
-          <div className="absolute right-2 top-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-amber-400 shadow">
-            <Bookmark className="h-3.5 w-3.5 text-white" fill="white" strokeWidth={0} />
+          <div className="absolute right-2 top-9 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-stv-green shadow">
+            <CheckCircle2 className="h-3 w-3 text-white" strokeWidth={2.5} />
           </div>
         )}
       </div>
-    </button>
+
+      {/* Bookmark toggle button — top-right corner, outside the click-to-open area */}
+      <button
+        type="button"
+        onClick={onToggleBookmark}
+        aria-label={isBookmarked ? 'Hapus bookmark' : 'Simpan bookmark'}
+        className={`absolute right-1.5 top-1.5 z-40 flex h-7 w-7 items-center justify-center rounded-full shadow-[0_2px_8px_rgba(0,0,0,.18)] transition hover:scale-110 ${
+          isBookmarked
+            ? 'bg-amber-400 text-white'
+            : 'bg-white/85 text-stv-muted hover:bg-white hover:text-amber-500'
+        }`}
+      >
+        <Bookmark
+          className="h-3.5 w-3.5"
+          fill={isBookmarked ? 'currentColor' : 'none'}
+          strokeWidth={2}
+        />
+      </button>
+    </div>
   );
 }
 
 export default function BookGrid({
   cards, selectedAge, setSelectedAge, selectedDomain, setSelectedDomain,
-  viewTab, setViewTab, isRead, isBookmarked, onBookClick,
+  viewTab, setViewTab, isRead, isBookmarked, toggleBookmark, onBookClick,
 }: BookGridProps) {
 
   return (
@@ -177,6 +187,7 @@ export default function BookGrid({
               card={card}
               isRead={isRead(card.id)}
               isBookmarked={isBookmarked(card.id)}
+              onToggleBookmark={e => { e.stopPropagation(); toggleBookmark(card.id); }}
               onClick={() => onBookClick(card)}
             />
           ))}

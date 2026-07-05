@@ -36,11 +36,16 @@ function buildSummaryText(card: KnowledgeCard): string {
 }
 
 function buildScientificText(card: KnowledgeCard): string {
-  return [
-    'Detail ilmiah.',
-    card.scientific.title,
-    card.scientific.paragraphs.join(' '),
-  ].join(' ');
+  const sci = card.scientific;
+  // Use structured sections if available (strip [n] citation markers for TTS)
+  if (sci.sections && sci.sections.length > 0) {
+    const sectionsText = sci.sections
+      .map(s => `${s.judul}. ${s.isi.replace(/\[\d+\]/g, '').replace(/\s+/g, ' ').trim()}`)
+      .join(' ');
+    return ['Detail ilmiah.', sci.title, sectionsText].join(' ');
+  }
+  // Fallback to legacy paragraphs
+  return ['Detail ilmiah.', sci.title, (sci.paragraphs ?? []).join(' ')].join(' ');
 }
 
 function getTextForSegment(seg: PlayerSegment): string {

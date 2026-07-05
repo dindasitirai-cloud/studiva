@@ -15,6 +15,29 @@ export type AgeKey =
   | "0-3m" | "3-6m" | "6-9m" | "9-12m" | "12-18m" | "18-24m"
   | "2-3y" | "3-4y" | "4-5y" | "5-6y";
 
+export interface ScientificStat {
+  value: string;
+  label: string;
+  ref?: number;
+}
+
+export interface ScientificSection {
+  judul: string;
+  isi: string;
+}
+
+export interface ScientificReference {
+  n: number;
+  text: string;
+  url?: string;
+}
+
+export interface ScientificFigure {
+  id: string;
+  caption: string;
+  afterSectionIndex?: number;
+}
+
 export interface KnowledgeCard {
   id: string;
   ageKey: AgeKey;
@@ -29,7 +52,22 @@ export interface KnowledgeCard {
     perhatian: string;
   };
   isMedical?: boolean;
-  scientific: { title: string; readMinutes: number; paragraphs: string[] };
+  scientific: {
+    title: string;
+    readMinutes?: number;
+    /** Badge: reviewed by whom and when */
+    reviewedBy?: { name: string; date: string };
+    /** Key statistics callout (2–3 items) */
+    stats?: ScientificStat[];
+    /** Inline diagram to insert after a section */
+    figure?: ScientificFigure;
+    /** Structured sections with numbered citation markers like [n] */
+    sections?: ScientificSection[];
+    /** Numbered reference list */
+    references?: ScientificReference[];
+    /** Legacy fallback — still rendered if sections is absent/empty */
+    paragraphs?: string[];
+  };
   sources: string[];
 }
 
@@ -139,18 +177,31 @@ export const CARDS: KnowledgeCard[] = [
       perhatian: "Menjelang 3 bulan tidak ada senyum sosial, tidak ada kontak mata, atau bayi sangat sulit ditenangkan."
     },
     scientific: {
-      title: "Bagaimana rasa aman membentuk otak bayi", readMinutes: 8,
-      paragraphs: [
-        "Saat lahir, otak bayi baru memiliki sebagian kecil dari koneksi yang kelak ia miliki. Sebagian besar \"kabel\" otak dibangun setelah lahir — dan yang paling menentukan susunannya adalah pengalaman sehari-hari bersama orang yang merawatnya.",
-        "Ilmuwan Harvard menggambarkan proses ini seperti lempar-tangkap. Bayi \"melempar\" sinyal — menatap, mengoceh, menangis. Ketika orang dewasa \"menangkap\" dan membalas, otak bayi menerima sinyal bahwa dunia menanggapinya. Pertukaran bolak-balik ini (serve and return) memperkuat sirkuit saraf dasar bahasa, emosi, dan hubungan.",
-        "Mengapa konsistensi penting? Bowlby dan Ainsworth menunjukkan bahwa bayi yang kebutuhannya ditanggapi secara hangat dan dapat diprediksi cenderung mengembangkan kelekatan aman. Anak ini merasa punya \"basis aman\" — tempat kembali saat takut, yang justru membuatnya lebih berani menjelajah dan belajar.",
-        "Di sinilah jawaban atas kekhawatiran umum: apakah sering menggendong memanjakan bayi? Ilmu perkembangan menjawab tidak, setidaknya di tahun pertama. Bagi bayi, menangis bukan manipulasi; itu satu-satunya caranya berkata \"aku butuh sesuatu\". Saat dijawab, ia belajar dunia bisa diandalkan — rasa percaya yang oleh Erikson disebut tugas psikologis pertama manusia.",
-        "Ada sisi biologisnya. Sentuhan dan kontak kulit memicu oksitosin, hormon penumbuh rasa tenang dan ikatan. Sebaliknya, bila bayi berulang kali dibiarkan tertekan tanpa penghiburan, tubuhnya melepaskan hormon stres berkepanjangan (toxic stress) yang dapat mengganggu pembentukan otak. Pelindung paling ampuhnya justru kehadiran orang dewasa yang responsif.",
-        "Kabar baiknya, Anda tak perlu sempurna. Yang penting bukan menanggapi tepat 100% dari waktu, melainkan cukup sering dan cukup hangat. Bahkan saat Anda salah lalu memperbaikinya, bayi belajar hal berharga: hubungan bisa retak lalu diperbaiki.",
-        "Ringkasnya: rasa aman bukan lawan kemandirian. Justru dari fondasi rasa aman itulah kemandirian tumbuh."
-      ]
+      title: "Bagaimana rasa aman membentuk otak bayi",
+      readMinutes: 7,
+      reviewedBy: { name: "Psikolog Fitri Effendy", date: "2026-07" },
+      stats: [
+        { value: "1 jt+", label: "koneksi saraf baru terbentuk tiap detik di tahun-tahun awal", ref: 1 },
+        { value: "90%", label: "ukuran otak dewasa sudah tercapai pada usia 5 tahun", ref: 2 },
+        { value: "±50–60%", label: "bayi membentuk kelekatan aman saat pengasuhan responsif", ref: 3 },
+      ],
+      figure: { id: "serve-return", caption: "Siklus serve & return yang memperkuat arsitektur otak", afterSectionIndex: 1 },
+      sections: [
+        { judul: "Otak dibangun oleh pengalaman", isi: "Otak bayi tidak lahir dalam keadaan selesai. Ia dibangun bertahap setelah lahir, dengan lebih dari satu juta koneksi saraf baru terbentuk setiap detik pada tahun-tahun awal [1], hingga mencapai sekitar 90% ukuran otak dewasa pada usia 5 tahun [2]. Pengalaman sehari-hari — terutama interaksi dengan pengasuh — menentukan koneksi mana yang menguat dan mana yang dipangkas." },
+        { judul: "Mekanisme: serve & return", isi: "Harvard Center on the Developing Child menjelaskan mekanisme utamanya sebagai serve and return [1]: pertukaran bolak-balik antara bayi dan pengasuh. Ketika bayi memberi sinyal dan pengasuh menanggapi secara konsisten, sirkuit saraf untuk bahasa, regulasi emosi, dan hubungan sosial menguat. Ketiadaan respons yang berkepanjangan justru mengaktifkan sistem stres tubuh dan dapat mengganggu proses ini [1]." },
+        { judul: "Bukti: responsivitas & kelekatan aman", isi: "Penelitian klasik Ainsworth melalui prosedur Strange Situation menunjukkan bayi yang pengasuhnya responsif dan konsisten lebih mungkin mengembangkan kelekatan aman [3]. Meta-analisis lintas budaya memperkirakan sekitar separuh hingga dua pertiga bayi tergolong kelekatan aman, dengan responsivitas pengasuh sebagai salah satu prediktor terkuatnya [3]. Erikson menempatkan periode ini sebagai tahap trust vs mistrust — pembentukan rasa percaya dasar [4]." },
+        { judul: "Menjawab miskonsepsi umum", isi: "Apakah menanggapi setiap tangisan akan memanjakan bayi? Bukti perkembangan menunjukkan tidak, setidaknya pada tahun pertama. Pada bayi, menangis adalah sinyal kebutuhan, bukan manipulasi; respons yang konsisten membangun rasa aman yang menjadi fondasi kemandirian, bukan ketergantungan [5]." },
+        { judul: "Implikasi praktis", isi: "Temuan ini menyederhanakan menjadi satu prinsip: interaksi hangat dan responsif sehari-hari — menanggapi tangis, membalas tatapan, meniru suara — adalah bentuk stimulasi paling bermakna. Yang dibutuhkan bukan kesempurnaan, melainkan respons yang cukup sering dan cukup hangat [5]." },
+      ],
+      references: [
+        { n: 1, text: "Center on the Developing Child, Harvard University. Brain Architecture & Serve and Return.", url: "https://developingchild.harvard.edu/key-concepts/serve-and-return/" },
+        { n: 2, text: "Center on the Developing Child — otak mencapai ~90% ukuran dewasa pada usia 5.", url: "https://developingchild.harvard.edu/key-concept/brain-architecture/" },
+        { n: 3, text: "Ainsworth, M. D. S. (1978); van IJzendoorn & Kroonenberg (1988) — distribusi kelekatan lintas budaya.", url: "https://www.simplypsychology.org/mary-ainsworth.html" },
+        { n: 4, text: "Erikson, E. H. Childhood and Society — trust vs mistrust." },
+        { n: 5, text: "American Academy of Pediatrics — Responsive caregiving.", url: "https://www.healthychildren.org" },
+      ],
     },
-    sources: ["Harvard Center on the Developing Child", "Erik Erikson (trust vs mistrust)", "Bowlby & Ainsworth (attachment)", "AAP HealthyChildren.org"]
+    sources: ["Harvard Center on the Developing Child", "Ainsworth & Bowlby (attachment)", "Erik Erikson", "AAP HealthyChildren.org"]
   },
   {
     id: "RL-0-3m-KS", ageKey: "0-3m", domain: "KS", title: "Tidur aman & menyusu di bulan pertama",
@@ -205,7 +256,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Perpanjang tummy time; taruh mainan sedikit di luar jangkauan.", "Beri benda ringan yang mudah digenggam.", "Jangan tinggalkan di tempat tinggi — bayi bisa berguling jatuh."],
       perhatian: "Di usia 6 bulan bayi belum bisa menahan kepala, tidak meraih benda, atau tubuh sangat kaku/lemas."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "AAP HealthyChildren.org"]
   },
   {
@@ -217,7 +268,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Beri mainan aman untuk dieksplorasi.", "Mainan yang bereaksi (kerincingan) mengajarkan sebab-akibat.", "Mainkan ciluk-ba."],
       perhatian: "Di usia 6 bulan bayi tidak berusaha meraih, tidak merespons suara/wajah."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Jean Piaget"]
   },
   {
@@ -229,7 +280,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Tirukan ocehan lalu beri jeda.", "Sebut nama benda yang ia lihat.", "Bacakan buku bergambar; panggil namanya."],
       perhatian: "Di usia 6 bulan bayi tidak mengoceh, tidak tertawa/memekik, atau tidak merespons suara."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
@@ -241,7 +292,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Ajak bermain interaktif (ciluk-ba, tepuk).", "Tanggapi emosinya dengan menamai.", "Jaga rutinitas yang bisa diprediksi."],
       perhatian: "Di usia 6 bulan bayi tidak tersenyum ke orang atau tidak menunjukkan kasih sayang pada pengasuh."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Bowlby & Ainsworth", "AAP"]
   },
   {
@@ -253,7 +304,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Lanjutkan ASI eksklusif hingga ~6 bulan.", "Bangun rutinitas tidur; letakkan saat mengantuk belum tertidur.", "Ikuti jadwal imunisasi sesuai anjuran dokter/IDAI."],
       perhatian: "Berat badan tidak naik, menolak menyusu, demam tinggi, atau sangat rewel/lemas — konsultasikan."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["WHO / UNICEF", "IDAI", "AAP Safe Sleep 2022", "Kemenkes RI — Buku KIA"]
   },
   {
@@ -265,7 +316,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan mainan aman beragam tekstur/bunyi.", "Bacakan board book setiap hari.", "Beri waktu bermain di lantai; ikuti minat bayi."],
       perhatian: "Bayi tampak tidak tertarik berinteraksi atau bermain sama sekali."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["Harvard Center on the Developing Child", "AAP", "Montessori & Vygotsky"]
   },
 
@@ -279,7 +330,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Beri ruang lantai yang aman dan luas.", "Amankan rumah (baby-proofing): colokan, tangga, sudut tajam, benda kecil.", "Beri benda untuk dipindah-tangan."],
       perhatian: "Di usia 9 bulan bayi belum bisa duduk meski dibantu, tidak menumpu berat pada kaki, atau tidak memindahkan benda antar tangan."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "AAP"]
   },
   {
@@ -291,7 +342,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Mainkan ciluk-ba dan sembunyikan mainan sebagian.", "Beri wadah untuk memasukkan-mengeluarkan benda.", "Biarkan mengeksplorasi benda aman."],
       perhatian: "Di usia 9 bulan bayi tidak mencari benda yang disembunyikan atau tidak menunjukkan minat menjelajah."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Jean Piaget"]
   },
   {
@@ -303,7 +354,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sebut nama benda secara konsisten.", "Tanggapi setiap kali bayi bersuara.", "Gunakan gestur (dadah, menunjuk); bacakan buku."],
       perhatian: "Di usia 9 bulan bayi tidak merespons namanya, tidak mengoceh, atau tidak mengeluarkan beragam suara."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
@@ -315,7 +366,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Jangan paksa bayi didekati orang asing; beri waktu.", "Berpamitanlah singkat & konsisten — jangan menyelinap pergi.", "Tenangkan dengan pelukan."],
       perhatian: "Di usia 9 bulan bayi tidak menunjukkan kelekatan pada pengasuh mana pun, atau tidak ada kontak mata/ekspresi."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Bowlby & Ainsworth", "AAP"]
   },
   {
@@ -327,7 +378,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Mulai ~6 bulan dengan makanan kaya zat besi (hati, daging, kuning telur, kacang halus) + sayur/buah.", "Naikkan tekstur bertahap; kenalkan finger food.", "Kenalkan alergen satu per satu; teruskan ASI."],
       perhatian: "Hindari makanan pemicu tersedak (kacang/anggur utuh) dan madu <1 tahun. Reaksi alergi (ruam/bengkak/sesak) — hentikan & ke dokter."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["WHO — Complementary feeding 6–23 bln (2023)", "IDAI", "AAP", "Kemenkes RI — Buku KIA"]
   },
   {
@@ -339,7 +390,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Baby-proof rumah agar bayi bebas menjelajah tanpa 'jangan' terus.", "Sediakan mainan menantang sesuai usia (wadah, balok).", "Jaga rutinitas makan–main–tidur; tetap tanpa layar."],
       perhatian: "Bila Anda kesulitan mengamankan lingkungan atau merasa kewalahan, carilah dukungan."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["Harvard Center on the Developing Child", "Montessori", "AAP"]
   },
 
@@ -353,7 +404,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan furnitur stabil untuk merambat.", "Beri finger food untuk melatih menjumput.", "Hindari baby walker (berisiko cedera)."],
       perhatian: "Di usia 12 bulan bayi tidak menarik badan untuk berdiri, tidak menjumput, atau kehilangan keterampilan."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "AAP"]
   },
   {
@@ -365,7 +416,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Tunjukkan gestur sederhana untuk ditiru.", "Beri mainan sebab-akibat & shape sorter.", "Namai apa pun yang ia tunjuk."],
       perhatian: "Di usia 12 bulan bayi tidak menunjuk, tidak meniru, atau tidak mencari benda yang disembunyikan."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Jean Piaget"]
   },
   {
@@ -377,7 +428,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Beri nama saat bayi menunjuk (\"iya, itu bola\").", "Perluas ocehannya menjadi kata utuh.", "Bacakan buku dan tanya \"mana ...?\"."],
       perhatian: "Di usia 12 bulan bayi tidak mengucap kata, tidak menunjuk, tidak merespons perintah, atau kehilangan kata/kemampuan sosial."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
@@ -389,7 +440,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Buat rutinitas perpisahan yang konsisten & hangat.", "Izinkan objek transisi.", "Tanggapi dengan sabar saat ia 'menguji'."],
       perhatian: "Di usia 12 bulan bayi tidak menunjukkan kelekatan, tidak ada kontak mata atau berbagi perhatian."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Bowlby & Ainsworth", "Winnicott"]
   },
   {
@@ -401,7 +452,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Tawarkan makanan keluarga yang dilunakkan dan beragam.", "Biarkan bayi makan sendiri.", "Jaga jadwal makan; hindari gula/garam berlebih & madu <1 tahun."],
       perhatian: "Menolak makan terus-menerus, berat badan turun/stagnan, tanda alergi, atau tersedak — konsultasikan."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["WHO — Complementary feeding (2023)", "IDAI", "AAP (susu sapi <1 thn)"]
   },
   {
@@ -413,7 +464,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Alihkan (redirect) daripada terus melarang.", "Tetapkan sedikit batas jelas demi keamanan.", "Libatkan dalam rutinitas; perbanyak main & baca."],
       perhatian: "Bila Anda merasa perlu sering menghukum atau kewalahan, carilah strategi disiplin positif atau dukungan."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["Harvard Center on the Developing Child", "AAP", "Montessori"]
   },
 
@@ -427,7 +478,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan ruang aman untuk berjalan dan memanjat.", "Beri krayon besar dan balok.", "Dorong anak makan/minum sendiri (kaki telanjang bantu keseimbangan di rumah)."],
       perhatian: "Di usia 18 bulan anak belum berjalan, tidak mencoret, atau kehilangan keterampilan."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "AAP"]
   },
   {
@@ -439,7 +490,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan mainan tiruan kehidupan nyata.", "Libatkan anak dalam kegiatan rumah sederhana.", "Beri puzzle dan shape sorter."],
       perhatian: "Di usia 18 bulan anak tidak meniru, tidak mengenali fungsi benda umum, atau tidak menunjuk untuk berbagi minat."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Piaget", "Vygotsky"]
   },
   {
@@ -451,7 +502,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Banyak bicara dan namai benda.", "Perluas kata anak menjadi frasa (\"bola\" → \"bola merah\").", "Bacakan buku tiap hari; batasi layar (menghambat bahasa)."],
       perhatian: "Di usia 18 bulan anak tidak mengucap kata bermakna, tidak mengikuti perintah, tidak menunjuk, atau kehilangan kata."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
@@ -463,7 +514,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Tetap tenang saat tantrum — Anda jangkarnya.", "Namai emosinya (\"kamu marah, ya\").", "Beri pilihan terbatas; cukupkan tidur & jaga rutinitas."],
       perhatian: "Di usia 18 bulan anak tidak menunjukkan afeksi, tidak ada kontak mata, tidak meniru, atau mengalami kemunduran sosial."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Erikson", "Siegel & Bryson"]
   },
   {
@@ -475,7 +526,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sajikan variasi; biarkan anak menentukan jumlah (division of responsibility).", "Batasi susu ~2 gelas/hari.", "Jaga rutinitas tidur; ikuti imunisasi."],
       perhatian: "Berat badan menurun, pilih-pilih sampai berisiko kurang gizi, atau tanda anemia (pucat, lemas) — konsultasikan."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["WHO", "IDAI", "AAP", "Kemenkes RI — Buku KIA"]
   },
   {
@@ -487,7 +538,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Tetapkan sedikit aturan yang jelas dan konsisten.", "Alihkan perhatian dan beri pilihan; puji perilaku baik.", "Jadi teladan; minimalkan layar, perbanyak bermain & membaca."],
       perhatian: "Bila Anda cenderung mengandalkan hukuman fisik atau merasa kewalahan, carilah pendekatan disiplin positif dan dukungan."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["AAP (screen time & disiplin positif)", "Harvard Center on the Developing Child", "Montessori"]
   },
 
@@ -501,7 +552,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Beri ruang untuk gerak aktif: berlari, memanjat rendah, bermain bola.", "Sediakan mainan dorong-tarik dan bola.", "Latih memakai sendok, membuka-menutup wadah, menuang."],
       perhatian: "Di usia 24 bulan anak belum berjalan stabil, tidak menumpuk balok, atau kehilangan keterampilan."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "AAP"]
   },
   {
@@ -513,7 +564,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan properti bermain peran.", "Beri puzzle dan mainan memilah bentuk/warna.", "Beri waktu bermain bebas; ajukan pertanyaan \"apa ini?\"."],
       perhatian: "Di usia 24 bulan anak tidak bermain pura-pura, tidak meniru, atau tidak mengikuti perintah dua langkah."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Piaget", "Vygotsky"]
   },
   {
@@ -525,7 +576,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Perluas ucapan anak (\"susu\" → \"kamu mau susu?\").", "Bacakan buku interaktif dan ajukan pertanyaan.", "Deskripsikan kegiatan; batasi layar."],
       perhatian: "Di usia 24 bulan kosakata di bawah 50 kata atau belum menggabungkan dua kata, tidak mengikuti perintah, atau kehilangan bahasa — pertimbangkan skrining."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
@@ -537,7 +588,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Tetap tenang dan konsisten.", "Validasi emosi lalu tetapkan batas (\"kamu kesal, tapi tidak boleh memukul\").", "Beri pilihan; ajarkan berbagi lewat contoh & giliran, hindari hukuman saat tantrum."],
       perhatian: "Di usia 24 bulan anak tidak meniru, tidak tertarik pada orang lain, tidak bermain pura-pura, atau kehilangan keterampilan sosial."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Erikson", "Siegel & Bryson"]
   },
   {
@@ -549,7 +600,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Tawarkan makanan bervariasi tanpa memaksa (butuh paparan berulang).", "Sikat gigi 2x sehari dengan pasta fluoride seukuran biji beras; kunjungan gigi pertama ~usia 1 tahun.", "Batasi jajanan manis & susu berlebih; jaga rutinitas tidur."],
       perhatian: "Berat badan tidak naik, tanda gigi berlubang (bercak putih/cokelat), atau pilih-pilih hingga berisiko kurang gizi — konsultasikan."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["AAP & AAPD (kesehatan gigi)", "IDAI", "WHO", "Kemenkes RI — Buku KIA"]
   },
   {
@@ -561,7 +612,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Libatkan anak dalam tugas kecil (membuang popok, merapikan mainan).", "Buat rutinitas harian yang jelas.", "Kenalkan konsep toilet tanpa tekanan; batasi layar."],
       perhatian: "Bila tekanan soal toilet atau makan menimbulkan konflik terus-menerus, longgarkan dan tunggu kesiapan anak."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["AAP (kesiapan toilet training)", "Harvard Center on the Developing Child", "Montessori"]
   },
 
@@ -575,7 +626,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan banyak waktu bermain aktif, terutama di luar.", "Beri sepeda roda tiga atau mainan panjat yang aman.", "Latih tangan dengan krayon, playdough, meronce; libatkan berpakaian sendiri."],
       perhatian: "Di usia 3 tahun anak sering jatuh atau sangat kesulitan di tangga, tidak bisa mencoret, atau kehilangan keterampilan."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "AAP"]
   },
   {
@@ -587,7 +638,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sediakan bahan main terbuka (balok, playdough, kostum).", "Jawab pertanyaan \"kenapa\" dengan sabar; hitung benda sehari-hari.", "Beri puzzle dan kegiatan memilah; bacakan cerita lalu bahas."],
       perhatian: "Di usia 3 tahun anak tidak bermain pura-pura, tidak memahami perintah dua langkah, atau tidak tertarik pada anak lain."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Piaget", "Vygotsky"]
   },
   {
@@ -599,7 +650,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Ngobrol banyak dan ajukan pertanyaan terbuka.", "Bacakan buku setiap hari dan bahas ceritanya.", "Nyanyikan lagu dan sajak; batasi layar."],
       perhatian: "Di usia 3 tahun anak belum berbicara dengan kalimat, ucapannya tidak dimengerti keluarga, tidak bertanya, atau kehilangan bahasa — pertimbangkan skrining."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "ASHA"]
   },
   {
@@ -611,7 +662,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Namai dan validasi emosi.", "Modelkan empati dan berbagi dalam kehidupan sehari-hari.", "Beri strategi menenangkan (napas, pelukan, tempat tenang)."],
       perhatian: "Di usia 3 tahun anak tidak menunjukkan empati, tidak bisa bermain berdampingan, atau tantrum sangat sering & intens."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["CDC Learn the Signs. Act Early.", "Siegel & Bryson", "Erikson"]
   },
   {
@@ -623,7 +674,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Sajikan porsi kecil beragam; ekspos berulang tanpa memaksa.", "Tunggu tanda kesiapan toilet (sadar pipis, bisa tahan sebentar, mau duduk di toilet).", "Sikat gigi 2x/hari; imunisasi sesuai jadwal."],
       perhatian: "Berat badan tidak naik, pilih-pilih hingga berisiko kurang gizi, atau tanda infeksi saluran kemih — konsultasikan."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["AAP (toilet training)", "IDAI", "WHO", "Kemenkes RI"]
   },
   {
@@ -635,7 +686,7 @@ export const CARDS: KnowledgeCard[] = [
       lakukan: ["Jaga rutinitas makan-main-tidur.", "Beri waktu bermain bebas setiap hari, terutama di luar.", "Batasi layar; pilih konten edukatif dan tonton bersama bila perlu."],
       perhatian: "Bila anak sangat bergantung pada layar atau kesulitan bermain sendiri, kurangi bertahap dan perbanyak aktivitas fisik."
     },
-    scientific: { title: "Detail ilmiah — TODO", readMinutes: 0, paragraphs: [] },
+    scientific: { title: "Detail ilmiah — TODO" },
     sources: ["AAP (play 2018)", "Harvard Center on the Developing Child", "Montessori"]
   },
 

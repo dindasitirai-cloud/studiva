@@ -200,8 +200,8 @@ export default function KnowledgeCardSummary() {
           <p className="text-[14px] leading-relaxed text-red-800">{card.summary.perhatian}</p>
         </div>
 
-        {/* Scientific CTA */}
-        {card.scientific.paragraphs.length > 0 && (
+        {/* Scientific CTA — shown only when content exists */}
+        {((card.scientific.sections?.length ?? 0) > 0 || (card.scientific.paragraphs?.length ?? 0) > 0) && (
           <button
             type="button"
             onClick={() => navigate(`${basePath}/knowledge/${card.id}/ilmiah`)}

@@ -83,19 +83,18 @@ export function CoverImage({ card }: { card: KnowledgeCard }) {
         background: `${domain.fg}10`, pointerEvents: 'none',
       }} />
 
-      {/* Small header: domain + age */}
+      {/* Small header: domain, then age below */}
       <div style={{
-        position: 'absolute', top: 16, left: 20, right: 14,
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        position: 'absolute', top: 14, left: 20, right: 14,
         zIndex: 3,
       }}>
-        <span style={{ fontSize: 9, fontWeight: 700, color: `${domain.fg}BB`, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+        <p style={{ fontSize: 9, fontWeight: 700, color: `${domain.fg}BB`, letterSpacing: '0.06em', textTransform: 'uppercase', margin: 0 }}>
           {domain.label}
-        </span>
+        </p>
         {age && (
-          <span style={{ fontSize: 9, fontWeight: 700, color: `${domain.fg}99`, letterSpacing: '0.04em' }}>
+          <p style={{ fontSize: 9, fontWeight: 700, color: `${domain.fg}88`, letterSpacing: '0.04em', margin: '2px 0 0' }}>
             {age.label}
-          </span>
+          </p>
         )}
       </div>
 

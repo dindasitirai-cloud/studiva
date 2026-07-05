@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { CheckCircle2, Bookmark } from 'lucide-react';
 import { KnowledgeCard, AGE_RANGES, DOMAIN_MAP, AgeKey, DomainCode } from './knowledgeCardData';
+import { CoverImage } from './BookCarousel';
 
 const ALL_DOMAIN = '__all__' as const;
 type ViewTab = 'semua' | 'dibaca' | 'disimpan';
@@ -24,11 +25,6 @@ function BookCover({ card, isRead, isBookmarked, onClick }: {
   isBookmarked: boolean;
   onClick: () => void;
 }) {
-  const [imgErr, setImgErr] = useState(false);
-  const domain = DOMAIN_MAP[card.domain];
-  const Icon = domain.icon;
-  const ageRange = AGE_RANGES.find(a => a.key === card.ageKey);
-
   return (
     <button
       type="button"
@@ -41,66 +37,22 @@ function BookCover({ card, isRead, isBookmarked, onClick }: {
         style={{
           paddingBottom: '133%',
           borderRadius: '5px 11px 11px 5px',
-          boxShadow: '4px 4px 14px rgba(0,0,0,.20), inset -2px 0 4px rgba(0,0,0,.1)',
+          boxShadow: '4px 4px 14px rgba(0,0,0,.18), inset -2px 0 4px rgba(0,0,0,.08)',
         }}
       >
-        {/* Spine */}
-        <div
-          className="absolute inset-y-0 left-0 z-10"
-          style={{ width: 11, background: 'rgba(0,0,0,0.28)', borderRadius: '5px 0 0 5px' }}
-        />
-
-        {/* Cover image or fallback */}
-        <div className="absolute inset-0">
-          {!imgErr && card.photo.src ? (
-            <img
-              src={card.photo.src}
-              alt={card.photo.alt}
-              onError={() => setImgErr(true)}
-              className="h-full w-full object-cover"
-              style={{ borderRadius: '0 11px 11px 0' }}
-            />
-          ) : (
-            <div
-              className="flex h-full w-full items-center justify-center"
-              style={{ background: domain.bg, borderRadius: '0 11px 11px 0' }}
-            >
-              <Icon className="h-16 w-16" style={{ color: domain.fg, opacity: 0.3 }} strokeWidth={1.5} />
-            </div>
-          )}
-        </div>
-
-        {/* Age strip at top */}
-        {ageRange && (
-          <div
-            className="absolute left-3 right-0 top-0 z-20 px-2 py-1"
-            style={{ background: `${ageRange.fill}CC` }}
-          >
-            <span className="text-[10px] font-bold" style={{ color: ageRange.ink }}>
-              {ageRange.label}
-            </span>
-          </div>
-        )}
-
-        {/* Title strip at bottom */}
-        <div
-          className="absolute bottom-0 left-3 right-0 z-20 px-2 py-2"
-          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0))' }}
-        >
-          <p className="text-[10px] font-semibold text-white/80">{domain.label}</p>
-          <p className="line-clamp-2 text-[12px] font-bold leading-tight text-white">{card.title}</p>
-        </div>
+        {/* Typographic illustrated cover (same as carousel) */}
+        <CoverImage card={card} />
 
         {/* Read badge */}
         {isRead && (
-          <div className="absolute right-2 top-8 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-stv-green shadow">
+          <div className="absolute right-2 top-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-stv-green shadow">
             <CheckCircle2 className="h-3.5 w-3.5 text-white" strokeWidth={2.5} />
           </div>
         )}
 
         {/* Bookmark badge */}
         {isBookmarked && !isRead && (
-          <div className="absolute right-2 top-8 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-amber-400 shadow">
+          <div className="absolute right-2 top-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-amber-400 shadow">
             <Bookmark className="h-3.5 w-3.5 text-white" fill="white" strokeWidth={0} />
           </div>
         )}

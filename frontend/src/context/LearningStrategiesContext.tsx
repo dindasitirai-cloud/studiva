@@ -30,6 +30,7 @@ interface LearningStrategiesContextValue {
   togglePlanDay: (planId: number, dayIndex: number) => void;
   isPlanDayDone: (planId: number, dayIndex: number) => boolean;
   getPlanProgress: (planId: number) => number; // 0-7
+  isPlanDone: (planId: number) => boolean; // all 7 days checked
   followPlan: (planId: number) => void;
   unfollowPlan: () => void;
   isFollowing: (planId: number) => boolean;
@@ -115,6 +116,9 @@ export function LearningStrategiesProvider({ children }: { children: React.React
   const getPlanProgress = useCallback((planId: number) =>
     planProgress[planId]?.size ?? 0, [planProgress]);
 
+  const isPlanDone = useCallback((planId: number) =>
+    (planProgress[planId]?.size ?? 0) >= 7, [planProgress]);
+
   const followPlan = useCallback((planId: number) => {
     setFollowedPlanId(planId);
     // TODO: POST /api/learning-strategies/plans/follow { planId }
@@ -136,7 +140,7 @@ export function LearningStrategiesProvider({ children }: { children: React.React
       toggleDone, isDone, doneCount,
       toggleOwned, isOwned,
       toggleDownloaded, isDownloaded,
-      togglePlanDay, isPlanDayDone, getPlanProgress,
+      togglePlanDay, isPlanDayDone, getPlanProgress, isPlanDone,
       followPlan, unfollowPlan, isFollowing,
     }}>
       {children}

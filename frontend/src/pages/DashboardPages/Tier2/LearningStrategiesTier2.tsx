@@ -156,19 +156,29 @@ function ActivityCard({ activity, onOpen }: { activity: Activity; onOpen: () => 
 // ── PlanCard ──────────────────────────────────────────────────────────────────
 
 function PlanCard({ plan, onOpen }: { plan: WeeklyPlan; onOpen: () => void }) {
-  const { toggleSaved, isSaved, getPlanProgress } = useLearningStrategies();
+  const { toggleSaved, isSaved, getPlanProgress, isPlanDone } = useLearningStrategies();
   const saved = isSaved('plans', plan.id);
   const progress = getPlanProgress(plan.id);
+  const done = isPlanDone(plan.id);
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_2px_12px_rgba(16,58,107,.06)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(217,119,6,.10)]">
+    <div className={`flex flex-col gap-3 rounded-2xl border bg-white p-4 shadow-[0_2px_12px_rgba(16,58,107,.06)] transition-all duration-300 hover:-translate-y-0.5 ${
+      done ? 'border-green-200 bg-green-50/30 hover:shadow-[0_8px_24px_rgba(34,197,94,.14)]' : 'border-slate-100 hover:shadow-[0_8px_24px_rgba(217,119,6,.10)]'
+    }`}>
       <div className="flex items-start gap-3">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-2xl">
+        <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl ${done ? 'bg-green-100' : 'bg-amber-50'}`}>
           {plan.icon}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
-            <p className="font-baloo text-[15px] font-bold leading-tight text-stv-navy">{plan.judul}</p>
+            <div className="flex-1 min-w-0">
+              <p className="font-baloo text-[15px] font-bold leading-tight text-stv-navy">{plan.judul}</p>
+              {done && (
+                <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">
+                  <Check className="h-3 w-3" /> Sudah Dilakukan
+                </span>
+              )}
+            </div>
             <button type="button"
               onClick={e => { e.stopPropagation(); toggleSaved('plans', plan.id); }}
               className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl transition ${
@@ -187,18 +197,17 @@ function PlanCard({ plan, onOpen }: { plan: WeeklyPlan; onOpen: () => void }) {
       <div>
         <div className="mb-2 flex items-center justify-between text-[11px] text-stv-muted">
           <span className="font-semibold">Progress</span>
-          <span>{progress}/7 hari</span>
+          <span className={done ? 'font-bold text-green-600' : ''}>{progress}/7 hari</span>
         </div>
         <div className="flex gap-1.5">
-          {plan.hari.map((h, i) => {
-            // We'd need per-day status but keep it simple with progress count
-            const done = i < progress;
+          {plan.hari.map((_h, i) => {
+            const dayDone = i < progress;
             return (
               <div key={i}
                 className={`flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold transition ${
-                  done ? 'bg-green-500 text-white' : 'bg-slate-100 text-stv-muted'
+                  dayDone ? 'bg-green-500 text-white' : 'bg-slate-100 text-stv-muted'
                 }`}>
-                H{i + 1}
+                {dayDone ? <Check className="h-3.5 w-3.5" /> : i + 1}
               </div>
             );
           })}
@@ -501,10 +510,11 @@ function ActivityModal({ activity, onClose }: { activity: Activity; onClose: () 
 // ── PlanModal ─────────────────────────────────────────────────────────────────
 
 function PlanModal({ plan, onClose }: { plan: WeeklyPlan; onClose: () => void }) {
-  const { toggleSaved, isSaved, togglePlanDay, isPlanDayDone, getPlanProgress, followPlan, unfollowPlan, isFollowing } = useLearningStrategies();
+  const { toggleSaved, isSaved, togglePlanDay, isPlanDayDone, getPlanProgress, isPlanDone, followPlan, unfollowPlan, isFollowing } = useLearningStrategies();
   const saved = isSaved('plans', plan.id);
   const progress = getPlanProgress(plan.id);
   const following = isFollowing(plan.id);
+  const planCompleted = isPlanDone(plan.id);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -537,14 +547,27 @@ function PlanModal({ plan, onClose }: { plan: WeeklyPlan; onClose: () => void })
             <p className="text-[13px] leading-relaxed text-stv-body">{plan.caraPakai}</p>
           </div>
 
+          {/* Completion banner — auto-shown when all 7 days checked */}
+          {planCompleted && (
+            <div className="flex items-center gap-3 rounded-xl border border-green-300 bg-green-50 px-4 py-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-500 text-white">
+                <Check className="h-5 w-5" strokeWidth={2.5} />
+              </div>
+              <div>
+                <p className="font-bold text-green-700">Sudah Dilakukan!</p>
+                <p className="text-[12px] text-green-600">Kamu telah menyelesaikan semua 7 hari program ini.</p>
+              </div>
+            </div>
+          )}
+
           {/* Progress bar */}
           <div>
             <div className="mb-2 flex items-center justify-between text-[12px]">
               <span className="font-bold text-stv-navy">Progress Minggu Ini</span>
-              <span className="font-semibold text-amber-600">{progress}/7 hari</span>
+              <span className={`font-semibold ${planCompleted ? 'text-green-600' : 'text-amber-600'}`}>{progress}/7 hari</span>
             </div>
             <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
-              <div className="h-full rounded-full bg-amber-400 transition-all duration-500"
+              <div className={`h-full rounded-full transition-all duration-500 ${planCompleted ? 'bg-green-500' : 'bg-amber-400'}`}
                 style={{ width: `${(progress / 7) * 100}%` }} />
             </div>
           </div>
@@ -767,7 +790,7 @@ function DownloadModal({ item, onClose }: { item: Downloadable; onClose: () => v
 
 // ── Tab types & config ────────────────────────────────────────────────────────
 
-type Tab = 'aktivitas' | 'program' | 'alat' | 'unduhan';
+type Tab = 'aktivitas' | 'program' | 'alat' | 'unduhan' | 'selesai';
 type ViewMode = 'personal' | 'browse';
 
 // ── PersonalView ──────────────────────────────────────────────────────────────
@@ -784,7 +807,7 @@ function PersonalView({
   onOpenDownload: (d: Downloadable) => void;
 }) {
   const { children } = useDashboardTier2();
-  const { totalSaved, doneCount, followedPlanId, unfollowPlan, isPlanDayDone, getPlanProgress, isDone } = useLearningStrategies();
+  const { totalSaved, doneCount, followedPlanId, unfollowPlan, isPlanDayDone, getPlanProgress, isPlanDone, isDone, isOwned, isDownloaded } = useLearningStrategies();
   const [selectedChildId, setSelectedChildId] = useState<string>(() => children[0]?.id ?? '');
   const [gridTab, setGridTab] = useState<Tab>('aktivitas');
 
@@ -821,11 +844,19 @@ function PersonalView({
 
   const currentRange = AGE_RANGES.find(r => r.id === bestAgeRangeId(ageMonths));
 
+  // Sudah Dilakukan counts
+  const doneActivitiesAge = allActivities.filter(a => isDone(a.id));
+  const donePlansAge      = allPlans.filter(p => isPlanDone(p.id));
+  const doneToolsAge      = allTools.filter(t => isOwned(t.id));
+  const doneDownloadsAge  = allDownloads.filter(d => isDownloaded(d.id));
+  const doneTotal = doneActivitiesAge.length + donePlansAge.length + doneToolsAge.length + doneDownloadsAge.length;
+
   const GRID_TABS: { id: Tab; label: string; count: number }[] = [
-    { id: 'aktivitas', label: 'Aktivitas',       count: allActivities.length },
-    { id: 'program',   label: 'Program',          count: allPlans.length },
-    { id: 'alat',      label: 'Alat Edukasi',     count: allTools.length },
-    { id: 'unduhan',   label: 'Unduhan',           count: allDownloads.length },
+    { id: 'aktivitas', label: 'Aktivitas',      count: allActivities.length },
+    { id: 'program',   label: 'Program',         count: allPlans.length },
+    { id: 'alat',      label: 'Alat Edukasi',    count: allTools.length },
+    { id: 'unduhan',   label: 'Unduhan',          count: allDownloads.length },
+    { id: 'selesai',   label: 'Sudah Dilakukan', count: doneTotal },
   ];
 
   return (
@@ -1048,6 +1079,16 @@ function PersonalView({
                   {allDownloads.map(d => <DownloadCard key={d.id} item={d} onOpen={() => onOpenDownload(d)} />)}
                 </div>
           )}
+          {gridTab === 'selesai' && (
+            doneTotal === 0
+              ? <EmptyState message="Belum ada kegiatan yang selesai. Tandai 'Sudah Dicoba', selesaikan program, atau unduh materi!" />
+              : <SelesaiContent
+                  activities={doneActivitiesAge} plans={donePlansAge}
+                  tools={doneToolsAge} downloads={doneDownloadsAge}
+                  onOpenActivity={onOpenActivity} onOpenPlan={onOpenPlan}
+                  onOpenTool={onOpenTool} onOpenDownload={onOpenDownload}
+                />
+          )}
         </section>
       )}
 
@@ -1074,7 +1115,7 @@ export default function LearningStrategiesTier2() {
   const [openTool, setOpenTool] = useState<EduTool | null>(null);
   const [openDownload, setOpenDownload] = useState<Downloadable | null>(null);
 
-  const { isSaved, isDone } = useLearningStrategies();
+  const { isSaved, isDone, isPlanDone, isOwned, isDownloaded } = useLearningStrategies();
 
   // Filtered data per tab
   const filteredActivities = useMemo(() => ACTIVITIES.filter(a => {
@@ -1111,11 +1152,19 @@ export default function LearningStrategiesTier2() {
     return matchSearch && matchAge && matchSaved;
   }), [searchQuery, filterAgeId, filterSavedOnly, isSaved]);
 
+  // Sudah Dilakukan: across all content (no age/search filter — it's what you've done)
+  const selesaiActivities = useMemo(() => ACTIVITIES.filter(a => isDone(a.id)), [isDone]);
+  const selesaiPlans      = useMemo(() => WEEKLY_PLANS.filter(p => isPlanDone(p.id)), [isPlanDone]);
+  const selesaiTools      = useMemo(() => EDU_TOOLS.filter(t => isOwned(t.id)), [isOwned]);
+  const selesaiDownloads  = useMemo(() => DOWNLOADABLES.filter(d => isDownloaded(d.id)), [isDownloaded]);
+  const selesaiTotal = selesaiActivities.length + selesaiPlans.length + selesaiTools.length + selesaiDownloads.length;
+
   const TABS: { id: Tab; label: string; icon: React.ReactNode; count: number }[] = [
-    { id: 'aktivitas', label: 'Aktivitas', icon: <Dumbbell className="h-4 w-4" />, count: filteredActivities.length },
-    { id: 'program',   label: 'Program Mingguan', icon: <Calendar className="h-4 w-4" />, count: filteredPlans.length },
-    { id: 'alat',      label: 'Alat Edukasi', icon: <Wrench className="h-4 w-4" />, count: filteredTools.length },
-    { id: 'unduhan',   label: 'Unduhan', icon: <FileDown className="h-4 w-4" />, count: filteredDownloads.length },
+    { id: 'aktivitas', label: 'Aktivitas',      icon: <Dumbbell className="h-4 w-4" />,   count: filteredActivities.length },
+    { id: 'program',   label: 'Program',         icon: <Calendar className="h-4 w-4" />,   count: filteredPlans.length },
+    { id: 'alat',      label: 'Alat Edukasi',    icon: <Wrench className="h-4 w-4" />,     count: filteredTools.length },
+    { id: 'unduhan',   label: 'Unduhan',          icon: <FileDown className="h-4 w-4" />,   count: filteredDownloads.length },
+    { id: 'selesai',   label: 'Sudah Dilakukan', icon: <CheckCircle2 className="h-4 w-4" />, count: selesaiTotal },
   ];
 
   return (
@@ -1311,6 +1360,19 @@ export default function LearningStrategiesTier2() {
         )
       )}
 
+      {activeTab === 'selesai' && (
+        selesaiTotal === 0 ? (
+          <EmptyState message="Belum ada kegiatan yang selesai. Tandai 'Sudah Dicoba', selesaikan program, tandai punya alat, atau unduh materi!" />
+        ) : (
+          <SelesaiContent
+            activities={selesaiActivities} plans={selesaiPlans}
+            tools={selesaiTools} downloads={selesaiDownloads}
+            onOpenActivity={setOpenActivity} onOpenPlan={setOpenPlan}
+            onOpenTool={setOpenTool} onOpenDownload={setOpenDownload}
+          />
+        )
+      )}
+
       </>)} {/* end browse view */}
 
       {/* Modals — shared by both views */}
@@ -1318,6 +1380,83 @@ export default function LearningStrategiesTier2() {
       {openPlan && <PlanModal plan={openPlan} onClose={() => setOpenPlan(null)} />}
       {openTool && <ToolModal tool={openTool} onClose={() => setOpenTool(null)} />}
       {openDownload && <DownloadModal item={openDownload} onClose={() => setOpenDownload(null)} />}
+    </div>
+  );
+}
+
+// ── SelesaiContent ────────────────────────────────────────────────────────────
+
+function SelesaiContent({
+  activities, plans, tools, downloads,
+  onOpenActivity, onOpenPlan, onOpenTool, onOpenDownload,
+}: {
+  activities: Activity[];
+  plans: WeeklyPlan[];
+  tools: EduTool[];
+  downloads: Downloadable[];
+  onOpenActivity: (a: Activity) => void;
+  onOpenPlan: (p: WeeklyPlan) => void;
+  onOpenTool: (t: EduTool) => void;
+  onOpenDownload: (d: Downloadable) => void;
+}) {
+  return (
+    <div className="flex flex-col gap-6">
+      {activities.length > 0 && (
+        <section>
+          <div className="mb-3 flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 text-green-500" />
+            <h3 className="font-baloo text-[14px] font-bold text-stv-navy">
+              Aktivitas Sudah Dicoba
+            </h3>
+            <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">{activities.length}</span>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {activities.map(a => <ActivityCard key={a.id} activity={a} onOpen={() => onOpenActivity(a)} />)}
+          </div>
+        </section>
+      )}
+      {plans.length > 0 && (
+        <section>
+          <div className="mb-3 flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 text-green-500" />
+            <h3 className="font-baloo text-[14px] font-bold text-stv-navy">
+              Program Sudah Diselesaikan
+            </h3>
+            <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">{plans.length}</span>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {plans.map(p => <PlanCard key={p.id} plan={p} onOpen={() => onOpenPlan(p)} />)}
+          </div>
+        </section>
+      )}
+      {tools.length > 0 && (
+        <section>
+          <div className="mb-3 flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 text-green-500" />
+            <h3 className="font-baloo text-[14px] font-bold text-stv-navy">
+              Alat Edukasi yang Dimiliki
+            </h3>
+            <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">{tools.length}</span>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {tools.map(t => <ToolCard key={t.id} tool={t} onOpen={() => onOpenTool(t)} />)}
+          </div>
+        </section>
+      )}
+      {downloads.length > 0 && (
+        <section>
+          <div className="mb-3 flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 text-green-500" />
+            <h3 className="font-baloo text-[14px] font-bold text-stv-navy">
+              Materi yang Sudah Diunduh
+            </h3>
+            <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">{downloads.length}</span>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {downloads.map(d => <DownloadCard key={d.id} item={d} onOpen={() => onOpenDownload(d)} />)}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

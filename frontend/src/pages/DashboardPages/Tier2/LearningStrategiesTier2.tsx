@@ -784,33 +784,30 @@ function PersonalView({
   onOpenDownload: (d: Downloadable) => void;
 }) {
   const { children } = useDashboardTier2();
-  const { totalSaved, doneCount, followedPlanId, unfollowPlan } = useLearningStrategies();
+  const { totalSaved, doneCount, followedPlanId, unfollowPlan, isPlanDayDone, getPlanProgress, isDone } = useLearningStrategies();
   const [selectedChildId, setSelectedChildId] = useState<string>(() => children[0]?.id ?? '');
+  const [gridTab, setGridTab] = useState<Tab>('aktivitas');
 
   const child = children.find(c => c.id === selectedChildId) ?? children[0] ?? null;
   const ageMonths = child ? childAgeInMonths(child) : 0;
 
-  const recActivities = useMemo(() =>
-    ACTIVITIES.filter(a => {
-      const { min, max } = activityAgeMonthRange(a.ageId);
-      return ageMonths >= min && ageMonths < max;
-    }).slice(0, 6),
+  // All age-matched content (no slice — used for grid + stats)
+  const allActivities = useMemo(() =>
+    ACTIVITIES.filter(a => { const { min, max } = activityAgeMonthRange(a.ageId); return ageMonths >= min && ageMonths < max; }),
   [ageMonths]);
+  const allPlans = useMemo(() => WEEKLY_PLANS.filter(p => matchesAgeMonths(p.minBulan, p.maxBulan, ageMonths)), [ageMonths]);
+  const allTools = useMemo(() => EDU_TOOLS.filter(t => matchesAgeMonths(t.minBulan, t.maxBulan, ageMonths)), [ageMonths]);
+  const allDownloads = useMemo(() => DOWNLOADABLES.filter(d => matchesAgeMonths(d.minBulan, d.maxBulan, ageMonths)), [ageMonths]);
 
-  const recPlans = useMemo(() =>
-    WEEKLY_PLANS.filter(p => matchesAgeMonths(p.minBulan, p.maxBulan, ageMonths)).slice(0, 3),
-  [ageMonths]);
-
-  const recTools = useMemo(() =>
-    EDU_TOOLS.filter(t => matchesAgeMonths(t.minBulan, t.maxBulan, ageMonths) && t.pilihanPsikolog).slice(0, 3),
-  [ageMonths]);
-
-  const recDownloads = useMemo(() =>
-    DOWNLOADABLES.filter(d => matchesAgeMonths(d.minBulan, d.maxBulan, ageMonths)).slice(0, 4),
-  [ageMonths]);
-
-  const totalLS = ACTIVITIES.length + WEEKLY_PLANS.length + EDU_TOOLS.length + DOWNLOADABLES.length;
+  const totalLS = allActivities.length + allPlans.length + allTools.length + allDownloads.length;
   const followedPlan = followedPlanId ? WEEKLY_PLANS.find(p => p.id === followedPlanId) ?? null : null;
+  const followProgress = followedPlanId ? getPlanProgress(followedPlanId) : 0;
+
+  // "Rekomendasi hari ini" — 1 from each category (prefer undone/unsaved)
+  const todayActivity = useMemo(() => allActivities.find(a => !isDone(a.id)) ?? allActivities[0] ?? null, [allActivities, isDone]);
+  const todayPlan = useMemo(() => allPlans[0] ?? null, [allPlans]);
+  const todayTool = useMemo(() => allTools.find(t => t.pilihanPsikolog) ?? allTools[0] ?? null, [allTools]);
+  const todayDownload = useMemo(() => allDownloads[0] ?? null, [allDownloads]);
 
   if (!child) {
     return (
@@ -822,10 +819,14 @@ function PersonalView({
     );
   }
 
-  const currentRange = AGE_RANGES.find(r => {
-    const id = bestAgeRangeId(ageMonths);
-    return r.id === id;
-  });
+  const currentRange = AGE_RANGES.find(r => r.id === bestAgeRangeId(ageMonths));
+
+  const GRID_TABS: { id: Tab; label: string; count: number }[] = [
+    { id: 'aktivitas', label: 'Aktivitas',       count: allActivities.length },
+    { id: 'program',   label: 'Program',          count: allPlans.length },
+    { id: 'alat',      label: 'Alat Edukasi',     count: allTools.length },
+    { id: 'unduhan',   label: 'Unduhan',           count: allDownloads.length },
+  ];
 
   return (
     <div className="flex flex-col gap-6">
@@ -836,12 +837,9 @@ function PersonalView({
             <button key={c.id} type="button"
               onClick={() => setSelectedChildId(c.id)}
               className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-[13px] font-semibold transition ${
-                selectedChildId === c.id
-                  ? 'border-amber-400 bg-amber-400 text-white'
-                  : 'border-slate-200 bg-white text-stv-body hover:border-amber-300'
+                selectedChildId === c.id ? 'border-amber-400 bg-amber-400 text-white' : 'border-slate-200 bg-white text-stv-body hover:border-amber-300'
               }`}>
-              <User className="h-3.5 w-3.5" />
-              {c.name}
+              <User className="h-3.5 w-3.5" />{c.name}
             </button>
           ))}
         </div>
@@ -849,6 +847,7 @@ function PersonalView({
 
       {/* Hero card */}
       <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-100 p-5">
+        {/* Child info */}
         <div className="flex items-start gap-4">
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-3xl">
             {child.photo
@@ -864,7 +863,7 @@ function PersonalView({
           </div>
         </div>
 
-        {/* Stats row */}
+        {/* Stats */}
         <div className="mt-4 grid grid-cols-3 gap-3">
           <div className="rounded-xl bg-white/70 p-3 text-center">
             <p className="font-baloo text-[22px] font-bold text-amber-500">{totalLS}</p>
@@ -880,97 +879,180 @@ function PersonalView({
           </div>
         </div>
 
-        {/* Following plan status */}
+        {/* Following plan status — clickable to open plan modal */}
         {followedPlan && (
-          <div className="mt-3 flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 text-lg">
-              {followedPlan.icon}
+          <button type="button"
+            onClick={() => onOpenPlan(followedPlan)}
+            className="mt-3 w-full rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-left transition hover:bg-green-100">
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 text-lg">
+                {followedPlan.icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-green-600">Sedang Mengikuti Program</p>
+                <p className="truncate text-[13px] font-semibold text-green-800">{followedPlan.judul}</p>
+              </div>
+              <button type="button"
+                onClick={e => { e.stopPropagation(); unfollowPlan(); }}
+                className="shrink-0 rounded-lg bg-white px-2.5 py-1 text-[11px] font-semibold text-stv-muted shadow-sm transition hover:text-red-500">
+                Berhenti
+              </button>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-green-600">Sedang Mengikuti Program</p>
-              <p className="truncate text-[13px] font-semibold text-green-800">{followedPlan.judul}</p>
-              {/* TODO: show daily reminder countdown when backend push notification is ready */}
+            {/* H1–H7 progress dots */}
+            <div className="mt-3 flex items-center gap-1.5">
+              {followedPlan.hari.map((h, i) => {
+                const done = isPlanDayDone(followedPlan.id, i);
+                return (
+                  <div key={i} className="flex flex-col items-center gap-0.5">
+                    <div className={`flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold transition ${
+                      done ? 'bg-green-500 text-white' : 'bg-white border border-green-200 text-green-600'
+                    }`}>
+                      {done ? <Check className="h-3.5 w-3.5" /> : i + 1}
+                    </div>
+                    <span className="text-[9px] text-green-600 font-medium">H{i + 1}</span>
+                  </div>
+                );
+              })}
+              <span className="ml-auto text-[11px] font-semibold text-green-600">
+                {followProgress}/7 selesai
+              </span>
             </div>
-            <button type="button"
-              onClick={unfollowPlan}
-              className="shrink-0 rounded-lg bg-white px-2.5 py-1 text-[11px] font-semibold text-stv-muted shadow-sm transition hover:text-red-500">
-              Berhenti
-            </button>
-          </div>
+            <p className="mt-2 text-[11px] text-green-500">
+              Ketuk untuk melihat program lengkap
+              {/* TODO: daily push notification reminder via backend */}
+            </p>
+          </button>
         )}
       </div>
 
-      {/* Recommended activities */}
-      {recActivities.length > 0 && (
+      {/* Rekomendasi hari ini */}
+      {(todayActivity || todayPlan || todayTool || todayDownload) && (
         <section>
           <div className="mb-3 flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-amber-500" />
             <h3 className="font-baloo text-[15px] font-bold text-stv-navy">
-              Aktivitas untuk {child.name}
+              Rekomendasi untuk {child.name} hari ini
             </h3>
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-700">
-              {recActivities.length}
-            </span>
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {recActivities.map(a => (
-              <ActivityCard key={a.id} activity={a} onOpen={() => onOpenActivity(a)} />
-            ))}
+          {/* Horizontal scroll row */}
+          <div className="-mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="flex gap-3 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
+              {todayActivity && (
+                <button type="button" onClick={() => onOpenActivity(todayActivity)}
+                  className="flex w-44 shrink-0 flex-col gap-2 rounded-2xl border border-slate-100 bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl text-xl"
+                    style={{ background: DOMAIN_META[todayActivity.domain[0]].bg }}>
+                    {todayActivity.icon}
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold text-amber-600">Aktivitas</span>
+                    <p className="text-[12px] font-bold leading-tight text-stv-navy line-clamp-2">{todayActivity.judul}</p>
+                  </div>
+                  <span className="mt-auto flex items-center gap-1 text-[10px] text-stv-muted">
+                    <Clock className="h-3 w-3" />{todayActivity.durasiMenit} mnt
+                  </span>
+                </button>
+              )}
+              {todayPlan && (
+                <button type="button" onClick={() => onOpenPlan(todayPlan)}
+                  className="flex w-44 shrink-0 flex-col gap-2 rounded-2xl border border-slate-100 bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-xl">
+                    {todayPlan.icon}
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold text-stv-navy">Program Mingguan</span>
+                    <p className="text-[12px] font-bold leading-tight text-stv-navy line-clamp-2">{todayPlan.judul}</p>
+                  </div>
+                  <span className="mt-auto text-[10px] text-amber-600 font-semibold">{todayPlan.ageLabel}</span>
+                </button>
+              )}
+              {todayTool && (
+                <button type="button" onClick={() => onOpenTool(todayTool)}
+                  className="flex w-44 shrink-0 flex-col gap-2 rounded-2xl border border-slate-100 bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-xl">
+                    {todayTool.icon}
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold text-violet-600">Alat Edukasi</span>
+                    <p className="text-[12px] font-bold leading-tight text-stv-navy line-clamp-2">{todayTool.nama}</p>
+                  </div>
+                  {todayTool.pilihanPsikolog && (
+                    <span className="mt-auto text-[10px] font-bold text-violet-500">⭐ Pilihan Psikolog</span>
+                  )}
+                </button>
+              )}
+              {todayDownload && (
+                <button type="button" onClick={() => onOpenDownload(todayDownload)}
+                  className="flex w-44 shrink-0 flex-col gap-2 rounded-2xl border border-slate-100 bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-xl">
+                    {todayDownload.icon}
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold text-blue-600">Unduhan</span>
+                    <p className="text-[12px] font-bold leading-tight text-stv-navy line-clamp-2">{todayDownload.nama}</p>
+                  </div>
+                  <span className="mt-auto text-[10px] text-stv-muted">{todayDownload.halaman}</span>
+                </button>
+              )}
+            </div>
           </div>
         </section>
       )}
 
-      {/* Recommended programs */}
-      {recPlans.length > 0 && (
+      {/* Tabbed grid — all age-matched content */}
+      {totalLS > 0 && (
         <section>
-          <div className="mb-3 flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-stv-navy" />
-            <h3 className="font-baloo text-[15px] font-bold text-stv-navy">Program Mingguan Sesuai Usia</h3>
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {recPlans.map(p => (
-              <PlanCard key={p.id} plan={p} onOpen={() => onOpenPlan(p)} />
+          {/* Tab bar */}
+          <div className="mb-4 flex gap-1 border-b border-slate-100" style={{ scrollbarWidth: 'none' }}>
+            {GRID_TABS.map(tab => (
+              <button key={tab.id} type="button"
+                onClick={() => setGridTab(tab.id)}
+                className={`flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2 text-[12px] font-semibold transition-all ${
+                  gridTab === tab.id
+                    ? 'border-amber-500 text-amber-600'
+                    : 'border-transparent text-stv-muted hover:text-stv-body'
+                }`}>
+                {tab.label}
+                <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
+                  gridTab === tab.id ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500'
+                }`}>{tab.count}</span>
+              </button>
             ))}
           </div>
+
+          {gridTab === 'aktivitas' && (
+            allActivities.length === 0
+              ? <EmptyState message="Belum ada aktivitas untuk usia ini." />
+              : <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {allActivities.map(a => <ActivityCard key={a.id} activity={a} onOpen={() => onOpenActivity(a)} />)}
+                </div>
+          )}
+          {gridTab === 'program' && (
+            allPlans.length === 0
+              ? <EmptyState message="Belum ada program untuk usia ini." />
+              : <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {allPlans.map(p => <PlanCard key={p.id} plan={p} onOpen={() => onOpenPlan(p)} />)}
+                </div>
+          )}
+          {gridTab === 'alat' && (
+            allTools.length === 0
+              ? <EmptyState message="Belum ada alat edukasi untuk usia ini." />
+              : <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {allTools.map(t => <ToolCard key={t.id} tool={t} onOpen={() => onOpenTool(t)} />)}
+                </div>
+          )}
+          {gridTab === 'unduhan' && (
+            allDownloads.length === 0
+              ? <EmptyState message="Belum ada unduhan untuk usia ini." />
+              : <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {allDownloads.map(d => <DownloadCard key={d.id} item={d} onOpen={() => onOpenDownload(d)} />)}
+                </div>
+          )}
         </section>
       )}
 
-      {/* Pilihan psikolog tools */}
-      {recTools.length > 0 && (
-        <section>
-          <div className="mb-3 flex items-center gap-2">
-            <Wrench className="h-4 w-4 text-violet-500" />
-            <h3 className="font-baloo text-[15px] font-bold text-stv-navy">Alat Edukasi Pilihan Psikolog</h3>
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {recTools.map(t => (
-              <ToolCard key={t.id} tool={t} onOpen={() => onOpenTool(t)} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Recommended downloads */}
-      {recDownloads.length > 0 && (
-        <section>
-          <div className="mb-3 flex items-center gap-2">
-            <FileDown className="h-4 w-4 text-blue-500" />
-            <h3 className="font-baloo text-[15px] font-bold text-stv-navy">Materi Unduhan untuk Usia Ini</h3>
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {recDownloads.map(d => (
-              <DownloadCard key={d.id} item={d} onOpen={() => onOpenDownload(d)} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {recActivities.length === 0 && recPlans.length === 0 && (
-        <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-amber-100 py-14 text-center">
-          <span className="mb-3 text-4xl">🔍</span>
-          <p className="font-semibold text-stv-navy">Belum ada konten untuk usia {child.age} tahun</p>
-          <p className="mt-1 text-[13px] text-stv-muted">Coba gunakan mode Jelajahi untuk melihat semua konten.</p>
-        </div>
+      {totalLS === 0 && (
+        <EmptyState message={`Belum ada konten untuk usia ${child.age} tahun.`} />
       )}
     </div>
   );

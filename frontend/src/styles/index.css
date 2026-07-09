@@ -77,3 +77,8 @@
     min-height: 0;
   }
 }
+
+@keyframes slideUp {
+  from { transform: translateY(32px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}

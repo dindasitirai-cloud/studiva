@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { DashboardTier2Provider } from './context/DashboardTier2Context';
+import { LearningStrategiesProvider } from './context/LearningStrategiesContext';
 import { SekolahStudivaProvider } from './context/SekolahStudivaContext';
 import { ToastProvider } from './components/ToastProvider';
 import { FullscreenNotificationProvider } from './components/FullscreenNotificationProvider';
@@ -137,6 +138,7 @@ export default function App() {
         <ToastProvider>
         <AudioPlayerProvider>
         <KnowledgeLibraryProvider>
+        <LearningStrategiesProvider>
         <FullscreenNotificationProvider>
         <SekolahStudivaProvider>
         <DashboardTier2Provider>
@@ -439,6 +441,7 @@ export default function App() {
         </DashboardTier2Provider>
         </SekolahStudivaProvider>
         </FullscreenNotificationProvider>
+        </LearningStrategiesProvider>
         </KnowledgeLibraryProvider>
         </AudioPlayerProvider>
         </ToastProvider>

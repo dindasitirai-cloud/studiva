@@ -501,9 +501,10 @@ function ActivityModal({ activity, onClose }: { activity: Activity; onClose: () 
 // ── PlanModal ─────────────────────────────────────────────────────────────────
 
 function PlanModal({ plan, onClose }: { plan: WeeklyPlan; onClose: () => void }) {
-  const { toggleSaved, isSaved, togglePlanDay, isPlanDayDone, getPlanProgress } = useLearningStrategies();
+  const { toggleSaved, isSaved, togglePlanDay, isPlanDayDone, getPlanProgress, followPlan, unfollowPlan, isFollowing } = useLearningStrategies();
   const saved = isSaved('plans', plan.id);
   const progress = getPlanProgress(plan.id);
+  const following = isFollowing(plan.id);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -580,7 +581,29 @@ function PlanModal({ plan, onClose }: { plan: WeeklyPlan; onClose: () => void })
           </div>
         </div>
 
-        <div className="border-t border-slate-100 p-4">
+        <div className="border-t border-slate-100 p-4 flex flex-col gap-2">
+          {/* Ikuti Program button */}
+          <button type="button"
+            onClick={() => { following ? unfollowPlan() : followPlan(plan.id); }}
+            className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-semibold transition ${
+              following
+                ? 'border-2 border-green-300 bg-green-50 text-green-700 hover:bg-green-100'
+                : 'bg-stv-navy text-white hover:bg-stv-navy/90'
+            }`}>
+            {following ? (
+              <><Check className="h-4 w-4" /> Sedang Mengikuti Program</>
+            ) : (
+              <><Calendar className="h-4 w-4" /> Ikuti Program Ini</>
+            )}
+          </button>
+          {following && (
+            <p className="text-center text-[11px] text-stv-muted">
+              {/* TODO: connect to push notification backend for daily reminders */}
+              Pengingat harian akan dikirim setiap pagi
+            </p>
+          )}
+
+          {/* Simpan button */}
           <button type="button"
             onClick={() => toggleSaved('plans', plan.id)}
             className={`flex w-full items-center justify-center gap-1.5 rounded-xl py-2.5 text-[13px] font-semibold transition ${
@@ -761,7 +784,7 @@ function PersonalView({
   onOpenDownload: (d: Downloadable) => void;
 }) {
   const { children } = useDashboardTier2();
-  const { isSaved, isDone } = useLearningStrategies();
+  const { totalSaved, doneCount, followedPlanId, unfollowPlan } = useLearningStrategies();
   const [selectedChildId, setSelectedChildId] = useState<string>(() => children[0]?.id ?? '');
 
   const child = children.find(c => c.id === selectedChildId) ?? children[0] ?? null;
@@ -786,9 +809,8 @@ function PersonalView({
     DOWNLOADABLES.filter(d => matchesAgeMonths(d.minBulan, d.maxBulan, ageMonths)).slice(0, 4),
   [ageMonths]);
 
-  const savedCount = ACTIVITIES.filter(a => isSaved('activities', a.id)).length
-    + WEEKLY_PLANS.filter(p => isSaved('plans', p.id)).length;
-  const doneCount = ACTIVITIES.filter(a => isDone(a.id)).length;
+  const totalLS = ACTIVITIES.length + WEEKLY_PLANS.length + EDU_TOOLS.length + DOWNLOADABLES.length;
+  const followedPlan = followedPlanId ? WEEKLY_PLANS.find(p => p.id === followedPlanId) ?? null : null;
 
   if (!child) {
     return (
@@ -845,18 +867,37 @@ function PersonalView({
         {/* Stats row */}
         <div className="mt-4 grid grid-cols-3 gap-3">
           <div className="rounded-xl bg-white/70 p-3 text-center">
-            <p className="font-baloo text-[22px] font-bold text-amber-500">{recActivities.length}</p>
-            <p className="text-[11px] text-stv-muted">Aktivitas</p>
+            <p className="font-baloo text-[22px] font-bold text-amber-500">{totalLS}</p>
+            <p className="text-[11px] leading-tight text-stv-muted">Total Learning Strategies</p>
           </div>
           <div className="rounded-xl bg-white/70 p-3 text-center">
-            <p className="font-baloo text-[22px] font-bold text-green-500">{doneCount}</p>
-            <p className="text-[11px] text-stv-muted">Sudah Dicoba</p>
+            <p className="font-baloo text-[22px] font-bold text-green-500">{doneCount()}</p>
+            <p className="text-[11px] leading-tight text-stv-muted">Sudah Dilakukan</p>
           </div>
           <div className="rounded-xl bg-white/70 p-3 text-center">
-            <p className="font-baloo text-[22px] font-bold text-stv-navy">{savedCount}</p>
-            <p className="text-[11px] text-stv-muted">Disimpan</p>
+            <p className="font-baloo text-[22px] font-bold text-stv-navy">{totalSaved()}</p>
+            <p className="text-[11px] leading-tight text-stv-muted">Favorit Saya</p>
           </div>
         </div>
+
+        {/* Following plan status */}
+        {followedPlan && (
+          <div className="mt-3 flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 text-lg">
+              {followedPlan.icon}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-green-600">Sedang Mengikuti Program</p>
+              <p className="truncate text-[13px] font-semibold text-green-800">{followedPlan.judul}</p>
+              {/* TODO: show daily reminder countdown when backend push notification is ready */}
+            </div>
+            <button type="button"
+              onClick={unfollowPlan}
+              className="shrink-0 rounded-lg bg-white px-2.5 py-1 text-[11px] font-semibold text-stv-muted shadow-sm transition hover:text-red-500">
+              Berhenti
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Recommended activities */}

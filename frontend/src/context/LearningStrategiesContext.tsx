@@ -15,11 +15,14 @@ interface LearningStrategiesContextValue {
   ownedToolIds: Set<number>;
   downloadedIds: Set<number>;
   planProgress: Record<number, Set<number>>; // planId -> set of day indices done
+  followedPlanId: number | null; // which weekly plan the user is currently following
 
   toggleSaved: (type: keyof SavedIds, id: number) => void;
   isSaved: (type: keyof SavedIds, id: number) => boolean;
+  totalSaved: () => number;
   toggleDone: (activityId: number) => void;
   isDone: (activityId: number) => boolean;
+  doneCount: () => number;
   toggleOwned: (toolId: number) => void;
   isOwned: (toolId: number) => boolean;
   toggleDownloaded: (downloadId: number) => void;
@@ -27,6 +30,9 @@ interface LearningStrategiesContextValue {
   togglePlanDay: (planId: number, dayIndex: number) => void;
   isPlanDayDone: (planId: number, dayIndex: number) => boolean;
   getPlanProgress: (planId: number) => number; // 0-7
+  followPlan: (planId: number) => void;
+  unfollowPlan: () => void;
+  isFollowing: (planId: number) => boolean;
 }
 
 const LearningStrategiesContext = createContext<LearningStrategiesContextValue | null>(null);
@@ -42,6 +48,7 @@ export function LearningStrategiesProvider({ children }: { children: React.React
   const [ownedToolIds, setOwnedToolIds] = useState<Set<number>>(new Set());
   const [downloadedIds, setDownloadedIds] = useState<Set<number>>(new Set());
   const [planProgress, setPlanProgress] = useState<Record<number, Set<number>>>({});
+  const [followedPlanId, setFollowedPlanId] = useState<number | null>(null);
 
   const toggleSaved = useCallback((type: keyof SavedIds, id: number) => {
     setSavedIds(prev => {
@@ -54,6 +61,10 @@ export function LearningStrategiesProvider({ children }: { children: React.React
 
   const isSaved = useCallback((type: keyof SavedIds, id: number) => savedIds[type].has(id), [savedIds]);
 
+  const totalSaved = useCallback(() =>
+    savedIds.activities.size + savedIds.plans.size + savedIds.tools.size + savedIds.downloads.size,
+  [savedIds]);
+
   const toggleDone = useCallback((activityId: number) => {
     setDoneActivityIds(prev => {
       const s = new Set(prev);
@@ -64,6 +75,8 @@ export function LearningStrategiesProvider({ children }: { children: React.React
   }, []);
 
   const isDone = useCallback((activityId: number) => doneActivityIds.has(activityId), [doneActivityIds]);
+
+  const doneCount = useCallback(() => doneActivityIds.size, [doneActivityIds]);
 
   const toggleOwned = useCallback((toolId: number) => {
     setOwnedToolIds(prev => {
@@ -102,14 +115,29 @@ export function LearningStrategiesProvider({ children }: { children: React.React
   const getPlanProgress = useCallback((planId: number) =>
     planProgress[planId]?.size ?? 0, [planProgress]);
 
+  const followPlan = useCallback((planId: number) => {
+    setFollowedPlanId(planId);
+    // TODO: POST /api/learning-strategies/plans/follow { planId }
+    // TODO: schedule daily push notification reminder via backend
+  }, []);
+
+  const unfollowPlan = useCallback(() => {
+    setFollowedPlanId(null);
+    // TODO: DELETE /api/learning-strategies/plans/follow
+    // TODO: cancel scheduled push notifications
+  }, []);
+
+  const isFollowing = useCallback((planId: number) => followedPlanId === planId, [followedPlanId]);
+
   return (
     <LearningStrategiesContext.Provider value={{
-      savedIds, doneActivityIds, ownedToolIds, downloadedIds, planProgress,
-      toggleSaved, isSaved,
-      toggleDone, isDone,
+      savedIds, doneActivityIds, ownedToolIds, downloadedIds, planProgress, followedPlanId,
+      toggleSaved, isSaved, totalSaved,
+      toggleDone, isDone, doneCount,
       toggleOwned, isOwned,
       toggleDownloaded, isDownloaded,
       togglePlanDay, isPlanDayDone, getPlanProgress,
+      followPlan, unfollowPlan, isFollowing,
     }}>
       {children}
     </LearningStrategiesContext.Provider>

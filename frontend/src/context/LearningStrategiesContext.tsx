@@ -2,6 +2,9 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
 
 // TODO: sync all state to backend API once endpoints are ready
 
+// followedPlanIds is keyed by childId (or '__global__' when no child context)
+const GLOBAL_KEY = '__global__';
+
 interface SavedIds {
   activities: Set<number>;
   plans: Set<number>;
@@ -15,7 +18,7 @@ interface LearningStrategiesContextValue {
   ownedToolIds: Set<number>;
   downloadedIds: Set<number>;
   planProgress: Record<number, Set<number>>; // planId -> set of day indices done
-  followedPlanId: number | null; // which weekly plan the user is currently following
+  followedPlanIds: Record<string, number>;   // childId -> planId (per-child)
 
   toggleSaved: (type: keyof SavedIds, id: number) => void;
   isSaved: (type: keyof SavedIds, id: number) => boolean;
@@ -30,10 +33,11 @@ interface LearningStrategiesContextValue {
   togglePlanDay: (planId: number, dayIndex: number) => void;
   isPlanDayDone: (planId: number, dayIndex: number) => boolean;
   getPlanProgress: (planId: number) => number; // 0-7
-  isPlanDone: (planId: number) => boolean; // all 7 days checked
-  followPlan: (planId: number) => void;
-  unfollowPlan: () => void;
-  isFollowing: (planId: number) => boolean;
+  isPlanDone: (planId: number) => boolean;     // all 7 days checked
+  getFollowedPlanId: (childId?: string) => number | null;
+  followPlan: (planId: number, childId?: string) => void;
+  unfollowPlan: (childId?: string) => void;
+  isFollowing: (planId: number, childId?: string) => boolean;
 }
 
 const LearningStrategiesContext = createContext<LearningStrategiesContextValue | null>(null);
@@ -49,7 +53,7 @@ export function LearningStrategiesProvider({ children }: { children: React.React
   const [ownedToolIds, setOwnedToolIds] = useState<Set<number>>(new Set());
   const [downloadedIds, setDownloadedIds] = useState<Set<number>>(new Set());
   const [planProgress, setPlanProgress] = useState<Record<number, Set<number>>>({});
-  const [followedPlanId, setFollowedPlanId] = useState<number | null>(null);
+  const [followedPlanIds, setFollowedPlanIds] = useState<Record<string, number>>({});
 
   const toggleSaved = useCallback((type: keyof SavedIds, id: number) => {
     setSavedIds(prev => {
@@ -76,7 +80,6 @@ export function LearningStrategiesProvider({ children }: { children: React.React
   }, []);
 
   const isDone = useCallback((activityId: number) => doneActivityIds.has(activityId), [doneActivityIds]);
-
   const doneCount = useCallback(() => doneActivityIds.size, [doneActivityIds]);
 
   const toggleOwned = useCallback((toolId: number) => {
@@ -119,29 +122,43 @@ export function LearningStrategiesProvider({ children }: { children: React.React
   const isPlanDone = useCallback((planId: number) =>
     (planProgress[planId]?.size ?? 0) >= 7, [planProgress]);
 
-  const followPlan = useCallback((planId: number) => {
-    setFollowedPlanId(planId);
-    // TODO: POST /api/learning-strategies/plans/follow { planId }
+  const getFollowedPlanId = useCallback((childId?: string): number | null => {
+    const key = childId ?? GLOBAL_KEY;
+    return followedPlanIds[key] ?? null;
+  }, [followedPlanIds]);
+
+  const followPlan = useCallback((planId: number, childId?: string) => {
+    const key = childId ?? GLOBAL_KEY;
+    setFollowedPlanIds(prev => ({ ...prev, [key]: planId }));
+    // TODO: POST /api/learning-strategies/plans/follow { planId, childId }
     // TODO: schedule daily push notification reminder via backend
   }, []);
 
-  const unfollowPlan = useCallback(() => {
-    setFollowedPlanId(null);
-    // TODO: DELETE /api/learning-strategies/plans/follow
+  const unfollowPlan = useCallback((childId?: string) => {
+    const key = childId ?? GLOBAL_KEY;
+    setFollowedPlanIds(prev => {
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+    // TODO: DELETE /api/learning-strategies/plans/follow { childId }
     // TODO: cancel scheduled push notifications
   }, []);
 
-  const isFollowing = useCallback((planId: number) => followedPlanId === planId, [followedPlanId]);
+  const isFollowing = useCallback((planId: number, childId?: string) => {
+    const key = childId ?? GLOBAL_KEY;
+    return followedPlanIds[key] === planId;
+  }, [followedPlanIds]);
 
   return (
     <LearningStrategiesContext.Provider value={{
-      savedIds, doneActivityIds, ownedToolIds, downloadedIds, planProgress, followedPlanId,
+      savedIds, doneActivityIds, ownedToolIds, downloadedIds, planProgress, followedPlanIds,
       toggleSaved, isSaved, totalSaved,
       toggleDone, isDone, doneCount,
       toggleOwned, isOwned,
       toggleDownloaded, isDownloaded,
       togglePlanDay, isPlanDayDone, getPlanProgress, isPlanDone,
-      followPlan, unfollowPlan, isFollowing,
+      getFollowedPlanId, followPlan, unfollowPlan, isFollowing,
     }}>
       {children}
     </LearningStrategiesContext.Provider>

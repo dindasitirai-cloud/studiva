@@ -509,11 +509,11 @@ function ActivityModal({ activity, onClose }: { activity: Activity; onClose: () 
 
 // ── PlanModal ─────────────────────────────────────────────────────────────────
 
-function PlanModal({ plan, onClose }: { plan: WeeklyPlan; onClose: () => void }) {
+function PlanModal({ plan, onClose, childId }: { plan: WeeklyPlan; onClose: () => void; childId?: string }) {
   const { toggleSaved, isSaved, togglePlanDay, isPlanDayDone, getPlanProgress, isPlanDone, followPlan, unfollowPlan, isFollowing } = useLearningStrategies();
   const saved = isSaved('plans', plan.id);
   const progress = getPlanProgress(plan.id);
-  const following = isFollowing(plan.id);
+  const following = isFollowing(plan.id, childId);
   const planCompleted = isPlanDone(plan.id);
 
   useEffect(() => {
@@ -607,7 +607,7 @@ function PlanModal({ plan, onClose }: { plan: WeeklyPlan; onClose: () => void })
         <div className="border-t border-slate-100 p-4 flex flex-col gap-2">
           {/* Ikuti Program button */}
           <button type="button"
-            onClick={() => { following ? unfollowPlan() : followPlan(plan.id); }}
+            onClick={() => { following ? unfollowPlan(childId) : followPlan(plan.id, childId); }}
             className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-[13px] font-semibold transition ${
               following
                 ? 'border-2 border-green-300 bg-green-50 text-green-700 hover:bg-green-100'
@@ -802,12 +802,12 @@ function PersonalView({
   onOpenDownload,
 }: {
   onOpenActivity: (a: Activity) => void;
-  onOpenPlan: (p: WeeklyPlan) => void;
+  onOpenPlan: (p: WeeklyPlan, childId?: string) => void;
   onOpenTool: (t: EduTool) => void;
   onOpenDownload: (d: Downloadable) => void;
 }) {
   const { children } = useDashboardTier2();
-  const { totalSaved, doneCount, followedPlanId, unfollowPlan, isPlanDayDone, getPlanProgress, isPlanDone, isDone, isOwned, isDownloaded } = useLearningStrategies();
+  const { totalSaved, doneCount, getFollowedPlanId, unfollowPlan, isPlanDayDone, getPlanProgress, isPlanDone, isDone, isOwned, isDownloaded } = useLearningStrategies();
   const [selectedChildId, setSelectedChildId] = useState<string>(() => children[0]?.id ?? '');
   const [gridTab, setGridTab] = useState<Tab>('aktivitas');
 
@@ -823,7 +823,12 @@ function PersonalView({
   const allDownloads = useMemo(() => DOWNLOADABLES.filter(d => matchesAgeMonths(d.minBulan, d.maxBulan, ageMonths)), [ageMonths]);
 
   const totalLS = allActivities.length + allPlans.length + allTools.length + allDownloads.length;
-  const followedPlan = followedPlanId ? WEEKLY_PLANS.find(p => p.id === followedPlanId) ?? null : null;
+  const followedPlanId = getFollowedPlanId(selectedChildId);
+  const followedPlan = followedPlanId
+    ? WEEKLY_PLANS.find(p => p.id === followedPlanId) ?? null
+    : null;
+  // Hide banner if program is already completed (all 7 days done)
+  const showFollowingBanner = followedPlan && !isPlanDone(followedPlan.id);
   const followProgress = followedPlanId ? getPlanProgress(followedPlanId) : 0;
 
   // "Rekomendasi hari ini" — 1 from each category (prefer undone/unsaved)
@@ -910,10 +915,10 @@ function PersonalView({
           </div>
         </div>
 
-        {/* Following plan status — clickable to open plan modal */}
-        {followedPlan && (
+        {/* Following plan status — hidden once plan is completed */}
+        {showFollowingBanner && followedPlan && (
           <button type="button"
-            onClick={() => onOpenPlan(followedPlan)}
+            onClick={() => onOpenPlan(followedPlan, selectedChildId)}
             className="mt-3 w-full rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-left transition hover:bg-green-100">
             <div className="flex items-center gap-3">
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 text-lg">
@@ -924,7 +929,7 @@ function PersonalView({
                 <p className="truncate text-[13px] font-semibold text-green-800">{followedPlan.judul}</p>
               </div>
               <button type="button"
-                onClick={e => { e.stopPropagation(); unfollowPlan(); }}
+                onClick={e => { e.stopPropagation(); unfollowPlan(selectedChildId); }}
                 className="shrink-0 rounded-lg bg-white px-2.5 py-1 text-[11px] font-semibold text-stv-muted shadow-sm transition hover:text-red-500">
                 Berhenti
               </button>
@@ -985,7 +990,7 @@ function PersonalView({
                 </button>
               )}
               {todayPlan && (
-                <button type="button" onClick={() => onOpenPlan(todayPlan)}
+                <button type="button" onClick={() => onOpenPlan(todayPlan, selectedChildId)}
                   className="flex w-44 shrink-0 flex-col gap-2 rounded-2xl border border-slate-100 bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-xl">
                     {todayPlan.icon}
@@ -1062,7 +1067,7 @@ function PersonalView({
             allPlans.length === 0
               ? <EmptyState message="Belum ada program untuk usia ini." />
               : <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {allPlans.map(p => <PlanCard key={p.id} plan={p} onOpen={() => onOpenPlan(p)} />)}
+                  {allPlans.map(p => <PlanCard key={p.id} plan={p} onOpen={() => onOpenPlan(p, selectedChildId)} />)}
                 </div>
           )}
           {gridTab === 'alat' && (
@@ -1111,7 +1116,7 @@ export default function LearningStrategiesTier2() {
   const [filterDoneOnly, setFilterDoneOnly] = useState(false);
 
   const [openActivity, setOpenActivity] = useState<Activity | null>(null);
-  const [openPlan, setOpenPlan] = useState<WeeklyPlan | null>(null);
+  const [openPlan, setOpenPlan] = useState<{ plan: WeeklyPlan; childId?: string } | null>(null);
   const [openTool, setOpenTool] = useState<EduTool | null>(null);
   const [openDownload, setOpenDownload] = useState<Downloadable | null>(null);
 
@@ -1202,7 +1207,7 @@ export default function LearningStrategiesTier2() {
       {viewMode === 'personal' && (
         <PersonalView
           onOpenActivity={setOpenActivity}
-          onOpenPlan={setOpenPlan}
+          onOpenPlan={(plan, childId) => setOpenPlan({ plan, childId })}
           onOpenTool={setOpenTool}
           onOpenDownload={setOpenDownload}
         />
@@ -1330,7 +1335,7 @@ export default function LearningStrategiesTier2() {
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {filteredPlans.map(p => (
-              <PlanCard key={p.id} plan={p} onOpen={() => setOpenPlan(p)} />
+              <PlanCard key={p.id} plan={p} onOpen={() => setOpenPlan({ plan: p })} />
             ))}
           </div>
         )
@@ -1367,7 +1372,7 @@ export default function LearningStrategiesTier2() {
           <SelesaiContent
             activities={selesaiActivities} plans={selesaiPlans}
             tools={selesaiTools} downloads={selesaiDownloads}
-            onOpenActivity={setOpenActivity} onOpenPlan={setOpenPlan}
+            onOpenActivity={setOpenActivity} onOpenPlan={p => setOpenPlan({ plan: p })}
             onOpenTool={setOpenTool} onOpenDownload={setOpenDownload}
           />
         )
@@ -1377,7 +1382,7 @@ export default function LearningStrategiesTier2() {
 
       {/* Modals — shared by both views */}
       {openActivity && <ActivityModal activity={openActivity} onClose={() => setOpenActivity(null)} />}
-      {openPlan && <PlanModal plan={openPlan} onClose={() => setOpenPlan(null)} />}
+      {openPlan && <PlanModal plan={openPlan.plan} childId={openPlan.childId} onClose={() => setOpenPlan(null)} />}
       {openTool && <ToolModal tool={openTool} onClose={() => setOpenTool(null)} />}
       {openDownload && <DownloadModal item={openDownload} onClose={() => setOpenDownload(null)} />}
     </div>
@@ -1395,7 +1400,7 @@ function SelesaiContent({
   tools: EduTool[];
   downloads: Downloadable[];
   onOpenActivity: (a: Activity) => void;
-  onOpenPlan: (p: WeeklyPlan) => void;
+  onOpenPlan: (p: WeeklyPlan, childId?: string) => void;
   onOpenTool: (t: EduTool) => void;
   onOpenDownload: (d: Downloadable) => void;
 }) {

@@ -3,6 +3,7 @@ import {
   Search, Star, CheckCircle2, Download, ShoppingBag,
   Dumbbell, X, FlaskConical, Clock,
   Wrench, FileDown, Calendar, ChevronRight, Check,
+  User, LayoutGrid, Sparkles,
 } from 'lucide-react';
 import {
   ACTIVITIES, WEEKLY_PLANS, EDU_TOOLS, DOWNLOADABLES,
@@ -10,6 +11,7 @@ import {
   Activity, WeeklyPlan, EduTool, Downloadable, DomainKey,
 } from '../../../data/learningStrategies';
 import { useLearningStrategies } from '../../../context/LearningStrategiesContext';
+import { useDashboardTier2, ChildProfile } from '../../../context/DashboardTier2Context';
 
 // ── helpers ─────────────────────────────────────────────────────────────────
 
@@ -23,6 +25,25 @@ function matchesAge(minBulan: number, maxBulan: number, filterAgeId: string): bo
   const range = AGE_RANGES.find(r => r.id === filterAgeId);
   if (!range) return true;
   return minBulan < range.max && maxBulan > range.min;
+}
+
+function childAgeInMonths(child: ChildProfile): number {
+  // child.age is stored in years; convert to months for strategy matching
+  return child.age * 12; // TODO: use precise birthdate from backend
+}
+
+function bestAgeRangeId(ageMonths: number): string {
+  const range = AGE_RANGES.find(r => ageMonths >= r.min && ageMonths < r.max);
+  return range?.id ?? AGE_RANGES[AGE_RANGES.length - 1].id;
+}
+
+function matchesAgeMonths(minBulan: number, maxBulan: number, ageMonths: number): boolean {
+  return ageMonths >= minBulan && ageMonths < maxBulan;
+}
+
+function activityAgeMonthRange(ageId: string): { min: number; max: number } {
+  const range = AGE_RANGES.find(r => r.id === ageId);
+  return { min: range?.min ?? 0, max: range?.max ?? 72 };
 }
 
 // ── SciBox ───────────────────────────────────────────────────────────────────
@@ -724,10 +745,200 @@ function DownloadModal({ item, onClose }: { item: Downloadable; onClose: () => v
 // ── Tab types & config ────────────────────────────────────────────────────────
 
 type Tab = 'aktivitas' | 'program' | 'alat' | 'unduhan';
+type ViewMode = 'personal' | 'browse';
+
+// ── PersonalView ──────────────────────────────────────────────────────────────
+
+function PersonalView({
+  onOpenActivity,
+  onOpenPlan,
+  onOpenTool,
+  onOpenDownload,
+}: {
+  onOpenActivity: (a: Activity) => void;
+  onOpenPlan: (p: WeeklyPlan) => void;
+  onOpenTool: (t: EduTool) => void;
+  onOpenDownload: (d: Downloadable) => void;
+}) {
+  const { children } = useDashboardTier2();
+  const { isSaved, isDone } = useLearningStrategies();
+  const [selectedChildId, setSelectedChildId] = useState<string>(() => children[0]?.id ?? '');
+
+  const child = children.find(c => c.id === selectedChildId) ?? children[0] ?? null;
+  const ageMonths = child ? childAgeInMonths(child) : 0;
+
+  const recActivities = useMemo(() =>
+    ACTIVITIES.filter(a => {
+      const { min, max } = activityAgeMonthRange(a.ageId);
+      return ageMonths >= min && ageMonths < max;
+    }).slice(0, 6),
+  [ageMonths]);
+
+  const recPlans = useMemo(() =>
+    WEEKLY_PLANS.filter(p => matchesAgeMonths(p.minBulan, p.maxBulan, ageMonths)).slice(0, 3),
+  [ageMonths]);
+
+  const recTools = useMemo(() =>
+    EDU_TOOLS.filter(t => matchesAgeMonths(t.minBulan, t.maxBulan, ageMonths) && t.pilihanPsikolog).slice(0, 3),
+  [ageMonths]);
+
+  const recDownloads = useMemo(() =>
+    DOWNLOADABLES.filter(d => matchesAgeMonths(d.minBulan, d.maxBulan, ageMonths)).slice(0, 4),
+  [ageMonths]);
+
+  const savedCount = ACTIVITIES.filter(a => isSaved('activities', a.id)).length
+    + WEEKLY_PLANS.filter(p => isSaved('plans', p.id)).length;
+  const doneCount = ACTIVITIES.filter(a => isDone(a.id)).length;
+
+  if (!child) {
+    return (
+      <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-amber-100 py-16 text-center">
+        <span className="mb-3 text-4xl">👶</span>
+        <p className="font-semibold text-stv-navy">Belum ada profil anak</p>
+        <p className="mt-1 text-[13px] text-stv-muted">Tambahkan profil anak di menu Profil Anak untuk mendapatkan rekomendasi personal.</p>
+      </div>
+    );
+  }
+
+  const currentRange = AGE_RANGES.find(r => {
+    const id = bestAgeRangeId(ageMonths);
+    return r.id === id;
+  });
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Child selector */}
+      {children.length > 1 && (
+        <div className="flex flex-wrap gap-2">
+          {children.map(c => (
+            <button key={c.id} type="button"
+              onClick={() => setSelectedChildId(c.id)}
+              className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-[13px] font-semibold transition ${
+                selectedChildId === c.id
+                  ? 'border-amber-400 bg-amber-400 text-white'
+                  : 'border-slate-200 bg-white text-stv-body hover:border-amber-300'
+              }`}>
+              <User className="h-3.5 w-3.5" />
+              {c.name}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Hero card */}
+      <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-100 p-5">
+        <div className="flex items-start gap-4">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-3xl">
+            {child.photo
+              ? <img src={child.photo} alt={child.name} className="h-14 w-14 rounded-2xl object-cover" />
+              : '👶'}
+          </div>
+          <div className="flex-1">
+            <p className="font-baloo text-[18px] font-bold text-stv-navy">{child.name}</p>
+            <p className="text-[13px] text-stv-muted">
+              {child.age} tahun ({ageMonths} bulan)
+              {currentRange && <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-700">{currentRange.label}</span>}
+            </p>
+          </div>
+        </div>
+
+        {/* Stats row */}
+        <div className="mt-4 grid grid-cols-3 gap-3">
+          <div className="rounded-xl bg-white/70 p-3 text-center">
+            <p className="font-baloo text-[22px] font-bold text-amber-500">{recActivities.length}</p>
+            <p className="text-[11px] text-stv-muted">Aktivitas</p>
+          </div>
+          <div className="rounded-xl bg-white/70 p-3 text-center">
+            <p className="font-baloo text-[22px] font-bold text-green-500">{doneCount}</p>
+            <p className="text-[11px] text-stv-muted">Sudah Dicoba</p>
+          </div>
+          <div className="rounded-xl bg-white/70 p-3 text-center">
+            <p className="font-baloo text-[22px] font-bold text-stv-navy">{savedCount}</p>
+            <p className="text-[11px] text-stv-muted">Disimpan</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Recommended activities */}
+      {recActivities.length > 0 && (
+        <section>
+          <div className="mb-3 flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-amber-500" />
+            <h3 className="font-baloo text-[15px] font-bold text-stv-navy">
+              Aktivitas untuk {child.name}
+            </h3>
+            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-700">
+              {recActivities.length}
+            </span>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {recActivities.map(a => (
+              <ActivityCard key={a.id} activity={a} onOpen={() => onOpenActivity(a)} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Recommended programs */}
+      {recPlans.length > 0 && (
+        <section>
+          <div className="mb-3 flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-stv-navy" />
+            <h3 className="font-baloo text-[15px] font-bold text-stv-navy">Program Mingguan Sesuai Usia</h3>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {recPlans.map(p => (
+              <PlanCard key={p.id} plan={p} onOpen={() => onOpenPlan(p)} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Pilihan psikolog tools */}
+      {recTools.length > 0 && (
+        <section>
+          <div className="mb-3 flex items-center gap-2">
+            <Wrench className="h-4 w-4 text-violet-500" />
+            <h3 className="font-baloo text-[15px] font-bold text-stv-navy">Alat Edukasi Pilihan Psikolog</h3>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {recTools.map(t => (
+              <ToolCard key={t.id} tool={t} onOpen={() => onOpenTool(t)} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Recommended downloads */}
+      {recDownloads.length > 0 && (
+        <section>
+          <div className="mb-3 flex items-center gap-2">
+            <FileDown className="h-4 w-4 text-blue-500" />
+            <h3 className="font-baloo text-[15px] font-bold text-stv-navy">Materi Unduhan untuk Usia Ini</h3>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {recDownloads.map(d => (
+              <DownloadCard key={d.id} item={d} onOpen={() => onOpenDownload(d)} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {recActivities.length === 0 && recPlans.length === 0 && (
+        <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-amber-100 py-14 text-center">
+          <span className="mb-3 text-4xl">🔍</span>
+          <p className="font-semibold text-stv-navy">Belum ada konten untuk usia {child.age} tahun</p>
+          <p className="mt-1 text-[13px] text-stv-muted">Coba gunakan mode Jelajahi untuk melihat semua konten.</p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 
 export default function LearningStrategiesTier2() {
+  const [viewMode, setViewMode] = useState<ViewMode>('personal');
   const [activeTab, setActiveTab] = useState<Tab>('aktivitas');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterAgeId, setFilterAgeId] = useState('all');
@@ -787,12 +998,46 @@ export default function LearningStrategiesTier2() {
   return (
     <div className="flex flex-col gap-5 font-nunito-sans" style={{ background: '#FFFDF8' }}>
       {/* Header */}
-      <div>
-        <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Learning Strategies</h2>
-        <p className="text-[14px] text-stv-muted">
-          Aktivitas berbasis riset, program mingguan, alat edukatif, dan materi unduhan untuk stimulasi tumbuh kembang anak.
-        </p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Learning Strategies</h2>
+          <p className="text-[14px] text-stv-muted">
+            Aktivitas berbasis riset, program mingguan, alat edukatif, dan materi unduhan.
+          </p>
+        </div>
+        {/* View mode toggle */}
+        <div className="flex shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <button type="button"
+            onClick={() => setViewMode('personal')}
+            className={`flex items-center gap-1.5 px-3 py-2 text-[12px] font-semibold transition ${
+              viewMode === 'personal' ? 'bg-amber-500 text-white' : 'text-stv-muted hover:bg-amber-50'
+            }`}>
+            <User className="h-3.5 w-3.5" />
+            Personal
+          </button>
+          <button type="button"
+            onClick={() => setViewMode('browse')}
+            className={`flex items-center gap-1.5 px-3 py-2 text-[12px] font-semibold transition ${
+              viewMode === 'browse' ? 'bg-amber-500 text-white' : 'text-stv-muted hover:bg-amber-50'
+            }`}>
+            <LayoutGrid className="h-3.5 w-3.5" />
+            Jelajahi
+          </button>
+        </div>
       </div>
+
+      {/* Personal View */}
+      {viewMode === 'personal' && (
+        <PersonalView
+          onOpenActivity={setOpenActivity}
+          onOpenPlan={setOpenPlan}
+          onOpenTool={setOpenTool}
+          onOpenDownload={setOpenDownload}
+        />
+      )}
+
+      {/* Browse View filters + content */}
+      {viewMode === 'browse' && (<>
 
       {/* Search */}
       <div className="relative">
@@ -943,7 +1188,9 @@ export default function LearningStrategiesTier2() {
         )
       )}
 
-      {/* Modals */}
+      </>)} {/* end browse view */}
+
+      {/* Modals — shared by both views */}
       {openActivity && <ActivityModal activity={openActivity} onClose={() => setOpenActivity(null)} />}
       {openPlan && <PlanModal plan={openPlan} onClose={() => setOpenPlan(null)} />}
       {openTool && <ToolModal tool={openTool} onClose={() => setOpenTool(null)} />}

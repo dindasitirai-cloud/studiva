@@ -69,6 +69,7 @@ export interface KnowledgeCard {
     paragraphs?: string[];
   };
   sources: string[];
+  adminStatus?: 'draft' | 'published'; // undefined = published (backward compat)
 }
 
 export const AGE_RANGES: { key: AgeKey; label: string; fill: string; ink: string }[] = [

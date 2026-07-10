@@ -5,7 +5,7 @@ import { useKnowledgeLibrary } from '../../../context/KnowledgeLibraryContext';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
 import { api } from '../../../api/client';
 import {
-  CARDS, AgeKey, DomainCode, KnowledgeCard, AGE_RANGES,
+  AgeKey, DomainCode, KnowledgeCard, AGE_RANGES,
 } from './knowledgeCardData';
 import BookGrid from './BookGrid';
 import BookCarousel from './BookCarousel';
@@ -58,7 +58,7 @@ function childAgeToAgeKey(ageYears: number): AgeKey {
 
 export default function KnowledgeGallery() {
   const { setSegments } = useAudioPlayer();
-  const { isBookmarked, toggleBookmark } = useKnowledgeLibrary();
+  const { isBookmarked, toggleBookmark, publishedCards } = useKnowledgeLibrary();
   const { children } = useDashboardTier2();
 
   // View mode: personal (auto age from child profile) vs browse (manual age select)
@@ -94,11 +94,12 @@ export default function KnowledgeGallery() {
       .catch(() => {});
   }, []);
 
+  // Merge: API cards (from backend) take priority; fall back to published managed cards
   const allCards = useMemo<KnowledgeCard[]>(() => {
-    if (!apiCards) return CARDS;
+    if (!apiCards) return publishedCards;
     const apiSlugs = new Set(apiCards.map(c => c.id));
-    return [...apiCards, ...CARDS.filter(c => !apiSlugs.has(c.id))];
-  }, [apiCards]);
+    return [...apiCards, ...publishedCards.filter(c => !apiSlugs.has(c.id))];
+  }, [apiCards, publishedCards]);
 
   // API-backed "sudah dibaca" state
   const [apiReadIds, setApiReadIds] = useState<Set<string>>(new Set());

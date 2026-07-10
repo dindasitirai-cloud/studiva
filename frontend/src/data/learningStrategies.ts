@@ -17,6 +17,8 @@ export interface ActivityBahan {
   affiliateUrl?: string;
 }
 
+export type ContentStatus = 'draft' | 'published';
+
 export interface Activity {
   id: number;
   icon: string;
@@ -34,6 +36,7 @@ export interface Activity {
   variasiMudah: string;
   variasiMenantang: string;
   adaptasiABK: string;
+  status?: ContentStatus; // undefined = published (backward compat)
 }
 
 export interface PlanHari {
@@ -54,6 +57,7 @@ export interface WeeklyPlan {
   sumber: string;
   caraPakai: string;
   hari: PlanHari[];
+  status?: ContentStatus;
 }
 
 export interface EduTool {
@@ -70,6 +74,7 @@ export interface EduTool {
   sumber: string;
   keunggulan: string[];
   affiliateUrl: string;
+  status?: ContentStatus;
 }
 
 export type DownloadKategori = 'Buku Cerita' | 'Flashcard' | 'Worksheet' | 'Checklist' | 'Panduan';
@@ -88,6 +93,7 @@ export interface Downloadable {
   halaman: string;
   jumlahUnduhan: number;
   fileUrl: string;
+  status?: ContentStatus;
 }
 
 export const AGE_RANGES = [

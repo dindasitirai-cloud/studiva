@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { Plus, Pencil, Trash2, Search, X, Save, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, X, Save, ChevronDown, ChevronUp, EyeOff, Send } from 'lucide-react';
 import { useLearningStrategies } from '../../context/LearningStrategiesContext';
 import {
   AGE_RANGES, DOMAIN_META,
-  Activity, WeeklyPlan, EduTool, Downloadable, DomainKey, DownloadKategori,
+  Activity, WeeklyPlan, EduTool, Downloadable, DomainKey, DownloadKategori, ContentStatus,
 } from '../../data/learningStrategies';
 
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -71,14 +71,15 @@ function ActivityModal({ initial, id, onClose }: { initial: AForm; id?: number; 
   const [form, setForm] = useState<AForm>(initial);
   const [err, setErr] = useState('');
 
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
+  function save(status: ContentStatus) {
     if (!form.judul.trim() || !form.deskripsi.trim()) { setErr('Judul dan deskripsi wajib diisi.'); return; }
-    const a = fromAForm(form, id);
+    const a = { ...fromAForm(form, id), status };
     if (id !== undefined) adminUpdateActivity(id, a);
-    else adminAddActivity(fromAForm(form));
+    else adminAddActivity(a);
     onClose();
   }
+
+  function submit(e: React.FormEvent) { e.preventDefault(); save('published'); }
 
   function toggleDomain(d: DomainKey) {
     setForm(f => ({
@@ -176,7 +177,7 @@ function ActivityModal({ initial, id, onClose }: { initial: AForm; id?: number; 
         </Field>
 
         {err && <p className="text-[12px] text-red-500">{err}</p>}
-        <ModalFooter onClose={onClose} />
+        <ModalFooter onClose={onClose} onSaveDraft={() => save('draft')} />
       </form>
     </Modal>
   );
@@ -206,12 +207,17 @@ function PlanModal({ initial, id, onClose }: { initial: PForm; id?: number; onCl
     });
   }
 
+  function save(status: ContentStatus) {
+    if (!form.judul.trim()) { setErr('Judul wajib diisi.'); return; }
+    const payload = { ...form, status };
+    if (id !== undefined) adminUpdatePlan(id, payload);
+    else adminAddPlan(payload);
+    onClose();
+  }
+
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.judul.trim()) { setErr('Judul wajib diisi.'); return; }
-    if (id !== undefined) adminUpdatePlan(id, form);
-    else adminAddPlan(form);
-    onClose();
+    save('published');
   }
 
   return (
@@ -257,7 +263,7 @@ function PlanModal({ initial, id, onClose }: { initial: PForm; id?: number; onCl
         </div>
 
         {err && <p className="text-[12px] text-red-500">{err}</p>}
-        <ModalFooter onClose={onClose} />
+        <ModalFooter onClose={onClose} onSaveDraft={() => save('draft')} />
       </form>
     </Modal>
   );
@@ -278,14 +284,15 @@ function ToolModal({ initial, id, onClose }: { initial: TForm; id?: number; onCl
   const [form, setForm] = useState<TForm>(initial);
   const [err, setErr] = useState('');
 
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
+  function save(status: ContentStatus) {
     if (!form.nama.trim()) { setErr('Nama wajib diisi.'); return; }
-    const t: Omit<EduTool, 'id'> = { ...form, keunggulan: form.keunggulanText.split('\n').filter(Boolean).map(s => s.trim()) };
+    const t: Omit<EduTool, 'id'> = { ...form, status, keunggulan: form.keunggulanText.split('\n').filter(Boolean).map(s => s.trim()) };
     if (id !== undefined) adminUpdateTool(id, t);
     else adminAddTool(t);
     onClose();
   }
+
+  function submit(e: React.FormEvent) { e.preventDefault(); save('published'); }
 
   return (
     <Modal title={id !== undefined ? 'Edit Alat Edukasi' : 'Tambah Alat Edukasi'} onClose={onClose}>
@@ -314,7 +321,7 @@ function ToolModal({ initial, id, onClose }: { initial: TForm; id?: number; onCl
         </Field>
         <Field label="Link Afiliasi (opsional)"><input value={form.affiliateUrl} onChange={e => setForm(f => ({ ...f, affiliateUrl: e.target.value }))} className={inp} /></Field>
         {err && <p className="text-[12px] text-red-500">{err}</p>}
-        <ModalFooter onClose={onClose} />
+        <ModalFooter onClose={onClose} onSaveDraft={() => save('draft')} />
       </form>
     </Modal>
   );
@@ -335,13 +342,15 @@ function DownloadModal({ initial, id, onClose }: { initial: DForm; id?: number; 
   const [form, setForm] = useState<DForm>(initial);
   const [err, setErr] = useState('');
 
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
+  function save(status: ContentStatus) {
     if (!form.nama.trim()) { setErr('Nama wajib diisi.'); return; }
-    if (id !== undefined) adminUpdateDownload(id, form);
-    else adminAddDownload(form);
+    const payload = { ...form, status };
+    if (id !== undefined) adminUpdateDownload(id, payload);
+    else adminAddDownload(payload);
     onClose();
   }
+
+  function submit(e: React.FormEvent) { e.preventDefault(); save('published'); }
 
   return (
     <Modal title={id !== undefined ? 'Edit Materi Unduhan' : 'Tambah Unduhan'} onClose={onClose}>
@@ -366,7 +375,7 @@ function DownloadModal({ initial, id, onClose }: { initial: DForm; id?: number; 
         <Field label="Cara Menggunakan"><textarea value={form.caraPakai} onChange={e => setForm(f => ({ ...f, caraPakai: e.target.value }))} rows={2} className={ta} /></Field>
         <Field label="URL File (TODO: upload)"><input value={form.fileUrl} onChange={e => setForm(f => ({ ...f, fileUrl: e.target.value }))} className={inp} /></Field>
         {err && <p className="text-[12px] text-red-500">{err}</p>}
-        <ModalFooter onClose={onClose} />
+        <ModalFooter onClose={onClose} onSaveDraft={() => save('draft')} />
       </form>
     </Modal>
   );
@@ -392,17 +401,25 @@ function Modal({ title, onClose, children }: { title: string; onClose: () => voi
   );
 }
 
-function ModalFooter({ onClose }: { onClose: () => void }) {
+function ModalFooter({ onClose, onSaveDraft }: { onClose: () => void; onSaveDraft?: () => void }) {
   return (
-    <div className="mt-2 flex justify-end gap-3 border-t border-slate-100 pt-3">
+    <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-3">
       <button type="button" onClick={onClose}
-        className="rounded-full border border-stv-border px-5 py-2 text-[13px] font-semibold text-stv-body hover:bg-slate-50">
+        className="rounded-full border border-stv-border px-4 py-2 text-[13px] font-semibold text-stv-body hover:bg-slate-50">
         Batal
       </button>
-      <button type="submit"
-        className="flex items-center gap-1.5 rounded-full bg-amber-500 px-5 py-2 text-[13px] font-bold text-white hover:bg-amber-600">
-        <Save className="h-4 w-4" /> Simpan
-      </button>
+      <div className="flex gap-2">
+        {onSaveDraft && (
+          <button type="button" onClick={onSaveDraft}
+            className="flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-4 py-2 text-[13px] font-semibold text-stv-body hover:bg-slate-50">
+            <Save className="h-3.5 w-3.5" /> Simpan Draft
+          </button>
+        )}
+        <button type="submit"
+          className="flex items-center gap-1.5 rounded-full bg-amber-500 px-4 py-2 text-[13px] font-bold text-white hover:bg-amber-600">
+          <Send className="h-3.5 w-3.5" /> Terbitkan
+        </button>
+      </div>
     </div>
   );
 }
@@ -415,6 +432,7 @@ export default function StrategiesAdmin() {
   const {
     managedActivities, managedPlans, managedTools, managedDownloads,
     adminDeleteActivity, adminDeletePlan, adminDeleteTool, adminDeleteDownload,
+    adminSetStatus,
   } = useLearningStrategies();
 
   const [activeTab, setActiveTab] = useState<TabKey>('aktivitas');
@@ -479,10 +497,25 @@ export default function StrategiesAdmin() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Learning Strategies</h2>
-          <p className="text-[14px] text-stv-muted">
-            Kelola {managedActivities.length + managedPlans.length + managedTools.length + managedDownloads.length} konten
-            <span className="ml-1 text-amber-600 font-semibold">(TODO: tersimpan di memori — hubungkan ke backend untuk persistensi)</span>
-          </p>
+          <div className="mt-1 flex flex-wrap items-center gap-3 text-[13px]">
+            <span className="text-stv-muted">
+              Total: <strong className="text-stv-navy">{managedActivities.length + managedPlans.length + managedTools.length + managedDownloads.length}</strong> konten
+            </span>
+            {(() => {
+              const draftCount = [managedActivities, managedPlans, managedTools, managedDownloads]
+                .flat().filter(x => x.status === 'draft').length;
+              return draftCount > 0 ? (
+                <span className="rounded-full bg-amber-100 px-3 py-0.5 font-semibold text-amber-700">
+                  {draftCount} Draft belum diterbitkan
+                </span>
+              ) : (
+                <span className="rounded-full bg-green-100 px-3 py-0.5 font-semibold text-green-700">
+                  Semua konten sudah terbit
+                </span>
+              );
+            })()}
+            <span className="text-amber-500 font-medium">TODO: sambungkan ke backend</span>
+          </div>
         </div>
         <button type="button"
           onClick={() => {
@@ -534,10 +567,11 @@ export default function StrategiesAdmin() {
             ? <Empty label="aktivitas" />
             : filteredActs.map(a => (
               <Row key={a.id}
-                icon={a.icon} title={a.judul}
+                icon={a.icon} title={a.judul} status={a.status}
                 meta={[AGE_RANGES.find(r => r.id === a.ageId)?.label ?? a.ageId, `${a.durasiMenit} mnt`, a.isDIY ? 'DIY' : 'Perlu Alat']}
                 onEdit={() => setActivityModal({ form: toAForm(a), id: a.id })}
                 onDelete={() => confirmDelete(a.judul, () => adminDeleteActivity(a.id))}
+                onToggleStatus={() => adminSetStatus('activity', a.id, a.status === 'draft' ? 'published' : 'draft')}
               />
             ))}
         </div>
@@ -550,10 +584,11 @@ export default function StrategiesAdmin() {
             ? <Empty label="program" />
             : filteredPlans.map(p => (
               <Row key={p.id}
-                icon={p.icon} title={p.judul}
+                icon={p.icon} title={p.judul} status={p.status}
                 meta={[p.ageLabel, ageStr(p.minBulan, p.maxBulan), `${p.hari.length} hari`]}
                 onEdit={() => setPlanModal({ form: { icon: p.icon, judul: p.judul, ageLabel: p.ageLabel, minBulan: p.minBulan, maxBulan: p.maxBulan, deskripsi: p.deskripsi, sci: p.sci, sumber: p.sumber, caraPakai: p.caraPakai, hari: p.hari }, id: p.id })}
                 onDelete={() => confirmDelete(p.judul, () => adminDeletePlan(p.id))}
+                onToggleStatus={() => adminSetStatus('plan', p.id, p.status === 'draft' ? 'published' : 'draft')}
               />
             ))}
         </div>
@@ -566,10 +601,11 @@ export default function StrategiesAdmin() {
             ? <Empty label="alat edukasi" />
             : filteredTools.map(t => (
               <Row key={t.id}
-                icon={t.icon} title={t.nama}
+                icon={t.icon} title={t.nama} status={t.status}
                 meta={[t.ageLabel, t.hargaEstimasi, t.pilihanPsikolog ? '⭐ Pilihan Psikolog' : '']}
                 onEdit={() => setToolModal({ form: { icon: t.icon, nama: t.nama, hargaEstimasi: t.hargaEstimasi, pilihanPsikolog: t.pilihanPsikolog, minBulan: t.minBulan, maxBulan: t.maxBulan, ageLabel: t.ageLabel, deskripsi: t.deskripsi, sci: t.sci, sumber: t.sumber, keunggulanText: t.keunggulan.join('\n'), affiliateUrl: t.affiliateUrl }, id: t.id })}
                 onDelete={() => confirmDelete(t.nama, () => adminDeleteTool(t.id))}
+                onToggleStatus={() => adminSetStatus('tool', t.id, t.status === 'draft' ? 'published' : 'draft')}
               />
             ))}
         </div>
@@ -582,10 +618,11 @@ export default function StrategiesAdmin() {
             ? <Empty label="unduhan" />
             : filteredDls.map(d => (
               <Row key={d.id}
-                icon={d.icon} title={d.nama}
+                icon={d.icon} title={d.nama} status={d.status}
                 meta={[d.kategori, ageStr(d.minBulan, d.maxBulan), d.halaman]}
                 onEdit={() => setDownloadModal({ form: { icon: d.icon, nama: d.nama, kategori: d.kategori, minBulan: d.minBulan, maxBulan: d.maxBulan, deskripsi: d.deskripsi, sci: d.sci, sumber: d.sumber, caraPakai: d.caraPakai, halaman: d.halaman, jumlahUnduhan: d.jumlahUnduhan, fileUrl: d.fileUrl }, id: d.id })}
                 onDelete={() => confirmDelete(d.nama, () => adminDeleteDownload(d.id))}
+                onToggleStatus={() => adminSetStatus('download', d.id, d.status === 'draft' ? 'published' : 'draft')}
               />
             ))}
         </div>
@@ -610,14 +647,22 @@ export default function StrategiesAdmin() {
 
 // ── shared row component ──────────────────────────────────────────────────────
 
-function Row({ icon, title, meta, onEdit, onDelete }: {
-  icon: string; title: string; meta: string[]; onEdit: () => void; onDelete: () => void;
+function Row({ icon, title, meta, status, onEdit, onDelete, onToggleStatus }: {
+  icon: string; title: string; meta: string[];
+  status?: ContentStatus;
+  onEdit: () => void; onDelete: () => void; onToggleStatus: () => void;
 }) {
+  const isDraft = status === 'draft';
   return (
-    <div className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_2px_8px_rgba(16,58,107,.05)]">
-      <span className="shrink-0 text-xl">{icon}</span>
+    <div className={`flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_2px_8px_rgba(16,58,107,.05)] ${isDraft ? 'border-l-4 border-amber-300' : ''}`}>
+      <span className="shrink-0 text-xl opacity-60" style={isDraft ? { filter: 'grayscale(60%)' } : {}}>{icon}</span>
       <div className="flex-1 min-w-0">
-        <p className="font-semibold text-[14px] text-stv-navy truncate">{title}</p>
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className={`font-semibold text-[14px] truncate ${isDraft ? 'text-stv-muted' : 'text-stv-navy'}`}>{title}</p>
+          <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${isDraft ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'}`}>
+            {isDraft ? 'Draft' : 'Terbit'}
+          </span>
+        </div>
         <div className="flex flex-wrap gap-1.5 mt-0.5">
           {meta.filter(Boolean).map((m, i) => (
             <span key={i} className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600">{m}</span>
@@ -625,6 +670,10 @@ function Row({ icon, title, meta, onEdit, onDelete }: {
         </div>
       </div>
       <div className="flex shrink-0 gap-1.5">
+        <button type="button" onClick={onToggleStatus} title={isDraft ? 'Terbitkan' : 'Jadikan Draft'}
+          className={`flex h-8 w-8 items-center justify-center rounded-xl transition ${isDraft ? 'bg-green-50 text-green-600 hover:bg-green-100' : 'bg-slate-50 text-stv-muted hover:bg-slate-100'}`}>
+          {isDraft ? <Send className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
+        </button>
         <button type="button" onClick={onEdit}
           className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 text-amber-600 hover:bg-amber-100 transition">
           <Pencil className="h-3.5 w-3.5" />

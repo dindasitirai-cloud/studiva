@@ -806,7 +806,7 @@ function PersonalView({
   onOpenDownload: (d: Downloadable) => void;
 }) {
   const { children } = useDashboardTier2();
-  const { totalSaved, doneCount, getFollowedPlanId, unfollowPlan, isPlanDayDone, getPlanProgress, isPlanDone, isDone, isOwned, isDownloaded, managedActivities, managedPlans, managedTools, managedDownloads } = useLearningStrategies();
+  const { totalSaved, doneCount, getFollowedPlanId, unfollowPlan, isPlanDayDone, getPlanProgress, isPlanDone, isDone, isOwned, isDownloaded, publishedActivities: managedActivities, publishedPlans: managedPlans, publishedTools: managedTools, publishedDownloads: managedDownloads } = useLearningStrategies();
   const [selectedChildId, setSelectedChildId] = useState<string>(() => children[0]?.id ?? '');
   const [gridTab, setGridTab] = useState<Tab>('aktivitas');
 
@@ -1119,7 +1119,7 @@ export default function LearningStrategiesTier2() {
   const [openTool, setOpenTool] = useState<EduTool | null>(null);
   const [openDownload, setOpenDownload] = useState<Downloadable | null>(null);
 
-  const { isSaved, isDone, isPlanDone, isOwned, isDownloaded, managedActivities, managedPlans, managedTools, managedDownloads } = useLearningStrategies();
+  const { isSaved, isDone, isPlanDone, isOwned, isDownloaded, publishedActivities: managedActivities, publishedPlans: managedPlans, publishedTools: managedTools, publishedDownloads: managedDownloads } = useLearningStrategies();
 
   // Filtered data per tab
   const filteredActivities = useMemo(() => managedActivities.filter(a => {

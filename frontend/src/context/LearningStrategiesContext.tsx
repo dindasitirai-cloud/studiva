@@ -4,7 +4,7 @@ import {
   WEEKLY_PLANS as STATIC_PLANS,
   EDU_TOOLS as STATIC_TOOLS,
   DOWNLOADABLES as STATIC_DOWNLOADS,
-  Activity, WeeklyPlan, EduTool, Downloadable,
+  Activity, WeeklyPlan, EduTool, Downloadable, ContentStatus,
 } from '../data/learningStrategies';
 
 // TODO: sync all state to backend API once endpoints are ready
@@ -64,6 +64,13 @@ interface LearningStrategiesContextValue {
   adminAddDownload: (d: Omit<Downloadable, 'id'>) => void;
   adminUpdateDownload: (id: number, patch: Partial<Omit<Downloadable, 'id'>>) => void;
   adminDeleteDownload: (id: number) => void;
+  adminSetStatus: (type: 'activity' | 'plan' | 'tool' | 'download', id: number, status: ContentStatus) => void;
+
+  // Published-only views (for user-facing pages)
+  publishedActivities: Activity[];
+  publishedPlans: WeeklyPlan[];
+  publishedTools: EduTool[];
+  publishedDownloads: Downloadable[];
 }
 
 const LearningStrategiesContext = createContext<LearningStrategiesContextValue | null>(null);
@@ -117,6 +124,20 @@ export function LearningStrategiesProvider({ children }: { children: React.React
   const adminDeleteDownload = useCallback((id: number) => {
     setManagedDownloads(prev => prev.filter(d => d.id !== id));
   }, []);
+
+  const adminSetStatus = useCallback((type: 'activity' | 'plan' | 'tool' | 'download', id: number, status: ContentStatus) => {
+    if (type === 'activity') setManagedActivities(prev => prev.map(a => a.id === id ? { ...a, status } : a));
+    else if (type === 'plan') setManagedPlans(prev => prev.map(p => p.id === id ? { ...p, status } : p));
+    else if (type === 'tool') setManagedTools(prev => prev.map(t => t.id === id ? { ...t, status } : t));
+    else setManagedDownloads(prev => prev.map(d => d.id === id ? { ...d, status } : d));
+    // TODO: PATCH /api/admin/learning-strategies/:type/:id/status
+  }, []);
+
+  // Published-only views — undefined status = published (backward compat with static data)
+  const publishedActivities = managedActivities.filter(a => a.status !== 'draft');
+  const publishedPlans      = managedPlans.filter(p => p.status !== 'draft');
+  const publishedTools      = managedTools.filter(t => t.status !== 'draft');
+  const publishedDownloads  = managedDownloads.filter(d => d.status !== 'draft');
 
   // ── User interaction state ─────────────────────────────────────────────────
   const [savedIds, setSavedIds] = useState<SavedIds>({
@@ -240,6 +261,8 @@ export function LearningStrategiesProvider({ children }: { children: React.React
       adminAddPlan, adminUpdatePlan, adminDeletePlan,
       adminAddTool, adminUpdateTool, adminDeleteTool,
       adminAddDownload, adminUpdateDownload, adminDeleteDownload,
+      adminSetStatus,
+      publishedActivities, publishedPlans, publishedTools, publishedDownloads,
     }}>
       {children}
     </LearningStrategiesContext.Provider>

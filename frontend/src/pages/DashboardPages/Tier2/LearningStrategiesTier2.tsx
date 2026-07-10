@@ -6,7 +6,6 @@ import {
   User, LayoutGrid, Sparkles,
 } from 'lucide-react';
 import {
-  ACTIVITIES, WEEKLY_PLANS, EDU_TOOLS, DOWNLOADABLES,
   DOMAIN_META, AGE_RANGES,
   Activity, WeeklyPlan, EduTool, Downloadable, DomainKey,
 } from '../../../data/learningStrategies';
@@ -807,7 +806,7 @@ function PersonalView({
   onOpenDownload: (d: Downloadable) => void;
 }) {
   const { children } = useDashboardTier2();
-  const { totalSaved, doneCount, getFollowedPlanId, unfollowPlan, isPlanDayDone, getPlanProgress, isPlanDone, isDone, isOwned, isDownloaded } = useLearningStrategies();
+  const { totalSaved, doneCount, getFollowedPlanId, unfollowPlan, isPlanDayDone, getPlanProgress, isPlanDone, isDone, isOwned, isDownloaded, managedActivities, managedPlans, managedTools, managedDownloads } = useLearningStrategies();
   const [selectedChildId, setSelectedChildId] = useState<string>(() => children[0]?.id ?? '');
   const [gridTab, setGridTab] = useState<Tab>('aktivitas');
 
@@ -816,16 +815,16 @@ function PersonalView({
 
   // All age-matched content (no slice — used for grid + stats)
   const allActivities = useMemo(() =>
-    ACTIVITIES.filter(a => { const { min, max } = activityAgeMonthRange(a.ageId); return ageMonths >= min && ageMonths < max; }),
-  [ageMonths]);
-  const allPlans = useMemo(() => WEEKLY_PLANS.filter(p => matchesAgeMonths(p.minBulan, p.maxBulan, ageMonths)), [ageMonths]);
-  const allTools = useMemo(() => EDU_TOOLS.filter(t => matchesAgeMonths(t.minBulan, t.maxBulan, ageMonths)), [ageMonths]);
-  const allDownloads = useMemo(() => DOWNLOADABLES.filter(d => matchesAgeMonths(d.minBulan, d.maxBulan, ageMonths)), [ageMonths]);
+    managedActivities.filter(a => { const { min, max } = activityAgeMonthRange(a.ageId); return ageMonths >= min && ageMonths < max; }),
+  [managedActivities, ageMonths]);
+  const allPlans = useMemo(() => managedPlans.filter(p => matchesAgeMonths(p.minBulan, p.maxBulan, ageMonths)), [managedPlans, ageMonths]);
+  const allTools = useMemo(() => managedTools.filter(t => matchesAgeMonths(t.minBulan, t.maxBulan, ageMonths)), [managedTools, ageMonths]);
+  const allDownloads = useMemo(() => managedDownloads.filter(d => matchesAgeMonths(d.minBulan, d.maxBulan, ageMonths)), [managedDownloads, ageMonths]);
 
   const totalLS = allActivities.length + allPlans.length + allTools.length + allDownloads.length;
   const followedPlanId = getFollowedPlanId(selectedChildId);
   const followedPlan = followedPlanId
-    ? WEEKLY_PLANS.find(p => p.id === followedPlanId) ?? null
+    ? managedPlans.find(p => p.id === followedPlanId) ?? null
     : null;
   // Hide banner if program is already completed (all 7 days done)
   const showFollowingBanner = followedPlan && !isPlanDone(followedPlan.id);
@@ -1120,10 +1119,10 @@ export default function LearningStrategiesTier2() {
   const [openTool, setOpenTool] = useState<EduTool | null>(null);
   const [openDownload, setOpenDownload] = useState<Downloadable | null>(null);
 
-  const { isSaved, isDone, isPlanDone, isOwned, isDownloaded } = useLearningStrategies();
+  const { isSaved, isDone, isPlanDone, isOwned, isDownloaded, managedActivities, managedPlans, managedTools, managedDownloads } = useLearningStrategies();
 
   // Filtered data per tab
-  const filteredActivities = useMemo(() => ACTIVITIES.filter(a => {
+  const filteredActivities = useMemo(() => managedActivities.filter(a => {
     const matchSearch = !searchQuery || a.judul.toLowerCase().includes(searchQuery.toLowerCase()) || a.deskripsi.toLowerCase().includes(searchQuery.toLowerCase());
     const matchAge = filterAgeId === 'all' || matchesAge(
       AGE_RANGES.find(r => r.id === a.ageId)?.min ?? 0,
@@ -1134,34 +1133,34 @@ export default function LearningStrategiesTier2() {
     const matchSaved = !filterSavedOnly || isSaved('activities', a.id);
     const matchDone = !filterDoneOnly || isDone(a.id);
     return matchSearch && matchAge && matchDomain && matchSaved && matchDone;
-  }), [searchQuery, filterAgeId, filterDomain, filterSavedOnly, filterDoneOnly, isSaved, isDone]);
+  }), [managedActivities, searchQuery, filterAgeId, filterDomain, filterSavedOnly, filterDoneOnly, isSaved, isDone]);
 
-  const filteredPlans = useMemo(() => WEEKLY_PLANS.filter(p => {
+  const filteredPlans = useMemo(() => managedPlans.filter(p => {
     const matchSearch = !searchQuery || p.judul.toLowerCase().includes(searchQuery.toLowerCase());
     const matchAge = matchesAge(p.minBulan, p.maxBulan, filterAgeId);
     const matchSaved = !filterSavedOnly || isSaved('plans', p.id);
     return matchSearch && matchAge && matchSaved;
-  }), [searchQuery, filterAgeId, filterSavedOnly, isSaved]);
+  }), [managedPlans, searchQuery, filterAgeId, filterSavedOnly, isSaved]);
 
-  const filteredTools = useMemo(() => EDU_TOOLS.filter(t => {
+  const filteredTools = useMemo(() => managedTools.filter(t => {
     const matchSearch = !searchQuery || t.nama.toLowerCase().includes(searchQuery.toLowerCase());
     const matchAge = matchesAge(t.minBulan, t.maxBulan, filterAgeId);
     const matchSaved = !filterSavedOnly || isSaved('tools', t.id);
     return matchSearch && matchAge && matchSaved;
-  }), [searchQuery, filterAgeId, filterSavedOnly, isSaved]);
+  }), [managedTools, searchQuery, filterAgeId, filterSavedOnly, isSaved]);
 
-  const filteredDownloads = useMemo(() => DOWNLOADABLES.filter(d => {
+  const filteredDownloads = useMemo(() => managedDownloads.filter(d => {
     const matchSearch = !searchQuery || d.nama.toLowerCase().includes(searchQuery.toLowerCase());
     const matchAge = matchesAge(d.minBulan, d.maxBulan, filterAgeId);
     const matchSaved = !filterSavedOnly || isSaved('downloads', d.id);
     return matchSearch && matchAge && matchSaved;
-  }), [searchQuery, filterAgeId, filterSavedOnly, isSaved]);
+  }), [managedDownloads, searchQuery, filterAgeId, filterSavedOnly, isSaved]);
 
   // Sudah Dilakukan: across all content (no age/search filter — it's what you've done)
-  const selesaiActivities = useMemo(() => ACTIVITIES.filter(a => isDone(a.id)), [isDone]);
-  const selesaiPlans      = useMemo(() => WEEKLY_PLANS.filter(p => isPlanDone(p.id)), [isPlanDone]);
-  const selesaiTools      = useMemo(() => EDU_TOOLS.filter(t => isOwned(t.id)), [isOwned]);
-  const selesaiDownloads  = useMemo(() => DOWNLOADABLES.filter(d => isDownloaded(d.id)), [isDownloaded]);
+  const selesaiActivities = useMemo(() => managedActivities.filter(a => isDone(a.id)), [managedActivities, isDone]);
+  const selesaiPlans      = useMemo(() => managedPlans.filter(p => isPlanDone(p.id)), [managedPlans, isPlanDone]);
+  const selesaiTools      = useMemo(() => managedTools.filter(t => isOwned(t.id)), [managedTools, isOwned]);
+  const selesaiDownloads  = useMemo(() => managedDownloads.filter(d => isDownloaded(d.id)), [managedDownloads, isDownloaded]);
   const selesaiTotal = selesaiActivities.length + selesaiPlans.length + selesaiTools.length + selesaiDownloads.length;
 
   const TABS: { id: Tab; label: string; icon: React.ReactNode; count: number }[] = [

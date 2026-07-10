@@ -18,6 +18,8 @@ interface BookGridProps {
   isBookmarked: (id: string) => boolean;
   toggleBookmark: (id: string) => void;
   onBookClick: (card: KnowledgeCard) => void;
+  hideHeader?: boolean;     // header is rendered by parent (KnowledgeGallery)
+  hideAgeFilter?: boolean;  // age is auto-set in personal mode
 }
 
 function BookCover({ card, isRead, isBookmarked, onToggleBookmark, onClick }: {
@@ -74,17 +76,20 @@ function BookCover({ card, isRead, isBookmarked, onToggleBookmark, onClick }: {
 export default function BookGrid({
   cards, selectedAge, setSelectedAge, selectedDomain, setSelectedDomain,
   viewTab, setViewTab, isRead, isBookmarked, toggleBookmark, onBookClick,
+  hideHeader = false, hideAgeFilter = false,
 }: BookGridProps) {
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Header */}
-      <div>
-        <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Panduan Tumbuh Kembang</h2>
-        <p className="text-[14px] text-stv-muted">
-          Kartu pengetahuan tumbuh kembang anak usia 0–6 tahun, berbasis riset.
-        </p>
-      </div>
+      {/* Header — hidden when KnowledgeGallery renders its own */}
+      {!hideHeader && (
+        <div>
+          <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Panduan Tumbuh Kembang</h2>
+          <p className="text-[14px] text-stv-muted">
+            Kartu pengetahuan tumbuh kembang anak usia 0–6 tahun, berbasis riset.
+          </p>
+        </div>
+      )}
 
       {/* View tabs */}
       <div className="flex flex-wrap gap-2">
@@ -108,8 +113,8 @@ export default function BookGrid({
         ))}
       </div>
 
-      {/* Age range pills */}
-      {viewTab === 'semua' && (
+      {/* Age range pills — hidden in personal mode (age auto-set from child profile) */}
+      {viewTab === 'semua' && !hideAgeFilter && (
         <div className="-mx-4 px-4 sm:-mx-0 sm:px-0">
           <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
             {AGE_RANGES.map(ar => {

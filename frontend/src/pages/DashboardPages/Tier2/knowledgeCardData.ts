@@ -107,7 +107,7 @@ export const CARDS: KnowledgeCard[] = [
   // ===================== 0–3 BULAN (detail ilmiah PENUH) =====================
   {
     id: "RL-0-3m-FM", ageKey: "0-3m", domain: "FM", title: "Tummy time: menegakkan kepala",
-    photo: P("0-3m-fm", "Bayi tummy time mengangkat kepala"), readMinutes: 2,
+    photo: { src: "", alt: "Tummy time: menegakkan kepala" }, readMinutes: 2,
     summary: {
       terjadi: "Otot leher dan bahu bayi menguat. Saat tengkurap dalam keadaan bangun, ia mulai mengangkat kepala; tangannya sering dibawa ke mulut.",
       penting: "Tummy time membangun kekuatan untuk berguling, duduk, dan merangkak, sekaligus mencegah kepala peyang. Prinsipnya: \"back to sleep, tummy to play\".",

@@ -10,6 +10,7 @@ import {
 import BookGrid from './BookGrid';
 import BookCarousel from './BookCarousel';
 import BookReader from './BookReader';
+import { fmtAge, ageInMonths } from './ProfilAnakTier2';
 
 const ALL_DOMAIN = '__all__' as const;
 type ViewTab = 'semua' | 'dibaca' | 'disimpan';
@@ -43,14 +44,17 @@ function apiToLocal(c: ApiKnowledgeCard): KnowledgeCard {
 
 // ── Child age → AgeKey mapping ───────────────────────────────────────────────
 
-function childAgeToAgeKey(ageYears: number): AgeKey {
-  // child.age stored in years; approximate mapping to AgeKey
-  // TODO: use exact birthdate from backend for precise range
-  if (ageYears <= 0) return '0-3m';
-  if (ageYears === 1) return '12-18m';
-  if (ageYears === 2) return '2-3y';
-  if (ageYears === 3) return '3-4y';
-  if (ageYears === 4) return '4-5y';
+function childAgeToAgeKey(ageMonths: number): AgeKey {
+  // child.age stored as total months
+  if (ageMonths < 3)   return '0-3m';
+  if (ageMonths < 6)   return '3-6m';
+  if (ageMonths < 9)   return '6-9m';
+  if (ageMonths < 12)  return '9-12m';
+  if (ageMonths < 18)  return '12-18m';
+  if (ageMonths < 24)  return '18-24m';
+  if (ageMonths < 36)  return '2-3y';
+  if (ageMonths < 48)  return '3-4y';
+  if (ageMonths < 60)  return '4-5y';
   return '5-6y';
 }
 
@@ -76,7 +80,7 @@ export default function KnowledgeGallery() {
   const activeChild = children.find(c => c.id === selectedChildId) ?? children[0] ?? null;
   useEffect(() => {
     if (viewMode === 'personal' && activeChild) {
-      setSelectedAge(childAgeToAgeKey(activeChild.age));
+      setSelectedAge(childAgeToAgeKey(ageInMonths(activeChild.birthdate)));
       setViewTab('semua');
     }
   }, [viewMode, activeChild]);
@@ -281,7 +285,7 @@ export default function KnowledgeGallery() {
                 <div className="flex-1 min-w-0">
                   <p className="font-baloo text-[16px] font-bold text-stv-navy">{activeChild.name}</p>
                   <div className="mt-0.5 flex flex-wrap items-center gap-2">
-                    <span className="text-[13px] text-stv-muted">{activeChild.age} tahun</span>
+                    <span className="text-[13px] text-stv-muted">{fmtAge(ageInMonths(activeChild.birthdate))}</span>
                     {ageRange && (
                       <span className="rounded-full px-2.5 py-0.5 text-[11px] font-bold"
                         style={{ background: ageRange.fill, color: ageRange.ink }}>

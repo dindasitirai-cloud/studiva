@@ -264,3 +264,47 @@ CREATE TABLE IF NOT EXISTS card_reads (
   UNIQUE(user_id, card_id)
 );
 CREATE INDEX IF NOT EXISTS idx_card_reads_user ON card_reads(user_id);
+
+-- ── Learning Strategies content (admin-managed) ───────────────────────────────
+
+CREATE TABLE IF NOT EXISTS ls_activities (
+  id       INTEGER PRIMARY KEY,
+  status   TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('draft', 'published')),
+  data     TEXT NOT NULL DEFAULT '{}',   -- full Activity JSON
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS ls_plans (
+  id       INTEGER PRIMARY KEY,
+  status   TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('draft', 'published')),
+  data     TEXT NOT NULL DEFAULT '{}',   -- full WeeklyPlan JSON
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS ls_tools (
+  id       INTEGER PRIMARY KEY,
+  status   TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('draft', 'published')),
+  data     TEXT NOT NULL DEFAULT '{}',   -- full EduTool JSON
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS ls_downloads (
+  id       INTEGER PRIMARY KEY,
+  status   TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('draft', 'published')),
+  data     TEXT NOT NULL DEFAULT '{}',   -- full Downloadable JSON
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ── Knowledge Cards managed content (admin-editable, JSON blob) ───────────────
+
+CREATE TABLE IF NOT EXISTS kc_managed (
+  id     TEXT PRIMARY KEY,   -- string slug like "0-3m-fm"
+  status TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('draft', 'published')),
+  data   TEXT NOT NULL DEFAULT '{}',  -- full KnowledgeCard JSON
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

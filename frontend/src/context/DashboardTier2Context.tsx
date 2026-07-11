@@ -17,7 +17,7 @@ export type JournalMood = 'great' | 'good' | 'ok' | 'challenging';
 export interface ChildProfile {
   id: string;
   name: string;
-  age: number;
+  birthdate: string; // ISO date string: "YYYY-MM-DD"
   photo?: string; // data URL or remote URL
   learningStyles: LearningStyle[];
   summary?: string;

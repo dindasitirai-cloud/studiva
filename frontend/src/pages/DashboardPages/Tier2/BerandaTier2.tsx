@@ -5,6 +5,7 @@ import {
   BookOpen, Star, Clock, Sparkles, TrendingUp, Zap, Eye, MessageCircle, Video,
 } from 'lucide-react';
 import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
+import { fmtAge, ageInMonths } from './ProfilAnakTier2';
 
 // ---------------------------------------------------------------------------
 // Rotating motivational greeting messages
@@ -192,7 +193,7 @@ export default function BerandaTier2() {
                 </div>
                 <div>
                   <div className="font-bold text-stv-navy">{child.name}</div>
-                  <div className="text-[13px] text-stv-muted">{child.age} tahun</div>
+                  <div className="text-[13px] text-stv-muted">{fmtAge(ageInMonths(child.birthdate))}</div>
                   <div className="mt-1 flex flex-wrap gap-1">
                     {child.learningStyles.map(s => (
                       <span key={s} className="rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-700">{s}</span>

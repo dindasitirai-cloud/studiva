@@ -11,6 +11,7 @@ import {
 } from '../../../data/learningStrategies';
 import { useLearningStrategies } from '../../../context/LearningStrategiesContext';
 import { useDashboardTier2, ChildProfile } from '../../../context/DashboardTier2Context';
+import { fmtAge, ageInMonths } from './ProfilAnakTier2';
 
 // ── helpers ─────────────────────────────────────────────────────────────────
 
@@ -27,8 +28,7 @@ function matchesAge(minBulan: number, maxBulan: number, filterAgeId: string): bo
 }
 
 function childAgeInMonths(child: ChildProfile): number {
-  // child.age is stored in years; convert to months for strategy matching
-  return child.age * 12; // TODO: use precise birthdate from backend
+  return ageInMonths(child.birthdate);
 }
 
 function bestAgeRangeId(ageMonths: number): string {
@@ -86,7 +86,7 @@ function AgePill({ ageId }: { ageId: string }) {
 
 // ── ActivityCard ──────────────────────────────────────────────────────────────
 
-function ActivityCard({ activity, onOpen }: { activity: Activity; onOpen: () => void }) {
+export function ActivityCard({ activity, onOpen }: { activity: Activity; onOpen: () => void }) {
   const { toggleSaved, isSaved, toggleDone, isDone } = useLearningStrategies();
   const saved = isSaved('activities', activity.id);
   const done = isDone(activity.id);
@@ -154,7 +154,7 @@ function ActivityCard({ activity, onOpen }: { activity: Activity; onOpen: () => 
 
 // ── PlanCard ──────────────────────────────────────────────────────────────────
 
-function PlanCard({ plan, onOpen }: { plan: WeeklyPlan; onOpen: () => void }) {
+export function PlanCard({ plan, onOpen }: { plan: WeeklyPlan; onOpen: () => void }) {
   const { toggleSaved, isSaved, getPlanProgress, isPlanDone } = useLearningStrategies();
   const saved = isSaved('plans', plan.id);
   const progress = getPlanProgress(plan.id);
@@ -230,7 +230,7 @@ function PlanCard({ plan, onOpen }: { plan: WeeklyPlan; onOpen: () => void }) {
 
 // ── ToolCard ──────────────────────────────────────────────────────────────────
 
-function ToolCard({ tool, onOpen }: { tool: EduTool; onOpen: () => void }) {
+export function ToolCard({ tool, onOpen }: { tool: EduTool; onOpen: () => void }) {
   const { toggleSaved, isSaved, toggleOwned, isOwned } = useLearningStrategies();
   const saved = isSaved('tools', tool.id);
   const owned = isOwned(tool.id);
@@ -296,7 +296,7 @@ function ToolCard({ tool, onOpen }: { tool: EduTool; onOpen: () => void }) {
 
 // ── DownloadCard ─────────────────────────────────────────────────────────────
 
-function DownloadCard({ item, onOpen }: { item: Downloadable; onOpen: () => void }) {
+export function DownloadCard({ item, onOpen }: { item: Downloadable; onOpen: () => void }) {
   const { toggleSaved, isSaved, toggleDownloaded, isDownloaded } = useLearningStrategies();
   const saved = isSaved('downloads', item.id);
   const downloaded = isDownloaded(item.id);
@@ -374,7 +374,7 @@ function DownloadCard({ item, onOpen }: { item: Downloadable; onOpen: () => void
 
 // ── ActivityModal ─────────────────────────────────────────────────────────────
 
-function ActivityModal({ activity, onClose }: { activity: Activity; onClose: () => void }) {
+export function ActivityModal({ activity, onClose }: { activity: Activity; onClose: () => void }) {
   const { toggleSaved, isSaved, toggleDone, isDone } = useLearningStrategies();
   const saved = isSaved('activities', activity.id);
   const done = isDone(activity.id);
@@ -508,7 +508,7 @@ function ActivityModal({ activity, onClose }: { activity: Activity; onClose: () 
 
 // ── PlanModal ─────────────────────────────────────────────────────────────────
 
-function PlanModal({ plan, onClose, childId }: { plan: WeeklyPlan; onClose: () => void; childId?: string }) {
+export function PlanModal({ plan, onClose, childId }: { plan: WeeklyPlan; onClose: () => void; childId?: string }) {
   const { toggleSaved, isSaved, togglePlanDay, isPlanDayDone, getPlanProgress, isPlanDone, followPlan, unfollowPlan, isFollowing } = useLearningStrategies();
   const saved = isSaved('plans', plan.id);
   const progress = getPlanProgress(plan.id);
@@ -642,7 +642,7 @@ function PlanModal({ plan, onClose, childId }: { plan: WeeklyPlan; onClose: () =
 
 // ── ToolModal ─────────────────────────────────────────────────────────────────
 
-function ToolModal({ tool, onClose }: { tool: EduTool; onClose: () => void }) {
+export function ToolModal({ tool, onClose }: { tool: EduTool; onClose: () => void }) {
   const { toggleSaved, isSaved, toggleOwned, isOwned } = useLearningStrategies();
   const saved = isSaved('tools', tool.id);
   const owned = isOwned(tool.id);
@@ -711,7 +711,28 @@ function ToolModal({ tool, onClose }: { tool: EduTool; onClose: () => void }) {
             <ShoppingBag className="h-4 w-4" />
             {owned ? 'Sudah Punya' : 'Tandai Sudah Punya'}
           </button>
-          {/* TODO: link to affiliate/store when backend ready */}
+          {/* TODO: catat event klik untuk analytics affiliate */}
+          {tool.affiliateUrl && tool.affiliateUrl !== '#todo' && tool.affiliateUrl !== '' ? (
+            <a
+              href={tool.affiliateUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 rounded-xl border border-orange-200 bg-orange-50 px-3 py-2.5 text-[13px] font-semibold text-orange-700 hover:bg-orange-100 transition"
+            >
+              <ShoppingBag className="h-4 w-4" />
+              Beli via Shopee
+            </a>
+          ) : (
+            <a
+              href={`https://shopee.co.id/search?keyword=${encodeURIComponent(tool.nama)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 rounded-xl border border-orange-200 bg-orange-50 px-3 py-2.5 text-[13px] font-semibold text-orange-700 hover:bg-orange-100 transition"
+            >
+              <ShoppingBag className="h-4 w-4" />
+              Cari di Shopee
+            </a>
+          )}
         </div>
       </div>
     </div>
@@ -720,7 +741,7 @@ function ToolModal({ tool, onClose }: { tool: EduTool; onClose: () => void }) {
 
 // ── DownloadModal ─────────────────────────────────────────────────────────────
 
-function DownloadModal({ item, onClose }: { item: Downloadable; onClose: () => void }) {
+export function DownloadModal({ item, onClose }: { item: Downloadable; onClose: () => void }) {
   const { toggleSaved, isSaved, toggleDownloaded, isDownloaded } = useLearningStrategies();
   const saved = isSaved('downloads', item.id);
   const downloaded = isDownloaded(item.id);
@@ -892,7 +913,7 @@ function PersonalView({
           <div className="flex-1">
             <p className="font-baloo text-[18px] font-bold text-stv-navy">{child.name}</p>
             <p className="text-[13px] text-stv-muted">
-              {child.age} tahun ({ageMonths} bulan)
+              {fmtAge(ageInMonths(child.birthdate))}
               {currentRange && <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-700">{currentRange.label}</span>}
             </p>
           </div>
@@ -1097,7 +1118,7 @@ function PersonalView({
       )}
 
       {totalLS === 0 && (
-        <EmptyState message={`Belum ada konten untuk usia ${child.age} tahun.`} />
+        <EmptyState message={`Belum ada konten untuk usia ${fmtAge(ageInMonths(child.birthdate))}.`} />
       )}
     </div>
   );

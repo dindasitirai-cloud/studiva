@@ -29,9 +29,11 @@ interface BookReaderProps {
   nextCard?: KnowledgeCard | null;
   onNavigate?: (card: KnowledgeCard) => void;
   onNavigateInReader?: (card: KnowledgeCard) => void;
+  /** When true, stay on the cover — don't auto-advance to summary (used by admin preview) */
+  noAutoAdvance?: boolean;
 }
 
-export default function BookReader({ card, isRead, onToggleRead, onClose, prevCard, nextCard, onNavigate, onNavigateInReader }: BookReaderProps) {
+export default function BookReader({ card, isRead, onToggleRead, onClose, prevCard, nextCard, onNavigate, onNavigateInReader, noAutoAdvance }: BookReaderProps) {
   const reduced = useReducedMotion();
   const [page, setPage] = useState<'cover' | 'summary' | 'scientific'>('cover');
   const { segments, setCurrentIndex, registerNavigate } = useAudioPlayer();
@@ -45,11 +47,12 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
   const hasScientific = hasSections || hasParagraphs;
   const FigureComp = sci.figure ? FIGURE_REGISTRY[sci.figure.id] : null;
 
-  // Open to summary after mounting (cover → summary)
+  // Open to summary after mounting (cover → summary), unless caller wants to start on cover
   useEffect(() => {
+    if (noAutoAdvance) return;
     const t = setTimeout(() => setPage('summary'), reduced ? 10 : 80);
     return () => clearTimeout(t);
-  }, [card.id, reduced]);
+  }, [card.id, reduced, noAutoAdvance]);
 
   // Sync audio player
   useEffect(() => {

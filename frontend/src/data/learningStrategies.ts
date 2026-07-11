@@ -17,7 +17,41 @@ export interface ActivityBahan {
   affiliateUrl?: string;
 }
 
-export type ContentStatus = 'draft' | 'published';
+export type ContentStatus = 'draft' | 'review' | 'approved' | 'published';
+
+export const PILAR_RISET: Record<string, string> = {
+  P01: 'AAP Policy Statement on Play 2018',
+  P02: 'Vygotsky Zone of Proximal Development',
+  P03: 'Piaget Sensorimotor Stage',
+  P04: 'Harvard Center on the Developing Child',
+  P05: 'WHO Motor Development Milestones 2006',
+  P06: 'Bronfenbrenner Ecological Systems Theory',
+  P07: 'Ainsworth Strange Situation / Attachment',
+  P08: 'CDC Learn the Signs. Act Early.',
+  P09: 'ASHA Language Development',
+  P10: 'Montessori Prepared Environment',
+  P11: 'Reggio Emilia Approach',
+  P12: 'Executive Function & Self-Regulation — Center on the Developing Child',
+  P13: 'Sensory Processing & Integration — Ayres',
+  P14: 'Music & Brain Development — Levitin',
+  P15: 'Nature & Outdoor Play — Louv Last Child in the Woods',
+  P16: 'Pretend Play & Cognitive Development — Singer',
+  P17: 'Bilingual Development — Bialystok',
+  P18: 'Screen Time Guidelines — AAP 2016',
+  P19: 'Growth Mindset — Dweck',
+  P20: 'Positive Discipline — Nelsen',
+  P21: 'Mindfulness for Children — Kabat-Zinn adaptation',
+  P22: 'Sleep & Brain Development — Walker Why We Sleep',
+  P23: 'Nutrition & Cognitive Development — Georgieff',
+  P24: 'Fine Motor Development — Case-Smith',
+  P25: 'Gross Motor Development — Gallahue',
+  P26: 'Social-Emotional Learning — CASEL Framework',
+  P27: 'Temperament & Goodness of Fit — Thomas & Chess',
+  P28: 'Shared Book Reading — Bus, van IJzendoorn & Pellegrini',
+  P29: 'Block Play & STEM — Verdine et al.',
+  P30: 'Art & Creative Development — Kellogg',
+  P31: 'Inclusive Education & UDL — CAST Framework',
+};
 
 export interface Activity {
   id: number;
@@ -36,6 +70,7 @@ export interface Activity {
   variasiMudah: string;
   variasiMenantang: string;
   adaptasiABK: string;
+  catatanReviewer?: string;
   status?: ContentStatus; // undefined = published (backward compat)
 }
 
@@ -57,6 +92,7 @@ export interface WeeklyPlan {
   sumber: string;
   caraPakai: string;
   hari: PlanHari[];
+  catatanReviewer?: string;
   status?: ContentStatus;
 }
 
@@ -74,6 +110,9 @@ export interface EduTool {
   sumber: string;
   keunggulan: string[];
   affiliateUrl: string;
+  statusLink?: 'KOSONG' | 'TERPASANG' | 'PERLU_CEK' | 'MATI';
+  tanggalCekLink?: string; // ISO date string
+  catatanReviewer?: string;
   status?: ContentStatus;
 }
 
@@ -93,6 +132,7 @@ export interface Downloadable {
   halaman: string;
   jumlahUnduhan: number;
   fileUrl: string;
+  catatanReviewer?: string;
   status?: ContentStatus;
 }
 

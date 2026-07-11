@@ -128,6 +128,29 @@ function PhotoUpload({ photo, name, onChange }: { photo?: string; name: string; 
   );
 }
 
+// Compute age in months from ISO birthdate to today
+export function ageInMonths(birthdate: string): number {
+  if (!birthdate) return 0;
+  const birth = new Date(birthdate);
+  const now = new Date();
+  const months = (now.getFullYear() - birth.getFullYear()) * 12
+    + (now.getMonth() - birth.getMonth());
+  return Math.max(0, months);
+}
+
+// Format total months as human-readable age
+export function fmtAge(months: number): string {
+  if (months < 1) return '< 1 bulan';
+  const y = Math.floor(months / 12);
+  const m = months % 12;
+  if (y === 0) return `${m} bulan`;
+  if (m === 0) return `${y} tahun`;
+  return `${y} tahun ${m} bulan`;
+}
+
+// Max date = today (can't be born in the future)
+const TODAY_STR = new Date().toISOString().split('T')[0];
+
 // ---------------------------------------------------------------------------
 // Child form (add or edit)
 // ---------------------------------------------------------------------------
@@ -139,12 +162,14 @@ interface ChildFormProps {
 }
 
 function ChildForm({ initial, onSave, onCancel, title }: ChildFormProps) {
-  const [name, setName] = useState(initial?.name ?? '');
-  const [age, setAge] = useState<string>(initial?.age?.toString() ?? '');
-  const [summary, setSummary] = useState(initial?.summary ?? '');
-  const [photo, setPhoto] = useState(initial?.photo ?? '');
-  const [styles, setStyles] = useState<LearningStyle[]>(initial?.learningStyles ?? []);
-  const [error, setError] = useState('');
+  const [name, setName]           = useState(initial?.name ?? '');
+  const [birthdate, setBirthdate] = useState(initial?.birthdate ?? '');
+  const [summary, setSummary]     = useState(initial?.summary ?? '');
+  const [photo, setPhoto]         = useState(initial?.photo ?? '');
+  const [styles, setStyles]       = useState<LearningStyle[]>(initial?.learningStyles ?? []);
+  const [error, setError]         = useState('');
+
+  const computedMonths = birthdate ? ageInMonths(birthdate) : null;
 
   function toggleStyle(s: LearningStyle) {
     setStyles(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
@@ -152,12 +177,12 @@ function ChildForm({ initial, onSave, onCancel, title }: ChildFormProps) {
 
   function handleSave() {
     if (!name.trim()) { setError('Nama anak wajib diisi.'); return; }
-    const parsedAge = parseInt(age, 10);
-    if (!age || isNaN(parsedAge) || parsedAge < 1 || parsedAge > 18) {
-      setError('Masukkan usia anak yang valid (1–18).'); return;
-    }
+    if (!birthdate) { setError('Tanggal lahir wajib diisi.'); return; }
+    if (birthdate > TODAY_STR) { setError('Tanggal lahir tidak boleh di masa depan.'); return; }
+    const months = ageInMonths(birthdate);
+    if (months > 216) { setError('Usia anak melebihi 18 tahun.'); return; }
     setError('');
-    onSave({ name: name.trim(), age: parsedAge, summary: summary.trim(), photo, learningStyles: styles });
+    onSave({ name: name.trim(), birthdate, summary: summary.trim(), photo, learningStyles: styles });
   }
 
   return (
@@ -186,12 +211,17 @@ function ChildForm({ initial, onSave, onCancel, title }: ChildFormProps) {
             />
           </div>
           <div>
-            <label className="mb-1 block text-[13px] font-semibold text-stv-navy">Usia (tahun) *</label>
+            <label className="mb-1 block text-[13px] font-semibold text-stv-navy">Tanggal Lahir *</label>
             <input
-              type="number" min={1} max={18} value={age} onChange={e => setAge(e.target.value)}
+              type="date" max={TODAY_STR} value={birthdate}
+              onChange={e => setBirthdate(e.target.value)}
               className="w-full rounded-xl border border-amber-200 px-4 py-2.5 text-[15px] focus:border-amber-500 focus:outline-none"
-              placeholder="mis. 7"
             />
+            {computedMonths !== null && (
+              <p className="mt-1 text-[12px] text-amber-600 font-medium">
+                Usia saat ini: {fmtAge(computedMonths)}
+              </p>
+            )}
           </div>
           <div>
             <label className="mb-1 block text-[13px] font-semibold text-stv-navy">Catatan Singkat</label>
@@ -459,7 +489,7 @@ function ChildDetail({ child }: { child: ChildProfile }) {
           </div>
           <div>
             <h3 className="font-baloo text-[20px] font-extrabold text-stv-navy">{child.name}</h3>
-            <p className="text-[14px] text-stv-muted">{child.age} tahun</p>
+            <p className="text-[14px] text-stv-muted">{fmtAge(ageInMonths(child.birthdate))}</p>
             {child.summary && <p className="mt-1 max-w-[360px] text-[13px] leading-[1.4] text-stv-body">{child.summary}</p>}
             {child.learningStyles.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-1.5">

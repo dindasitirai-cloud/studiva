@@ -9,7 +9,7 @@ import SidebarAdmin from './SidebarAdmin';
 
 const PAGE_TITLES: Record<string, string> = {
   '/admin': 'Beranda / Ringkasan',
-  '/admin/resource-library': 'Artikel Digital',
+
   '/admin/courses': 'Courses',
   '/admin/strategies': 'Learning Strategies',
   '/admin/forum': 'Community Forum',

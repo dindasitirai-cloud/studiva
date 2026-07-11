@@ -79,7 +79,6 @@ import CatatanOrangTuaGuru from './pages/GuruPages/CatatanOrangTuaGuru';
 import StudentProfileGuru from './pages/GuruPages/StudentProfileGuru';
 import AdminShell from './pages/AdminPages/AdminShell';
 import BerandaAdmin from './pages/AdminPages/BerandaAdmin';
-import ResourceLibraryAdmin from './pages/AdminPages/ResourceLibraryAdmin';
 import CoursesAdmin from './pages/AdminPages/CoursesAdmin';
 import StrategiesAdmin from './pages/AdminPages/StrategiesAdmin';
 import ForumAdmin from './pages/AdminPages/ForumAdmin';
@@ -101,7 +100,7 @@ const CONSULTATION_UPGRADE_MESSAGE =
 // enrollment-requests, fitri-dashboard) still rely on the public Navbar for
 // navigation and aren't wrapped in AdminShell.
 const ADMIN_SHELL_PATHS = [
-  '/admin', '/admin/resource-library', '/admin/courses', '/admin/strategies',
+  '/admin', '/admin/courses', '/admin/strategies',
   '/admin/forum', '/admin/konsultasi', '/admin/members', '/admin/payments', '/admin/settings',
   '/admin/spp-billing', '/admin/sekolah-akun', '/admin/guru-akun',
   '/admin/knowledge-cards',
@@ -365,7 +364,6 @@ export default function App() {
               }
             >
               <Route index element={<BerandaAdmin />} />
-              <Route path="resource-library" element={<ResourceLibraryAdmin />} />
               <Route path="courses" element={<CoursesAdmin />} />
               <Route path="strategies" element={<StrategiesAdmin />} />
               <Route path="forum" element={<ForumAdmin />} />

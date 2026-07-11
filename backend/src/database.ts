@@ -65,4 +65,5 @@ export async function initDatabase(): Promise<void> {
       if (!(err as Error).message.includes('duplicate column name')) throw err;
     }
   }
+
 }

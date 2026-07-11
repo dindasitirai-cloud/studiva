@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Users, UserPlus, Library, Video, CalendarCheck, MessageCircleWarning,
-  BarChart3, Upload, GraduationCap, Lightbulb, ArrowRight,
+  Users, UserPlus, Video, CalendarCheck, MessageCircleWarning,
+  BarChart3, GraduationCap, Lightbulb, ArrowRight,
 } from 'lucide-react';
 import { useAdmin, MEMBER_GROWTH } from './AdminContext';
 import { useDashboardTier2 } from '../../context/DashboardTier2Context';
@@ -49,7 +49,6 @@ function KpiCard({ icon: Icon, value, label, colorKey }: { icon: typeof Users; v
 }
 
 const SHORTCUTS = [
-  { to: '/admin/resource-library', label: 'Upload Materi Baru', icon: Upload, colorKey: 'resources' as const },
   { to: '/admin/courses', label: 'Buat Course Baru', icon: GraduationCap, colorKey: 'courses' as const },
   { to: '/admin/strategies', label: 'Tambah Strategi', icon: Lightbulb, colorKey: 'strategies' as const },
   { to: '/admin/konsultasi', label: 'Atur Slot Konsultasi', icon: CalendarCheck, colorKey: 'konsultasi' as const },
@@ -79,7 +78,7 @@ export default function BerandaAdmin() {
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         <KpiCard icon={Users} value={totalActiveMembers} label="Anggota Aktif" colorKey="members" />
         <KpiCard icon={UserPlus} value={newMembersThisMonth} label="Langganan Baru Bulan Ini" colorKey="members" />
-        <KpiCard icon={Library} value={totalMateri} label="Total Materi & Course" colorKey="resources" />
+        <KpiCard icon={GraduationCap} value={totalMateri} label="Total Materi & Course" colorKey="courses" />
         <KpiCard icon={Video} value={upcomingWebinars} label="Webinar Mendatang" colorKey="courses" />
         <KpiCard icon={CalendarCheck} value={scheduledConsultations} label="Konsultasi Terjadwal" colorKey="konsultasi" />
         <KpiCard icon={MessageCircleWarning} value={unansweredForum} label="Komentar Perlu Ditanggapi" colorKey="forum" />

@@ -1,10 +1,13 @@
-import React, { useState, useMemo } from 'react';
-import { Plus, Pencil, Trash2, Search, X, Save, Send, EyeOff } from 'lucide-react';
+import React, { useState, useMemo, useCallback } from 'react';
+import { Plus, Pencil, Trash2, Search, X, Save, Send, EyeOff, RefreshCw, Eye } from 'lucide-react';
 import { useKnowledgeLibrary } from '../../context/KnowledgeLibraryContext';
 import {
   KnowledgeCard, AgeKey, DomainCode,
-  AGE_RANGES, DOMAIN_MAP,
+  AGE_RANGES, DOMAIN_MAP, CARDS as STATIC_CARDS,
 } from '../DashboardPages/Tier2/knowledgeCardData';
+import { api } from '../../api/client';
+import BookCarousel from '../DashboardPages/Tier2/BookCarousel';
+import BookReader from '../DashboardPages/Tier2/BookReader';
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 
@@ -281,13 +284,30 @@ function CardFormModal({ initial, existing, onClose }: {
 // ── Main Admin Page ───────────────────────────────────────────────────────────
 
 export default function KnowledgeCardsAdmin() {
-  const { managedCards, adminDeleteCard, adminSetCardStatus } = useKnowledgeLibrary();
+  const { managedCards, adminDeleteCard, adminSetCardStatus, apiLoaded } = useKnowledgeLibrary();
 
   const [search, setSearch]             = useState('');
   const [filterAge, setFilterAge]       = useState<AgeKey | 'all'>('all');
   const [filterDomain, setFilterDomain] = useState<DomainCode | 'all'>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | 'published' | 'draft'>('all');
   const [modal, setModal]               = useState<{ form: CardForm; existing?: KnowledgeCard } | null>(null);
+  const [previewCard, setPreviewCard]   = useState<KnowledgeCard | null>(null);
+  const [previewView, setPreviewView]   = useState<'carousel' | 'reader'>('carousel');
+  const [syncing, setSyncing]           = useState(false);
+  const [syncMsg, setSyncMsg]           = useState('');
+
+  const syncToBackend = useCallback(async () => {
+    setSyncing(true);
+    setSyncMsg('');
+    try {
+      await api.post('/kc-managed/admin/bulk', { items: STATIC_CARDS });
+      setSyncMsg(`✓ ${STATIC_CARDS.length} kartu berhasil disinkron ke database`);
+    } catch {
+      setSyncMsg('Sinkronisasi gagal. Pastikan backend berjalan dan Anda sudah login sebagai admin.');
+    } finally {
+      setSyncing(false);
+    }
+  }, []);
 
   const filtered = useMemo(() => {
     const qs = search.toLowerCase();
@@ -328,14 +348,28 @@ export default function KnowledgeCardsAdmin() {
                 Semua kartu sudah terbit
               </span>
             )}
-            <span className="text-amber-500 font-medium">TODO: sambungkan ke backend</span>
+            {!apiLoaded && (
+              <span className="text-slate-400 text-[12px]">Memuat dari backend...</span>
+            )}
           </div>
+          {syncMsg && (
+            <p className={`mt-1 text-[12px] font-medium ${syncMsg.startsWith('✓') ? 'text-green-600' : 'text-red-500'}`}>
+              {syncMsg}
+            </p>
+          )}
         </div>
-        <button type="button"
-          onClick={() => setModal({ form: EMPTY_FORM })}
-          className="flex items-center gap-1.5 rounded-full bg-amber-500 px-5 py-2.5 text-[14px] font-bold text-white hover:bg-amber-600 transition">
-          <Plus className="h-4 w-4" /> Tambah Kartu
-        </button>
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={syncToBackend} disabled={syncing}
+            className="flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-4 py-2.5 text-[13px] font-semibold text-stv-body hover:bg-slate-50 disabled:opacity-50 transition">
+            <RefreshCw className={`h-3.5 w-3.5 ${syncing ? 'animate-spin' : ''}`} />
+            {syncing ? 'Menyinkron...' : 'Sinkron ke Backend'}
+          </button>
+          <button type="button"
+            onClick={() => setModal({ form: EMPTY_FORM })}
+            className="flex items-center gap-1.5 rounded-full bg-amber-500 px-5 py-2.5 text-[14px] font-bold text-white hover:bg-amber-600 transition">
+            <Plus className="h-4 w-4" /> Tambah Kartu
+          </button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -420,6 +454,12 @@ export default function KnowledgeCardsAdmin() {
                 {/* Actions */}
                 <div className="flex shrink-0 gap-1.5">
                   <button type="button"
+                    onClick={() => { setPreviewCard(c); setPreviewView('carousel'); }}
+                    title="Preview tampilan orang tua"
+                    className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 transition">
+                    <Eye className="h-3.5 w-3.5" />
+                  </button>
+                  <button type="button"
                     onClick={() => adminSetCardStatus(c.id, isDraft ? 'published' : 'draft')}
                     title={isDraft ? 'Terbitkan' : 'Jadikan Draft'}
                     className={`flex h-8 w-8 items-center justify-center rounded-xl transition ${isDraft ? 'bg-green-50 text-green-600 hover:bg-green-100' : 'bg-slate-50 text-stv-muted hover:bg-slate-100'}`}>
@@ -450,6 +490,54 @@ export default function KnowledgeCardsAdmin() {
           existing={modal.existing}
           onClose={() => setModal(null)}
         />
+      )}
+
+      {/* ── Card Preview overlay ── */}
+      {previewCard && (
+        <div className="fixed inset-0 z-[200] overflow-y-auto bg-[#FAFAF8]">
+          {/* Admin-only banner */}
+          <div className="sticky top-0 z-[201] flex items-center justify-between gap-3 border-b border-amber-200 bg-amber-50 px-4 py-2.5">
+            <div className="flex items-center gap-2 min-w-0">
+              <Eye className="h-4 w-4 shrink-0 text-amber-600" />
+              <span className="text-[13px] font-bold text-amber-700 shrink-0">MODE PREVIEW ADMIN</span>
+              <span className="rounded-full bg-amber-200 px-2 py-0.5 text-[11px] font-semibold text-amber-800 truncate">
+                {previewCard.adminStatus === 'draft' ? 'Draft — belum terlihat oleh orang tua' : 'Konten sudah terbit'}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setPreviewCard(null)}
+              className="shrink-0 flex items-center gap-1.5 rounded-full border border-amber-300 bg-white px-3 py-1 text-[12px] font-semibold text-amber-700 hover:bg-amber-100 transition"
+            >
+              <X className="h-3.5 w-3.5" /> Tutup Preview
+            </button>
+          </div>
+
+          {/* Carousel view */}
+          {previewView === 'carousel' && (
+            <div className="px-4 py-5">
+              <BookCarousel
+                cards={[previewCard]}
+                selectedId={previewCard.id}
+                onSelect={() => {}}
+                onOpen={() => setPreviewView('reader')}
+                onBack={() => setPreviewCard(null)}
+              />
+            </div>
+          )}
+
+          {/* Reader view */}
+          {previewView === 'reader' && (
+            <BookReader
+              card={previewCard}
+              isRead={false}
+              onToggleRead={() => {}}
+              onClose={() => setPreviewView('carousel')}
+              prevCard={null}
+              nextCard={null}
+            />
+          )}
+        </div>
       )}
     </div>
   );

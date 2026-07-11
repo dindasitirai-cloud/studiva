@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import {
   ACTIVITIES as STATIC_ACTIVITIES,
   WEEKLY_PLANS as STATIC_PLANS,
@@ -6,8 +6,9 @@ import {
   DOWNLOADABLES as STATIC_DOWNLOADS,
   Activity, WeeklyPlan, EduTool, Downloadable, ContentStatus,
 } from '../data/learningStrategies';
+import { api } from '../api/client';
 
-// TODO: sync all state to backend API once endpoints are ready
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 
 // followedPlanIds is keyed by childId (or '__global__' when no child context)
 const GLOBAL_KEY = '__global__';
@@ -46,9 +47,9 @@ interface LearningStrategiesContextValue {
   unfollowPlan: (childId?: string) => void;
   isFollowing: (planId: number, childId?: string) => boolean;
 
-  // Managed content (admin-editable, starts from static data)
-  // TODO: load from and persist to backend API
+  // Managed content (admin-editable, API-backed)
   managedActivities: Activity[];
+  apiLoaded: boolean; // true once first API fetch completes
   managedPlans: WeeklyPlan[];
   managedTools: EduTool[];
   managedDownloads: Downloadable[];
@@ -65,6 +66,12 @@ interface LearningStrategiesContextValue {
   adminUpdateDownload: (id: number, patch: Partial<Omit<Downloadable, 'id'>>) => void;
   adminDeleteDownload: (id: number) => void;
   adminSetStatus: (type: 'activity' | 'plan' | 'tool' | 'download', id: number, status: ContentStatus) => void;
+  adminBulkSetStatus: (type: 'activities' | 'plans' | 'tools' | 'downloads', ids: number[], status: ContentStatus) => void;
+  adminDuplicateActivity: (id: number) => void;
+  adminDuplicatePlan: (id: number) => void;
+  adminDuplicateTool: (id: number) => void;
+  adminDuplicateDownload: (id: number) => void;
+  adminUpdateToolLink: (id: number, affiliateUrl: string, statusLink: 'KOSONG' | 'TERPASANG' | 'PERLU_CEK' | 'MATI', tanggalCekLink: string) => void;
 
   // Published-only views (for user-facing pages)
   publishedActivities: Activity[];
@@ -76,68 +83,173 @@ interface LearningStrategiesContextValue {
 const LearningStrategiesContext = createContext<LearningStrategiesContextValue | null>(null);
 
 export function LearningStrategiesProvider({ children }: { children: React.ReactNode }) {
-  // ── Managed content (admin-editable) ─────────────────────────────────────
+  // ── Managed content (admin-editable, API-backed) ──────────────────────────
   const [managedActivities, setManagedActivities] = useState<Activity[]>(() => STATIC_ACTIVITIES);
   const [managedPlans, setManagedPlans] = useState<WeeklyPlan[]>(() => STATIC_PLANS);
   const [managedTools, setManagedTools] = useState<EduTool[]>(() => STATIC_TOOLS);
   const [managedDownloads, setManagedDownloads] = useState<Downloadable[]>(() => STATIC_DOWNLOADS);
+  const [apiLoaded, setApiLoaded] = useState(false);
 
+  // Load from backend on mount; auto-seed if empty
+  useEffect(() => {
+    async function loadFromApi() {
+      try {
+        const [acts, plans, tools, dls] = await Promise.all([
+          fetch(`${API}/api/learning-strategies/activities`).then(r => r.json()),
+          fetch(`${API}/api/learning-strategies/plans`).then(r => r.json()),
+          fetch(`${API}/api/learning-strategies/tools`).then(r => r.json()),
+          fetch(`${API}/api/learning-strategies/downloads`).then(r => r.json()),
+        ]);
+
+        const hasData = (acts.items?.length ?? 0) + (plans.items?.length ?? 0) > 0;
+        if (hasData) {
+          if (acts.items?.length)  setManagedActivities(acts.items);
+          if (plans.items?.length) setManagedPlans(plans.items);
+          if (tools.items?.length) setManagedTools(tools.items);
+          if (dls.items?.length)   setManagedDownloads(dls.items);
+        }
+        // else: backend empty → keep static data, admin will seed via StrategiesAdmin
+        setApiLoaded(true);
+      } catch {
+        // backend offline → keep static data
+        setApiLoaded(true);
+      }
+    }
+    loadFromApi();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Admin: add (optimistic update + API)
   const adminAddActivity = useCallback((a: Omit<Activity, 'id'>) => {
-    setManagedActivities(prev => [...prev, { ...a, id: Math.max(0, ...prev.map(x => x.id)) + 1 }]);
-    // TODO: POST /api/admin/learning-strategies/activities
-  }, []);
+    const newId = Math.max(0, ...managedActivities.map(x => x.id)) + 1;
+    const item = { ...a, id: newId } as Activity;
+    setManagedActivities(prev => [...prev, item]);
+    api.post('/learning-strategies/admin/activities', item).catch(console.error);
+  }, [managedActivities]);
+
   const adminUpdateActivity = useCallback((id: number, patch: Partial<Omit<Activity, 'id'>>) => {
     setManagedActivities(prev => prev.map(a => a.id === id ? { ...a, ...patch } : a));
-    // TODO: PATCH /api/admin/learning-strategies/activities/:id
+    api.put(`/learning-strategies/admin/activities/${id}`, patch).catch(console.error);
   }, []);
+
   const adminDeleteActivity = useCallback((id: number) => {
     setManagedActivities(prev => prev.filter(a => a.id !== id));
-    // TODO: DELETE /api/admin/learning-strategies/activities/:id
+    api.delete(`/learning-strategies/admin/activities/${id}`).catch(console.error);
   }, []);
 
   const adminAddPlan = useCallback((p: Omit<WeeklyPlan, 'id'>) => {
-    setManagedPlans(prev => [...prev, { ...p, id: Math.max(0, ...prev.map(x => x.id)) + 1 }]);
-  }, []);
+    const newId = Math.max(0, ...managedPlans.map(x => x.id)) + 1;
+    const item = { ...p, id: newId } as WeeklyPlan;
+    setManagedPlans(prev => [...prev, item]);
+    api.post('/learning-strategies/admin/plans', item).catch(console.error);
+  }, [managedPlans]);
+
   const adminUpdatePlan = useCallback((id: number, patch: Partial<Omit<WeeklyPlan, 'id'>>) => {
     setManagedPlans(prev => prev.map(p => p.id === id ? { ...p, ...patch } : p));
+    api.put(`/learning-strategies/admin/plans/${id}`, patch).catch(console.error);
   }, []);
+
   const adminDeletePlan = useCallback((id: number) => {
     setManagedPlans(prev => prev.filter(p => p.id !== id));
+    api.delete(`/learning-strategies/admin/plans/${id}`).catch(console.error);
   }, []);
 
   const adminAddTool = useCallback((t: Omit<EduTool, 'id'>) => {
-    setManagedTools(prev => [...prev, { ...t, id: Math.max(0, ...prev.map(x => x.id)) + 1 }]);
-  }, []);
+    const newId = Math.max(0, ...managedTools.map(x => x.id)) + 1;
+    const item = { ...t, id: newId } as EduTool;
+    setManagedTools(prev => [...prev, item]);
+    api.post('/learning-strategies/admin/tools', item).catch(console.error);
+  }, [managedTools]);
+
   const adminUpdateTool = useCallback((id: number, patch: Partial<Omit<EduTool, 'id'>>) => {
     setManagedTools(prev => prev.map(t => t.id === id ? { ...t, ...patch } : t));
+    api.put(`/learning-strategies/admin/tools/${id}`, patch).catch(console.error);
   }, []);
+
   const adminDeleteTool = useCallback((id: number) => {
     setManagedTools(prev => prev.filter(t => t.id !== id));
+    api.delete(`/learning-strategies/admin/tools/${id}`).catch(console.error);
   }, []);
 
   const adminAddDownload = useCallback((d: Omit<Downloadable, 'id'>) => {
-    setManagedDownloads(prev => [...prev, { ...d, id: Math.max(0, ...prev.map(x => x.id)) + 1 }]);
-  }, []);
+    const newId = Math.max(0, ...managedDownloads.map(x => x.id)) + 1;
+    const item = { ...d, id: newId } as Downloadable;
+    setManagedDownloads(prev => [...prev, item]);
+    api.post('/learning-strategies/admin/downloads', item).catch(console.error);
+  }, [managedDownloads]);
+
   const adminUpdateDownload = useCallback((id: number, patch: Partial<Omit<Downloadable, 'id'>>) => {
     setManagedDownloads(prev => prev.map(d => d.id === id ? { ...d, ...patch } : d));
+    api.put(`/learning-strategies/admin/downloads/${id}`, patch).catch(console.error);
   }, []);
+
   const adminDeleteDownload = useCallback((id: number) => {
     setManagedDownloads(prev => prev.filter(d => d.id !== id));
+    api.delete(`/learning-strategies/admin/downloads/${id}`).catch(console.error);
   }, []);
 
   const adminSetStatus = useCallback((type: 'activity' | 'plan' | 'tool' | 'download', id: number, status: ContentStatus) => {
+    const typeMap: Record<typeof type, string> = { activity: 'activities', plan: 'plans', tool: 'tools', download: 'downloads' };
     if (type === 'activity') setManagedActivities(prev => prev.map(a => a.id === id ? { ...a, status } : a));
     else if (type === 'plan') setManagedPlans(prev => prev.map(p => p.id === id ? { ...p, status } : p));
     else if (type === 'tool') setManagedTools(prev => prev.map(t => t.id === id ? { ...t, status } : t));
     else setManagedDownloads(prev => prev.map(d => d.id === id ? { ...d, status } : d));
-    // TODO: PATCH /api/admin/learning-strategies/:type/:id/status
+    api.patch(`/learning-strategies/admin/${typeMap[type]}/${id}/status`, { status }).catch(console.error);
   }, []);
 
-  // Published-only views — undefined status = published (backward compat with static data)
-  const publishedActivities = managedActivities.filter(a => a.status !== 'draft');
-  const publishedPlans      = managedPlans.filter(p => p.status !== 'draft');
-  const publishedTools      = managedTools.filter(t => t.status !== 'draft');
-  const publishedDownloads  = managedDownloads.filter(d => d.status !== 'draft');
+  const adminBulkSetStatus = useCallback((type: 'activities' | 'plans' | 'tools' | 'downloads', ids: number[], status: ContentStatus) => {
+    const idSet = new Set(ids);
+    if (type === 'activities') setManagedActivities(prev => prev.map(a => idSet.has(a.id) ? { ...a, status } : a));
+    else if (type === 'plans') setManagedPlans(prev => prev.map(p => idSet.has(p.id) ? { ...p, status } : p));
+    else if (type === 'tools') setManagedTools(prev => prev.map(t => idSet.has(t.id) ? { ...t, status } : t));
+    else setManagedDownloads(prev => prev.map(d => idSet.has(d.id) ? { ...d, status } : d));
+  }, []);
+
+  const adminDuplicateActivity = useCallback((id: number) => {
+    setManagedActivities(prev => {
+      const src = prev.find(a => a.id === id);
+      if (!src) return prev;
+      const newId = Math.max(0, ...prev.map(x => x.id)) + 1;
+      return [...prev, { ...src, id: newId, status: 'draft' as ContentStatus, judul: `${src.judul} (Salinan)` }];
+    });
+  }, []);
+
+  const adminDuplicatePlan = useCallback((id: number) => {
+    setManagedPlans(prev => {
+      const src = prev.find(p => p.id === id);
+      if (!src) return prev;
+      const newId = Math.max(0, ...prev.map(x => x.id)) + 1;
+      return [...prev, { ...src, id: newId, status: 'draft' as ContentStatus, judul: `${src.judul} (Salinan)` }];
+    });
+  }, []);
+
+  const adminDuplicateTool = useCallback((id: number) => {
+    setManagedTools(prev => {
+      const src = prev.find(t => t.id === id);
+      if (!src) return prev;
+      const newId = Math.max(0, ...prev.map(x => x.id)) + 1;
+      return [...prev, { ...src, id: newId, status: 'draft' as ContentStatus, nama: `${src.nama} (Salinan)` }];
+    });
+  }, []);
+
+  const adminDuplicateDownload = useCallback((id: number) => {
+    setManagedDownloads(prev => {
+      const src = prev.find(d => d.id === id);
+      if (!src) return prev;
+      const newId = Math.max(0, ...prev.map(x => x.id)) + 1;
+      return [...prev, { ...src, id: newId, status: 'draft' as ContentStatus, nama: `${src.nama} (Salinan)` }];
+    });
+  }, []);
+
+  const adminUpdateToolLink = useCallback((id: number, affiliateUrl: string, statusLink: 'KOSONG' | 'TERPASANG' | 'PERLU_CEK' | 'MATI', tanggalCekLink: string) => {
+    setManagedTools(prev => prev.map(t => t.id === id ? { ...t, affiliateUrl, statusLink, tanggalCekLink } : t));
+    api.patch(`/learning-strategies/admin/tools/${id}/link`, { affiliateUrl, statusLink, tanggalCekLink }).catch(console.error);
+  }, []);
+
+  // Published-only views — undefined or published status shows; draft/review/approved do not
+  const publishedActivities = managedActivities.filter(a => a.status === 'published' || a.status === undefined);
+  const publishedPlans      = managedPlans.filter(p => p.status === 'published' || p.status === undefined);
+  const publishedTools      = managedTools.filter(t => t.status === 'published' || t.status === undefined);
+  const publishedDownloads  = managedDownloads.filter(d => d.status === 'published' || d.status === undefined);
 
   // ── User interaction state ─────────────────────────────────────────────────
   const [savedIds, setSavedIds] = useState<SavedIds>({
@@ -256,12 +368,15 @@ export function LearningStrategiesProvider({ children }: { children: React.React
       toggleDownloaded, isDownloaded,
       togglePlanDay, isPlanDayDone, getPlanProgress, isPlanDone,
       getFollowedPlanId, followPlan, unfollowPlan, isFollowing,
-      managedActivities, managedPlans, managedTools, managedDownloads,
+      managedActivities, managedPlans, managedTools, managedDownloads, apiLoaded,
       adminAddActivity, adminUpdateActivity, adminDeleteActivity,
       adminAddPlan, adminUpdatePlan, adminDeletePlan,
       adminAddTool, adminUpdateTool, adminDeleteTool,
       adminAddDownload, adminUpdateDownload, adminDeleteDownload,
       adminSetStatus,
+      adminBulkSetStatus,
+      adminDuplicateActivity, adminDuplicatePlan, adminDuplicateTool, adminDuplicateDownload,
+      adminUpdateToolLink,
       publishedActivities, publishedPlans, publishedTools, publishedDownloads,
     }}>
       {children}

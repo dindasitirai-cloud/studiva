@@ -18,4 +18,5 @@ __exportStar(require("./values"), exports);
 __exportStar(require("./ageBands"), exports);
 __exportStar(require("./activityModules"), exports);
 __exportStar(require("./weeklyPlanTemplates"), exports);
+__exportStar(require("./profiles"), exports);
 //# sourceMappingURL=index.js.map

@@ -48,6 +48,7 @@ interface CardListRow {
   summary: string | null;
   figure_id: string | null;
   figure_caption: string | null;
+  figure_after_index: number | null;
   sci_title: string;
   sci_read_minutes: number | null;
   reviewed_by_name: string | null;

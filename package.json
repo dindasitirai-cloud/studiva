@@ -5,9 +5,10 @@
   "scripts": {
     "dev:sekolah": "pnpm --filter sekolah start",
     "dev:digital": "pnpm --filter digital start",
-    "build:sekolah": "pnpm --filter sekolah build",
-    "build:digital": "pnpm --filter digital build",
-    "build": "pnpm -r build",
+    "build:shared": "pnpm --filter @studiva/shared build",
+    "build:sekolah": "pnpm build:shared && pnpm --filter sekolah build",
+    "build:digital": "pnpm build:shared && pnpm --filter digital build",
+    "build": "pnpm build:shared && pnpm --filter sekolah --filter digital build",
     "typecheck": "pnpm -r typecheck"
   },
   "packageManager": "pnpm@11.13.1"

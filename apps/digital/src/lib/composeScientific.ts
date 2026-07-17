@@ -12,7 +12,7 @@ import {
   ComposeModule,
   ComposeSource,
   ScientificResolved,
-} from './compose';
+} from '@studiva/shared';
 import type { KnowledgeCard } from '../pages/DashboardPages/Tier2/knowledgeCardData';
 import { MODULES } from '../pages/DashboardPages/Tier2/modules';
 import { SOURCES } from '../pages/DashboardPages/Tier2/sources';

@@ -22,6 +22,8 @@ const PAGE_TITLES: Record<string, string> = {
   '/dashboard/tier2/community': 'Community Forum',
   '/dashboard/tier2/konsultasi': 'Konsultasi',
   '/dashboard/tier2/subscription': 'Subscription',
+  '/dashboard/tier2/partner-orang-tua': 'Partner Orang Tua',
+  '/dashboard/tier2/jurnal-perkembangan': 'Jurnal Perkembangan',
 };
 
 // Lives inside <DashboardTier2Provider> (rendered as a child below), so it

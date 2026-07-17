@@ -16,7 +16,10 @@ import {
   UserPlus,
   BookUser,
   BookOpen,
+  Activity,
+  Inbox,
 } from 'lucide-react';
+import { mockThreads } from '../../features/partner-orang-tua/mockData';
 import { useAuth } from '../../context/AuthContext';
 import { ADMIN_COLORS, AdminModuleKey } from './adminFeatureColors';
 import { useAdmin, AdminRole } from './AdminContext';
@@ -28,11 +31,16 @@ const contentNav: { to: string; label: string; icon: typeof Library; key: AdminM
   { to: '/admin/courses', label: 'Courses', icon: GraduationCap, key: 'courses' },
   { to: '/admin/strategies', label: 'Learning Strategies', icon: Lightbulb, key: 'strategies' },
   { to: '/admin/knowledge-cards', label: 'Panduan Tumbuh Kembang', icon: BookOpen, key: 'knowledge-cards' },
+  { to: '/admin/tracker-konten', label: 'Tracker Konten', icon: Activity, key: 'tracker-konten' },
 ];
 
 const communityNav: { to: string; label: string; icon: typeof Users; key: AdminModuleKey }[] = [
   { to: '/admin/forum', label: 'Community Forum', icon: Users, key: 'forum' },
   { to: '/admin/konsultasi', label: 'Konsultasi', icon: CalendarCheck, key: 'konsultasi' },
+];
+
+const pendampinganNav: { to: string; label: string; icon: typeof Inbox; key: AdminModuleKey }[] = [
+  { to: '/admin/partner-orang-tua', label: 'Partner Orang Tua', icon: Inbox, key: 'partner-orang-tua' },
 ];
 
 const managementNav: { to: string; label: string; icon: typeof UserCog; key: AdminModuleKey }[] = [
@@ -110,6 +118,10 @@ export default function SidebarAdmin({ open, onClose }: SidebarAdminProps) {
   const visibleCommunityNav = communityNav.filter(item => canAccessModule(currentAdminRole, item.key));
   const visibleManagementNav = managementNav.filter(item => canAccessModule(currentAdminRole, item.key));
   const visibleSekolahNav = sekolahNav.filter(item => canAccessModule(currentAdminRole, item.key));
+  const visiblePendampinganNav = pendampinganNav.filter(item => canAccessModule(currentAdminRole, item.key));
+
+  // TODO: Ganti dengan query live ke API saat integrasi backend selesai
+  const partnerPendingCount = mockThreads.filter(t => t.status === 'menunggu_balasan').length;
 
   const sidebar = (
     <div className="flex h-full w-64 flex-col bg-white font-nunito-sans shadow-[2px_0_16px_rgba(0,0,0,.06)]">
@@ -150,6 +162,46 @@ export default function SidebarAdmin({ open, onClose }: SidebarAdminProps) {
 
         {visibleContentNav.length > 0 && <NavSection title="Konten" items={visibleContentNav} onClose={onClose} />}
         {visibleCommunityNav.length > 0 && <NavSection title="Komunitas" items={visibleCommunityNav} onClose={onClose} />}
+        {visiblePendampinganNav.length > 0 && (
+          <>
+            <div className="my-4 flex items-center gap-2 px-2">
+              <div className="h-px flex-1 bg-stv-border" />
+              <span className="text-[11px] font-bold uppercase tracking-wide text-stv-muted-2">Pendampingan</span>
+              <div className="h-px flex-1 bg-stv-border" />
+            </div>
+            <ul className="space-y-1">
+              {visiblePendampinganNav.map(({ to, label, icon: Icon, key }) => {
+                const colors = ADMIN_COLORS[key];
+                const isPartner = key === 'partner-orang-tua';
+                return (
+                  <li key={to}>
+                    <NavLink
+                      to={to}
+                      onClick={onClose}
+                      className={({ isActive }) =>
+                        `flex items-center gap-3 rounded-xl px-4 py-[10px] text-[15px] font-semibold no-underline transition ${
+                          isActive ? `${colors.bg} font-bold ${colors.text}` : 'text-stv-body hover:bg-slate-50 hover:text-stv-navy'
+                        }`
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <Icon className={`h-5 w-5 shrink-0 ${isActive ? colors.text : 'text-stv-muted'}`} strokeWidth={2} />
+                          <span className="flex-1">{label}</span>
+                          {isPartner && partnerPendingCount > 0 && (
+                            <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-amber-500 px-1.5 text-[11px] font-bold text-white">
+                              {partnerPendingCount}
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </NavLink>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        )}
         {visibleManagementNav.length > 0 && <NavSection title="Manajemen" items={visibleManagementNav} onClose={onClose} />}
         {visibleSekolahNav.length > 0 && <NavSection title="Sekolah Studiva" items={visibleSekolahNav} onClose={onClose} />}
       </nav>

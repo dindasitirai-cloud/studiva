@@ -5,6 +5,7 @@ import { KnowledgeCard, DOMAIN_MAP, AGE_RANGES, SUMMARY_LABEL_STYLES } from './k
 import { FIGURE_REGISTRY } from '../../../components/figures';
 import AudioPlayerWidget from './AudioPlayerWidget';
 import { useAudioPlayer } from '../../../context/AudioPlayerContext';
+import { composeScientific } from '../../../lib/composeScientific';
 
 function useReducedMotion() {
   const [r] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -41,7 +42,7 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
   const domain = DOMAIN_MAP[card.domain];
   const DomainIcon = domain.icon;
   const ageRange = AGE_RANGES.find(a => a.key === card.ageKey);
-  const sci = card.scientific;
+  const sci = composeScientific(card);
   const hasSections = (sci.sections?.length ?? 0) > 0;
   const hasParagraphs = (sci.paragraphs?.length ?? 0) > 0;
   const hasScientific = hasSections || hasParagraphs;
@@ -222,8 +223,8 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
                     {/* Summary sections */}
                     <div className="space-y-4 rounded-xl border border-stv-border bg-slate-50 p-4">
                       {([
-                        { key: 'terjadi', content: card.summary.terjadi },
-                        { key: 'penting', content: card.summary.penting },
+                        { key: 'terjadi', content: card.summary?.terjadi },
+                        { key: 'penting', content: card.summary?.penting },
                       ] as const).map(({ key, content }) => (
                         <div key={key}>
                           <span className="mb-1 inline-block rounded-full px-2.5 py-0.5 text-[11px] font-bold"
@@ -239,7 +240,7 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
                           {SUMMARY_LABEL_STYLES.lakukan.text}
                         </span>
                         <ul className="mt-1 space-y-1">
-                          {card.summary.lakukan.map((item, i) => (
+                          {(card.summary?.lakukan ?? []).map((item, i) => (
                             <li key={i} className="flex items-start gap-2 text-[13px] text-stv-body">
                               <span className="mt-0.5 h-4 w-4 shrink-0 rounded-full text-center text-[10px] font-bold leading-4"
                                 style={{ background: SUMMARY_LABEL_STYLES.lakukan.bg, color: SUMMARY_LABEL_STYLES.lakukan.fg }}>{i + 1}</span>
@@ -256,7 +257,7 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
                         <AlertTriangle className="h-3.5 w-3.5 text-red-600" strokeWidth={2} />
                         <span className="text-[12px] font-bold text-red-700">Perlu perhatian bila</span>
                       </div>
-                      <p className="text-[13px] text-red-800">{card.summary.perhatian}</p>
+                      <p className="text-[13px] text-red-800">{card.summary?.perhatian}</p>
                     </div>
 
                     {/* Sources */}

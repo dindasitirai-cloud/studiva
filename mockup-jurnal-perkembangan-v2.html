@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jurnal Perkembangan — Studiva</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#eef1f8; --ink:#3a4a6b; --cover:#5b6c9e; --coverDark:#46557f;
+    --cream:#fff9f2; --sage:#7c9161; --pink:#e8a9bf; --coral:#f0876a;
+    --sun:#f2c14e; --desk:#f6ede4; --uiText:#4a4238;
+    --pageW:430px; --pageH:560px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Nunito',sans-serif;background:var(--desk);color:var(--uiText);min-height:100vh}
+  .wrap{max-width:1120px;margin:0 auto;padding:28px 20px 90px}
+
+  /* ---------- Header ---------- */
+  .pageHead{text-align:center;margin-bottom:22px}
+  .pageHead h1{font-family:'Caveat',cursive;font-size:52px;color:var(--ink);line-height:1}
+  .pageHead h1 .heart{color:var(--coral)}
+  .pageHead p{font-family:'Patrick Hand',cursive;font-size:19px;color:#8a7f72;margin-top:4px}
+
+  .childRow{display:flex;justify-content:center;gap:10px;margin:18px 0 14px;flex-wrap:wrap}
+  .childChip{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;border:2px solid transparent;background:#fff;box-shadow:0 2px 6px rgba(90,70,50,.08);cursor:pointer;font-weight:700;font-size:14px;transition:.2s}
+  .childChip .ava{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:15px}
+  .childChip.active{border-color:var(--coral);background:#fff4ef}
+  .childChip:focus-visible{outline:3px solid var(--sun)}
+
+  .tabs{display:flex;justify-content:center;gap:8px;margin-bottom:26px;flex-wrap:wrap}
+  .tab{padding:10px 20px;border-radius:999px;border:none;background:#fff;box-shadow:0 2px 6px rgba(90,70,50,.08);font-family:'Nunito';font-weight:800;font-size:14px;cursor:pointer;color:#8a7f72;transition:.2s}
+  .tab.active{color:#fff}
+  .tab:nth-child(1).active{background:var(--cover)}
+  .tab:nth-child(2).active{background:var(--sage)}
+  .tab:nth-child(3).active{background:var(--coral)}
+  .tab:focus-visible{outline:3px solid var(--sun)}
+
+  .mode{display:none;animation:fadeIn .35s ease}
+  .mode.show{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* =========================================================
+     MODE 1 : BUKU 3D
+     ========================================================= */
+  .sceneOuter{overflow:visible;padding:10px 0 26px}
+  .scene{perspective:2200px;display:flex;justify-content:center;min-height:calc(var(--pageH) + 40px)}
+
+  .book3d{
+    position:relative;width:var(--pageW);height:var(--pageH);
+    transform-style:preserve-3d;
+    transition:transform 1.2s cubic-bezier(.35,.1,.25,1);
+    transform:translateX(0);
+  }
+  .scene.open .book3d{transform:translateX(calc(var(--pageW) / 2))}
+
+  /* halaman kanan (dasar, statis) */
+  .rightPage{
+    position:absolute;inset:0;border-radius:4px 14px 14px 4px;
+    background:var(--paper);
+    background-image:
+      repeating-linear-gradient(0deg, rgba(90,105,150,.10) 0 1px, transparent 1px 26px),
+      repeating-linear-gradient(90deg, rgba(90,105,150,.07) 0 1px, transparent 1px 26px);
+    box-shadow:0 18px 40px rgba(70,80,120,.28), inset 14px 0 22px -16px rgba(50,60,95,.4);
+    padding:30px 26px;overflow:hidden;
+  }
+  /* tumpukan kertas di bawah */
+  .rightPage::after{content:'';position:absolute;right:-6px;top:8px;bottom:8px;width:6px;border-radius:0 6px 6px 0;
+    background:repeating-linear-gradient(0deg,#e5e9f4 0 3px,#cfd6ea 3px 4px)}
+
+  /* lembar yang berputar: depan = COVER, belakang = HALAMAN KIRI */
+  .flip{
+    position:absolute;inset:0;transform-origin:left center;transform-style:preserve-3d;
+    transition:transform 1.2s cubic-bezier(.35,.1,.25,1);z-index:5;
+  }
+  .scene.open .flip{transform:rotateY(-180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:4px 14px 14px 4px;overflow:hidden}
+
+  /* COVER */
+  .coverFace{
+    background:
+      radial-gradient(circle at 82% 12%, rgba(255,255,255,.14), transparent 42%),
+      linear-gradient(150deg, var(--cover), var(--coverDark));
+    box-shadow:0 18px 40px rgba(70,80,120,.35);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    cursor:pointer;color:#fff;text-align:center;padding:34px;
+  }
+  .coverFace::before{content:'';position:absolute;left:14px;top:10px;bottom:10px;width:2px;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,.35) 0 7px, transparent 7px 15px)}
+  .coverFace::after{content:'';position:absolute;right:26px;top:0;bottom:0;width:9px;background:rgba(240,135,106,.85);border-radius:3px} /* strap elastis */
+  .coverLabel{
+    background:#fdf8ef;border-radius:12px;padding:22px 26px;max-width:300px;
+    box-shadow:0 6px 16px rgba(0,0,0,.22), 0 0 0 5px rgba(253,248,239,.25);
+    transform:rotate(-1.5deg);position:relative;
+  }
+  .coverLabel .washiTop{position:absolute;top:-13px;left:50%;transform:translateX(-50%) rotate(2deg);width:92px;height:26px;border-radius:3px;opacity:.95;
+    background:repeating-linear-gradient(45deg,#f6bdd1 0 8px,#fde3ee 8px 16px)}
+  .coverLabel h2{font-family:'Caveat',cursive;font-size:40px;color:var(--ink);line-height:1.02}
+  .coverLabel .yr{font-family:'Patrick Hand',cursive;font-size:19px;color:#7c88ab;margin-top:6px}
+  .coverDeco{font-size:26px;margin-top:20px;letter-spacing:10px}
+  .coverHint{font-family:'Caveat',cursive;font-size:21px;margin-top:16px;color:#fdf8ef;opacity:.92;animation:bounce 2s infinite}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+  /* HALAMAN KIRI (backface, sudah dipra-rotasi) */
+  .leftFace{
+    transform:rotateY(180deg);
+    background:var(--paper);
+    background-image:
+      repeating-linear-gradient(0deg, rgba(90,105,150,.10) 0 1px, transparent 1px 26px),
+      repeating-linear-gradient(90deg, rgba(90,105,150,.07) 0 1px, transparent 1px 26px);
+    box-shadow:inset -14px 0 22px -16px rgba(50,60,95,.4);
+    padding:30px 26px;
+  }
+  .leftFace{border-radius:14px 4px 4px 14px}
+
+  /* ---------- Divider bulan (tab indeks di tepi kanan) ---------- */
+  .dividers{position:absolute;right:-34px;top:26px;display:flex;flex-direction:column;gap:3px;z-index:8}
+  .div-tab{
+    width:34px;padding:5px 4px 5px 8px;border:none;border-radius:0 8px 8px 0;cursor:pointer;
+    font-size:9.5px;font-weight:800;letter-spacing:.04em;color:#5a4f42;text-align:left;
+    box-shadow:2px 2px 5px rgba(60,60,90,.18);transition:.2s;
+  }
+  .div-tab:hover{width:42px}
+  .div-tab.active{width:48px;font-size:10.5px;color:#fff;box-shadow:3px 3px 8px rgba(60,60,90,.3)}
+  .div-tab:focus-visible{outline:3px solid var(--sun)}
+
+  /* ---------- Konten entri ---------- */
+  .entryTitle{font-family:'Caveat',cursive;font-size:32px;color:var(--ink);line-height:1.05}
+  .entryDate{font-family:'Patrick Hand',cursive;font-size:15px;color:#7c88ab;margin:2px 0 12px}
+  .entryBody{font-family:'Patrick Hand',cursive;font-size:17.5px;line-height:26px;color:var(--ink)}
+  .u-pink{background:linear-gradient(transparent 62%, #f6bdd1 62% 92%, transparent 92%)}
+  .u-yellow{background:linear-gradient(transparent 62%, #f7d98b 62% 92%, transparent 92%)}
+  .u-blue{background:linear-gradient(transparent 62%, #aad4f2 62% 92%, transparent 92%)}
+
+  .monthDividerHead{font-family:'Caveat',cursive;font-size:26px;color:#fff;background:var(--coral);display:inline-block;
+    padding:4px 18px;border-radius:999px;transform:rotate(-1.5deg);box-shadow:0 4px 10px rgba(240,135,106,.35);margin-bottom:14px}
+
+  .polaroid{background:#fff;padding:10px 10px 8px;box-shadow:0 6px 14px rgba(60,70,110,.22);width:180px;margin:18px auto 6px;position:relative}
+  .polaroid .ph{height:140px;display:grid;place-items:center;font-size:50px}
+  .polaroid .cap{font-family:'Caveat',cursive;font-size:19px;text-align:center;color:#55618a;margin-top:6px}
+  .washi{position:absolute;top:-12px;left:50%;transform:translateX(-50%) rotate(-3deg);width:86px;height:24px;border-radius:3px;opacity:.9;
+    background:repeating-linear-gradient(45deg,#f6bdd1 0 8px,#fde3ee 8px 16px)}
+  .rot-l{transform:rotate(-2.5deg)} .rot-r{transform:rotate(2deg)}
+
+  .sticker{position:absolute;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:22px;cursor:grab;user-select:none;touch-action:none;box-shadow:0 3px 8px rgba(60,70,110,.2);border:none;z-index:6}
+  .sticker:active{cursor:grabbing}
+  .st-pink{background:#fde3ee}.st-yellow{background:#fdf1cf}.st-blue{background:#ddebfa}.st-green{background:#e3f0d9}
+
+  .emptyMonth{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;gap:8px}
+  .emptyMonth .big{font-size:52px}
+  .emptyMonth p{font-family:'Caveat',cursive;font-size:25px;color:#8b96b8;max-width:240px;line-height:1.2}
+
+  .addEntry{margin:22px auto 0;display:block;font-family:'Caveat',cursive;font-size:22px;color:var(--ink);background:rgba(255,255,255,.75);border:2px dashed #93a0c6;border-radius:14px;padding:10px 20px;cursor:pointer;transition:.2s}
+  .addEntry:hover{border-color:var(--coral);color:var(--coral)}
+
+  .bookTools{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap;opacity:0;pointer-events:none;transition:.4s}
+  .bookTools.show{opacity:1;pointer-events:auto}
+  .toolBtn{background:#fff;border:none;border-radius:10px;padding:9px 14px;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 2px 6px rgba(90,70,50,.1)}
+  .autoNote{text-align:center;font-family:'Caveat',cursive;font-size:20px;color:#a08d78;margin-top:10px}
+
+  .stickerTray{display:none;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .stickerTray.open{display:flex}
+  .trayItem{width:44px;height:44px;border-radius:50%;border:none;font-size:22px;cursor:pointer;box-shadow:0 2px 6px rgba(90,70,50,.12)}
+
+  /* =========================================================
+     MODE 2 : KALENDER (sama seperti v1)
+     ========================================================= */
+  .calCard{background:var(--cream);border-radius:22px;padding:26px 24px 20px;box-shadow:0 12px 34px rgba(140,110,90,.16)}
+  .calHead{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:16px}
+  .calHead h2{font-family:'Caveat',cursive;font-size:46px;color:var(--sage)}
+  .navBtn{width:38px;height:38px;border-radius:50%;border:none;background:#f2e6da;font-size:17px;cursor:pointer;color:#8a7f72}
+  .calGrid{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid #f0d9e2;border-radius:12px;overflow:hidden}
+  .dow{background:#fbeef3;padding:8px 4px;text-align:center;font-size:11px;font-weight:800;letter-spacing:.05em;color:#b4849a}
+  .day{background:#fffdfb;min-height:86px;border-top:1px solid #f4e3ea;border-left:1px solid #f4e3ea;padding:6px;position:relative;cursor:pointer;transition:.15s}
+  .day:hover{background:#fff4f8}
+  .day .num{font-size:12px;font-weight:700;color:#a89a8c}
+  .day.faded .num{color:#ddd2c6}
+  .day .moment{margin-top:4px;height:52px;border-radius:8px;display:grid;place-items:center;font-size:24px;overflow:hidden;position:relative}
+  .day .dot{position:absolute;top:6px;right:6px;width:9px;height:9px;border-radius:50%}
+  .day.special{background:#f3f7ec}
+  .day .tag{font-family:'Caveat',cursive;font-size:15px;color:var(--coral);line-height:1.05;margin-top:4px;display:block}
+  .calSummary{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .calSummary .lead{font-family:'Caveat',cursive;font-size:24px;color:var(--sage)}
+  .catChip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px}
+  .c-motorik{background:#e3f0d9;color:#5c7a44}
+  .c-komunikasi{background:#ddebfa;color:#4a6f96}
+  .c-sosial{background:#fdf1cf;color:#96772a}
+  .c-mandiri{background:#ecdff5;color:#7a5b96}
+  .c-sensorik{background:#fde3ee;color:#a85878}
+
+  .overlay{position:fixed;inset:0;background:rgba(60,50,40,.45);display:none;place-items:center;z-index:50;padding:16px}
+  .overlay.open{display:grid}
+  .modal{background:#fffdfb;border-radius:20px;max-width:420px;width:100%;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+  .modal h3{font-family:'Caveat',cursive;font-size:32px;color:var(--sage)}
+  .modal .date{font-size:13px;color:#a89a8c;font-weight:700;margin-bottom:14px}
+  .drop{border:2px dashed #d9c8ba;border-radius:14px;padding:26px;text-align:center;color:#a89a8c;font-size:14px;cursor:pointer;margin-bottom:12px}
+  .drop span{font-size:30px;display:block;margin-bottom:6px}
+  .modal input[type=text]{width:100%;border:1.5px solid #ecdccf;border-radius:10px;padding:10px 12px;font-family:'Patrick Hand',cursive;font-size:17px;color:var(--uiText);margin-bottom:12px}
+  .modal .cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+  .modal .catChip{cursor:pointer;border:2px solid transparent}
+  .modal .catChip.sel{border-color:currentColor}
+  .modalBtns{display:flex;gap:8px;justify-content:flex-end}
+  .btn{border:none;border-radius:10px;padding:10px 18px;font-weight:800;font-size:13px;cursor:pointer}
+  .btn.ghost{background:#f2e9e0;color:#8a7f72}
+  .btn.save{background:var(--sage);color:#fff}
+
+  /* =========================================================
+     MODE 3 : MILESTONE (sama seperti v1)
+     ========================================================= */
+  .disclaimer{display:flex;gap:12px;align-items:flex-start;background:#fff6ee;border:1.5px solid #f5ddc8;border-radius:16px;padding:16px 18px;margin-bottom:18px}
+  .disclaimer .ic{font-size:22px}
+  .disclaimer p{font-family:'Patrick Hand',cursive;font-size:17px;color:#8a6f55;line-height:1.45}
+  .heroCard{display:flex;justify-content:space-between;align-items:center;gap:14px;background:linear-gradient(120deg,#ffe9de,#fff3d9);border-radius:18px;padding:20px 24px;margin-bottom:20px;flex-wrap:wrap}
+  .heroCard .big{font-family:'Caveat',cursive;font-size:34px;color:#b05f3c;line-height:1.05}
+  .heroCard .sub{font-size:13px;font-weight:700;color:#b08a6a;margin-top:2px}
+  .heroCard .latest{font-family:'Patrick Hand',cursive;font-size:16px;color:#8a6f55;background:#fff;border-radius:12px;padding:10px 14px;box-shadow:0 2px 8px rgba(160,110,70,.12)}
+  .catBlock{background:#fff;border-radius:18px;padding:18px 20px;margin-bottom:14px;box-shadow:0 4px 14px rgba(120,90,70,.08)}
+  .catHead{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+  .catHead .emoji{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px}
+  .catHead h4{font-size:16px;font-weight:800}
+  .catHead .count{font-family:'Caveat',cursive;font-size:20px;margin-left:auto}
+  .bar{height:8px;border-radius:99px;background:#f2e9e0;overflow:hidden;margin-bottom:14px}
+  .bar i{display:block;height:100%;border-radius:99px;transition:width .5s ease}
+  .ms{display:flex;align-items:flex-start;gap:12px;padding:9px 4px;border-radius:10px}
+  .ms:hover{background:#fdf8f2}
+  .msCheck{width:26px;height:26px;min-width:26px;border-radius:50%;border:2.5px solid #d9c8ba;background:#fff;cursor:pointer;display:grid;place-items:center;font-size:14px;color:#fff;transition:.2s;margin-top:1px}
+  .ms.done .msCheck{border-color:var(--sun);background:var(--sun)}
+  .msCheck:focus-visible{outline:3px solid var(--pink)}
+  .msName{font-size:14.5px;font-weight:700}
+  .ms.done .msName{color:#96772a}
+  .msDate{font-family:'Caveat',cursive;font-size:17px;color:#b08a6a;display:block}
+  .msJurnal{font-size:11px;font-weight:800;color:var(--cover);background:#eef1f8;border:none;border-radius:8px;padding:4px 10px;cursor:pointer;margin-top:3px;display:none}
+  .ms.done .msJurnal{display:inline-block}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;font-weight:700;font-size:14px;padding:12px 22px;border-radius:999px;opacity:0;transition:.35s;z-index:60}
+  .toast.show{transform:translateX(-50%);opacity:1}
+  .confetti{position:fixed;pointer-events:none;font-size:20px;z-index:70;animation:pop 1s ease-out forwards}
+  @keyframes pop{0%{opacity:1;transform:translateY(0) scale(.6)}100%{opacity:0;transform:translateY(-90px) scale(1.25)}}
+
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+  @media (max-width:980px){
+    :root{--pageW:min(78vw,380px);--pageH:520px}
+    .dividers{right:-30px}
+  }
+  @media (max-width:700px){
+    :root{--pageW:76vw;--pageH:480px}
+    .pageHead h1{font-size:40px}
+    /* di layar kecil: buku terbuka menampilkan satu halaman (kanan), halaman kiri dilipat keluar layar */
+    .scene.open .book3d{transform:translateX(0)}
+    .scene.open .flip{transform:rotateY(-180deg) translateZ(1px)}
+    .scene.open .leftFace{display:none}
+    .coverLabel h2{font-size:32px}
+    .day{min-height:64px}
+    .day .moment{height:34px;font-size:17px}
+    .heroCard{flex-direction:column;align-items:flex-start}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="pageHead">
+    <h1>Jurnal Perkembangan <span class="heart">♥</span></h1>
+    <p>Rekam setiap momen berharga dalam perjalanan tumbuh kembang si kecil</p>
+  </header>
+
+  <div class="childRow" role="tablist" aria-label="Pilih anak">
+    <button class="childChip active" data-name="Aisyah"><span class="ava" style="background:#fde3ee">👧</span> Aisyah · 6 tahun</button>
+    <button class="childChip" data-name="Rafi"><span class="ava" style="background:#ddebfa">👦</span> Rafi · 4 tahun</button>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-mode="jurnal">📖 Buku Jurnal</button>
+    <button class="tab" data-mode="kalender">📅 Kalender Momen</button>
+    <button class="tab" data-mode="milestone">⭐ Perjalanan Pencapaian</button>
+  </nav>
+
+  <!-- ========== MODE 1 : BUKU ========== -->
+  <section class="mode show" id="mode-jurnal">
+    <div class="sceneOuter">
+      <div class="scene" id="scene">
+        <div class="book3d" id="book3d">
+
+          <!-- halaman kanan (dasar) -->
+          <div class="rightPage" id="rightPage"></div>
+
+          <!-- lembar berputar: cover ⇄ halaman kiri -->
+          <div class="flip" id="flip">
+            <div class="face coverFace" id="coverFace" role="button" tabindex="0" aria-label="Buka buku jurnal">
+              <div class="coverLabel">
+                <span class="washiTop"></span>
+                <h2 id="coverTitle">Catatan Harian<br>Aisyah</h2>
+                <div class="yr" id="coverYear">✿ Tahun 2026 ✿</div>
+              </div>
+              <div class="coverDeco">🌷 ⭐ 🦋</div>
+              <div class="coverHint">ketuk untuk membuka 📖</div>
+            </div>
+            <div class="face leftFace" id="leftFace"></div>
+          </div>
+
+          <!-- divider bulan -->
+          <div class="dividers" id="dividers" role="tablist" aria-label="Pilih bulan"></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="autoNote" id="autoNote">buku terbuka otomatis di bulan <b>Juli</b> ✨</p>
+
+    <div class="bookTools" id="bookTools">
+      <button class="toolBtn" id="btnTray">🎨 Sticker</button>
+      <button class="toolBtn">📷 Tambah Foto</button>
+      <button class="toolBtn">✏️ Edit Entri</button>
+      <button class="toolBtn" id="btnClose3d">📕 Tutup Buku</button>
+    </div>
+    <div class="stickerTray" id="tray">
+      <button class="trayItem st-yellow">⭐</button><button class="trayItem st-pink">❤️</button>
+      <button class="trayItem st-blue">🌈</button><button class="trayItem st-green">🏆</button>
+      <button class="trayItem st-yellow">🎉</button><button class="trayItem st-pink">🎈</button>
+      <button class="trayItem st-blue">☀️</button><button class="trayItem st-green">👏</button>
+      <button class="trayItem st-yellow">🧸</button><button class="trayItem st-pink">💪</button>
+    </div>
+  </section>
+
+  <!-- ========== MODE 2 : KALENDER ========== -->
+  <section class="mode" id="mode-kalender">
+    <div class="calCard">
+      <div class="calHead">
+        <button class="navBtn" aria-label="Bulan sebelumnya">←</button>
+        <h2>Juli 2026</h2>
+        <button class="navBtn" aria-label="Bulan berikutnya">→</button>
+      </div>
+      <div class="calGrid" id="calGrid">
+        <div class="dow">MIN</div><div class="dow">SEN</div><div class="dow">SEL</div>
+        <div class="dow">RAB</div><div class="dow">KAM</div><div class="dow">JUM</div><div class="dow">SAB</div>
+      </div>
+      <div class="calSummary">
+        <span class="lead">Bulan ini: 6 momen terekam 🎉</span>
+        <span class="catChip c-motorik">🏃 Motorik · 2</span>
+        <span class="catChip c-komunikasi">💬 Komunikasi · 1</span>
+        <span class="catChip c-sosial">🤝 Sosial · 1</span>
+        <span class="catChip c-mandiri">🌱 Kemandirian · 1</span>
+        <span class="catChip c-sensorik">✋ Sensorik · 1</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MODE 3 : MILESTONE ========== -->
+  <section class="mode" id="mode-milestone">
+    <div class="disclaimer">
+      <span class="ic">💛</span>
+      <p>Setiap anak tumbuh dengan kecepatan dan caranya sendiri. Checklist ini bukan tolok ukur,
+      melainkan peta perjalanan untuk merayakan setiap langkah kecil si kecil.</p>
+    </div>
+    <div class="heroCard">
+      <div>
+        <div class="big" id="totalCount">11 pencapaian terekam 🏆</div>
+        <div class="sub">Perjalanan Aisyah sejauh ini</div>
+      </div>
+      <div class="latest">Pencapaian terbaru: <b>Merangkai 2 kata</b> — 9 Juli 2026 ✨</div>
+    </div>
+    <div id="msContainer"></div>
+  </section>
+</div>
+
+<!-- Modal kalender -->
+<div class="overlay" id="overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h3 id="modalTitle">Momen Hari Ini</h3>
+    <div class="date" id="modalDate">16 Juli 2026</div>
+    <div class="drop"><span>📷</span>Ketuk untuk unggah foto aktivitas si kecil</div>
+    <input type="text" placeholder="Rafi berhasil menyusun balok sendiri!">
+    <div class="cats">
+      <span class="catChip c-motorik">🏃 Motorik</span>
+      <span class="catChip c-komunikasi">💬 Komunikasi</span>
+      <span class="catChip c-sosial">🤝 Sosial</span>
+      <span class="catChip c-mandiri">🌱 Kemandirian</span>
+      <span class="catChip c-sensorik">✋ Sensorik</span>
+    </div>
+    <div class="modalBtns">
+      <button class="btn ghost" id="btnCloseModal">Batal</button>
+      <button class="btn save">Simpan Momen</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Hore! Satu langkah lagi tercapai! 🎉</div>
+
+<script>
+/* ===================== data bulan ===================== */
+const MONTHS=['JAN','FEB','MAR','APR','MEI','JUN','JUL','AGU','SEP','OKT','NOV','DES'];
+const MONTH_FULL=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const CURRENT_MONTH=6; /* Juli (index 6) — nanti: new Date().getMonth() */
+const tabColors=['#fde3ee','#fdf1cf','#ddebfa','#e3f0d9','#ecdff5','#ffe4d6','#f6bdd1','#f7d98b','#aad4f2','#cfe8c0','#dcd0f0','#ffd3c2'];
+const tabActive=['#df8fae','#e0b64f','#7aa5cf','#8bb56a','#a884c9','#f0876a','#df8fae','#e0b64f','#7aa5cf','#8bb56a','#a884c9','#f0876a'];
+
+const journal={
+  6:{ /* Juli */
+    left:`
+      <article>
+        <span class="monthDividerHead">✿ Juli 2026</span>
+        <h3 class="entryTitle">Minggu pertama Aisyah kembali sekolah 🌷</h3>
+        <div class="entryDate">✎ 6 Juli 2026</div>
+        <p class="entryBody">
+          Minggu ini Aisyah mulai <span class="u-pink">berani menyapa gurunya duluan</span> saat tiba
+          di kelas. Biasanya ia menunggu disapa, tapi pagi itu ia melambaikan tangan sambil tersenyum.
+          Ia juga mulai <span class="u-yellow">mau mencoba tekstur makanan baru</span> di bekalnya —
+          wortel kukus yang selama ini disisihkan, kali ini digigit dua kali.
+          Langkah kecil, tapi <span class="u-blue">artinya besar sekali</span> untuk kami.
+        </p>
+        <figure class="polaroid rot-l">
+          <span class="washi"></span>
+          <div class="ph" style="background:linear-gradient(135deg,#fde3ee,#ddebfa)">🎨</div>
+          <figcaption class="cap">karya finger painting pertama!</figcaption>
+        </figure>
+      </article>`,
+    right:`
+      <article>
+        <h3 class="entryTitle">Terapi wicara: kata baru! ✨</h3>
+        <div class="entryDate">✎ 9 Juli 2026</div>
+        <p class="entryBody">
+          Bu guru bercerita hari ini Aisyah mengucapkan <span class="u-pink">"mau lagi"</span>
+          dengan jelas saat sesi bermain balok. Dua kata, digabung sendiri, tanpa dipancing.
+          Di rumah aku coba ulangi permainannya dan ia mengatakannya lagi sambil tertawa.
+          <span class="u-yellow">Alhamdulillah.</span> Kami catat ini sebagai kata gabungan
+          pertamanya bulan ini.
+        </p>
+        <figure class="polaroid rot-r">
+          <span class="washi" style="background:repeating-linear-gradient(45deg,#f7d98b 0 8px,#fdf1cf 8px 16px)"></span>
+          <div class="ph" style="background:linear-gradient(135deg,#e3f0d9,#fdf1cf)">🧩</div>
+          <figcaption class="cap">menara balok 6 tingkat!</figcaption>
+        </figure>
+        <button class="addEntry">＋ Tulis Entri Baru</button>
+      </article>`
+  },
+  5:{ /* Juni */
+    left:`
+      <article>
+        <span class="monthDividerHead" style="background:#8bb56a">✿ Juni 2026</span>
+        <h3 class="entryTitle">Berani main perosotan! 🛝</h3>
+        <div class="entryDate">✎ 15 Juni 2026</div>
+        <p class="entryBody">
+          Setelah berminggu-minggu hanya menonton dari bawah, hari ini Aisyah
+          <span class="u-yellow">naik perosotan sendiri</span> di taman.
+          Ia meluncur sambil memejamkan mata, lalu langsung minta lagi.
+          Tiga kali! <span class="u-pink">Keberanian barunya</span> membuat sore kami istimewa.
+        </p>
+      </article>`,
+    right:`
+      <article>
+        <h3 class="entryTitle">Piknik keluarga 🌼</h3>
+        <div class="entryDate">✎ 28 Juni 2026</div>
+        <p class="entryBody">
+          Piknik di taman kota. Aisyah membantu <span class="u-blue">menata bekal</span> dan
+          membagikan gelas ke semua orang — kakek sampai terharu.
+        </p>
+        <figure class="polaroid rot-r">
+          <span class="washi"></span>
+          <div class="ph" style="background:linear-gradient(135deg,#cfe8c0,#fdf1cf)">🧺</div>
+          <figcaption class="cap">piknik pertama tahun ini</figcaption>
+        </figure>
+        <button class="addEntry">＋ Tulis Entri Baru</button>
+      </article>`
+  }
+};
+const emptyPage=(m)=>`
+  <div class="emptyMonth">
+    <span class="big">📖</span>
+    <p>Belum ada cerita di bulan ${MONTH_FULL[m]}. Yuk mulai tulis kenangan pertama!</p>
+    <button class="addEntry">＋ Tulis Entri Baru</button>
+  </div>`;
+
+/* ===================== render buku ===================== */
+const scene=document.getElementById('scene');
+const leftFace=document.getElementById('leftFace');
+const rightPage=document.getElementById('rightPage');
+const dividers=document.getElementById('dividers');
+const bookTools=document.getElementById('bookTools');
+let activeMonth=CURRENT_MONTH;
+
+function renderMonth(m){
+  activeMonth=m;
+  if(journal[m]){leftFace.innerHTML=journal[m].left;rightPage.innerHTML=journal[m].right;}
+  else{leftFace.innerHTML=`<article><span class="monthDividerHead" style="background:#93a0c6">✿ ${MONTH_FULL[m]} 2026</span></article>`+emptyPage(m);rightPage.innerHTML=emptyPage(m);}
+  document.querySelectorAll('.div-tab').forEach((t,i)=>{
+    t.classList.toggle('active',i===m);
+    t.style.background=i===m?tabActive[i]:tabColors[i];
+  });
+  addStickers();
+}
+
+MONTHS.forEach((mm,i)=>{
+  const b=document.createElement('button');
+  b.className='div-tab';b.textContent=mm;b.style.background=tabColors[i];
+  b.setAttribute('role','tab');b.setAttribute('aria-label','Bulan '+MONTH_FULL[i]);
+  b.addEventListener('click',()=>{renderMonth(i);openBook();});
+  dividers.appendChild(b);
+});
+
+function openBook(){
+  if(scene.classList.contains('open'))return;
+  scene.classList.add('open');
+  bookTools.classList.add('show');
+  document.getElementById('autoNote').style.display='none';
+}
+function closeBook(){
+  scene.classList.remove('open');
+  bookTools.classList.remove('show');
+  document.getElementById('tray').classList.remove('open');
+}
+document.getElementById('coverFace').addEventListener('click',openBook);
+document.getElementById('coverFace').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')openBook()});
+document.getElementById('btnClose3d').addEventListener('click',closeBook);
+
+renderMonth(CURRENT_MONTH); /* otomatis di bulan sekarang */
+
+/* ganti anak → judul cover ikut berubah */
+document.querySelectorAll('.childChip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('.childChip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    document.getElementById('coverTitle').innerHTML='Catatan Harian<br>'+c.dataset.name;
+  });
+});
+
+/* ===================== stiker ===================== */
+function makeDraggable(st,container){
+  st.addEventListener('pointerdown',e=>{
+    e.preventDefault();e.stopPropagation();
+    st.setPointerCapture(e.pointerId);
+    const r=st.getBoundingClientRect(), pr=container.getBoundingClientRect();
+    const ox=e.clientX-r.left, oy=e.clientY-r.top;
+    const move=ev=>{
+      st.style.left=Math.min(Math.max(ev.clientX-pr.left-ox,0),pr.width-44)+'px';
+      st.style.top =Math.min(Math.max(ev.clientY-pr.top-oy,0),pr.height-44)+'px';
+      st.style.right='auto';st.style.bottom='auto';
+    };
+    const up=()=>{st.removeEventListener('pointermove',move);st.removeEventListener('pointerup',up)};
+    st.addEventListener('pointermove',move);
+    st.addEventListener('pointerup',up);
+  });
+}
+function addStickers(){
+  [['🌟','st-yellow','18px','','','24px'],['🦋','st-blue','','30px','120px','']].forEach(([e,c,t,r,b,l])=>{
+    const st=document.createElement('button');
+    st.className='sticker '+c;st.textContent=e;st.setAttribute('aria-label','Stiker '+e);
+    if(t)st.style.top=t; if(r)st.style.right=r; if(b)st.style.bottom=b; if(l)st.style.left=l;
+    rightPage.appendChild(st);makeDraggable(st,rightPage);
+  });
+}
+document.getElementById('btnTray').addEventListener('click',()=>document.getElementById('tray').classList.toggle('open'));
+document.querySelectorAll('.trayItem').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const st=document.createElement('button');
+    st.className='sticker '+b.classList[1];st.textContent=b.textContent;
+    st.style.top='42%';st.style.left='42%';
+    st.setAttribute('aria-label','Stiker '+b.textContent);
+    rightPage.appendChild(st);makeDraggable(st,rightPage);
+  });
+});
+
+/* ===================== tab utama ===================== */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.mode').forEach(x=>x.classList.remove('show'));
+    t.classList.add('active');
+    document.getElementById('mode-'+t.dataset.mode).classList.add('show');
+  });
+});
+
+/* ===================== kalender ===================== */
+const moments={
+  3:{e:'🖐️',cat:'c-sensorik',bg:'linear-gradient(135deg,#fde3ee,#fff)'},
+  7:{e:'🚲',cat:'c-motorik',bg:'linear-gradient(135deg,#e3f0d9,#fff)'},
+  9:{e:'💬',cat:'c-komunikasi',bg:'linear-gradient(135deg,#ddebfa,#fff)'},
+  14:{e:'🤝',cat:'c-sosial',bg:'linear-gradient(135deg,#fdf1cf,#fff)'},
+  18:{e:'👟',cat:'c-mandiri',bg:'linear-gradient(135deg,#ecdff5,#fff)'},
+  24:{e:'⚽',cat:'c-motorik',bg:'linear-gradient(135deg,#e3f0d9,#fff)'}
+};
+const dotColor={'c-motorik':'#8bb56a','c-komunikasi':'#7aa5cf','c-sosial':'#e0b64f','c-mandiri':'#a884c9','c-sensorik':'#df8fae'};
+const grid=document.getElementById('calGrid');
+const firstDow=3, daysIn=31;
+for(let i=0;i<firstDow;i++){const d=document.createElement('div');d.className='day faded';grid.appendChild(d);}
+for(let d=1;d<=daysIn;d++){
+  const cell=document.createElement('div');cell.className='day';
+  let inner='<span class="num">'+String(d).padStart(2,'0')+'</span>';
+  if(moments[d]){
+    inner+='<div class="moment" style="background:'+moments[d].bg+'">'+moments[d].e+'</div>'
+         +'<span class="dot" style="background:'+dotColor[moments[d].cat]+'"></span>';
+  }
+  if(d===17){cell.classList.add('special');inner+='<span class="tag">Hari pertama liburan! 🌞</span>';}
+  cell.innerHTML=inner;
+  cell.addEventListener('click',()=>{
+    document.getElementById('modalDate').textContent=d+' Juli 2026';
+    document.getElementById('overlay').classList.add('open');
+  });
+  grid.appendChild(cell);
+}
+document.getElementById('btnCloseModal').addEventListener('click',()=>document.getElementById('overlay').classList.remove('open'));
+document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')e.target.classList.remove('open')});
+document.querySelectorAll('.modal .catChip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('.modal .catChip').forEach(x=>x.classList.remove('sel'));c.classList.add('sel');
+}));
+
+/* ===================== milestone ===================== */
+const cats=[
+ {name:'Motorik Kasar',emoji:'🏃',bg:'#e3f0d9',bar:'#8bb56a',items:[
+   ['Berjalan mandiri','12 Mar 2026'],['Melompat dengan dua kaki','2 Mei 2026'],['Menendang bola','24 Jun 2026'],
+   ['Menaiki tangga bergantian kaki',null],['Berdiri satu kaki sebentar',null]]},
+ {name:'Motorik Halus',emoji:'✏️',bg:'#fde3ee',bar:'#df8fae',items:[
+   ['Memegang pensil/krayon','20 Feb 2026'],['Menyusun 4+ balok','8 Jul 2026'],
+   ['Menggunting mengikuti garis',null],['Menulis namanya sendiri',null],['Mengancingkan baju',null]]},
+ {name:'Komunikasi & Bahasa',emoji:'💬',bg:'#ddebfa',bar:'#7aa5cf',items:[
+   ['Merespons saat dipanggil namanya','5 Jan 2026'],['Mengucapkan kata pertama','18 Apr 2026'],
+   ['Merangkai 2 kata','9 Jul 2026'],['Menyampaikan keinginan (verbal / isyarat / AAC)','30 Mei 2026'],
+   ['Bercerita sederhana',null]]},
+ {name:'Sosial & Emosional',emoji:'🤝',bg:'#fdf1cf',bar:'#e0b64f',items:[
+   ['Melakukan kontak mata','10 Feb 2026'],['Bermain berdampingan dengan anak lain','15 Jun 2026'],
+   ['Bergantian dalam permainan',null],['Mengenali emosi diri',null],['Menunjukkan empati',null]]},
+ {name:'Kemandirian',emoji:'🌱',bg:'#ecdff5',bar:'#a884c9',items:[
+   ['Makan sendiri','1 Mar 2026'],['Memakai sepatu sendiri',null],['Toilet training',null],
+   ['Merapikan mainan',null],['Menyiapkan tas sekolah',null]]}
+];
+const cont=document.getElementById('msContainer');
+cats.forEach(cat=>{
+  const done=cat.items.filter(i=>i[1]).length;
+  const block=document.createElement('div');block.className='catBlock';
+  block.innerHTML=`
+    <div class="catHead">
+      <span class="emoji" style="background:${cat.bg}">${cat.emoji}</span>
+      <h4>${cat.name}</h4>
+      <span class="count" style="color:${cat.bar}"><span class="n">${done}</span> pencapaian 🌟</span>
+    </div>
+    <div class="bar"><i style="width:${done/cat.items.length*100}%;background:${cat.bar}"></i></div>`;
+  cat.items.forEach(([name,date])=>{
+    const row=document.createElement('div');row.className='ms'+(date?' done':'');
+    row.innerHTML=`
+      <button class="msCheck" role="checkbox" aria-checked="${!!date}" aria-label="${name}">${date?'★':''}</button>
+      <div>
+        <span class="msName">${name}</span>
+        <span class="msDate">${date?'tercapai '+date+' 🎊':''}</span>
+        <button class="msJurnal">Tulis di jurnal 📖</button>
+      </div>`;
+    const chk=row.querySelector('.msCheck');
+    chk.addEventListener('click',()=>{
+      if(row.classList.contains('done')) return;
+      row.classList.add('done');chk.textContent='★';chk.setAttribute('aria-checked','true');
+      row.querySelector('.msDate').textContent='tercapai 12 Juli 2026 🎊';
+      const n=block.querySelector('.n');n.textContent=+n.textContent+1;
+      block.querySelector('.bar i').style.width=(block.querySelectorAll('.ms.done').length/cat.items.length*100)+'%';
+      const tot=document.getElementById('totalCount');
+      tot.textContent=(parseInt(tot.textContent)+1)+' pencapaian terekam 🏆';
+      celebrate(chk);
+    });
+    block.appendChild(row);
+  });
+  cont.appendChild(block);
+});
+function celebrate(el){
+  const r=el.getBoundingClientRect();
+  ['🎉','✨','⭐','🎊','💛'].forEach((e,i)=>{
+    const s=document.createElement('span');s.className='confetti';s.textContent=e;
+    s.style.left=(r.left+r.width/2+(i-2)*18)+'px';
+    s.style.top=r.top+'px';
+    s.style.animationDelay=(i*0.05)+'s';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),1200);
+  });
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2200);
+}
+document.addEventListener('click',e=>{
+  if(e.target.classList.contains('msJurnal')){
+    document.querySelector('[data-mode="jurnal"]').click();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+});
+</script>
+</body>
+</html>

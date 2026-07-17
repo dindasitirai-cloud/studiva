@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useRef, useState } from 'react';
 import { CARDS, KnowledgeCard } from '../pages/DashboardPages/Tier2/knowledgeCardData';
+import { composeScientific } from '../lib/composeScientific';
 
 export interface PlayerSegment {
   cardId: string;
@@ -22,6 +23,7 @@ interface AudioPlayerContextValue {
 const AudioPlayerContext = createContext<AudioPlayerContextValue | null>(null);
 
 function buildSummaryText(card: KnowledgeCard): string {
+  if (!card.summary) return card.title;
   return [
     card.title,
     'Yang biasa terjadi di usia ini.',
@@ -36,7 +38,7 @@ function buildSummaryText(card: KnowledgeCard): string {
 }
 
 function buildScientificText(card: KnowledgeCard): string {
-  const sci = card.scientific;
+  const sci = composeScientific(card);
   // Use structured sections if available (strip [n] citation markers for TTS)
   if (sci.sections && sci.sections.length > 0) {
     const sectionsText = sci.sections

@@ -10,6 +10,8 @@ import { useKnowledgeLibrary } from '../../../context/KnowledgeLibraryContext';
 import {
   CARDS, AGE_RANGES, DOMAIN_MAP, SUMMARY_LABEL_STYLES,
 } from './knowledgeCardData';
+import { DOMAIN_CONFIG_MAP } from './domains';
+import { KonsultasiCTA } from './KonsultasiCTA';
 import AudioPlayerWidget from './AudioPlayerWidget';
 
 export default function KnowledgeCardSummary() {
@@ -51,9 +53,21 @@ export default function KnowledgeCardSummary() {
     );
   }
 
-  const ageRange   = AGE_RANGES.find(a => a.key === card.ageKey);
-  const domainInfo = DOMAIN_MAP[card.domain];
-  const DomainIcon = domainInfo.icon;
+  if (!card.summary) {
+    return (
+      <div className="flex min-h-screen items-center justify-center font-nunito-sans">
+        <div className="text-center">
+          <p className="font-baloo text-[20px] font-bold text-stv-navy">Segera Hadir</p>
+          <p className="mt-2 text-[14px] text-stv-muted">Konten untuk kartu ini sedang disiapkan.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const ageRange    = AGE_RANGES.find(a => a.key === card.ageKey);
+  const domainInfo  = DOMAIN_MAP[card.domain];
+  const domainConfig = DOMAIN_CONFIG_MAP[card.domain];
+  const DomainIcon  = domainInfo.icon;
   const read       = isRead(card.id);
   const bookmarked = isBookmarked(card.id);
 
@@ -135,10 +149,11 @@ export default function KnowledgeCardSummary() {
           <AudioPlayerWidget />
         </div>
 
-        {/* Medical disclaimer */}
-        {card.isMedical && (
+        {/* Domain/medical disclaimer — driven by DomainConfig.sensitiveDisclaimer */}
+        {(card.isMedical || domainConfig.sensitiveDisclaimer) && (
           <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-[13px] text-amber-800">
-            Informasi ini bersifat edukatif dan tidak menggantikan saran dokter atau tenaga kesehatan profesional.
+            {domainConfig.sensitiveDisclaimer ??
+              "Informasi ini bersifat edukatif dan tidak menggantikan saran dokter atau tenaga kesehatan profesional."}
           </div>
         )}
 
@@ -179,14 +194,19 @@ export default function KnowledgeCardSummary() {
           </section>
         </div>
 
-        {/* Perhatian */}
+        {/* Perhatian — label dari DomainConfig.attentionLabel (default: "Perlu perhatian bila") */}
         <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4">
           <div className="mb-2 flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 text-red-600" strokeWidth={2} />
-            <span className="text-[13px] font-bold text-red-700">Perlu perhatian bila</span>
+            <span className="text-[13px] font-bold text-red-700">
+              {domainConfig.attentionLabel ?? "Perlu perhatian bila"}
+            </span>
           </div>
-          <p className="text-[14px] leading-relaxed text-red-800">{card.summary.perhatian}</p>
+          <p className="text-[14px] leading-relaxed text-red-800">{card.summary?.perhatian}</p>
         </div>
+
+        {/* CTA Konsultasi — hanya kartu domain DK */}
+        {card.domain === 'DK' && <KonsultasiCTA />}
 
         {/* Sudah Dibaca, after content, before next card */}
         <button

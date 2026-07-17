@@ -20,6 +20,8 @@ import knowledgeCardsRouter from './routes/knowledgeCards';
 import knowledgeCardReadsRouter from './routes/knowledgeCardReads';
 import learningStrategiesRouter from './routes/learningStrategies';
 import kcManagedRouter from './routes/kcManaged';
+import contentRouter from './routes/content';
+import adminContentRouter from './routes/adminContent';
 
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 
@@ -70,6 +72,8 @@ app.use('/api/knowledge-cards', knowledgeCardsRouter);
 app.use('/api/knowledge-cards/reads', knowledgeCardReadsRouter);
 app.use('/api/learning-strategies', learningStrategiesRouter);
 app.use('/api/kc-managed', kcManagedRouter);
+app.use('/api/content', contentRouter);
+app.use('/api/admin/content', adminContentRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

@@ -12,6 +12,8 @@ import {
   CreditCard,
   X,
   BookOpen,
+  HeartHandshake,
+  BookHeart,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 
@@ -23,6 +25,9 @@ const navItems = [
   { to: '/dashboard/tier2/strategies', label: 'Learning Strategies', icon: Lightbulb },
   { to: '/dashboard/tier2/community', label: 'Community Forum', icon: Users },
   { to: '/dashboard/tier2/konsultasi', label: 'Konsultasi', icon: CalendarCheck },
+  { to: '/dashboard/tier2/jurnal-perkembangan', label: 'Jurnal Perkembangan', icon: BookHeart },
+  // Fase 1: hanya di Studiva Digital (Tier 2). Fase 3 akan pasang di Tier 1 juga.
+  { to: '/dashboard/tier2/partner-orang-tua', label: 'Partner Orang Tua', icon: HeartHandshake },
 ];
 
 interface SidebarTier2Props {

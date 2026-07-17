@@ -51,6 +51,8 @@ module.exports = {
         display: ['Poppins', 'Nunito', 'Segoe UI', 'sans-serif'],
         baloo: ["'Baloo 2'", 'cursive'],
         'nunito-sans': ["'Nunito Sans'", 'sans-serif'],
+        caveat: ["'Caveat'", 'cursive'],
+        hand: ["'Patrick Hand'", 'cursive'],
       },
       fontSize: {
         h1: ['3.25rem', { lineHeight: '1.1', letterSpacing: '-0.01em' }],

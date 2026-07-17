@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ChevronLeft } from 'lucide-react';
-import { KnowledgeCard, DOMAIN_MAP, AGE_RANGES } from './knowledgeCardData';
+import { KnowledgeCard, DOMAIN_MAP, AGE_RANGES, getCardContentStatus } from './knowledgeCardData';
 
 function useReducedMotion() {
   const [r] = useState(() =>
@@ -167,8 +167,23 @@ export default function BookCarousel({ cards, selectedId, onSelect, onOpen, onBa
   const centerIdx = Math.max(0, cards.findIndex(c => c.id === selectedId));
   const selected  = cards[centerIdx] ?? cards[0];
 
-  function shiftLeft()  { if (centerIdx > 0) onSelect(cards[centerIdx - 1].id); }
-  function shiftRight() { if (centerIdx < cards.length - 1) onSelect(cards[centerIdx + 1].id); }
+  function nextNonPlaceholder(from: number, dir: 1 | -1): number {
+    let i = from + dir;
+    while (i >= 0 && i < cards.length) {
+      if (getCardContentStatus(cards[i]) !== 'segera-hadir') return i;
+      i += dir;
+    }
+    return -1;
+  }
+
+  function shiftLeft()  {
+    const i = nextNonPlaceholder(centerIdx, -1);
+    if (i >= 0) onSelect(cards[i].id);
+  }
+  function shiftRight() {
+    const i = nextNonPlaceholder(centerIdx, 1);
+    if (i >= 0) onSelect(cards[i].id);
+  }
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -284,13 +299,19 @@ export default function BookCarousel({ cards, selectedId, onSelect, onOpen, onBa
 
       {/* Open + dots */}
       <div className="flex flex-col items-center gap-3">
-        <button
-          type="button"
-          onClick={() => selected && onOpen(selected)}
-          className="rounded-full bg-amber-500 px-8 py-3 font-baloo text-[16px] font-bold text-white shadow-[0_6px_20px_rgba(251,146,60,.3)] transition hover:-translate-y-0.5 hover:bg-amber-600"
-        >
-          Buka buku ini
-        </button>
+        {selected && getCardContentStatus(selected) === 'segera-hadir' ? (
+          <span className="rounded-full bg-slate-200 px-8 py-3 font-baloo text-[16px] font-bold text-slate-400 cursor-default select-none">
+            Segera hadir
+          </span>
+        ) : (
+          <button
+            type="button"
+            onClick={() => selected && onOpen(selected)}
+            className="rounded-full bg-amber-500 px-8 py-3 font-baloo text-[16px] font-bold text-white shadow-[0_6px_20px_rgba(251,146,60,.3)] transition hover:-translate-y-0.5 hover:bg-amber-600"
+          >
+            Buka buku ini
+          </button>
+        )}
         <div className="flex gap-1.5">
           {cards.map((c, i) => (
             <button key={c.id} type="button" aria-label={`Buku ${i + 1}`} onClick={() => onSelect(c.id)}

@@ -308,3 +308,209 @@ CREATE TABLE IF NOT EXISTS kc_managed (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- CMS Content Tables — Fase 1 (seeded from static files)
+-- Schema created in full now so Fase 2-4 only adds endpoints, never DDL.
+-- ═══════════════════════════════════════════════════════════════════════════
+
+-- Domain configuration (7 domains: FM, KG, BH, SE, KS, PS, DK)
+CREATE TABLE IF NOT EXISTS cms_domains (
+  code                TEXT PRIMARY KEY,   -- 'FM', 'KG', 'BH', 'SE', 'KS', 'PS', 'DK'
+  label               TEXT NOT NULL,
+  short_label         TEXT NOT NULL,
+  bg                  TEXT NOT NULL,      -- hex background swatch
+  fg                  TEXT NOT NULL,      -- hex foreground colour
+  strict_freshness    INTEGER NOT NULL DEFAULT 0,  -- 1 = tighter review window (KS, DK)
+  sensitive_disclaimer TEXT,
+  attention_label     TEXT,
+  created_at          DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at          DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Canonical reference/source registry
+CREATE TABLE IF NOT EXISTS cms_sources (
+  id         TEXT PRIMARY KEY,   -- 'harvard-brain', 'cdc-act-early', etc.
+  label      TEXT NOT NULL,
+  url        TEXT,
+  type       TEXT NOT NULL CHECK (type IN ('institusi','pedoman','karya-klasik','riset')),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Figure metadata only — SVG stays in React component library
+-- TODO(fase-4): migrate svg_source when figure editor is built
+CREATE TABLE IF NOT EXISTS cms_figures (
+  id          TEXT PRIMARY KEY,   -- 'serve-return', 'motor-sequence', etc.
+  name        TEXT NOT NULL,      -- human-readable name
+  aria_label  TEXT NOT NULL,      -- accessibility label
+  svg_source  TEXT,               -- TODO(fase-4): NULL until editor migration
+  created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Reusable content modules (referenced by multiple cards)
+CREATE TABLE IF NOT EXISTS cms_modules (
+  id              TEXT PRIMARY KEY,
+  title           TEXT NOT NULL,
+  domain_hints    TEXT NOT NULL DEFAULT '[]',   -- JSON array of DomainCode strings
+  figure_id       TEXT REFERENCES cms_figures(id),
+  status          TEXT NOT NULL DEFAULT 'draft'
+                    CHECK (status IN ('draft','review','approved','published')),
+  last_reviewed_at TEXT,   -- 'YYYY-MM'
+  created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Module text sections; key is unique within a module
+CREATE TABLE IF NOT EXISTS cms_module_sections (
+  id        INTEGER PRIMARY KEY AUTOINCREMENT,
+  module_id TEXT NOT NULL REFERENCES cms_modules(id) ON DELETE CASCADE,
+  key       TEXT NOT NULL,
+  judul     TEXT NOT NULL,
+  isi       TEXT NOT NULL,   -- may contain [ref:sourceId] tokens
+  sort      INTEGER NOT NULL DEFAULT 0,
+  UNIQUE (module_id, key)
+);
+
+-- Module numeric/text stats; key is unique within a module
+CREATE TABLE IF NOT EXISTS cms_module_stats (
+  id        INTEGER PRIMARY KEY AUTOINCREMENT,
+  module_id TEXT NOT NULL REFERENCES cms_modules(id) ON DELETE CASCADE,
+  key       TEXT NOT NULL,
+  value     TEXT NOT NULL,
+  label     TEXT NOT NULL,
+  source_id TEXT REFERENCES cms_sources(id),
+  sort      INTEGER NOT NULL DEFAULT 0,
+  UNIQUE (module_id, key)
+);
+
+-- Many-to-many: which sources a module cites
+CREATE TABLE IF NOT EXISTS cms_module_sources (
+  module_id TEXT NOT NULL REFERENCES cms_modules(id) ON DELETE CASCADE,
+  source_id TEXT NOT NULL REFERENCES cms_sources(id) ON DELETE CASCADE,
+  PRIMARY KEY (module_id, source_id)
+);
+
+-- Knowledge cards (CMS-managed, separate from legacy knowledge_cards table)
+CREATE TABLE IF NOT EXISTS cms_cards (
+  id                  TEXT PRIMARY KEY,   -- 'RL-0-3m-FM', etc.
+  age_key             TEXT NOT NULL,
+  domain              TEXT NOT NULL REFERENCES cms_domains(code),
+  title               TEXT NOT NULL,
+  read_minutes        INTEGER NOT NULL DEFAULT 2,
+  is_medical          INTEGER NOT NULL DEFAULT 0,   -- 0/1 boolean
+  -- summary: NULL = 'segera-hadir'; JSON = {terjadi,penting,lakukan,perhatian}
+  summary             TEXT,
+  -- figure metadata embedded on the card (resolved from figure_id at read time)
+  figure_id           TEXT REFERENCES cms_figures(id),
+  figure_caption      TEXT,
+  figure_after_index  INTEGER,
+  -- scientific header
+  sci_title           TEXT NOT NULL,
+  sci_read_minutes    INTEGER,
+  reviewed_by_name    TEXT,
+  reviewed_by_date    TEXT,   -- 'YYYY-MM'
+  admin_status        TEXT NOT NULL DEFAULT 'published'
+                        CHECK (admin_status IN ('draft','published')),
+  created_at          DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at          DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_cms_cards_age_domain ON cms_cards(age_key, domain);
+
+-- Card scientific sections (ordered by sort)
+-- type='module': references a module section (with optional overrides)
+-- type='own':    inline text, not from a module
+CREATE TABLE IF NOT EXISTS cms_card_sections (
+  id             INTEGER PRIMARY KEY AUTOINCREMENT,
+  card_id        TEXT NOT NULL REFERENCES cms_cards(id) ON DELETE CASCADE,
+  type           TEXT NOT NULL CHECK (type IN ('module','own')),
+  sort           INTEGER NOT NULL DEFAULT 0,
+  -- type='module'
+  module_id      TEXT REFERENCES cms_modules(id),
+  section_key    TEXT,
+  judul_override TEXT,
+  isi_override   TEXT,
+  -- type='own'
+  judul          TEXT,
+  isi            TEXT,
+  UNIQUE (card_id, sort)
+);
+
+-- Card scientific stats (ordered by sort)
+-- type='module': references a module stat
+-- type='own':    inline stat with explicit sourceId
+-- type='legacy': plain ScientificStat with optional numeric ref (no sourceId)
+CREATE TABLE IF NOT EXISTS cms_card_stats (
+  id        INTEGER PRIMARY KEY AUTOINCREMENT,
+  card_id   TEXT NOT NULL REFERENCES cms_cards(id) ON DELETE CASCADE,
+  type      TEXT NOT NULL CHECK (type IN ('module','own','legacy')),
+  sort      INTEGER NOT NULL DEFAULT 0,
+  -- type='module'
+  module_id TEXT REFERENCES cms_modules(id),
+  stat_key  TEXT,
+  -- type='own' and 'legacy'
+  value     TEXT,
+  label     TEXT,
+  source_id TEXT REFERENCES cms_sources(id),
+  ref       INTEGER,   -- legacy [n] citation number
+  UNIQUE (card_id, sort)
+);
+
+-- Cover image per card (1:1)
+CREATE TABLE IF NOT EXISTS cms_covers (
+  card_id  TEXT PRIMARY KEY REFERENCES cms_cards(id) ON DELETE CASCADE,
+  src      TEXT NOT NULL,
+  alt      TEXT NOT NULL,
+  credit   TEXT
+);
+
+-- ── CMS Workflow Tables (schema created now, populated Fase 2–3) ────────────
+
+-- TODO(fase-2): source inspection log — filled when periodic check workflow built
+CREATE TABLE IF NOT EXISTS cms_source_check_log (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  source_id  TEXT NOT NULL REFERENCES cms_sources(id) ON DELETE CASCADE,
+  checked_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  result     TEXT NOT NULL CHECK (result IN ('no-change','changed')),
+  note       TEXT,
+  url        TEXT,
+  checked_by INTEGER REFERENCES users(id)
+);
+
+-- TODO(fase-2/3): content flags — filled when flag/review workflow built
+CREATE TABLE IF NOT EXISTS cms_flags (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  target_type TEXT NOT NULL CHECK (target_type IN ('card','module','source')),
+  target_id   TEXT NOT NULL,
+  type        TEXT NOT NULL CHECK (type IN ('source-change','forum-report','manual')),
+  reason      TEXT NOT NULL,
+  source_id   TEXT REFERENCES cms_sources(id),
+  note        TEXT,
+  url         TEXT,
+  created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  resolved_at DATETIME,
+  resolved_by INTEGER REFERENCES users(id)
+);
+
+-- TODO(fase-3): version snapshots — filled when version history built
+CREATE TABLE IF NOT EXISTS cms_versions (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  target_type TEXT NOT NULL CHECK (target_type IN ('card','module','source')),
+  target_id   TEXT NOT NULL,
+  version     INTEGER NOT NULL DEFAULT 1,
+  snapshot    TEXT NOT NULL,   -- full JSON snapshot of the content at this version
+  changed_by  INTEGER REFERENCES users(id),
+  created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- TODO(fase-2/3): review audit log — filled when review workflow built
+CREATE TABLE IF NOT EXISTS cms_review_log (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  target_type TEXT NOT NULL CHECK (target_type IN ('card','module')),
+  target_id   TEXT NOT NULL,
+  action      TEXT NOT NULL CHECK (action IN ('approved','marked-valid','flagged','updated')),
+  reviewer    INTEGER REFERENCES users(id),
+  note        TEXT,
+  created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

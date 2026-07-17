@@ -11,7 +11,8 @@ export type FeatureKey =
   | 'iep'
   | 'catatan-guru'
   | 'pembayaran-spp'
-  | 'knowledge';
+  | 'knowledge'
+  | 'jurnal-perkembangan';
 
 interface FeatureColor {
   text: string;
@@ -31,4 +32,5 @@ export const FEATURE_COLORS: Record<FeatureKey, FeatureColor> = {
   'catatan-guru': { text: 'text-teal-600', bg: 'bg-teal-50', bgSolid: 'bg-teal-500', border: 'border-teal-500' },
   'pembayaran-spp': { text: 'text-emerald-600', bg: 'bg-emerald-50', bgSolid: 'bg-emerald-500', border: 'border-emerald-500' },
   knowledge: { text: 'text-amber-600', bg: 'bg-amber-50', bgSolid: 'bg-amber-500', border: 'border-amber-500' },
+  'jurnal-perkembangan': { text: 'text-rose-600', bg: 'bg-rose-50', bgSolid: 'bg-rose-500', border: 'border-rose-500' },
 };

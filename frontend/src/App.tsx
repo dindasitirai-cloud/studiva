@@ -91,6 +91,10 @@ import SekolahAkunAdmin from './pages/AdminPages/SekolahAkunAdmin';
 import GuruAkunAdmin from './pages/AdminPages/GuruAkunAdmin';
 import KnowledgeCardsAdmin from './pages/AdminPages/KnowledgeCardsAdmin';
 import KnowledgeCardFormAdmin from './pages/AdminPages/KnowledgeCardFormAdmin';
+import TrackerKontenAdmin from './pages/AdminPages/TrackerKonten';
+import PartnerOrangTuaPage from './features/partner-orang-tua/parent/PartnerOrangTuaPage';
+import PartnerInboxPage from './features/partner-orang-tua/admin/PartnerInboxPage';
+import JurnalPerkembanganPage from './features/jurnal-perkembangan/JurnalPerkembanganPage';
 
 const CONSULTATION_UPGRADE_MESSAGE =
   'Anda perlu upgrade ke Tier 1 atau Tier 2 untuk melakukan booking konsultasi. Silakan pilih plan yang sesuai untuk mulai berkonsultasi.';
@@ -104,6 +108,8 @@ const ADMIN_SHELL_PATHS = [
   '/admin/forum', '/admin/konsultasi', '/admin/members', '/admin/payments', '/admin/settings',
   '/admin/spp-billing', '/admin/sekolah-akun', '/admin/guru-akun',
   '/admin/knowledge-cards',
+  '/admin/tracker-konten',
+  '/admin/partner-orang-tua',
 ];
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -304,6 +310,11 @@ export default function App() {
               <Route path="community" element={<CommunityTier2 />} />
               <Route path="community/:id" element={<ThreadDetailTier2 />} />
               <Route path="konsultasi" element={<KonsultasiTier2 />} />
+              {/* Fase 1: Partner Orang Tua hanya di Tier 2.
+                  Fase 3 — pasang route yang sama di /dashboard/tier1 */}
+              <Route path="partner-orang-tua" element={<PartnerOrangTuaPage tierContext="tier2" />} />
+              {/* Shared component — same source as Tier 1 below */}
+              <Route path="jurnal-perkembangan" element={<JurnalPerkembanganPage />} />
             </Route>
 
             {/* Tier 1 (Sekolah Studiva) member dashboard, nested routes with shared DashboardShellTier1 layout */}
@@ -345,6 +356,8 @@ export default function App() {
               <Route path="community" element={<CommunityTier2 />} />
               <Route path="community/:id" element={<ThreadDetailTier2 />} />
               <Route path="konsultasi" element={<KonsultasiTier2 />} />
+              {/* Shared component — same source as Tier 2 above */}
+              <Route path="jurnal-perkembangan" element={<JurnalPerkembanganPage />} />
             </Route>
 
             {/* Admin dashboard - internal Studiva team only. Resource Library/
@@ -377,6 +390,8 @@ export default function App() {
               <Route path="knowledge-cards" element={<KnowledgeCardsAdmin />} />
               <Route path="knowledge-cards/new" element={<KnowledgeCardFormAdmin />} />
               <Route path="knowledge-cards/:id/edit" element={<KnowledgeCardFormAdmin />} />
+              <Route path="tracker-konten" element={<TrackerKontenAdmin />} />
+              <Route path="partner-orang-tua" element={<PartnerInboxPage />} />
             </Route>
 
             <Route

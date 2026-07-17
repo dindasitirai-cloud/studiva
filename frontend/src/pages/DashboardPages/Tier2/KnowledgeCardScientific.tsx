@@ -7,8 +7,11 @@ import { useDashboardBasePath } from '../useDashboardBasePath';
 import { useAudioPlayer } from '../../../context/AudioPlayerContext';
 import { useKnowledgeLibrary } from '../../../context/KnowledgeLibraryContext';
 import { CARDS, DOMAIN_MAP } from './knowledgeCardData';
+import { DOMAIN_CONFIG_MAP } from './domains';
+import { KonsultasiCTA } from './KonsultasiCTA';
 import AudioPlayerWidget from './AudioPlayerWidget';
 import { FIGURE_REGISTRY } from '../../../components/figures';
+import { composeScientific } from '../../../lib/composeScientific';
 
 // Render inline [n] markers as superscript links to reference anchors
 function renderCitations(text: string) {
@@ -68,12 +71,13 @@ export default function KnowledgeCardScientific() {
     );
   }
 
-  const { scientific: sci } = card;
+  const sci = composeScientific(card);
   const hasSections    = (sci.sections?.length ?? 0) > 0;
   const hasParagraphs  = (sci.paragraphs?.length ?? 0) > 0;
   const read           = isRead(card.id);
   const bookmarked     = isBookmarked(card.id);
   const FigureComp     = sci.figure ? FIGURE_REGISTRY[sci.figure.id] : null;
+  const domainConfig   = DOMAIN_CONFIG_MAP[card.domain];
 
   return (
     <div className="min-h-screen bg-[#FAFAF8] px-4 py-8 font-nunito-sans sm:px-6">
@@ -101,6 +105,13 @@ export default function KnowledgeCardScientific() {
             </span>
           )}
         </div>
+
+        {/* ── Domain/medical disclaimer — driven by DomainConfig.sensitiveDisclaimer ── */}
+        {domainConfig.sensitiveDisclaimer && (
+          <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-[13px] text-amber-800">
+            {domainConfig.sensitiveDisclaimer}
+          </div>
+        )}
 
         {/* ── Title + read time ─────────────────────────────────────── */}
         <h1 className="mb-1 font-baloo text-2xl font-extrabold leading-snug text-stv-navy">
@@ -224,6 +235,9 @@ export default function KnowledgeCardScientific() {
             </ol>
           </div>
         )}
+
+        {/* ── CTA Konsultasi — hanya kartu domain DK ───────────────── */}
+        {card.domain === 'DK' && <KonsultasiCTA />}
 
         {/* ── Sudah Dibaca, after content, before next card ────────── */}
         <button

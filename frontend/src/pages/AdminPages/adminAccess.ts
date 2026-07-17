@@ -5,10 +5,10 @@ import { AdminRole } from './AdminContext';
 // Pengelola Konten is scoped to content management; Psikolog and Staf
 // Operasional both get the community-facing section (forum + konsultasi).
 export const ROLE_ACCESS: Record<AdminRole, AdminModuleKey[]> = {
-  'Super Admin': ['beranda', 'courses', 'strategies', 'knowledge-cards', 'forum', 'konsultasi', 'members', 'payments', 'settings', 'spp-billing', 'sekolah-akun', 'guru-akun'],
-  'Pengelola Konten': ['courses', 'strategies', 'knowledge-cards'],
-  Psikolog: ['forum', 'konsultasi'],
-  'Staf Operasional': ['forum', 'konsultasi'],
+  'Super Admin': ['beranda', 'courses', 'strategies', 'knowledge-cards', 'tracker-konten', 'forum', 'konsultasi', 'partner-orang-tua', 'members', 'payments', 'settings', 'spp-billing', 'sekolah-akun', 'guru-akun'],
+  'Pengelola Konten': ['courses', 'strategies', 'knowledge-cards', 'tracker-konten'],
+  Psikolog: ['forum', 'konsultasi', 'partner-orang-tua'],
+  'Staf Operasional': ['forum', 'konsultasi', 'partner-orang-tua'],
 };
 
 export function canAccessModule(role: AdminRole, module: AdminModuleKey): boolean {
@@ -24,8 +24,10 @@ export const MODULE_PATH: Record<AdminModuleKey, string> = {
   courses: '/admin/courses',
   strategies: '/admin/strategies',
   'knowledge-cards': '/admin/knowledge-cards',
+  'tracker-konten':  '/admin/tracker-konten',
   forum: '/admin/forum',
   konsultasi: '/admin/konsultasi',
+  'partner-orang-tua': '/admin/partner-orang-tua',
   members: '/admin/members',
   payments: '/admin/payments',
   settings: '/admin/settings',
@@ -41,6 +43,7 @@ export const PATH_MODULE: Record<string, AdminModuleKey> = {
   '/admin/knowledge-cards': 'knowledge-cards',
   '/admin/forum': 'forum',
   '/admin/konsultasi': 'konsultasi',
+  '/admin/partner-orang-tua': 'partner-orang-tua',
   '/admin/members': 'members',
   '/admin/payments': 'payments',
   '/admin/settings': 'settings',
@@ -48,4 +51,5 @@ export const PATH_MODULE: Record<string, AdminModuleKey> = {
   '/admin/sekolah-akun': 'sekolah-akun',
   '/admin/guru-akun': 'guru-akun',
   '/admin/knowledge-cards/new': 'knowledge-cards',
+  '/admin/tracker-konten': 'tracker-konten',
 };

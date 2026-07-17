@@ -9,7 +9,6 @@ import {
   ClipboardList,
   FileText,
   MessageSquarePlus,
-
   GraduationCap,
   Lightbulb,
   Users,
@@ -19,6 +18,7 @@ import {
   Receipt,
   X,
   BookOpen,
+  BookHeart,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { FEATURE_COLORS, FeatureKey } from './featureColors';
@@ -33,6 +33,7 @@ const navItems: { to: string; label: string; icon: typeof Home; key: FeatureKey;
   { to: '/dashboard/tier1/iep', label: 'IEP', icon: FileText, key: 'iep' },
   { to: '/dashboard/tier1/catatan-guru', label: 'Catatan untuk Guru', icon: MessageSquarePlus, key: 'catatan-guru' },
   { to: '/dashboard/tier1/pembayaran-spp', label: 'Pembayaran SPP', icon: Receipt, key: 'pembayaran-spp' },
+  { to: '/dashboard/tier1/jurnal-perkembangan', label: 'Jurnal Perkembangan', icon: BookHeart, key: 'jurnal-perkembangan' },
 ];
 
 const digitalNavItems = [

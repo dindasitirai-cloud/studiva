@@ -14,6 +14,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/admin/strategies': 'Learning Strategies',
   '/admin/forum': 'Community Forum',
   '/admin/konsultasi': 'Konsultasi',
+  '/admin/partner-orang-tua': 'Partner Orang Tua',
   '/admin/members': 'Anggota & Langganan',
   '/admin/payments': 'Pembayaran',
   '/admin/settings': 'Pengaturan',
@@ -22,6 +23,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/admin/guru-akun':    'Akun Guru',
   '/admin/knowledge-cards': 'Panduan Tumbuh Kembang, CMS',
   '/admin/knowledge-cards/new': 'Tambah Kartu',
+  '/admin/tracker-konten': 'Tracker Konten',
 };
 
 const ACTION_ICON: Record<AdminActionKind, typeof Bell> = {

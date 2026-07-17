@@ -1,6 +1,7 @@
 import React from 'react';
 import { CheckCircle2, Bookmark } from 'lucide-react';
-import { KnowledgeCard, AGE_RANGES, DOMAIN_MAP, AgeKey, DomainCode } from './knowledgeCardData';
+import { KnowledgeCard, AGE_RANGES, DOMAIN_MAP, AgeKey, DomainCode, getCardContentStatus } from './knowledgeCardData';
+import { DOMAIN_CONFIGS } from './domains';
 import { CoverImage } from './BookCarousel';
 
 const ALL_DOMAIN = '__all__' as const;
@@ -29,46 +30,60 @@ function BookCover({ card, isRead, isBookmarked, onToggleBookmark, onClick }: {
   onToggleBookmark: (e: React.MouseEvent) => void;
   onClick: () => void;
 }) {
+  const comingSoon = getCardContentStatus(card) === 'segera-hadir';
+
   return (
     <div className="group relative w-full">
       <div
-        className="relative w-full overflow-hidden transition-transform duration-300 group-hover:-translate-y-1"
+        className={`relative w-full overflow-hidden ${comingSoon ? '' : 'transition-transform duration-300 group-hover:-translate-y-1'}`}
         style={{
           paddingBottom: '133%',
           borderRadius: '5px 11px 11px 5px',
           boxShadow: '4px 4px 14px rgba(0,0,0,.18), inset -2px 0 4px rgba(0,0,0,.08)',
-          cursor: 'pointer',
+          cursor: comingSoon ? 'default' : 'pointer',
+          opacity: comingSoon ? 0.7 : 1,
         }}
-        onClick={onClick}
+        onClick={comingSoon ? undefined : onClick}
+        aria-disabled={comingSoon ? true : undefined}
+        role={comingSoon ? undefined : 'button'}
       >
         {/* Typographic illustrated cover (same as carousel) */}
         <CoverImage card={card} />
 
+        {/* "Segera hadir" badge for placeholder cards */}
+        {comingSoon && (
+          <div className="absolute bottom-3 left-3 right-3 z-30 rounded-full bg-black/50 px-2 py-1 text-center text-[10px] font-bold text-white">
+            Segera hadir
+          </div>
+        )}
+
         {/* Read indicator (non-interactive badge, button is inside BookReader) */}
-        {isRead && (
+        {!comingSoon && isRead && (
           <div className="absolute right-2 top-9 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-stv-green shadow">
             <CheckCircle2 className="h-3 w-3 text-white" strokeWidth={2.5} />
           </div>
         )}
       </div>
 
-      {/* Bookmark toggle button — top-right corner, outside the click-to-open area */}
-      <button
-        type="button"
-        onClick={onToggleBookmark}
-        aria-label={isBookmarked ? 'Hapus bookmark' : 'Simpan bookmark'}
-        className={`absolute right-1.5 top-1.5 z-40 flex h-7 w-7 items-center justify-center rounded-full shadow-[0_2px_8px_rgba(0,0,0,.18)] transition hover:scale-110 ${
-          isBookmarked
-            ? 'bg-amber-400 text-white'
-            : 'bg-white/85 text-stv-muted hover:bg-white hover:text-amber-500'
-        }`}
-      >
-        <Bookmark
-          className="h-3.5 w-3.5"
-          fill={isBookmarked ? 'currentColor' : 'none'}
-          strokeWidth={2}
-        />
-      </button>
+      {/* Bookmark toggle — hidden for placeholder cards */}
+      {!comingSoon && (
+        <button
+          type="button"
+          onClick={onToggleBookmark}
+          aria-label={isBookmarked ? 'Hapus bookmark' : 'Simpan bookmark'}
+          className={`absolute right-1.5 top-1.5 z-40 flex h-7 w-7 items-center justify-center rounded-full shadow-[0_2px_8px_rgba(0,0,0,.18)] transition hover:scale-110 ${
+            isBookmarked
+              ? 'bg-amber-400 text-white'
+              : 'bg-white/85 text-stv-muted hover:bg-white hover:text-amber-500'
+          }`}
+        >
+          <Bookmark
+            className="h-3.5 w-3.5"
+            fill={isBookmarked ? 'currentColor' : 'none'}
+            strokeWidth={2}
+          />
+        </button>
+      )}
     </div>
   );
 }
@@ -150,21 +165,21 @@ export default function BookGrid({
         >
           Semua
         </button>
-        {(Object.entries(DOMAIN_MAP) as [DomainCode, typeof DOMAIN_MAP[DomainCode]][]).map(([code, info]) => {
-          const isActive = selectedDomain === code;
-          const Icon = info.icon;
+        {DOMAIN_CONFIGS.map((dc) => {
+          const isActive = selectedDomain === dc.code;
+          const Icon = dc.icon;
           return (
             <button
-              key={code}
+              key={dc.code}
               type="button"
-              onClick={() => setSelectedDomain(code)}
+              onClick={() => setSelectedDomain(dc.code)}
               className="flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12px] font-semibold transition"
               style={isActive
-                ? { background: info.bg, color: info.fg, borderColor: info.fg }
+                ? { background: dc.bg, color: dc.fg, borderColor: dc.fg }
                 : { background: 'white', color: '#888', borderColor: '#E5E7EB' }}
             >
               <Icon className="h-3.5 w-3.5" strokeWidth={2} />
-              {info.label}
+              {dc.label}
             </button>
           );
         })}

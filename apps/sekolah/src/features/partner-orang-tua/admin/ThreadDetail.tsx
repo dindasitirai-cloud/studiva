@@ -4,7 +4,7 @@ import { PartnerThread } from '../types';
 import { COPY_ADMIN } from '../voiceGuide';
 import ChatThread from '../parent/ChatThread';
 import CatatanPendampingPanel from './CatatanPendampingPanel';
-import { relativeTime } from '../../../pages/DashboardPages/Tier2/relativeTime';
+import { relativeTime } from '../../../lib/relativeTime';
 
 interface ThreadDetailProps {
   thread: PartnerThread;

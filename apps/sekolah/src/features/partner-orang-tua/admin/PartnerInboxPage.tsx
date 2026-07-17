@@ -4,7 +4,7 @@ import { PartnerThread, PartnerMessage, ThreadStatus } from '../types';
 import { mockThreads } from '../mockData';
 import { COPY_ADMIN, STATUS_LABEL } from '../voiceGuide';
 import ThreadDetail from './ThreadDetail';
-import { relativeTime } from '../../../pages/DashboardPages/Tier2/relativeTime';
+import { relativeTime } from '../../../lib/relativeTime';
 
 const STATUS_ORDER: Record<ThreadStatus, number> = {
   menunggu_balasan: 0,

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { PartnerMessage } from '../types';
-import { relativeTime } from '../../../pages/DashboardPages/Tier2/relativeTime';
+import { relativeTime } from '../../../lib/relativeTime';
 
 interface ChatThreadProps {
   messages: PartnerMessage[];

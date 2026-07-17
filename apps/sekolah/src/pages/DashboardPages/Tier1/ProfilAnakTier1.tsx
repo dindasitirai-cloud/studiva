@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  HandHeart, ArrowRight, TrendingUp, CalendarCheck, FolderOpen, FileText, Sparkles, GraduationCap,
+  HandHeart, ArrowRight, TrendingUp, CalendarCheck, FolderOpen, FileText, GraduationCap,
 } from 'lucide-react';
 import { useDashboardTier1, DiagnosisTag } from './DashboardTier1Context';
 import { FEATURE_COLORS } from './featureColors';
-import { PerjalananPembelajaran } from '../Tier2/ProfilAnakTier2';
 
 // Phrased to inform, not label - the goal is for parents to see this as
 // context the school uses to support their child, not a clinical tag.
@@ -70,18 +69,6 @@ export default function ProfilAnakTier1() {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Status Perjalanan Pembelajaran (Studiva Digital) */}
-      <div className="animate-fade-in-up rounded-2xl bg-white p-6 shadow-[0_4px_16px_rgba(16,58,107,.06)]">
-        <div className="mb-1 flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-amber-500" />
-          <h3 className="font-baloo text-[16px] font-bold text-stv-navy">Status Perjalanan Pembelajaran</h3>
-        </div>
-        <p className="mb-4 text-[13px] text-stv-muted">
-          Progres ini berasal dari aktivitas {child.name.split(' ')[0]} di fitur Studiva Digital (Panduan Tumbuh Kembang, Courses, Learning Strategies) - tersambung otomatis tanpa perlu memilih nama anak.
-        </p>
-        <PerjalananPembelajaran childId={child.id} />
       </div>
 
       {/* Tautan Cepat */}

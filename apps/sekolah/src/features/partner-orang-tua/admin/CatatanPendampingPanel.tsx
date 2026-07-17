@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { CatatanPendamping } from '../types';
 import { COPY_ADMIN } from '../voiceGuide';
 import { mockCatatan } from '../mockData';
-import { relativeTime } from '../../../pages/DashboardPages/Tier2/relativeTime';
+import { relativeTime } from '../../../lib/relativeTime';
 import { NotebookPen } from 'lucide-react';
 
 // TODO: Fase 2 — catatan ini tampil sebagai layer di Jurnal Perkembangan

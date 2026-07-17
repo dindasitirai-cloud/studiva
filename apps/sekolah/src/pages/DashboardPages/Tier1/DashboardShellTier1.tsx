@@ -4,7 +4,7 @@ import { Menu, Bell, TrendingUp, FolderOpen, ClipboardList, MessageSquare, Video
 import { useAuth } from '../../../context/AuthContext';
 import { useDashboardTier2, AppNotificationKind } from '../../../context/DashboardTier2Context';
 import { DashboardTier1Provider, useDashboardTier1, TeacherNotificationKind } from './DashboardTier1Context';
-import { relativeTime } from '../Tier2/relativeTime';
+import { relativeTime } from '../../../lib/relativeTime';
 import SidebarTier1 from './SidebarTier1';
 
 const TEACHER_NOTIF_ICON: Record<TeacherNotificationKind, typeof TrendingUp> = {

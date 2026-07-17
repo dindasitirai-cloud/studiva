@@ -21,9 +21,9 @@ const VALUES = [
     icon: Baby,
     title: 'Berpusat pada Anak',
     desc: 'Kurikulumlah yang menyesuaikan diri dengan anak, bukan sebaliknya. Setiap rencana belajar dirancang khusus untuk keunikan, kecepatan, dan gaya belajar masing-masing anak.',
-    bg: 'bg-amber-50',
-    iconColor: 'text-amber-500',
-    iconBg: 'bg-amber-100',
+    bg: 'bg-fajar',
+    iconColor: 'text-madu',
+    iconBg: 'bg-mawar',
   },
   {
     icon: Users,
@@ -160,10 +160,10 @@ export default function TentangPage() {
       {/* ── NILAI-NILAI KAMI ──────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-slate-50 px-4 py-20 sm:px-8 sm:py-24">
         <span className="pointer-events-none absolute left-[2%] top-[10%] h-[12px] w-[12px] rounded-full bg-rose-400 opacity-40" />
-        <span className="pointer-events-none absolute right-[3%] top-[20%] h-[8px] w-[8px] rounded-full bg-amber-400 opacity-50" />
+        <span className="pointer-events-none absolute right-[3%] top-[20%] h-[8px] w-[8px] rounded-full bg-madu opacity-50" />
         <span className="pointer-events-none absolute bottom-[15%] left-[5%] h-[9px] w-[9px] rounded-full bg-emerald-400 opacity-40" />
         <span className="pointer-events-none absolute bottom-[10%] right-[5%] h-[11px] w-[11px] rounded-full bg-stv-sky-stroke opacity-35" />
-        <Sparkles className="pointer-events-none absolute right-[9%] top-[8%] h-[16px] w-[16px] text-amber-400 opacity-45" fill="currentColor" strokeWidth={0} />
+        <Sparkles className="pointer-events-none absolute right-[9%] top-[8%] h-[16px] w-[16px] text-madu opacity-45" fill="currentColor" strokeWidth={0} />
         <Sparkles className="pointer-events-none absolute bottom-[22%] left-[8%] h-[12px] w-[12px] text-stv-sky-stroke opacity-40" fill="currentColor" strokeWidth={0} />
         <div className="mx-auto max-w-[1100px]">
           <Reveal>
@@ -249,15 +249,15 @@ export default function TentangPage() {
 
             {/* Tier 2 */}
             <Reveal delayMs={80}>
-              <div className="group relative flex flex-col overflow-hidden rounded-2xl border-2 border-amber-100 bg-white shadow-[0_8px_24px_rgba(16,58,107,.08)] transition hover:-translate-y-1 hover:border-amber-400 hover:shadow-[0_16px_40px_rgba(217,119,6,.14)]">
-                <div className="bg-gradient-to-br from-amber-50 to-yellow-100 px-6 py-7">
-                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500 shadow-[0_4px_12px_rgba(251,146,60,.35)]">
+              <div className="group relative flex flex-col overflow-hidden rounded-2xl border-2 border-mawar bg-white shadow-[0_8px_24px_rgba(16,58,107,.08)] transition hover:-translate-y-1 hover:border-madu hover:shadow-[0_16px_40px_rgba(217,119,6,.14)]">
+                <div className="bg-gradient-to-br from-fajar to-yellow-100 px-6 py-7">
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-madu shadow-[0_4px_12px_rgba(251,146,60,.35)]">
                     <Laptop className="h-6 w-6 text-white" strokeWidth={2} />
                   </div>
-                  <span className="mb-1 block text-[12px] font-bold uppercase tracking-wider text-amber-600">
+                  <span className="mb-1 block text-[12px] font-bold uppercase tracking-wider text-rekah">
                     Tier 2 · Platform Digital
                   </span>
-                  <h3 className="font-baloo text-[24px] font-extrabold text-stv-navy">Studiva Digital</h3>
+                  <h3 className="font-baloo text-[24px] font-extrabold text-stv-navy">Rekah</h3>
                   <p className="mt-1 text-[13px] text-stv-muted">Tersedia di seluruh Indonesia</p>
                 </div>
                 <div className="flex flex-1 flex-col gap-5 p-6">
@@ -269,18 +269,18 @@ export default function TentangPage() {
                   <ul className="space-y-2">
                     {['Resource library & panduan praktis', 'Webinar live + video rekaman', 'Konsultasi 1-on-1 dengan psikolog', 'Komunitas forum orang tua'].map(f => (
                       <li key={f} className="flex items-center gap-2 text-[14px] text-stv-body">
-                        <CheckCircle className="h-4 w-4 shrink-0 text-amber-500" />
+                        <CheckCircle className="h-4 w-4 shrink-0 text-madu" />
                         {f}
                       </li>
                     ))}
                   </ul>
                   <div className="mt-auto">
-                    <p className="mb-3 rounded-xl bg-amber-50 px-4 py-2.5 text-[13px] font-semibold text-amber-700">
+                    <p className="mb-3 rounded-xl bg-fajar px-4 py-2.5 text-[13px] font-semibold text-rekah-tua">
                       Daftar mandiri secara online dan mulai akses langsung.
                     </p>
                     <Link
                       to="/studiva-digital"
-                      className="inline-flex items-center gap-1.5 font-baloo text-[15px] font-bold text-amber-600 no-underline transition hover:underline"
+                      className="inline-flex items-center gap-1.5 font-baloo text-[15px] font-bold text-rekah no-underline transition hover:underline"
                     >
                       Pelajari lebih lanjut <ArrowRight className="h-4 w-4" />
                     </Link>

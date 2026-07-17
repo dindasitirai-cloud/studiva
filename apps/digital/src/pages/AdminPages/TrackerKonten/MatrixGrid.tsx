@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle, Square, Flag } from 'lucide-react';
-import { AGE_RANGES, DOMAIN_MAP, DomainCode, AgeKey } from '../../DashboardPages/Tier2/knowledgeCardData';
-import { DOMAIN_CODES } from '../../DashboardPages/Tier2/domains';
+import { AGE_RANGES, DOMAIN_MAP, DomainCode, AgeKey } from '@studiva/shared';
+import { DOMAIN_CODES } from '@studiva/shared';
 import { FreshnessDot } from './FreshnessBadge';
 import { useTracker } from './TrackerContext';
 
@@ -206,7 +206,7 @@ export function MatrixGrid() {
           Segar
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+          <span className="h-2.5 w-2.5 rounded-full bg-madu" />
           Menua
         </span>
         <span className="flex items-center gap-1.5">

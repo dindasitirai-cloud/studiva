@@ -63,7 +63,7 @@ module.exports = {
         jakarta:   ["'Plus Jakarta Sans'", 'system-ui', 'sans-serif'],
         fraunces:  ["'Fraunces'", 'Georgia', 'serif'],
 
-        sans: ['Nunito', 'Segoe UI', 'Roboto', 'Arial', 'sans-serif'],
+        sans: ["'Plus Jakarta Sans'", 'system-ui', 'sans-serif'],
         display: ['Poppins', 'Nunito', 'Segoe UI', 'sans-serif'],
         baloo: ["'Baloo 2'", 'cursive'],
         'nunito-sans': ["'Nunito Sans'", 'sans-serif'],

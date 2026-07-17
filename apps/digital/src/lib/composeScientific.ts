@@ -13,9 +13,9 @@ import {
   ComposeSource,
   ScientificResolved,
 } from '@studiva/shared';
-import type { KnowledgeCard } from '../pages/DashboardPages/Tier2/knowledgeCardData';
-import { MODULES } from '../pages/DashboardPages/Tier2/modules';
-import { SOURCES } from '../pages/DashboardPages/Tier2/sources';
+import type { KnowledgeCard } from '@studiva/shared';
+import { MODULES } from '@studiva/shared';
+import { SOURCES } from '@studiva/shared';
 
 // Re-export types that callers expect from this module
 export type { ScientificResolved };

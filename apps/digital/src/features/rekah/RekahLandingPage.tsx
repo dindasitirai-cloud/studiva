@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   BookOpen, ClipboardList, HelpCircle, ChevronDown, Check,
 } from 'lucide-react';
-import LogoRekah from './LogoRekah';
-import Kelopak from './Kelopak';
+import LogoRekah from '../../components/LogoRekah';
+import Kelopak from '../../components/Kelopak';
 import { REKAH_COPY, REKAH_WA_NUMBER } from './rekahLandingCopy';
 
 // ---------------------------------------------------------------------------

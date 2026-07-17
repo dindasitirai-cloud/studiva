@@ -20,7 +20,7 @@ export default function ChildPicker({ children, taggedIds, onToggle, label = 'Ta
   if (children.length === 0) return null;
 
   return (
-    <div className="rounded-xl bg-amber-50 p-4">
+    <div className="rounded-xl bg-fajar p-4">
       <p className="mb-2.5 text-[13px] font-semibold text-stv-navy">{label}</p>
       <div className="flex flex-wrap gap-2">
         {children.map(child => {
@@ -34,7 +34,7 @@ export default function ChildPicker({ children, taggedIds, onToggle, label = 'Ta
               className={`group flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition ${
                 tagged
                   ? 'bg-stv-green text-white hover:bg-red-500'
-                  : 'border border-amber-300 bg-white text-stv-body hover:border-amber-500'
+                  : 'border border-madu bg-white text-stv-body hover:border-madu'
               }`}
             >
               {tagged ? (
@@ -43,7 +43,7 @@ export default function ChildPicker({ children, taggedIds, onToggle, label = 'Ta
                   <X className="hidden h-3.5 w-3.5 group-hover:block" />
                 </>
               ) : (
-                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-amber-200 text-[9px] font-bold text-amber-700">
+                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-mawar text-[9px] font-bold text-rekah-tua">
                   {child.name.charAt(0).toUpperCase()}
                 </span>
               )}

@@ -13,7 +13,7 @@ export interface AdminActionItem {
 // Derived directly from the SAME shared data the parent dashboards read -
 // threads/bookings/courses all live in DashboardTier2Context. Nothing here
 // is admin-only mock data, which is the point: it's a real reflection of
-// what parents are currently doing on the shared Studiva Digital surface.
+// what parents are currently doing on the shared Rekah surface.
 export function useAdminActionItems(): AdminActionItem[] {
   const { threads, bookings, courses } = useDashboardTier2();
 

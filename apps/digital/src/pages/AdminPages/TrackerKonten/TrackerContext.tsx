@@ -3,9 +3,9 @@
 // distributes it to child components without prop-drilling.
 
 import { createContext, useContext } from 'react';
-import { KnowledgeCard, DomainCode } from '../../DashboardPages/Tier2/knowledgeCardData';
-import { KnowledgeModule } from '../../DashboardPages/Tier2/modules';
-import { Source } from '../../DashboardPages/Tier2/sources';
+import { KnowledgeCard, DomainCode } from '@studiva/shared';
+import { KnowledgeModule } from '@studiva/shared';
+import { Source } from '@studiva/shared';
 import { UsageMap } from '../../../lib/buildUsageMap';
 import { Freshness } from '../../../lib/contentFreshness';
 import {

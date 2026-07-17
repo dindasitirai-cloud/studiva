@@ -230,7 +230,7 @@ export default function ForumAdmin() {
                 <div className="flex flex-wrap items-center gap-1.5">
                   <span className={`w-fit rounded-full px-2.5 py-0.5 text-[11px] font-bold ${STATUS_STYLE[t.status]}`}>{STATUS_LABEL[t.status]}</span>
                   {t.pinned && (
-                    <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-700">
+                    <span className="flex items-center gap-1 rounded-full bg-mawar px-2.5 py-0.5 text-[11px] font-bold text-rekah-tua">
                       <Pin className="h-3 w-3" />Disematkan
                     </span>
                   )}
@@ -268,7 +268,7 @@ export default function ForumAdmin() {
                 <button
                   type="button"
                   onClick={() => togglePinThread(t.id)}
-                  className="flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-[12px] font-semibold text-amber-700 hover:opacity-80"
+                  className="flex items-center gap-1.5 rounded-full bg-fajar px-3 py-1.5 text-[12px] font-semibold text-rekah-tua hover:opacity-80"
                 >
                   {t.pinned ? <PinOff className="h-3.5 w-3.5" /> : <Pin className="h-3.5 w-3.5" />}
                   {t.pinned ? 'Lepas Sematan' : 'Sematkan'}

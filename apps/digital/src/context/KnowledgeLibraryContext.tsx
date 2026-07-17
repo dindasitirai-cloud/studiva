@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { CARDS, KnowledgeCard } from '../pages/DashboardPages/Tier2/knowledgeCardData';
+import { CARDS, KnowledgeCard } from '@studiva/shared';
 import { api } from '../api/client';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';

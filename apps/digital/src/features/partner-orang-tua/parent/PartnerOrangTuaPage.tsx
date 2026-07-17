@@ -7,7 +7,7 @@ import ChatThread from './ChatThread';
 import MessageComposer from './MessageComposer';
 
 // Komponen shared — dirancang untuk menerima konteks tier via props agar
-// dapat dipasang di Studiva Digital (Tier 2) maupun Sekolah Studiva (Tier 1)
+// dapat dipasang di Rekah (Tier 2) maupun Sekolah Studiva (Tier 1)
 // tanpa duplikasi kode. Fase 1 hanya memasangnya di Tier 2.
 // TODO: Fase 3 — pasang di dashboard Tier 1 dengan tierContext='tier1'
 interface PartnerOrangTuaPageProps {
@@ -102,7 +102,7 @@ export default function PartnerOrangTuaPage({ tierContext = 'tier2' }: PartnerOr
 
 function StatusBadge({ status }: { status: PartnerThread['status'] }) {
   const map: Record<PartnerThread['status'], { label: string; cls: string }> = {
-    menunggu_balasan: { label: 'Menunggu Balasan', cls: 'bg-amber-100 text-amber-700' },
+    menunggu_balasan: { label: 'Menunggu Balasan', cls: 'bg-mawar text-rekah-tua' },
     dibalas: { label: 'Sudah Dibalas', cls: 'bg-stv-green-tint text-stv-green' },
     selesai: { label: 'Selesai', cls: 'bg-stv-border text-stv-muted' },
   };

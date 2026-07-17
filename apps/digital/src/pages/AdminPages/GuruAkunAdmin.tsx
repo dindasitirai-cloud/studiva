@@ -81,7 +81,7 @@ function CredentialsModal({ email, password, name, onClose }: {
               </div>
             </div>
           ))}
-          <p className="mb-4 rounded-xl bg-amber-50 p-3 text-[12px] text-amber-700">
+          <p className="mb-4 rounded-xl bg-fajar p-3 text-[12px] text-rekah-tua">
             Guru dapat login di <strong>/login</strong>. Akses dashboard guru langsung aktif setelah login.
           </p>
           {/* TODO: integrasikan pengiriman email kredensial otomatis ke guru */}

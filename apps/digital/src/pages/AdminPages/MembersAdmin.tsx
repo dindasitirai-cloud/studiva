@@ -2,12 +2,12 @@ import React, { useMemo, useState } from 'react';
 import { Search, Mail, CalendarDays, Baby, Activity, UserX, UserCheck, X, UserCog } from 'lucide-react';
 import { useAdmin, MemberAdmin, MemberTier, MemberStatus } from './AdminContext';
 
-const TIER_LABEL: Record<MemberTier, string> = { tier1: 'Sekolah Studiva', tier2: 'Studiva Digital' };
-const TIER_STYLE: Record<MemberTier, string> = { tier1: 'bg-stv-sky-tint text-stv-sky-stroke', tier2: 'bg-amber-50 text-amber-700' };
+const TIER_LABEL: Record<MemberTier, string> = { tier1: 'Sekolah Studiva', tier2: 'Rekah' };
+const TIER_STYLE: Record<MemberTier, string> = { tier1: 'bg-stv-sky-tint text-stv-sky-stroke', tier2: 'bg-fajar text-rekah-tua' };
 const STATUS_LABEL: Record<MemberStatus, string> = { aktif: 'Aktif', kadaluarsa: 'Kadaluarsa', nonaktif: 'Nonaktif' };
 const STATUS_STYLE: Record<MemberStatus, string> = {
   aktif: 'bg-stv-green-tint text-stv-green',
-  kadaluarsa: 'bg-amber-100 text-amber-700',
+  kadaluarsa: 'bg-mawar text-rekah-tua',
   nonaktif: 'bg-red-100 text-red-600',
 };
 const PLAN_LABEL: Record<string, string> = { monthly: 'Bulanan', quarterly: '3 Bulan', yearly: 'Tahunan' };
@@ -120,7 +120,7 @@ export default function MembersAdmin() {
     <div className="flex flex-col gap-5">
       <div>
         <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Anggota & Langganan</h2>
-        <p className="text-[14px] text-stv-muted">Kelola anggota Sekolah Studiva dan Studiva Digital.</p>
+        <p className="text-[14px] text-stv-muted">Kelola anggota Sekolah Studiva dan Rekah.</p>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
@@ -136,7 +136,7 @@ export default function MembersAdmin() {
         <select value={tierFilter} onChange={e => setTierFilter(e.target.value as 'semua' | MemberTier)} className="rounded-full border border-stv-border bg-white px-4 py-2.5 text-[14px] focus:border-pink-400 focus:outline-none">
           <option value="semua">Semua Tier</option>
           <option value="tier1">Sekolah Studiva</option>
-          <option value="tier2">Studiva Digital</option>
+          <option value="tier2">Rekah</option>
         </select>
         <select value={statusFilter} onChange={e => setStatusFilter(e.target.value as 'semua' | MemberStatus)} className="rounded-full border border-stv-border bg-white px-4 py-2.5 text-[14px] focus:border-pink-400 focus:outline-none">
           <option value="semua">Semua Status</option>

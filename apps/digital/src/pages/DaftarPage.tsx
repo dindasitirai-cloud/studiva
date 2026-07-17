@@ -133,14 +133,14 @@ function StepperBar({ current }: { current: Step }) {
 function PasswordStrengthBar({ password }: { password: string }) {
   const s = password.length === 0 ? 0 : password.length < 8 ? 1 : /[A-Z]/.test(password) && /[0-9]/.test(password) ? 3 : 2;
   if (s === 0) return null;
-  const colors = ['', 'bg-red-400', 'bg-amber-400', 'bg-emerald-500'];
+  const colors = ['', 'bg-red-400', 'bg-madu', 'bg-emerald-500'];
   const labels = ['', 'Lemah', 'Cukup', 'Kuat'];
   return (
     <div className="mt-1.5 flex items-center gap-2">
       <div className="flex flex-1 gap-1">
         {[1,2,3].map(n => <div key={n} className={`h-1.5 flex-1 rounded-full transition-colors ${s >= n ? colors[s] : 'bg-stv-border'}`}/>)}
       </div>
-      <span className={`text-[11px] font-semibold ${s===3?'text-emerald-600':s===2?'text-amber-600':'text-red-500'}`}>{labels[s]}</span>
+      <span className={`text-[11px] font-semibold ${s===3?'text-emerald-600':s===2?'text-rekah':'text-red-500'}`}>{labels[s]}</span>
     </div>
   );
 }
@@ -256,15 +256,15 @@ export default function DaftarPage() {
                   <MessageCircle className="h-4 w-4" />Hubungi via WhatsApp
                 </a>
               </div>
-              {/* Studiva Digital */}
-              <div className="flex flex-col rounded-2xl border-2 border-amber-300 bg-amber-50/40 p-6 shadow-[0_4px_20px_rgba(251,146,60,.12)]">
+              {/* Rekah */}
+              <div className="flex flex-col rounded-2xl border-2 border-madu bg-fajar p-6 shadow-[0_4px_20px_rgba(251,146,60,.12)]">
                 <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-madu">
                     <MailIcon className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-amber-600">Studiva Digital</p>
-                    <h2 className="font-baloo text-[18px] font-bold text-stv-navy">Studiva Digital</h2>
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-rekah">Rekah</p>
+                    <h2 className="font-baloo text-[18px] font-bold text-stv-navy">Rekah</h2>
                   </div>
                 </div>
                 <p className="mb-4 text-[14px] leading-[1.7] text-stv-body">
@@ -274,12 +274,12 @@ export default function DaftarPage() {
                 <ul className="mb-6 flex-1 space-y-2">
                   {TIER2_FEATURES.map(f => (
                     <li key={f} className="flex items-center gap-2 text-[13px] text-stv-body">
-                      <CheckCircle className="h-4 w-4 shrink-0 text-amber-500" />{f}
+                      <CheckCircle className="h-4 w-4 shrink-0 text-madu" />{f}
                     </li>
                   ))}
                 </ul>
                 <button type="button" onClick={() => setStep('pricing')}
-                  className="inline-flex items-center gap-1.5 self-start rounded-full bg-amber-500 px-6 py-3 font-baloo text-[15px] font-bold text-white shadow-[0_6px_16px_rgba(251,146,60,.3)] transition hover:-translate-y-0.5 hover:bg-amber-600">
+                  className="inline-flex items-center gap-1.5 self-start rounded-full bg-madu px-6 py-3 font-baloo text-[15px] font-bold text-white shadow-[0_6px_16px_rgba(251,146,60,.3)] transition hover:-translate-y-0.5 hover:bg-rekah">
                   Daftar Sekarang <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
@@ -342,7 +342,7 @@ export default function DaftarPage() {
                 Pilih Paket{' '}
                 <span style={{ position: 'relative', display: 'inline-block', zIndex: 0 }}>
                   <span style={{ position: 'absolute', left: -5, right: -5, bottom: '10%', height: '32%', background: '#FBD00A', borderRadius: 7, zIndex: -1 }} />
-                  Studiva Digital
+                  Rekah
                 </span>
               </h1>
               <p style={{ fontFamily: "'Nunito Sans', sans-serif", fontWeight: 400, fontSize: 17, color: '#6B7790', lineHeight: 1.65, maxWidth: 500, margin: '14px auto 0' }}>
@@ -360,7 +360,7 @@ export default function DaftarPage() {
                 </div>
                 <div>
                   <p style={{ fontFamily: "'Baloo 2', sans-serif", fontWeight: 800, fontSize: 36, color: '#103A6B', margin: 0, lineHeight: 1.15 }}>
-                    Studiva Digital
+                    Rekah
                   </p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#E4F1FB', color: '#2E8BC9', fontWeight: 700, fontSize: 13, borderRadius: 999, padding: '4px 12px' }}>
@@ -490,8 +490,8 @@ export default function DaftarPage() {
             </button>
 
             {selectedPlan && (
-              <div className="mb-6 flex items-center gap-2 rounded-2xl bg-amber-50 px-4 py-3 text-[14px]">
-                <CheckCircle className="h-4 w-4 shrink-0 text-amber-500" />
+              <div className="mb-6 flex items-center gap-2 rounded-2xl bg-fajar px-4 py-3 text-[14px]">
+                <CheckCircle className="h-4 w-4 shrink-0 text-madu" />
                 <span className="text-stv-body">
                   Paket dipilih:{' '}
                   <strong className="text-stv-navy">
@@ -501,7 +501,7 @@ export default function DaftarPage() {
               </div>
             )}
 
-            <h1 className="mb-1 font-baloo text-[28px] font-extrabold text-stv-navy sm:text-[32px]">Buat Akun Studiva Digital</h1>
+            <h1 className="mb-1 font-baloo text-[28px] font-extrabold text-stv-navy sm:text-[32px]">Buat Akun Rekah</h1>
             <p className="mb-6 text-[14px] text-stv-body">Isi data di bawah untuk membuat akun, lalu lanjut ke pembayaran.</p>
 
             {apiError && (
@@ -572,7 +572,7 @@ export default function DaftarPage() {
                 {errors.setuju && <p className="mt-1 flex items-center gap-1 text-[12px] text-red-500"><AlertCircle className="h-3 w-3" />{errors.setuju}</p>}
               </div>
               <button type="button" onClick={handleDaftar} disabled={submitting}
-                className="flex min-h-[50px] items-center justify-center gap-2 rounded-full bg-amber-500 font-baloo text-[16px] font-bold text-white shadow-[0_6px_20px_rgba(251,146,60,.3)] transition hover:-translate-y-0.5 hover:bg-amber-600 disabled:opacity-60">
+                className="flex min-h-[50px] items-center justify-center gap-2 rounded-full bg-madu font-baloo text-[16px] font-bold text-white shadow-[0_6px_20px_rgba(251,146,60,.3)] transition hover:-translate-y-0.5 hover:bg-rekah disabled:opacity-60">
                 {submitting ? 'Memproses...' : 'Buat Akun & Lanjut ke Pembayaran'}
               </button>
             </div>

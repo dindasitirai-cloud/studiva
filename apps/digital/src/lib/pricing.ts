@@ -30,5 +30,5 @@ export function formatIDR(amount: number): string {
 
 export const TIER_LABELS: Record<Tier, string> = {
   tier1: 'Tier 1: Sekolah Studiva',
-  tier2: 'Tier 2: Studiva Digital',
+  tier2: 'Tier 2: Rekah',
 };

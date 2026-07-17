@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useRef, useState } from 'react';
-import { CARDS, KnowledgeCard } from '../pages/DashboardPages/Tier2/knowledgeCardData';
+import { CARDS, KnowledgeCard } from '@studiva/shared';
 import { composeScientific } from '../lib/composeScientific';
 
 export interface PlayerSegment {

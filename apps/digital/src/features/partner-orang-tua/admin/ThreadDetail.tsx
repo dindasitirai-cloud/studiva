@@ -154,7 +154,7 @@ export default function ThreadDetail({ thread, onReply, onMarkDone, onBack }: Th
 
 function StatusBadge({ status }: { status: PartnerThread['status'] }) {
   const map: Record<PartnerThread['status'], { label: string; cls: string }> = {
-    menunggu_balasan: { label: 'Menunggu', cls: 'bg-amber-100 text-amber-700' },
+    menunggu_balasan: { label: 'Menunggu', cls: 'bg-mawar text-rekah-tua' },
     dibalas: { label: 'Dibalas', cls: 'bg-stv-green-tint text-stv-green' },
     selesai: { label: 'Selesai', cls: 'bg-stv-border text-stv-muted' },
   };

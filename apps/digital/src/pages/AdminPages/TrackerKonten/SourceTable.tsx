@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AlertTriangle, CheckCircle2, ExternalLink, BookOpen, Building2, FlaskConical, Scroll } from 'lucide-react';
 import { useTracker } from './TrackerContext';
-import { Source } from '../../DashboardPages/Tier2/sources';
+import { Source } from '@studiva/shared';
 import { monthsDiff, parseYearMonth } from '../../../lib/contentFreshness';
 
 const TYPE_META: Record<Source['type'], { label: string; icon: React.ElementType; className: string }> = {
@@ -123,7 +123,7 @@ export function SourceTable() {
           {isClassic ? (
             <span className="text-stv-muted-2 italic">Tidak perlu</span>
           ) : (
-            <span className={staleChecked ? 'font-semibold text-amber-700' : 'text-stv-body'}>
+            <span className={staleChecked ? 'font-semibold text-rekah-tua' : 'text-stv-body'}>
               {st.lastChecked !== '—'
                 ? `${st.lastChecked.replace('-', '/')} ${staleChecked ? '⚠' : ''}`
                 : '—'}
@@ -148,13 +148,13 @@ export function SourceTable() {
     <div className="flex flex-col gap-5">
       {/* Quarterly banner */}
       {showQuarterlyBanner && (
-        <div className="flex items-start gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3">
-          <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
+        <div className="flex items-start gap-3 rounded-xl border border-madu bg-fajar px-4 py-3">
+          <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rekah" />
           <div>
-            <p className="text-sm font-semibold text-amber-800">
+            <p className="text-sm font-semibold text-pekat">
               Sudah waktunya pemeriksaan sumber kuartalan
             </p>
-            <p className="mt-0.5 text-xs text-amber-700">
+            <p className="mt-0.5 text-xs text-rekah-tua">
               Satu atau lebih sumber belum diperiksa selama ≥3 bulan. Lakukan pemeriksaan berkala dan catat hasilnya.
             </p>
           </div>

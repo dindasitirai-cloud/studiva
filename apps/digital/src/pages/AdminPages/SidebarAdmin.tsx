@@ -189,7 +189,7 @@ export default function SidebarAdmin({ open, onClose }: SidebarAdminProps) {
                           <Icon className={`h-5 w-5 shrink-0 ${isActive ? colors.text : 'text-stv-muted'}`} strokeWidth={2} />
                           <span className="flex-1">{label}</span>
                           {isPartner && partnerPendingCount > 0 && (
-                            <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-amber-500 px-1.5 text-[11px] font-bold text-white">
+                            <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-madu px-1.5 text-[11px] font-bold text-white">
                               {partnerPendingCount}
                             </span>
                           )}

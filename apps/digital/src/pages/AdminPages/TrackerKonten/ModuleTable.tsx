@@ -7,7 +7,7 @@ import { fmtYM } from '../../../lib/contentFreshness';
 const STATUS_BADGE: Record<string, string> = {
   published: 'bg-emerald-50 text-emerald-700 border-emerald-200',
   approved:  'bg-sky-50 text-sky-700 border-sky-200',
-  review:    'bg-amber-50 text-amber-700 border-amber-200',
+  review:    'bg-fajar text-rekah-tua border-mawar',
   draft:     'bg-slate-100 text-slate-600 border-slate-200',
 };
 
@@ -167,7 +167,7 @@ export function ModuleTable() {
                             flagInputState?.moduleId === mod.id ? null : { moduleId: mod.id, reason: '' }
                           )
                         }
-                        className="inline-flex items-center gap-1 rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-1.5 text-[11px] font-semibold text-amber-700 hover:bg-amber-100"
+                        className="inline-flex items-center gap-1 rounded-lg border border-mawar bg-fajar px-2.5 py-1.5 text-[11px] font-semibold text-rekah-tua hover:bg-mawar"
                         title="Tandai modul ini perlu ditinjau dan kaskadetkan ke sel kartu"
                       >
                         <Flag className="h-3.5 w-3.5" />
@@ -180,14 +180,14 @@ export function ModuleTable() {
                 {/* Inline flag input row */}
                 {flagInputState?.moduleId === mod.id && (
                   <tr>
-                    <td colSpan={7} className="bg-amber-50 px-4 py-3 border-b border-amber-200">
+                    <td colSpan={7} className="bg-fajar px-4 py-3 border-b border-mawar">
                       <div className="flex items-start gap-3">
-                        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rekah" />
                         <div className="flex-1 space-y-2">
-                          <p className="text-xs font-semibold text-amber-800">
+                          <p className="text-xs font-semibold text-pekat">
                             Alasan flag untuk modul "{mod.title}" (wajib):
                           </p>
-                          <p className="text-[11px] text-amber-600">
+                          <p className="text-[11px] text-rekah">
                             Ini akan membuat semua sel kartu yang memakai modul ini otomatis "Perlu tinjau".
                           </p>
                           <div className="flex gap-2">
@@ -198,13 +198,13 @@ export function ModuleTable() {
                               }
                               rows={2}
                               placeholder="Mis. Pedoman AAP revisi 2026 mengubah rekomendasi…"
-                              className="flex-1 rounded-lg border border-amber-300 bg-white px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400"
+                              className="flex-1 rounded-lg border border-madu bg-white px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-madu"
                             />
                             <div className="flex flex-col gap-1.5">
                               <button
                                 onClick={() => handleFlag(mod.id, flagInputState.reason)}
                                 disabled={!flagInputState.reason.trim()}
-                                className="rounded-lg bg-amber-500 px-4 py-2 text-xs font-semibold text-white hover:bg-amber-600 disabled:opacity-40"
+                                className="rounded-lg bg-madu px-4 py-2 text-xs font-semibold text-white hover:bg-rekah disabled:opacity-40"
                               >
                                 Buat flag
                               </button>

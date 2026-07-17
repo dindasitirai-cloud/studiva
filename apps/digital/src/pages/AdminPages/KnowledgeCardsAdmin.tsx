@@ -4,16 +4,16 @@ import { useKnowledgeLibrary } from '../../context/KnowledgeLibraryContext';
 import {
   KnowledgeCard, AgeKey, DomainCode,
   AGE_RANGES, DOMAIN_MAP, CARDS as STATIC_CARDS,
-} from '../DashboardPages/Tier2/knowledgeCardData';
+} from '@studiva/shared';
 import { api } from '../../api/client';
-import BookCarousel from '../DashboardPages/Tier2/BookCarousel';
-import BookReader from '../DashboardPages/Tier2/BookReader';
+// PARKIR: BookCarousel & BookReader removed with Knowledge feature (build 1)
+// TODO: substituci dengan preview admin baru saat fitur Panduan hadir kembali (build 4)
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 
 const DOMAIN_CODES = Object.keys(DOMAIN_MAP) as DomainCode[];
 
-const inp = "w-full rounded-xl border border-stv-border px-3 py-2 text-[13px] focus:border-amber-400 focus:outline-none";
+const inp = "w-full rounded-xl border border-stv-border px-3 py-2 text-[13px] focus:border-madu focus:outline-none";
 const ta  = `${inp} resize-none`;
 
 function Field({ label, required, hint, children }: { label: string; required?: boolean; hint?: string; children: React.ReactNode }) {
@@ -244,7 +244,7 @@ function CardFormModal({ initial, existing, onClose }: {
                   placeholder="Paragraf 1...&#10;&#10;Paragraf 2..." />
               </Field>
               {existing?.scientific?.sections && existing.scientific.sections.length > 0 && (
-                <p className="rounded-lg bg-amber-50 px-3 py-2 text-[12px] text-amber-700">
+                <p className="rounded-lg bg-fajar px-3 py-2 text-[12px] text-rekah-tua">
                   Kartu ini memiliki {existing.scientific.sections.length} seksi ilmiah terstruktur dari data asli yang tetap dipertahankan.
                 </p>
               )}
@@ -270,7 +270,7 @@ function CardFormModal({ initial, existing, onClose }: {
                 <Save className="h-3.5 w-3.5" /> Simpan Draft
               </button>
               <button type="submit"
-                className="flex items-center gap-1.5 rounded-full bg-amber-500 px-4 py-2 text-[13px] font-bold text-white hover:bg-amber-600">
+                className="flex items-center gap-1.5 rounded-full bg-madu px-4 py-2 text-[13px] font-bold text-white hover:bg-rekah">
                 <Send className="h-3.5 w-3.5" /> Terbitkan
               </button>
             </div>
@@ -340,7 +340,7 @@ export default function KnowledgeCardsAdmin() {
               Total: <strong className="text-stv-navy">{managedCards.length}</strong> kartu
             </span>
             {draftCount > 0 ? (
-              <span className="rounded-full bg-amber-100 px-3 py-0.5 font-semibold text-amber-700">
+              <span className="rounded-full bg-mawar px-3 py-0.5 font-semibold text-rekah-tua">
                 {draftCount} Draft belum diterbitkan
               </span>
             ) : (
@@ -366,7 +366,7 @@ export default function KnowledgeCardsAdmin() {
           </button>
           <button type="button"
             onClick={() => setModal({ form: EMPTY_FORM })}
-            className="flex items-center gap-1.5 rounded-full bg-amber-500 px-5 py-2.5 text-[14px] font-bold text-white hover:bg-amber-600 transition">
+            className="flex items-center gap-1.5 rounded-full bg-madu px-5 py-2.5 text-[14px] font-bold text-white hover:bg-rekah transition">
             <Plus className="h-4 w-4" /> Tambah Kartu
           </button>
         </div>
@@ -378,20 +378,20 @@ export default function KnowledgeCardsAdmin() {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stv-muted" />
           <input value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Cari judul atau slug..."
-            className="w-full rounded-full border border-slate-200 bg-white py-2 pl-10 pr-4 text-[13px] focus:border-amber-400 focus:outline-none" />
+            className="w-full rounded-full border border-slate-200 bg-white py-2 pl-10 pr-4 text-[13px] focus:border-madu focus:outline-none" />
         </div>
         <select value={filterAge} onChange={e => setFilterAge(e.target.value as AgeKey | 'all')}
-          className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] focus:border-amber-400 focus:outline-none">
+          className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] focus:border-madu focus:outline-none">
           <option value="all">Semua Usia</option>
           {AGE_RANGES.map(r => <option key={r.key} value={r.key}>{r.label}</option>)}
         </select>
         <select value={filterDomain} onChange={e => setFilterDomain(e.target.value as DomainCode | 'all')}
-          className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] focus:border-amber-400 focus:outline-none">
+          className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] focus:border-madu focus:outline-none">
           <option value="all">Semua Domain</option>
           {DOMAIN_CODES.map(d => <option key={d} value={d}>{DOMAIN_MAP[d].label}</option>)}
         </select>
         <select value={filterStatus} onChange={e => setFilterStatus(e.target.value as typeof filterStatus)}
-          className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] focus:border-amber-400 focus:outline-none">
+          className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] focus:border-madu focus:outline-none">
           <option value="all">Semua Status</option>
           <option value="published">Terbit</option>
           <option value="draft">Draft</option>
@@ -416,7 +416,7 @@ export default function KnowledgeCardsAdmin() {
             const isDraft = c.adminStatus === 'draft';
             return (
               <div key={c.id}
-                className={`flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_2px_8px_rgba(16,58,107,.05)] ${isDraft ? 'border-l-4 border-amber-300' : ''}`}>
+                className={`flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_2px_8px_rgba(16,58,107,.05)] ${isDraft ? 'border-l-4 border-madu' : ''}`}>
                 {/* Domain swatch */}
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
                   style={{ background: domain.bg }}>
@@ -429,7 +429,7 @@ export default function KnowledgeCardsAdmin() {
                     <p className={`font-semibold text-[14px] truncate ${isDraft ? 'text-stv-muted' : 'text-stv-navy'}`}>
                       {c.title}
                     </p>
-                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${isDraft ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'}`}>
+                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${isDraft ? 'bg-mawar text-rekah-tua' : 'bg-green-100 text-green-700'}`}>
                       {isDraft ? 'Draft' : 'Terbit'}
                     </span>
                     {c.isMedical && (
@@ -468,7 +468,7 @@ export default function KnowledgeCardsAdmin() {
                   <button type="button"
                     onClick={() => setModal({ form: toForm(c), existing: c })}
                     title="Edit"
-                    className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 text-amber-600 hover:bg-amber-100 transition">
+                    className="flex h-8 w-8 items-center justify-center rounded-xl bg-fajar text-rekah hover:bg-mawar transition">
                     <Pencil className="h-3.5 w-3.5" />
                   </button>
                   <button type="button"
@@ -496,47 +496,28 @@ export default function KnowledgeCardsAdmin() {
       {previewCard && (
         <div className="fixed inset-0 z-[200] overflow-y-auto bg-[#FAFAF8]">
           {/* Admin-only banner */}
-          <div className="sticky top-0 z-[201] flex items-center justify-between gap-3 border-b border-amber-200 bg-amber-50 px-4 py-2.5">
+          <div className="sticky top-0 z-[201] flex items-center justify-between gap-3 border-b border-mawar bg-fajar px-4 py-2.5">
             <div className="flex items-center gap-2 min-w-0">
-              <Eye className="h-4 w-4 shrink-0 text-amber-600" />
-              <span className="text-[13px] font-bold text-amber-700 shrink-0">MODE PREVIEW ADMIN</span>
-              <span className="rounded-full bg-amber-200 px-2 py-0.5 text-[11px] font-semibold text-amber-800 truncate">
+              <Eye className="h-4 w-4 shrink-0 text-rekah" />
+              <span className="text-[13px] font-bold text-rekah-tua shrink-0">MODE PREVIEW ADMIN</span>
+              <span className="rounded-full bg-mawar px-2 py-0.5 text-[11px] font-semibold text-pekat truncate">
                 {previewCard.adminStatus === 'draft' ? 'Draft — belum terlihat oleh orang tua' : 'Konten sudah terbit'}
               </span>
             </div>
             <button
               type="button"
               onClick={() => setPreviewCard(null)}
-              className="shrink-0 flex items-center gap-1.5 rounded-full border border-amber-300 bg-white px-3 py-1 text-[12px] font-semibold text-amber-700 hover:bg-amber-100 transition"
+              className="shrink-0 flex items-center gap-1.5 rounded-full border border-madu bg-white px-3 py-1 text-[12px] font-semibold text-rekah-tua hover:bg-mawar transition"
             >
               <X className="h-3.5 w-3.5" /> Tutup Preview
             </button>
           </div>
 
-          {/* Carousel view */}
-          {previewView === 'carousel' && (
-            <div className="px-4 py-5">
-              <BookCarousel
-                cards={[previewCard]}
-                selectedId={previewCard.id}
-                onSelect={() => {}}
-                onOpen={() => setPreviewView('reader')}
-                onBack={() => setPreviewCard(null)}
-              />
-            </div>
-          )}
-
-          {/* Reader view */}
-          {previewView === 'reader' && (
-            <BookReader
-              card={previewCard}
-              isRead={false}
-              onToggleRead={() => {}}
-              onClose={() => setPreviewView('carousel')}
-              prevCard={null}
-              nextCard={null}
-            />
-          )}
+          {/* TODO: preview admin — BookCarousel & BookReader diparkir build 1; aktifkan kembali build 4 */}
+          <div className="px-4 py-8 text-center text-[13px] text-pekat/50">
+            Preview kartu: <strong className="text-pekat">{previewCard.title}</strong> (ID: {previewCard.id})<br />
+            Komponen preview diparkir — akan dikembalikan di build 4.
+          </div>
         </div>
       )}
     </div>

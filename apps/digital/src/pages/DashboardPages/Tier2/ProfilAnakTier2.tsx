@@ -43,7 +43,7 @@ const LEARNING_STYLE_INFO: Record<LearningStyle, { color: string; desc: string }
     desc: 'Belajar terbaik melalui praktik langsung, gerakan, dan pengalaman nyata.',
   },
   'Membaca/Menulis': {
-    color: 'bg-amber-100 text-amber-700',
+    color: 'bg-mawar text-rekah-tua',
     desc: 'Belajar terbaik melalui teks, catatan tertulis, dan kegiatan membaca.',
   },
 };
@@ -58,7 +58,7 @@ const MOOD_OPTIONS: { value: JournalMood; label: string; icon: React.ReactNode }
 ];
 
 const MOOD_STYLE: Record<JournalMood, string> = {
-  great: 'bg-amber-100 text-amber-700',
+  great: 'bg-mawar text-rekah-tua',
   good: 'bg-stv-green-tint text-stv-green',
   ok: 'bg-stv-sky-tint text-stv-sky-stroke',
   challenging: 'bg-stv-coral-tint text-stv-coral',
@@ -106,12 +106,12 @@ function PhotoUpload({ photo, name, onChange }: { photo?: string; name: string; 
     <div className="relative">
       <div
         onClick={() => inputRef.current?.click()}
-        className="flex h-24 w-24 cursor-pointer items-center justify-center overflow-hidden rounded-full border-4 border-amber-200 bg-amber-100 transition hover:opacity-80"
+        className="flex h-24 w-24 cursor-pointer items-center justify-center overflow-hidden rounded-full border-4 border-mawar bg-mawar transition hover:opacity-80"
       >
         {photo ? (
           <img src={photo} alt={name} className="h-full w-full object-cover" />
         ) : (
-          <span className="font-baloo text-[32px] font-bold text-amber-600">
+          <span className="font-baloo text-[32px] font-bold text-rekah">
             {name.charAt(0).toUpperCase() || '?'}
           </span>
         )}
@@ -119,7 +119,7 @@ function PhotoUpload({ photo, name, onChange }: { photo?: string; name: string; 
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full bg-amber-500 text-white shadow"
+        className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full bg-madu text-white shadow"
       >
         <Camera className="h-3.5 w-3.5" />
       </button>
@@ -190,7 +190,7 @@ function ChildForm({ initial, onSave, onCancel, title }: ChildFormProps) {
       <div className="w-full max-w-[520px] rounded-2xl bg-white p-6 shadow-[0_20px_60px_rgba(16,58,107,.2)]">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="font-baloo text-[20px] font-bold text-stv-navy">{title}</h2>
-          <button type="button" onClick={onCancel} className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-50 text-stv-muted hover:text-stv-navy">
+          <button type="button" onClick={onCancel} className="flex h-8 w-8 items-center justify-center rounded-full bg-fajar text-stv-muted hover:text-stv-navy">
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -206,7 +206,7 @@ function ChildForm({ initial, onSave, onCancel, title }: ChildFormProps) {
             <label className="mb-1 block text-[13px] font-semibold text-stv-navy">Nama Anak *</label>
             <input
               value={name} onChange={e => setName(e.target.value)}
-              className="w-full rounded-xl border border-amber-200 px-4 py-2.5 text-[15px] focus:border-amber-500 focus:outline-none"
+              className="w-full rounded-xl border border-mawar px-4 py-2.5 text-[15px] focus:border-madu focus:outline-none"
               placeholder="mis. Aqila"
             />
           </div>
@@ -215,10 +215,10 @@ function ChildForm({ initial, onSave, onCancel, title }: ChildFormProps) {
             <input
               type="date" max={TODAY_STR} value={birthdate}
               onChange={e => setBirthdate(e.target.value)}
-              className="w-full rounded-xl border border-amber-200 px-4 py-2.5 text-[15px] focus:border-amber-500 focus:outline-none"
+              className="w-full rounded-xl border border-mawar px-4 py-2.5 text-[15px] focus:border-madu focus:outline-none"
             />
             {computedMonths !== null && (
-              <p className="mt-1 text-[12px] text-amber-600 font-medium">
+              <p className="mt-1 text-[12px] text-rekah font-medium">
                 Usia saat ini: {fmtAge(computedMonths)}
               </p>
             )}
@@ -227,7 +227,7 @@ function ChildForm({ initial, onSave, onCancel, title }: ChildFormProps) {
             <label className="mb-1 block text-[13px] font-semibold text-stv-navy">Catatan Singkat</label>
             <textarea
               value={summary} onChange={e => setSummary(e.target.value)} rows={2}
-              className="w-full resize-none rounded-xl border border-amber-200 px-4 py-2.5 text-[15px] focus:border-amber-500 focus:outline-none"
+              className="w-full resize-none rounded-xl border border-mawar px-4 py-2.5 text-[15px] focus:border-madu focus:outline-none"
               placeholder="mis. Senang menggambar, belajar terbaik dengan gambar dan warna"
             />
           </div>
@@ -242,7 +242,7 @@ function ChildForm({ initial, onSave, onCancel, title }: ChildFormProps) {
                   <button
                     key={s} type="button" onClick={() => toggleStyle(s)}
                     className={`rounded-full border px-3 py-1.5 text-[13px] font-semibold transition ${
-                      active ? 'border-amber-500 bg-amber-100 text-amber-700' : 'border-amber-200 text-stv-muted hover:border-amber-400'
+                      active ? 'border-madu bg-mawar text-rekah-tua' : 'border-mawar text-stv-muted hover:border-madu'
                     }`}
                   >
                     {s}
@@ -265,10 +265,10 @@ function ChildForm({ initial, onSave, onCancel, title }: ChildFormProps) {
         {error && <p className="mt-3 text-[13px] text-red-500">{error}</p>}
 
         <div className="mt-5 flex justify-end gap-3">
-          <button type="button" onClick={onCancel} className="rounded-full border border-amber-200 px-5 py-2 text-[14px] font-semibold text-stv-body hover:bg-amber-50">
+          <button type="button" onClick={onCancel} className="rounded-full border border-mawar px-5 py-2 text-[14px] font-semibold text-stv-body hover:bg-fajar">
             Batal
           </button>
-          <button type="button" onClick={handleSave} className="flex items-center gap-1.5 rounded-full bg-amber-500 px-5 py-2 text-[14px] font-bold text-white transition hover:bg-amber-600">
+          <button type="button" onClick={handleSave} className="flex items-center gap-1.5 rounded-full bg-madu px-5 py-2 text-[14px] font-bold text-white transition hover:bg-rekah">
             <Save className="h-4 w-4" />
             Simpan
           </button>
@@ -296,8 +296,8 @@ export function PerjalananPembelajaran({ childId }: { childId: string }) {
 
   if (total === 0) {
     return (
-      <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-amber-200 py-10 text-center">
-        <BookOpen className="h-9 w-9 text-amber-300" strokeWidth={1.5} />
+      <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-mawar py-10 text-center">
+        <BookOpen className="h-9 w-9 text-madu" strokeWidth={1.5} />
         <p className="mt-3 text-[15px] font-semibold text-stv-navy">Belum ada aktivitas tercatat</p>
         <p className="mt-1 max-w-[300px] text-[13px] text-stv-muted">
           Aktivitas belajar (artikel, course, strategi) akan muncul di sini setelah Anda menggunakannya.
@@ -311,7 +311,7 @@ export function PerjalananPembelajaran({ childId }: { childId: string }) {
       {/* Counters */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { count: articlesCount, label: 'Artikel Dibaca', icon: BookOpen, color: 'text-amber-600', bg: 'bg-amber-50' },
+          { count: articlesCount, label: 'Artikel Dibaca', icon: BookOpen, color: 'text-rekah', bg: 'bg-fajar' },
           { count: coursesCount, label: 'Course Diikuti', icon: GraduationCap, color: 'text-stv-sky-stroke', bg: 'bg-stv-sky-tint' },
           { count: strategiesCount, label: 'Strategi Disimpan', icon: Lightbulb, color: 'text-stv-coral', bg: 'bg-stv-coral-tint' },
         ].map(({ count, label, icon: Icon, color, bg }) => (
@@ -327,11 +327,11 @@ export function PerjalananPembelajaran({ childId }: { childId: string }) {
       <div>
         <div className="mb-1.5 flex items-center justify-between text-[12px] text-stv-muted">
           <span>Total aktivitas</span>
-          <span className="font-bold text-amber-600">{total} item</span>
+          <span className="font-bold text-rekah">{total} item</span>
         </div>
-        <div className="h-2.5 overflow-hidden rounded-full bg-amber-100">
+        <div className="h-2.5 overflow-hidden rounded-full bg-mawar">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-amber-400 to-yellow-300 transition-all duration-700"
+            className="h-full rounded-full bg-gradient-to-r from-madu to-yellow-300 transition-all duration-700"
             style={{ width: `${Math.min(100, (total / 20) * 100)}%` }}
           />
         </div>
@@ -372,7 +372,7 @@ function JurnalPerkembangan({ childId, entries, onAdd, onRemove }: {
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="flex items-center gap-2 self-start rounded-full bg-amber-500 px-5 py-2 text-[14px] font-bold text-white transition hover:bg-amber-600"
+        className="flex items-center gap-2 self-start rounded-full bg-madu px-5 py-2 text-[14px] font-bold text-white transition hover:bg-rekah"
       >
         <Plus className="h-4 w-4" />
         Tambah Catatan
@@ -380,12 +380,12 @@ function JurnalPerkembangan({ childId, entries, onAdd, onRemove }: {
       </button>
 
       {open && (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50/40 p-5">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 rounded-2xl border border-mawar bg-fajar p-5">
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="mb-1 block text-[12px] font-semibold text-stv-navy">Tanggal</label>
               <input type="date" value={date} onChange={e => setDate(e.target.value)}
-                className="w-full rounded-xl border border-amber-200 px-3 py-2 text-[14px] focus:border-amber-500 focus:outline-none" />
+                className="w-full rounded-xl border border-mawar px-3 py-2 text-[14px] focus:border-madu focus:outline-none" />
             </div>
             <div>
               <label className="mb-1 block text-[12px] font-semibold text-stv-navy">Kondisi Hari Ini</label>
@@ -393,7 +393,7 @@ function JurnalPerkembangan({ childId, entries, onAdd, onRemove }: {
                 {MOOD_OPTIONS.map(m => (
                   <button key={m.value} type="button" onClick={() => setMood(m.value)}
                     className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold transition ${
-                      mood === m.value ? MOOD_STYLE[m.value] + ' ring-2 ring-offset-1 ring-amber-400' : 'bg-white border border-amber-200 text-stv-muted'
+                      mood === m.value ? MOOD_STYLE[m.value] + ' ring-2 ring-offset-1 ring-madu' : 'bg-white border border-mawar text-stv-muted'
                     }`}>
                     {m.icon} {m.label}
                   </button>
@@ -404,23 +404,23 @@ function JurnalPerkembangan({ childId, entries, onAdd, onRemove }: {
           <div>
             <label className="mb-1 block text-[12px] font-semibold text-stv-navy">Judul Catatan *</label>
             <input value={title} onChange={e => setTitle(e.target.value)}
-              className="w-full rounded-xl border border-amber-200 px-3 py-2 text-[14px] focus:border-amber-500 focus:outline-none"
+              className="w-full rounded-xl border border-mawar px-3 py-2 text-[14px] focus:border-madu focus:outline-none"
               placeholder="mis. Berhasil makan sendiri hari ini!" />
           </div>
           <div>
             <label className="mb-1 block text-[12px] font-semibold text-stv-navy">Catatan *</label>
             <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3}
-              className="w-full resize-none rounded-xl border border-amber-200 px-3 py-2 text-[14px] focus:border-amber-500 focus:outline-none"
+              className="w-full resize-none rounded-xl border border-mawar px-3 py-2 text-[14px] focus:border-madu focus:outline-none"
               placeholder="Ceritakan perkembangan anak Anda hari ini..." />
           </div>
           {error && <p className="text-[12px] text-red-500">{error}</p>}
           <div className="flex justify-end gap-2">
             <button type="button" onClick={() => setOpen(false)}
-              className="rounded-full border border-amber-200 px-4 py-1.5 text-[13px] text-stv-muted hover:bg-amber-50">
+              className="rounded-full border border-mawar px-4 py-1.5 text-[13px] text-stv-muted hover:bg-fajar">
               Batal
             </button>
             <button type="submit"
-              className="rounded-full bg-amber-500 px-4 py-1.5 text-[13px] font-bold text-white hover:bg-amber-600">
+              className="rounded-full bg-madu px-4 py-1.5 text-[13px] font-bold text-white hover:bg-rekah">
               Simpan Catatan
             </button>
           </div>
@@ -429,7 +429,7 @@ function JurnalPerkembangan({ childId, entries, onAdd, onRemove }: {
 
       {/* Entry list */}
       {childEntries.length === 0 ? (
-        <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-amber-200 py-10 text-center">
+        <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-mawar py-10 text-center">
           <span className="text-3xl">📝</span>
           <p className="mt-3 text-[15px] font-semibold text-stv-navy">Belum ada catatan perkembangan</p>
           <p className="mt-1 text-[13px] text-stv-muted">Tambahkan catatan pertama untuk melacak perjalanan anak Anda.</p>
@@ -480,9 +480,9 @@ function ChildDetail({ child }: { child: ChildProfile }) {
         <div className="flex items-center gap-4">
           <div className="relative">
             {child.photo ? (
-              <img src={child.photo} alt={child.name} className="h-16 w-16 rounded-full border-4 border-amber-200 object-cover" />
+              <img src={child.photo} alt={child.name} className="h-16 w-16 rounded-full border-4 border-mawar object-cover" />
             ) : (
-              <div className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-amber-200 bg-amber-500 font-baloo text-[28px] font-bold text-white">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-mawar bg-madu font-baloo text-[28px] font-bold text-white">
                 {child.name.charAt(0).toUpperCase()}
               </div>
             )}
@@ -501,13 +501,13 @@ function ChildDetail({ child }: { child: ChildProfile }) {
           </div>
         </div>
         <button type="button" onClick={() => setEditOpen(true)}
-          className="flex shrink-0 items-center gap-1.5 self-start rounded-full border border-amber-200 px-4 py-2 text-[13px] font-semibold text-stv-body transition hover:bg-amber-50 sm:self-auto">
+          className="flex shrink-0 items-center gap-1.5 self-start rounded-full border border-mawar px-4 py-2 text-[13px] font-semibold text-stv-body transition hover:bg-fajar sm:self-auto">
           <Edit2 className="h-3.5 w-3.5" /> Edit Profil
         </button>
       </div>
 
       {/* Section tabs */}
-      <div className="flex gap-1 rounded-2xl bg-amber-50 p-1">
+      <div className="flex gap-1 rounded-2xl bg-fajar p-1">
         {([
           ['tipe', 'Tipe Belajar'],
           ['perjalanan', 'Perjalanan Pembelajaran'],
@@ -515,7 +515,7 @@ function ChildDetail({ child }: { child: ChildProfile }) {
         ] as const).map(([id, label]) => (
           <button key={id} type="button" onClick={() => setActiveSection(id)}
             className={`flex-1 rounded-xl py-2.5 text-[13px] font-semibold transition ${
-              activeSection === id ? 'bg-white font-bold text-amber-700 shadow-sm' : 'text-stv-muted hover:text-amber-700'
+              activeSection === id ? 'bg-white font-bold text-rekah-tua shadow-sm' : 'text-stv-muted hover:text-rekah-tua'
             }`}>
             {label}
           </button>
@@ -528,7 +528,7 @@ function ChildDetail({ child }: { child: ChildProfile }) {
           <div className="flex flex-col gap-4">
             <h4 className="font-baloo text-[16px] font-bold text-stv-navy">Tipe Belajar Anak</h4>
             {child.learningStyles.length === 0 ? (
-              <p className="rounded-xl bg-amber-50 px-4 py-4 text-[14px] text-stv-muted">
+              <p className="rounded-xl bg-fajar px-4 py-4 text-[14px] text-stv-muted">
                 Belum ada tipe belajar dipilih. Klik &quot;Edit Profil&quot; untuk menambahkan.
               </p>
             ) : (
@@ -616,7 +616,7 @@ export default function ProfilAnakTier2() {
         <button
           type="button"
           onClick={() => setAddOpen(true)}
-          className="flex items-center gap-1.5 rounded-full bg-amber-500 px-5 py-2 text-[14px] font-bold text-white transition hover:bg-amber-600"
+          className="flex items-center gap-1.5 rounded-full bg-madu px-5 py-2 text-[14px] font-bold text-white transition hover:bg-rekah"
         >
           <Plus className="h-4 w-4" />
           Tambah Anak
@@ -632,10 +632,10 @@ export default function ProfilAnakTier2() {
                 type="button"
                 onClick={() => setSelectedId(c.id)}
                 className={`flex items-center gap-2 rounded-l-full px-4 py-2 text-[14px] font-semibold transition ${
-                  c.id === activeId ? 'bg-amber-500 text-white' : 'bg-white border border-amber-200 text-stv-body hover:bg-amber-50'
+                  c.id === activeId ? 'bg-madu text-white' : 'bg-white border border-mawar text-stv-body hover:bg-fajar'
                 }`}
               >
-                <div className={`flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold ${c.id === activeId ? 'bg-white/30 text-white' : 'bg-amber-100 text-amber-700'}`}>
+                <div className={`flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold ${c.id === activeId ? 'bg-white/30 text-white' : 'bg-mawar text-rekah-tua'}`}>
                   {c.name.charAt(0).toUpperCase()}
                 </div>
                 {c.name}
@@ -644,7 +644,7 @@ export default function ProfilAnakTier2() {
                 type="button"
                 onClick={() => setConfirmDelete(c.id)}
                 className={`flex h-[38px] items-center rounded-r-full border-l px-2.5 text-stv-muted transition hover:text-red-500 ${
-                  c.id === activeId ? 'bg-amber-500 border-white/30' : 'bg-white border-amber-200 hover:bg-red-50'
+                  c.id === activeId ? 'bg-madu border-white/30' : 'bg-white border-mawar hover:bg-red-50'
                 }`}
                 aria-label={`Hapus ${c.name}`}
               >
@@ -657,8 +657,8 @@ export default function ProfilAnakTier2() {
 
       {/* Empty state */}
       {children.length === 0 && (
-        <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-amber-200 py-16 text-center">
-          <Baby className="h-14 w-14 text-amber-300" strokeWidth={1.5} />
+        <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-mawar py-16 text-center">
+          <Baby className="h-14 w-14 text-madu" strokeWidth={1.5} />
           <p className="mt-4 font-baloo text-[18px] font-bold text-stv-navy">Belum ada profil anak</p>
           <p className="mt-2 max-w-[340px] text-[14px] text-stv-muted">
             Tambahkan profil anak untuk mulai mencatat perjalanan belajar dan perkembangannya.
@@ -666,7 +666,7 @@ export default function ProfilAnakTier2() {
           <button
             type="button"
             onClick={() => setAddOpen(true)}
-            className="mt-5 flex items-center gap-1.5 rounded-full bg-amber-500 px-6 py-2.5 text-[14px] font-bold text-white transition hover:bg-amber-600"
+            className="mt-5 flex items-center gap-1.5 rounded-full bg-madu px-6 py-2.5 text-[14px] font-bold text-white transition hover:bg-rekah"
           >
             <Plus className="h-4 w-4" />
             Tambahkan Profil Anak
@@ -710,7 +710,7 @@ export default function ProfilAnakTier2() {
             </p>
             <div className="mt-5 flex justify-end gap-3">
               <button type="button" onClick={() => setConfirmDelete(null)}
-                className="rounded-full border border-amber-200 px-4 py-2 text-[13px] font-semibold text-stv-muted hover:bg-amber-50">
+                className="rounded-full border border-mawar px-4 py-2 text-[13px] font-semibold text-stv-muted hover:bg-fajar">
                 Batal
               </button>
               <button type="button" onClick={() => handleDelete(confirmDelete)}

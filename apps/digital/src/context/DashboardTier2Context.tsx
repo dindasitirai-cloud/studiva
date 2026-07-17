@@ -84,7 +84,7 @@ export interface ForumThread {
   replies: ForumReply[];
 }
 
-// Generic shape for all Studiva Digital notifications - shared between the
+// Generic shape for all Rekah notifications - shared between the
 // Tier 1 and Tier 2 dashboards since both read from this same context.
 export type AppNotificationKind = 'forum-reply' | 'webinar-registered' | 'webinar-reminder' | 'consultation-confirmed';
 

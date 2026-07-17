@@ -10,7 +10,7 @@ const STATUS_LABEL: Record<ConsultationBooking['status'], string> = {
   pending: 'Baru', confirmed: 'Dikonfirmasi', completed: 'Selesai', canceled: 'Dibatalkan',
 };
 const STATUS_STYLE: Record<ConsultationBooking['status'], string> = {
-  pending: 'bg-amber-100 text-amber-700',
+  pending: 'bg-mawar text-rekah-tua',
   confirmed: 'bg-teal-100 text-teal-700',
   completed: 'bg-stv-badge-navy-tint text-stv-navy',
   canceled: 'bg-red-100 text-red-600',
@@ -476,7 +476,7 @@ export default function KonsultasiAdmin() {
                           {b.durationMinutes && ` (${b.durationMinutes} menit)`}
                         </span>
                       ) : (
-                        <span className="font-semibold text-amber-600">Belum dijadwalkan - diskusikan via WhatsApp lalu atur jadwal manual</span>
+                        <span className="font-semibold text-rekah">Belum dijadwalkan - diskusikan via WhatsApp lalu atur jadwal manual</span>
                       )}
                     </div>
                     {b.notes && <p className="mt-1.5 flex items-start gap-1 text-[12px] text-stv-body"><FileText className="mt-0.5 h-3 w-3 shrink-0" />{b.notes}</p>}

@@ -9,7 +9,7 @@ import ThumbnailUpload from './ThumbnailUpload';
 
 const THEME_OPTIONS: Course['colorTheme'][] = ['amber', 'sky', 'coral', 'green'];
 const THEME_SWATCH: Record<Course['colorTheme'], string> = {
-  amber: 'bg-amber-400', sky: 'bg-sky-400', coral: 'bg-orange-400', green: 'bg-emerald-400',
+  amber: 'bg-madu', sky: 'bg-sky-400', coral: 'bg-orange-400', green: 'bg-emerald-400',
 };
 
 // No real multi-user backend yet, so the participant LIST itself is

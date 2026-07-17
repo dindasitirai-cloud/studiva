@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 
-// The Studiva Digital pages (Resource Library, Courses, Learning Strategies,
+// The Rekah pages (Resource Library, Courses, Learning Strategies,
 // Community Forum, Konsultasi) are mounted under BOTH /dashboard/tier2 and
 // /dashboard/tier1 (Sekolah Studiva parents get the same shared content/data
 // via the same DashboardTier2Context, just wrapped in their own shell). Any

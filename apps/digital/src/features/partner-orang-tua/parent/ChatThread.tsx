@@ -38,7 +38,7 @@ export default function ChatThread({ messages }: ChatThreadProps) {
             <div
               className={`max-w-[80%] rounded-2xl px-4 py-3 text-[14px] leading-relaxed sm:max-w-[70%] ${
                 isParent
-                  ? 'rounded-br-sm bg-amber-500 text-white'
+                  ? 'rounded-br-sm bg-madu text-white'
                   : 'rounded-bl-sm bg-white text-stv-navy shadow-sm ring-1 ring-stv-border'
               }`}
             >
@@ -46,7 +46,7 @@ export default function ChatThread({ messages }: ChatThreadProps) {
             </div>
             <div className="mt-1 flex items-center gap-1.5 px-1">
               {!isParent && msg.senderName && (
-                <span className="text-[12px] font-semibold text-amber-700">
+                <span className="text-[12px] font-semibold text-rekah-tua">
                   — {msg.senderName} 🌷
                 </span>
               )}

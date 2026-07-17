@@ -41,7 +41,7 @@ export default function MessageComposer({ onSend, disabled }: MessageComposerPro
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-end gap-2 rounded-2xl border border-amber-200 bg-white p-3 shadow-sm"
+      className="flex items-end gap-2 rounded-2xl border border-mawar bg-white p-3 shadow-sm"
     >
       <textarea
         ref={textareaRef}
@@ -58,7 +58,7 @@ export default function MessageComposer({ onSend, disabled }: MessageComposerPro
         type="submit"
         disabled={!value.trim() || disabled}
         aria-label={COPY_PARENT.composerKirim}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-white transition hover:bg-amber-600 disabled:opacity-40"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-madu text-white transition hover:bg-rekah disabled:opacity-40"
       >
         <Send className="h-4 w-4" strokeWidth={2} />
       </button>

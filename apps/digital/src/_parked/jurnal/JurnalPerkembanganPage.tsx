@@ -1,3 +1,4 @@
+// PARKIR: diintegrasikan kembali sebagai fitur premium bersama Jejak Mekar (build 4)
 import React, { useState } from 'react';
 import { JurnalProvider, useJurnal } from './context/JurnalContext';
 import { ANAK_LIST } from './data/mockJurnalData';

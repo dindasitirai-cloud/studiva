@@ -58,7 +58,7 @@ export default function CatatanPendampingPanel({ childId, childName }: CatatanPe
         onSubmit={handleSubmit}
         className="rounded-xl border border-stv-border bg-white p-3 shadow-sm"
       >
-        <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-amber-700">
+        <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-rekah-tua">
           {COPY_ADMIN.catatanReminder}
         </p>
         <textarea

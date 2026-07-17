@@ -346,7 +346,7 @@ export default function CsvImportModal({ type, onClose }: CsvImportModalProps) {
               <p className="text-[13px] text-stv-muted">{errorRows.length} baris dilewati karena terdapat error</p>
             )}
             <button type="button" onClick={onClose}
-              className="mt-2 rounded-full bg-amber-500 px-6 py-2 text-[14px] font-bold text-white hover:bg-amber-600">
+              className="mt-2 rounded-full bg-madu px-6 py-2 text-[14px] font-bold text-white hover:bg-rekah">
               Tutup
             </button>
           </div>
@@ -358,7 +358,7 @@ export default function CsvImportModal({ type, onClose }: CsvImportModalProps) {
               <p className="mb-4 text-[12px] text-stv-muted">Format: .csv dengan header baris pertama</p>
               <button type="button"
                 onClick={() => fileRef.current?.click()}
-                className="rounded-full bg-amber-500 px-5 py-2 text-[13px] font-bold text-white hover:bg-amber-600">
+                className="rounded-full bg-madu px-5 py-2 text-[13px] font-bold text-white hover:bg-rekah">
                 Pilih File
               </button>
               <input ref={fileRef} type="file" accept=".csv" className="hidden"
@@ -413,7 +413,7 @@ export default function CsvImportModal({ type, onClose }: CsvImportModalProps) {
                             </span>
                           ) : row.idConflict ? (
                             <div className="flex items-center gap-2">
-                              <span className="text-amber-600 font-semibold">ID Duplikat</span>
+                              <span className="text-rekah font-semibold">ID Duplikat</span>
                               <label className="flex items-center gap-1 cursor-pointer">
                                 <input type="checkbox" checked={row.useNewId} onChange={() => toggleUseNewId(i)} />
                                 <span className="text-[11px]">ID baru</span>
@@ -430,7 +430,7 @@ export default function CsvImportModal({ type, onClose }: CsvImportModalProps) {
                             <p key={ei} className="text-red-500 text-[11px]">{e}</p>
                           ))}
                           {row.warnings.map((w, wi) => (
-                            <p key={wi} className="text-amber-600 text-[11px]">
+                            <p key={wi} className="text-rekah text-[11px]">
                               <AlertTriangle className="mr-0.5 inline h-3 w-3" />{w}
                             </p>
                           ))}
@@ -450,7 +450,7 @@ export default function CsvImportModal({ type, onClose }: CsvImportModalProps) {
               <button type="button"
                 onClick={doImport}
                 disabled={validRows.length === 0 || importing}
-                className="flex items-center gap-1.5 rounded-full bg-amber-500 px-5 py-2 text-[13px] font-bold text-white hover:bg-amber-600 disabled:opacity-50 transition">
+                className="flex items-center gap-1.5 rounded-full bg-madu px-5 py-2 text-[13px] font-bold text-white hover:bg-rekah disabled:opacity-50 transition">
                 <Upload className="h-3.5 w-3.5" />
                 Impor {validRows.length} baris valid
               </button>

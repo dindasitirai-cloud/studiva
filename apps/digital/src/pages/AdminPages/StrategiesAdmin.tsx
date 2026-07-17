@@ -80,7 +80,7 @@ function Field({ label, required, children }: { label: string; required?: boolea
   );
 }
 
-const inp = "w-full rounded-xl border border-stv-border px-3 py-2 text-[13px] focus:border-amber-400 focus:outline-none";
+const inp = "w-full rounded-xl border border-stv-border px-3 py-2 text-[13px] focus:border-madu focus:outline-none";
 const ta  = `${inp} resize-none`;
 
 // ── shared modal shell ────────────────────────────────────────────────────────
@@ -118,7 +118,7 @@ function ModalFooter({ onClose, onSaveDraft, currentStatus }: { onClose: () => v
           </button>
         )}
         <button type="submit"
-          className="flex items-center gap-1.5 rounded-full bg-amber-500 px-4 py-2 text-[13px] font-bold text-white hover:bg-amber-600">
+          className="flex items-center gap-1.5 rounded-full bg-madu px-4 py-2 text-[13px] font-bold text-white hover:bg-rekah">
           <Send className="h-3.5 w-3.5" /> Simpan
         </button>
       </div>
@@ -263,7 +263,7 @@ function ActivityModal({ initial, id, onClose }: { initial: AForm; id?: number; 
             <div className="flex gap-2 pt-1">
               {[true, false].map(v => (
                 <button key={String(v)} type="button" onClick={() => setForm(f => ({ ...f, isDIY: v }))}
-                  className={`rounded-full px-3 py-1.5 text-[12px] font-semibold transition ${form.isDIY === v ? 'bg-amber-500 text-white' : 'bg-slate-100 text-stv-body'}`}>
+                  className={`rounded-full px-3 py-1.5 text-[12px] font-semibold transition ${form.isDIY === v ? 'bg-madu text-white' : 'bg-slate-100 text-stv-body'}`}>
                   {v ? 'DIY (tanpa alat)' : 'Perlu Alat'}
                 </button>
               ))}
@@ -742,10 +742,10 @@ function AffiliateWarnings({ tools, onFilterLink }: { tools: EduTool[]; onFilter
   if (mati.length === 0 && perluCek.length === 0 && kosong.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+    <div className="rounded-2xl border border-mawar bg-fajar p-4">
       <div className="mb-2 flex items-center gap-2">
-        <AlertTriangle className="h-4 w-4 text-amber-600" />
-        <h3 className="text-[13px] font-bold text-amber-800">Peringatan Affiliate</h3>
+        <AlertTriangle className="h-4 w-4 text-rekah" />
+        <h3 className="text-[13px] font-bold text-pekat">Peringatan Affiliate</h3>
       </div>
       <div className="flex flex-wrap gap-2">
         {mati.length > 0 && (
@@ -875,7 +875,7 @@ function Row({
         <select
           value={status ?? 'published'}
           onChange={e => onStatusChange(e.target.value as ContentStatus)}
-          className="rounded-xl border border-stv-border px-2 py-1 text-[11px] font-semibold text-stv-navy focus:border-amber-400 focus:outline-none">
+          className="rounded-xl border border-stv-border px-2 py-1 text-[11px] font-semibold text-stv-navy focus:border-madu focus:outline-none">
           <option value="draft">Draft</option>
           <option value="review">Review</option>
           <option value="approved">Disetujui</option>
@@ -888,7 +888,7 @@ function Row({
           </button>
         )}
         <button type="button" onClick={onEdit} title="Edit"
-          className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 text-amber-600 hover:bg-amber-100 transition">
+          className="flex h-8 w-8 items-center justify-center rounded-xl bg-fajar text-rekah hover:bg-mawar transition">
           <Pencil className="h-3.5 w-3.5" />
         </button>
         <button type="button" onClick={onDuplicate} title="Duplikat"
@@ -1072,10 +1072,10 @@ export default function StrategiesAdmin() {
         {TABS.map(tab => (
           <button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-1.5 border-b-2 px-4 py-2.5 text-[13px] font-semibold transition ${
-              activeTab === tab.id ? 'border-amber-500 text-amber-600' : 'border-transparent text-stv-muted hover:text-stv-body'
+              activeTab === tab.id ? 'border-madu text-rekah' : 'border-transparent text-stv-muted hover:text-stv-body'
             }`}>
             {tab.label}
-            <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${activeTab === tab.id ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500'}`}>
+            <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${activeTab === tab.id ? 'bg-mawar text-rekah-tua' : 'bg-slate-100 text-slate-500'}`}>
               {tab.count}
             </span>
           </button>
@@ -1088,10 +1088,10 @@ export default function StrategiesAdmin() {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stv-muted" />
           <input value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Cari judul..."
-            className="w-full rounded-full border border-slate-200 bg-white py-2 pl-10 pr-4 text-[13px] focus:border-amber-400 focus:outline-none" />
+            className="w-full rounded-full border border-slate-200 bg-white py-2 pl-10 pr-4 text-[13px] focus:border-madu focus:outline-none" />
         </div>
         <select value={filterStatus} onChange={e => setFilterStatus(e.target.value as ContentStatus | 'all')}
-          className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] focus:border-amber-400 focus:outline-none">
+          className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] focus:border-madu focus:outline-none">
           <option value="all">Semua Status</option>
           <option value="draft">Draft</option>
           <option value="review">Review</option>
@@ -1099,13 +1099,13 @@ export default function StrategiesAdmin() {
           <option value="published">Terbit</option>
         </select>
         <select value={filterAge} onChange={e => setFilterAge(e.target.value)}
-          className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] focus:border-amber-400 focus:outline-none">
+          className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] focus:border-madu focus:outline-none">
           <option value="all">Semua Usia</option>
           {AGE_RANGES.map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
         </select>
         {activeTab === 'alat' && (
           <select value={filterLinkStatus} onChange={e => setFilterLinkStatus(e.target.value)}
-            className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] focus:border-amber-400 focus:outline-none">
+            className="rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] focus:border-madu focus:outline-none">
             <option value="all">Semua Link</option>
             <option value="KOSONG">Kosong</option>
             <option value="TERPASANG">Terpasang</option>
@@ -1125,7 +1125,7 @@ export default function StrategiesAdmin() {
               else if (activeTab === 'alat') setToolModal({ form: { ...EMPTY_TFORM } });
               else setDownloadModal({ form: { ...EMPTY_DFORM } });
             }}
-            className="flex items-center gap-1.5 rounded-full bg-amber-500 px-4 py-2 text-[13px] font-bold text-white hover:bg-amber-600 transition">
+            className="flex items-center gap-1.5 rounded-full bg-madu px-4 py-2 text-[13px] font-bold text-white hover:bg-rekah transition">
             <Plus className="h-4 w-4" />
             Tambah {activeTab === 'aktivitas' ? 'Aktivitas' : activeTab === 'program' ? 'Program' : activeTab === 'alat' ? 'Alat' : 'Unduhan'}
           </button>

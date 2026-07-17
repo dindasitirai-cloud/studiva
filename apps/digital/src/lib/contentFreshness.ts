@@ -20,10 +20,10 @@ export const FRESHNESS_META: Record<Freshness, FreshnessMeta> = {
   },
   menua: {
     label: "Menua",
-    textClass: "text-amber-700",
-    bgClass: "bg-amber-50",
-    dotClass: "bg-amber-500",
-    borderClass: "border-amber-300",
+    textClass: "text-rekah-tua",
+    bgClass: "bg-fajar",
+    dotClass: "bg-madu",
+    borderClass: "border-madu",
   },
   "perlu-tinjau": {
     label: "Perlu tinjau",

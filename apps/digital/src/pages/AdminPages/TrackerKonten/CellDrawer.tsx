@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { X, ExternalLink, CheckCircle2, Flag, ChevronRight } from 'lucide-react';
-import { DomainCode } from '../../DashboardPages/Tier2/knowledgeCardData';
+import { DomainCode } from '@studiva/shared';
 import { FreshnessBadge } from './FreshnessBadge';
 import { useTracker } from './TrackerContext';
 import { fmtYM } from '../../../lib/contentFreshness';
@@ -190,20 +190,20 @@ export function CellDrawer() {
 
           {/* Flag input */}
           {showFlagInput && (
-            <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 space-y-2">
-              <p className="text-xs font-semibold text-amber-800">Alasan flag (wajib):</p>
+            <div className="rounded-xl border border-mawar bg-fajar p-3 space-y-2">
+              <p className="text-xs font-semibold text-pekat">Alasan flag (wajib):</p>
               <textarea
                 value={flagInput}
                 onChange={(e) => setFlagInput(e.target.value)}
                 rows={3}
                 placeholder="Mis. Rekomendasi AAP berubah, perlu cek bagian X…"
-                className="w-full rounded-lg border border-amber-300 bg-white px-3 py-2 text-xs text-stv-body focus:outline-none focus:ring-2 focus:ring-amber-400"
+                className="w-full rounded-lg border border-madu bg-white px-3 py-2 text-xs text-stv-body focus:outline-none focus:ring-2 focus:ring-madu"
               />
               <div className="flex gap-2">
                 <button
                   onClick={handleSubmitFlag}
                   disabled={!flagInput.trim()}
-                  className="flex-1 rounded-lg bg-amber-500 py-1.5 text-xs font-semibold text-white hover:bg-amber-600 disabled:opacity-40"
+                  className="flex-1 rounded-lg bg-madu py-1.5 text-xs font-semibold text-white hover:bg-rekah disabled:opacity-40"
                 >
                   Buat flag
                 </button>
@@ -231,7 +231,7 @@ export function CellDrawer() {
           {!showFlagInput && (
             <button
               onClick={() => setShowFlagInput(true)}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50 py-2.5 text-sm font-semibold text-amber-700 hover:bg-amber-100 transition-colors"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-madu bg-fajar py-2.5 text-sm font-semibold text-rekah-tua hover:bg-mawar transition-colors"
             >
               <Flag className="h-4 w-4" />
               Tandai perlu tinjau

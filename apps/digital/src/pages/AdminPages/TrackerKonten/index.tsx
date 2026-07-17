@@ -10,10 +10,10 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { LayoutGrid, BookOpen, Library, Flag, CalendarCheck } from 'lucide-react';
 
-import { CARDS, DomainCode, KnowledgeCard } from '../../DashboardPages/Tier2/knowledgeCardData';
-import { DOMAIN_CONFIG_MAP } from '../../DashboardPages/Tier2/domains';
-import { MODULES } from '../../DashboardPages/Tier2/modules';
-import { SOURCES } from '../../DashboardPages/Tier2/sources';
+import { CARDS, DomainCode, KnowledgeCard } from '@studiva/shared';
+import { DOMAIN_CONFIG_MAP } from '@studiva/shared';
+import { MODULES } from '@studiva/shared';
+import { SOURCES } from '@studiva/shared';
 import { buildUsageMap } from '../../../lib/buildUsageMap';
 import {
   hitungFreshness,
@@ -370,7 +370,7 @@ export default function TrackerKontenAdmin() {
           <Kpi
             value={freshnessDistribution.menua}
             label="Sel menua"
-            accent="text-amber-600"
+            accent="text-rekah"
           />
           <Kpi
             value={freshnessDistribution.perluTinjau}

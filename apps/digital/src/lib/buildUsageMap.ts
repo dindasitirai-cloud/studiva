@@ -1,5 +1,5 @@
-import type { KnowledgeCard } from '../pages/DashboardPages/Tier2/knowledgeCardData';
-import type { KnowledgeModule } from '../pages/DashboardPages/Tier2/modules';
+import type { KnowledgeCard } from '@studiva/shared';
+import type { KnowledgeModule } from '@studiva/shared';
 
 export interface UsageMap {
   /** moduleId → cardId[] */

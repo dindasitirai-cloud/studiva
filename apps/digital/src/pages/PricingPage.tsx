@@ -11,7 +11,7 @@ const tier1Features = [
   'Dashboard orang tua real-time',
   'Komunikasi harian dengan guru',
   'Personalized learning plan (IEP)',
-  'Akses Studiva Digital gratis',
+  'Akses Rekah gratis',
 ];
 
 const tier2Features = [
@@ -68,14 +68,14 @@ export default function PricingPage() {
           <PricingCard
             tier="tier2"
             icon="💻"
-            title="Studiva Digital"
+            title="Rekah"
             subtitle="Nasional · Platform Online"
             features={tier2Features}
             onChoosePlan={handleChoosePlan}
           />
         </div>
         <p className="mx-auto mt-6 max-w-[1200px] text-center text-sm text-textlight">
-          Studiva Digital juga tersedia gratis dengan akses terbatas (5 resource, tanpa kursus dan
+          Rekah juga tersedia gratis dengan akses terbatas (5 resource, tanpa kursus dan
           konsultasi). Hubungi kami via WhatsApp untuk informasi cicilan Sekolah Studiva.
         </p>
       </section>

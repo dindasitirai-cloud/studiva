@@ -36,7 +36,7 @@ export const ADMIN_COLORS: Record<AdminModuleKey, ModuleColor> = {
   'spp-billing': { text: 'text-emerald-600', bg: 'bg-emerald-50', bgSolid: 'bg-emerald-500' },
   'sekolah-akun': { text: 'text-sky-600', bg: 'bg-sky-50', bgSolid: 'bg-sky-500' },
   'guru-akun':    { text: 'text-teal-600', bg: 'bg-teal-50', bgSolid: 'bg-teal-500' },
-  'knowledge-cards': { text: 'text-amber-600', bg: 'bg-amber-50', bgSolid: 'bg-amber-500' },
+  'knowledge-cards': { text: 'text-rekah', bg: 'bg-fajar', bgSolid: 'bg-madu' },
   'tracker-konten':  { text: 'text-violet-600', bg: 'bg-violet-50', bgSolid: 'bg-violet-600' },
   'partner-orang-tua': { text: 'text-rose-600', bg: 'bg-rose-50', bgSolid: 'bg-rose-500' },
 };

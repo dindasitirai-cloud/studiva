@@ -7,10 +7,10 @@ const STATUS_LABEL: Record<PaymentStatus, string> = { berhasil: 'Berhasil', gaga
 const STATUS_STYLE: Record<PaymentStatus, string> = {
   berhasil: 'bg-stv-green-tint text-stv-green',
   gagal: 'bg-red-100 text-red-600',
-  menunggu: 'bg-amber-100 text-amber-700',
+  menunggu: 'bg-mawar text-rekah-tua',
 };
 const STATUS_ICON: Record<PaymentStatus, typeof CheckCircle2> = { berhasil: CheckCircle2, gagal: XCircle, menunggu: Clock };
-const TIER_LABEL: Record<MemberTier, string> = { tier1: 'Sekolah Studiva', tier2: 'Studiva Digital' };
+const TIER_LABEL: Record<MemberTier, string> = { tier1: 'Sekolah Studiva', tier2: 'Rekah' };
 const PLAN_LABEL: Record<string, string> = { monthly: 'Bulanan', quarterly: '3 Bulan', yearly: 'Tahunan' };
 
 function useAnimatedCounter(target: number, duration = 800) {
@@ -53,7 +53,7 @@ export default function PaymentsAdmin() {
     <div className="flex flex-col gap-6">
       <div>
         <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Pembayaran</h2>
-        <p className="text-[14px] text-stv-muted">Ringkasan transaksi langganan SPP Sekolah Studiva & Studiva Digital.</p>
+        <p className="text-[14px] text-stv-muted">Ringkasan transaksi langganan SPP Sekolah Studiva & Rekah.</p>
       </div>
 
       <p className="flex items-start gap-2 rounded-xl bg-indigo-50 px-4 py-3 text-[13px] text-stv-body">
@@ -109,7 +109,7 @@ export default function PaymentsAdmin() {
             <select value={tierFilter} onChange={e => setTierFilter(e.target.value as 'semua' | MemberTier)} className="rounded-full border border-stv-border bg-white px-4 py-2 text-[13px] focus:border-indigo-400 focus:outline-none">
               <option value="semua">Semua Tier</option>
               <option value="tier1">Sekolah Studiva</option>
-              <option value="tier2">Studiva Digital</option>
+              <option value="tier2">Rekah</option>
             </select>
             <select value={statusFilter} onChange={e => setStatusFilter(e.target.value as 'semua' | PaymentStatus)} className="rounded-full border border-stv-border bg-white px-4 py-2 text-[13px] focus:border-indigo-400 focus:outline-none">
               <option value="semua">Semua Status</option>

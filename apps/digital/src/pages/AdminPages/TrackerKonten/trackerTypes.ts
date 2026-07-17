@@ -2,7 +2,7 @@
 // All runtime state lives in useState (never localStorage).
 // TODO: replace initXxxState() with API fetches (GET /admin/content-state).
 
-import { SOURCES } from '../../DashboardPages/Tier2/sources';
+import { SOURCES } from '@studiva/shared';
 
 // ---------------------------------------------------------------------------
 // Domain types

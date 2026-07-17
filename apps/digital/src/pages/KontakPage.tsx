@@ -71,8 +71,8 @@ const CONTACT_CARDS: ContactCardProps[] = [
     icon: Clock,
     label: 'Jam Operasional',
     value: HOURS,
-    gradient: 'from-amber-50 to-yellow-50',
-    iconColor: 'text-amber-600',
+    gradient: 'from-fajar to-yellow-50',
+    iconColor: 'text-rekah',
   },
 ];
 
@@ -129,10 +129,10 @@ export default function KontakPage() {
       <section className="relative overflow-hidden px-4 py-16 sm:px-8 sm:py-20">
         <span className="pointer-events-none absolute left-[2%] top-[12%] h-[11px] w-[11px] rounded-full bg-emerald-400 opacity-40" />
         <span className="pointer-events-none absolute right-[2%] top-[18%] h-[8px] w-[8px] rounded-full bg-violet-400 opacity-40" />
-        <span className="pointer-events-none absolute bottom-[14%] left-[3%] h-[9px] w-[9px] rounded-full bg-amber-400 opacity-45" />
+        <span className="pointer-events-none absolute bottom-[14%] left-[3%] h-[9px] w-[9px] rounded-full bg-madu opacity-45" />
         <span className="pointer-events-none absolute bottom-[8%] right-[4%] h-[10px] w-[10px] rounded-full bg-sky-400 opacity-35" />
         <Sparkles className="pointer-events-none absolute right-[6%] top-[6%] h-[14px] w-[14px] text-emerald-500 opacity-45" fill="currentColor" strokeWidth={0} />
-        <Sparkles className="pointer-events-none absolute bottom-[20%] left-[7%] h-[11px] w-[11px] text-amber-400 opacity-40" fill="currentColor" strokeWidth={0} />
+        <Sparkles className="pointer-events-none absolute bottom-[20%] left-[7%] h-[11px] w-[11px] text-madu opacity-40" fill="currentColor" strokeWidth={0} />
         <div className="mx-auto max-w-[1100px]">
           <Reveal>
             <h2 className="mb-8 text-center font-baloo text-[28px] font-extrabold text-stv-navy sm:text-[34px]">
@@ -184,7 +184,7 @@ export default function KontakPage() {
 
               <div className="rounded-2xl bg-white p-5 shadow-[0_4px_16px_rgba(16,58,107,.06)]">
                 <div className="mb-3 flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-amber-500" />
+                  <Clock className="h-5 w-5 text-madu" />
                   <h3 className="font-baloo text-[16px] font-bold text-stv-navy">Jam Operasional</h3>
                 </div>
                 <div className="space-y-1.5 text-[14px] text-stv-body">

@@ -64,7 +64,7 @@ export default function SubscriptionTier2() {
     <div className="mx-auto flex max-w-[760px] flex-col gap-6">
       <div>
         <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Subscription</h2>
-        <p className="text-[14px] text-stv-muted">Kelola paket dan status pembayaran Studiva Digital Anda.</p>
+        <p className="text-[14px] text-stv-muted">Kelola paket dan status pembayaran Rekah Anda.</p>
       </div>
 
       {loading ? (
@@ -72,16 +72,16 @@ export default function SubscriptionTier2() {
       ) : (
         <>
           {message && (
-            <p className="rounded-xl bg-amber-50 px-4 py-3 text-[13px] text-stv-body">{message}</p>
+            <p className="rounded-xl bg-fajar px-4 py-3 text-[13px] text-stv-body">{message}</p>
           )}
 
           {!subscription ? (
-            <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-amber-200 py-14 text-center">
-              <CreditCard className="h-10 w-10 text-amber-300" strokeWidth={1.5} />
+            <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-mawar py-14 text-center">
+              <CreditCard className="h-10 w-10 text-madu" strokeWidth={1.5} />
               <p className="mt-3 font-semibold text-stv-navy">Anda belum memiliki subscription</p>
               <Link
                 to="/pricing"
-                className="mt-4 rounded-full bg-amber-500 px-5 py-2 text-[14px] font-bold text-white no-underline transition hover:bg-amber-600"
+                className="mt-4 rounded-full bg-madu px-5 py-2 text-[14px] font-bold text-white no-underline transition hover:bg-rekah"
               >
                 Lihat Paket Kami
               </Link>
@@ -97,15 +97,15 @@ export default function SubscriptionTier2() {
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-xl bg-amber-50 p-3.5">
+                  <div className="rounded-xl bg-fajar p-3.5">
                     <p className="flex items-center gap-1.5 text-[12px] text-stv-muted"><CreditCard className="h-3.5 w-3.5" />Plan</p>
                     <p className="mt-1 text-[14px] font-bold text-stv-navy">{PLAN_LABEL[subscription.plan]}</p>
                   </div>
-                  <div className="rounded-xl bg-amber-50 p-3.5">
+                  <div className="rounded-xl bg-fajar p-3.5">
                     <p className="flex items-center gap-1.5 text-[12px] text-stv-muted"><CalendarDays className="h-3.5 w-3.5" />Tanggal Perpanjangan</p>
                     <p className="mt-1 text-[14px] font-bold text-stv-navy">{new Date(subscription.end_date).toLocaleDateString('id-ID')}</p>
                   </div>
-                  <div className="rounded-xl bg-amber-50 p-3.5">
+                  <div className="rounded-xl bg-fajar p-3.5">
                     <p className="flex items-center gap-1.5 text-[12px] text-stv-muted"><Wallet className="h-3.5 w-3.5" />Jumlah Dibayar</p>
                     <p className="mt-1 text-[14px] font-bold text-stv-navy">{formatIDR(subscription.amount_paid)}</p>
                   </div>
@@ -115,7 +115,7 @@ export default function SubscriptionTier2() {
               <div className="flex flex-wrap gap-3">
                 <Link
                   to="/pricing"
-                  className="flex items-center gap-1.5 rounded-full bg-amber-500 px-5 py-2.5 text-[14px] font-bold text-white no-underline transition hover:bg-amber-600"
+                  className="flex items-center gap-1.5 rounded-full bg-madu px-5 py-2.5 text-[14px] font-bold text-white no-underline transition hover:bg-rekah"
                 >
                   <ArrowUpCircle className="h-4 w-4" />
                   Upgrade / Downgrade Tier

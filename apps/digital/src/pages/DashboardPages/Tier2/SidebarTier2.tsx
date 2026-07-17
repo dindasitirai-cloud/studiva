@@ -1,33 +1,18 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  Home,
-  Baby,
-  GraduationCap,
-  Lightbulb,
-  Users,
-  CalendarCheck,
-  Settings,
-  LogOut,
-  CreditCard,
-  X,
-  BookOpen,
-  HeartHandshake,
-  BookHeart,
+  Home, Baby, HeartHandshake, CreditCard, Settings, LogOut, X,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
+import LogoRekah from '../../../components/LogoRekah';
+import Kelopak from '../../../components/Kelopak';
 
 const navItems = [
   { to: '/dashboard/tier2', label: 'Beranda', icon: Home, end: true },
   { to: '/dashboard/tier2/profil-anak', label: 'Profil Anak', icon: Baby },
-  { to: '/dashboard/tier2/knowledge', label: 'Panduan Tumbuh Kembang', icon: BookOpen },
-  { to: '/dashboard/tier2/courses', label: 'Courses', icon: GraduationCap },
-  { to: '/dashboard/tier2/strategies', label: 'Learning Strategies', icon: Lightbulb },
-  { to: '/dashboard/tier2/community', label: 'Community Forum', icon: Users },
-  { to: '/dashboard/tier2/konsultasi', label: 'Konsultasi', icon: CalendarCheck },
-  { to: '/dashboard/tier2/jurnal-perkembangan', label: 'Jurnal Perkembangan', icon: BookHeart },
-  // Fase 1: hanya di Studiva Digital (Tier 2). Fase 3 akan pasang di Tier 1 juga.
+  // TODO: tambahkan Akar Keluarga & Rencana Pekan Ini setelah build 2
   { to: '/dashboard/tier2/partner-orang-tua', label: 'Partner Orang Tua', icon: HeartHandshake },
+  // PARKIR: aktifkan Jurnal Perkembangan lagi saat build 4
 ];
 
 interface SidebarTier2Props {
@@ -52,17 +37,11 @@ export default function SidebarTier2({ open, onClose }: SidebarTier2Props) {
   }
 
   const sidebar = (
-    <div className="flex h-full w-64 flex-col bg-white font-nunito-sans shadow-[2px_0_16px_rgba(0,0,0,.06)]">
-      {/* Logo */}
-      <div className="flex h-[72px] items-center gap-3 border-b border-amber-100 px-5">
-        <img src="/images/logo-studiva.png" alt="Studiva" className="h-10 w-10 object-contain" />
-        <div>
-          <div className="font-baloo text-[15px] font-extrabold leading-none text-stv-navy">Studiva</div>
-          <div className="text-[11px] font-semibold text-amber-600">Digital · Tier 2</div>
-        </div>
+    <div className="flex h-full w-64 flex-col bg-white shadow-[2px_0_16px_rgba(224,82,107,0.07)]">
+      <div className="flex h-[72px] items-center gap-3 border-b border-fajar px-5">
+        <LogoRekah size={32} withWordmark />
       </div>
 
-      {/* Nav items */}
       <nav className="flex-1 overflow-y-auto px-3 py-4">
         <ul className="space-y-1">
           {navItems.map(({ to, label, icon: Icon, end }) => (
@@ -72,17 +51,17 @@ export default function SidebarTier2({ open, onClose }: SidebarTier2Props) {
                 end={end}
                 onClick={onClose}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-xl px-4 py-[10px] text-[15px] font-semibold no-underline transition ${
+                  `flex items-center gap-3 rounded-[14px] px-4 py-[10px] text-[15px] font-semibold no-underline transition ${
                     isActive
-                      ? 'bg-amber-50 font-bold text-amber-700'
-                      : 'text-stv-body hover:bg-amber-50 hover:text-amber-700'
+                      ? 'bg-fajar font-bold text-rekah-tua'
+                      : 'text-pekat/65 hover:bg-fajar hover:text-rekah'
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
                     <Icon
-                      className={`h-5 w-5 shrink-0 ${isActive ? 'text-amber-600' : 'text-stv-muted'}`}
+                      className={`h-5 w-5 shrink-0 ${isActive ? 'text-rekah' : 'text-pekat/40'}`}
                       strokeWidth={2}
                     />
                     {label}
@@ -94,24 +73,26 @@ export default function SidebarTier2({ open, onClose }: SidebarTier2Props) {
         </ul>
       </nav>
 
-      {/* Bottom: user info + settings + logout */}
-      <div className="border-t border-amber-100 p-3">
-        <div className="mb-3 flex items-center gap-3 rounded-xl bg-amber-50 px-3 py-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-500 font-baloo text-[16px] font-bold text-white">
-            {user?.name?.charAt(0)?.toUpperCase() ?? '?'}
-          </div>
+      <div className="border-t border-fajar p-3">
+        <div className="mb-3 flex items-center gap-3 rounded-[16px] bg-fajar px-3 py-3">
+          <Kelopak className="flex h-9 w-9 shrink-0 items-center justify-center bg-rekah">
+            <span className="font-bricolage text-[16px] font-bold text-white">
+              {user?.name?.charAt(0)?.toUpperCase() ?? '?'}
+            </span>
+          </Kelopak>
           <div className="min-w-0">
-            <div className="truncate text-[13px] font-bold text-stv-navy">{user?.name ?? '-'}</div>
-            <div className="truncate text-[11px] text-stv-muted">{user?.email ?? ''}</div>
+            <div className="truncate text-[13px] font-bold text-pekat">{user?.name ?? '-'}</div>
+            <div className="truncate text-[11px] text-pekat/50">{user?.email ?? ''}</div>
           </div>
         </div>
+
         <div className="grid grid-cols-2 gap-2">
           <div className="relative">
             <button
               type="button"
               onClick={() => setSettingsOpen(o => !o)}
               aria-expanded={settingsOpen}
-              className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-amber-200 py-2 text-[13px] font-semibold text-stv-body transition hover:bg-amber-50"
+              className="flex w-full items-center justify-center gap-1.5 rounded-[10px] border border-mawar py-2 text-[13px] font-semibold text-pekat/70 transition hover:bg-fajar min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
             >
               <Settings className="h-4 w-4" strokeWidth={2} />
               Pengaturan
@@ -120,23 +101,24 @@ export default function SidebarTier2({ open, onClose }: SidebarTier2Props) {
             {settingsOpen && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setSettingsOpen(false)} />
-                <div className="absolute bottom-full left-0 z-50 mb-2 w-48 rounded-xl bg-white p-1.5 shadow-[0_12px_32px_rgba(16,58,107,.18)]">
+                <div className="absolute bottom-full left-0 z-50 mb-2 w-48 rounded-[16px] bg-white p-1.5 shadow-[0_12px_32px_rgba(224,82,107,0.16)]">
                   <button
                     type="button"
                     onClick={handleSubscriptionClick}
-                    className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-[13px] font-semibold text-stv-body transition hover:bg-amber-50 hover:text-amber-700"
+                    className="flex w-full items-center gap-2.5 rounded-[12px] px-3 py-2.5 text-left text-[13px] font-semibold text-pekat/70 transition hover:bg-fajar hover:text-rekah"
                   >
                     <CreditCard className="h-4 w-4 shrink-0" strokeWidth={2} />
-                    Subscription
+                    Langganan
                   </button>
                 </div>
               </>
             )}
           </div>
+
           <button
             type="button"
             onClick={handleLogout}
-            className="flex items-center justify-center gap-1.5 rounded-lg border border-amber-200 py-2 text-[13px] font-semibold text-stv-body transition hover:bg-amber-50 hover:text-red-600"
+            className="flex items-center justify-center gap-1.5 rounded-[10px] border border-mawar py-2 text-[13px] font-semibold text-pekat/70 transition hover:bg-fajar hover:text-rekah-tua min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
           >
             <LogOut className="h-4 w-4" strokeWidth={2} />
             Keluar
@@ -148,22 +130,20 @@ export default function SidebarTier2({ open, onClose }: SidebarTier2Props) {
 
   return (
     <>
-      {/* Desktop: always visible */}
       <aside className="sticky top-0 hidden h-screen shrink-0 lg:block">
         {sidebar}
       </aside>
 
-      {/* Mobile: overlay drawer */}
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-stv-navy/40" onClick={onClose} />
+          <div className="absolute inset-0 bg-pekat/40" onClick={onClose} />
           <aside className="absolute left-0 top-0 h-full">
             <div className="relative h-full">
               <button
                 type="button"
                 onClick={onClose}
                 aria-label="Tutup menu"
-                className="absolute right-3 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-amber-700"
+                className="absolute right-3 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-fajar text-rekah"
               >
                 <X className="h-4 w-4" />
               </button>

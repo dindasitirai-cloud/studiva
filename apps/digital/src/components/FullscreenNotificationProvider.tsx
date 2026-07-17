@@ -32,7 +32,7 @@ function formatIDR(amount: number) {
 
 const KIND_META: Record<FullscreenNotifKind, { emoji: string; gradient: string; iconBg: string; icon: typeof Receipt }> = {
   'spp-new':           { emoji: '💳', gradient: 'from-emerald-500 to-teal-600',   iconBg: 'bg-emerald-100', icon: Receipt },
-  'spp-reminder-h7':   { emoji: '📅', gradient: 'from-amber-400 to-orange-500',   iconBg: 'bg-amber-100',   icon: Clock },
+  'spp-reminder-h7':   { emoji: '📅', gradient: 'from-madu to-orange-500',   iconBg: 'bg-mawar',   icon: Clock },
   'spp-reminder-h1':   { emoji: '⏰', gradient: 'from-red-500 to-rose-600',        iconBg: 'bg-red-100',     icon: Clock },
   'webinar-reminder-h1': { emoji: '🎓', gradient: 'from-purple-500 to-indigo-600', iconBg: 'bg-purple-100', icon: Video },
 };

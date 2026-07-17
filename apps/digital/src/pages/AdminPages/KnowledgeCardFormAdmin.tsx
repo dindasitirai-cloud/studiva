@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Plus, X, ArrowLeft, AlertCircle } from 'lucide-react';
 import { api } from '../../api/client';
-import { AGE_RANGES, DOMAIN_MAP, AgeKey, DomainCode } from '../DashboardPages/Tier2/knowledgeCardData';
+import { AGE_RANGES, DOMAIN_MAP, AgeKey, DomainCode } from '@studiva/shared';
 
 interface KnowledgeCardDetail {
   id: number;
@@ -85,9 +85,9 @@ function Field({ label, required, children }: { label: string; required?: boolea
   );
 }
 
-const inputClass = "w-full rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:border-amber-400 focus:outline-none";
-const textareaClass = "w-full rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:border-amber-400 focus:outline-none resize-y min-h-[80px]";
-const selectClass = "w-full rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:border-amber-400 focus:outline-none";
+const inputClass = "w-full rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:border-madu focus:outline-none";
+const textareaClass = "w-full rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:border-madu focus:outline-none resize-y min-h-[80px]";
+const selectClass = "w-full rounded-xl border border-stv-border px-3 py-2.5 text-[14px] focus:border-madu focus:outline-none";
 
 export default function KnowledgeCardFormAdmin() {
   const navigate = useNavigate();
@@ -317,7 +317,7 @@ export default function KnowledgeCardFormAdmin() {
                 id="is_medical"
                 checked={form.is_medical}
                 onChange={e => setField('is_medical', e.target.checked)}
-                className="h-4 w-4 rounded border-stv-border accent-amber-500"
+                className="h-4 w-4 rounded border-stv-border accent-madu"
               />
               <label htmlFor="is_medical" className="text-[14px] font-semibold text-stv-navy">
                 Konten Medis (tampilkan peringatan "bukan pengganti nasihat dokter")
@@ -409,7 +409,7 @@ export default function KnowledgeCardFormAdmin() {
                   <button
                     type="button"
                     onClick={() => addListItem('lakukan', 4)}
-                    className="flex items-center gap-1.5 text-[13px] font-semibold text-amber-600 hover:text-amber-700"
+                    className="flex items-center gap-1.5 text-[13px] font-semibold text-rekah hover:text-rekah-tua"
                   >
                     <Plus className="h-3.5 w-3.5" />
                     Tambah Langkah
@@ -461,7 +461,7 @@ export default function KnowledgeCardFormAdmin() {
               <div className="flex flex-col gap-3">
                 {form.sci_paragraphs.map((para, idx) => (
                   <div key={idx} className="flex gap-2">
-                    <div className="mt-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-100 text-[11px] font-bold text-amber-700">
+                    <div className="mt-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-mawar text-[11px] font-bold text-rekah-tua">
                       {idx + 1}
                     </div>
                     <textarea
@@ -484,7 +484,7 @@ export default function KnowledgeCardFormAdmin() {
                 <button
                   type="button"
                   onClick={() => addListItem('sci_paragraphs')}
-                  className="flex items-center gap-1.5 text-[13px] font-semibold text-amber-600 hover:text-amber-700"
+                  className="flex items-center gap-1.5 text-[13px] font-semibold text-rekah hover:text-rekah-tua"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   Tambah Paragraf
@@ -520,7 +520,7 @@ export default function KnowledgeCardFormAdmin() {
             <button
               type="button"
               onClick={() => addListItem('sources')}
-              className="flex items-center gap-1.5 text-[13px] font-semibold text-amber-600 hover:text-amber-700"
+              className="flex items-center gap-1.5 text-[13px] font-semibold text-rekah hover:text-rekah-tua"
             >
               <Plus className="h-3.5 w-3.5" />
               Tambah Sumber
@@ -548,7 +548,7 @@ export default function KnowledgeCardFormAdmin() {
               type="button"
               disabled={saving}
               onClick={() => handleSubmit(false)}
-              className="rounded-full border border-amber-500 px-6 py-2.5 text-[14px] font-semibold text-amber-600 transition hover:bg-amber-50 disabled:opacity-50"
+              className="rounded-full border border-madu px-6 py-2.5 text-[14px] font-semibold text-rekah transition hover:bg-fajar disabled:opacity-50"
             >
               {saving ? 'Menyimpan...' : 'Kirim untuk Review'}
             </button>
@@ -558,7 +558,7 @@ export default function KnowledgeCardFormAdmin() {
             type="button"
             disabled={saving}
             onClick={() => handleSubmit(true)}
-            className="rounded-full bg-amber-500 px-6 py-2.5 text-[14px] font-bold text-white transition hover:bg-amber-600 disabled:opacity-50"
+            className="rounded-full bg-madu px-6 py-2.5 text-[14px] font-bold text-white transition hover:bg-rekah disabled:opacity-50"
           >
             {saving ? 'Menyimpan...' : 'Simpan sebagai Draft'}
           </button>

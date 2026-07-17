@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, AlertCircle, Sparkles } from 'lucide-react';
+import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import LogoRekah from '../components/LogoRekah';
+import Kelopak from '../components/Kelopak';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -64,7 +66,7 @@ export default function LoginPage() {
                    : '/dashboard/parent';
         navigate(dest);
       } else {
-        navigate('/pricing', { state: { message: 'Pilih paket Studiva Digital untuk mulai mengakses dashboard.' } });
+        navigate('/pricing', { state: { message: 'Pilih paket Rekah untuk mulai mengakses dashboard.' } });
       }
     } catch {
       navigate('/dashboard/parent');
@@ -74,60 +76,62 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-82px)] font-nunito-sans">
+    <div className="flex min-h-[calc(100vh-82px)]">
 
       {/* ── Panel kiri, branding ─────────────────────────────────────── */}
-      <div className="relative hidden w-[44%] shrink-0 flex-col justify-between overflow-hidden bg-gradient-to-br from-stv-navy via-[#1a3f6f] to-[#0d2a4d] p-12 lg:flex">
-        <div className="pointer-events-none absolute -right-12 -top-12 h-56 w-56 rounded-full bg-stv-yellow/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-8 left-8 h-40 w-40 rounded-full bg-stv-sky/15 blur-2xl" />
-        <Sparkles className="absolute right-10 top-10 h-6 w-6 text-stv-yellow/30" fill="currentColor" strokeWidth={0} />
+      <div className="relative hidden w-[44%] shrink-0 flex-col justify-between overflow-hidden bg-pekat p-12 lg:flex">
+        <Kelopak
+          aria-hidden
+          rotate={90}
+          className="absolute -right-16 -top-16 h-56 w-56 bg-rekah/20 pointer-events-none"
+        />
+        <Kelopak
+          aria-hidden
+          rotate={270}
+          className="absolute -bottom-20 -left-12 h-64 w-64 bg-rekah/10 pointer-events-none"
+        />
 
-        {/* Logo */}
-        <div className="relative flex items-center gap-3">
-          <img src="/images/logo-studiva.png" alt="Studiva" className="h-12 w-12 object-contain" />
-          <span className="font-baloo text-[22px] font-extrabold text-white">Studiva</span>
+        <div className="relative">
+          <LogoRekah size={40} withWordmark light />
         </div>
 
-        {/* Tagline */}
         <div className="relative">
-          <h2 className="mb-4 font-baloo text-[32px] font-extrabold leading-[1.15] text-white">
-            Selamat datang kembali di Studiva
+          <h2 className="mb-4 font-bricolage text-[32px] font-extrabold leading-[1.1] text-white">
+            Selamat datang<br/>kembali, Ayah-Bunda.
           </h2>
-          <p className="mb-10 text-[16px] leading-[1.7] text-white/70">
-            Masuk untuk melanjutkan perjalanan belajar bersama anak Anda, memantau perkembangannya,
-            dan terhubung dengan komunitas orang tua yang saling mendukung.
+          <p className="mb-10 text-[15px] leading-[1.7] text-white/60">
+            Masuk dan lanjutkan pendampingan si kecil — satu langkah kecil hari ini bermakna besar.
           </p>
           <div className="space-y-3">
             {[
-              'Pantau perkembangan harian anak',
-              'Akses panduan tumbuh kembang & webinar psikolog',
-              'Terhubung dengan guru dan tim Studiva',
+              'Rencana pekan ini sudah menunggu kamu',
+              'Dikurasi Psikolog Fitri Effendy',
+              'Setiap anak mekar pada waktunya',
             ].map(item => (
-              <div key={item} className="flex items-center gap-3 text-[14px] text-white/80">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-stv-yellow/20 text-stv-yellow text-[11px] font-bold">✓</span>
+              <div key={item} className="flex items-center gap-3 text-[14px] text-white/75">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-rekah/25 text-mawar text-[11px] font-bold">✓</span>
                 {item}
               </div>
             ))}
           </div>
         </div>
 
-        <p className="relative text-[13px] text-white/40">
-          © {new Date().getFullYear()} Studiva · Jl. Mandiangin No. 65, Bukittinggi
+        <p className="relative text-[13px] text-white/30">
+          © {new Date().getFullYear()} Rekah · oleh Psikolog Fitri Effendy
         </p>
       </div>
 
       {/* ── Panel kanan, form ────────────────────────────────────────── */}
-      <div className="flex flex-1 items-center justify-center px-4 py-12 sm:px-8">
+      <div className="flex flex-1 items-center justify-center bg-kanvas px-4 py-12 sm:px-8">
         <div className="w-full max-w-[420px]">
 
           {/* Mobile logo */}
           <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <img src="/images/logo-studiva.png" alt="Studiva" className="h-10 w-10 object-contain" />
-            <span className="font-baloo text-[20px] font-extrabold text-stv-navy">Studiva</span>
+            <LogoRekah size={36} withWordmark />
           </div>
 
-          <h1 className="mb-1 font-baloo text-[28px] font-extrabold text-stv-navy sm:text-[32px]">Masuk</h1>
-          <p className="mb-7 text-[15px] text-stv-body">Masuk ke akun Studiva Anda</p>
+          <h1 className="mb-1 font-bricolage text-[28px] font-extrabold text-pekat sm:text-[32px]">Masuk</h1>
+          <p className="mb-7 text-[15px] text-pekat/60">Masuk ke akun Rekah kamu</p>
 
           {successMessage && (
             <div className="mb-5 rounded-xl bg-emerald-50 px-4 py-3 text-[14px] text-emerald-700">
@@ -145,7 +149,7 @@ export default function LoginPage() {
           <div className="flex flex-col gap-4">
             {/* Email */}
             <div>
-              <label className="mb-1.5 block text-[13px] font-semibold text-stv-navy">Email</label>
+              <label className="mb-1.5 block text-[13px] font-semibold text-pekat">Email</label>
               <input
                 type="email"
                 value={email}
@@ -153,19 +157,19 @@ export default function LoginPage() {
                 onKeyDown={e => e.key === 'Enter' && handleSubmit()}
                 placeholder="nama@email.com"
                 autoComplete="email"
-                className="w-full rounded-xl border border-stv-border px-4 py-3 text-[15px] text-stv-navy placeholder:text-stv-muted-2 transition focus:border-stv-sky-stroke focus:outline-none focus:ring-2 focus:ring-stv-sky-stroke/20"
+                className="w-full rounded-[14px] border border-daun/30 bg-white px-4 py-3 text-[15px] text-pekat placeholder:text-pekat/35 transition focus:border-rekah focus:outline-none focus:ring-2 focus:ring-rekah/20 min-h-[52px]"
               />
             </div>
 
             {/* Password */}
             <div>
               <div className="mb-1.5 flex items-center justify-between">
-                <label className="text-[13px] font-semibold text-stv-navy">Password</label>
+                <label className="text-[13px] font-semibold text-pekat">Password</label>
                 {/* TODO: implementasi fitur "Lupa Password" dengan endpoint reset password backend */}
                 <button
                   type="button"
                   onClick={() => setError('Fitur lupa password akan segera tersedia. Hubungi kami via WhatsApp.')}
-                  className="text-[13px] font-semibold text-stv-sky-stroke transition hover:underline"
+                  className="text-[13px] font-semibold text-rekah transition hover:underline"
                 >
                   Lupa password?
                 </button>
@@ -176,15 +180,15 @@ export default function LoginPage() {
                   value={password}
                   onChange={e => { setPassword(e.target.value); setError(null); }}
                   onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-                  placeholder="Password Anda"
+                  placeholder="Password kamu"
                   autoComplete="current-password"
-                  className="w-full rounded-xl border border-stv-border px-4 py-3 pr-11 text-[15px] text-stv-navy placeholder:text-stv-muted-2 transition focus:border-stv-sky-stroke focus:outline-none focus:ring-2 focus:ring-stv-sky-stroke/20"
+                  className="w-full rounded-[14px] border border-daun/30 bg-white px-4 py-3 pr-11 text-[15px] text-pekat placeholder:text-pekat/35 transition focus:border-rekah focus:outline-none focus:ring-2 focus:ring-rekah/20 min-h-[52px]"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(s => !s)}
                   aria-label={showPass ? 'Sembunyikan password' : 'Tampilkan password'}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-stv-muted transition hover:text-stv-navy"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-pekat/40 transition hover:text-pekat"
                 >
                   {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -192,12 +196,12 @@ export default function LoginPage() {
             </div>
 
             {/* Ingat saya */}
-            <label className="flex cursor-pointer items-center gap-2.5 text-[14px] text-stv-body">
+            <label className="flex cursor-pointer items-center gap-2.5 text-[14px] text-pekat/70">
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={e => setRememberMe(e.target.checked)}
-                className="h-4 w-4 rounded accent-stv-sky-stroke"
+                className="h-4 w-4 rounded accent-rekah"
               />
               Ingat saya
             </label>
@@ -207,26 +211,24 @@ export default function LoginPage() {
               type="button"
               onClick={handleSubmit}
               disabled={submitting}
-              className="flex min-h-[50px] items-center justify-center rounded-full bg-stv-navy font-baloo text-[16px] font-bold text-white shadow-[0_6px_20px_rgba(16,58,107,.25)] transition hover:-translate-y-0.5 hover:bg-stv-navy-dark disabled:opacity-60"
+              className="flex min-h-[52px] items-center justify-center rounded-full bg-rekah font-bricolage text-[16px] font-bold text-white shadow-[0_4px_16px_rgba(224,82,107,0.28)] transition hover:bg-rekah-tua disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah focus-visible:ring-offset-2"
             >
               {submitting ? 'Memproses...' : 'Masuk'}
             </button>
           </div>
 
-          {/* Daftar Tier 2 */}
-          <p className="mt-6 text-center text-[14px] text-stv-body">
-            Belum punya akun Studiva Digital?{' '}
-            <Link to="/daftar" className="font-bold text-stv-sky-stroke no-underline transition hover:underline">
+          <p className="mt-6 text-center text-[14px] text-pekat/65">
+            Belum punya akun Rekah?{' '}
+            <Link to="/daftar" className="font-bold text-rekah no-underline transition hover:underline">
               Daftar sekarang
             </Link>
           </p>
 
-          {/* Info Tier 1 & Guru */}
-          <div className="mt-5 rounded-2xl bg-slate-50 px-4 py-4">
-            <p className="text-[13px] leading-[1.6] text-stv-muted">
-              <span className="font-semibold text-stv-body">Akun Sekolah Studiva & Guru</span> dibuat
-              oleh tim kami secara langsung, tidak tersedia pendaftaran mandiri.{' '}
-              <Link to="/kontak" className="font-semibold text-stv-sky-stroke no-underline hover:underline">
+          <div className="mt-5 rounded-[16px] bg-fajar px-4 py-4">
+            <p className="text-[13px] leading-[1.6] text-pekat/60">
+              <span className="font-semibold text-pekat/80">Akun Sekolah Studiva & Guru</span> dibuat
+              oleh tim kami secara langsung.{' '}
+              <Link to="/kontak" className="font-semibold text-rekah no-underline hover:underline">
                 Hubungi kami
               </Link>{' '}
               untuk informasi lebih lanjut.

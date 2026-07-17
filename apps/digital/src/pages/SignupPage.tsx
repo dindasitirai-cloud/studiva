@@ -163,7 +163,7 @@ export default function SignupPage() {
               <PricingCard
                 tier="tier2"
                 icon="💻"
-                title="Tier 2: Studiva Digital"
+                title="Tier 2: Rekah"
                 subtitle="Nasional - Pembelajaran Online"
                 features={tier2Features}
                 onChoosePlan={(chosenTier) => {
@@ -294,7 +294,7 @@ export default function SignupPage() {
               <PricingCard
                 tier={tier}
                 icon={tier === 'tier1' ? '🏫' : '💻'}
-                title={tier === 'tier1' ? 'Tier 1: Sekolah Studiva' : 'Tier 2: Studiva Digital'}
+                title={tier === 'tier1' ? 'Tier 1: Sekolah Studiva' : 'Tier 2: Rekah'}
                 subtitle={tier === 'tier1' ? 'Bukittinggi - Kolaborasi Penuh' : 'Nasional - Pembelajaran Online'}
                 features={tier === 'tier1' ? tier1Features : tier2Features}
                 onChoosePlan={handleChoosePlan}

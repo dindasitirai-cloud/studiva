@@ -10,49 +10,34 @@ import Footer from './components/Footer';
 import PrivateRoute, { AdminRoute, ParentRoute } from './components/PrivateRoute';
 import SubscriptionGuard from './components/SubscriptionGuard';
 
-import LandingPage from './pages/LandingPage';
-import StudivaDigitalPage from './pages/StudivaDigitalPage';
-import AboutPage from './pages/AboutPage';
+// Public pages
+import RekahLandingPage from './features/rekah/RekahLandingPage';
 import TentangPage from './pages/TentangPage';
 import KontakPage from './pages/KontakPage';
+// TODO: paywall Rekah dirancang setelah build 4
 import PricingPage from './pages/PricingPage';
-import ResourcesPage from './pages/ResourcesPage';
 import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
 import DaftarPage from './pages/DaftarPage';
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import PaymentFailedPage from './pages/PaymentFailedPage';
 import SubscriptionSettingsPage from './pages/SubscriptionSettingsPage';
-import ConsultationPage from './pages/ConsultationPage';
-import MyConsultationsPage from './pages/MyConsultationsPage';
+
+// Admin standalone pages (use public Navbar)
 import AdminConsultationsPage from './pages/AdminConsultationsPage';
-// TODO: klasifikasi — sekolah atau digital?
 import AdminEnrollmentRequestsPage from './pages/AdminEnrollmentRequestsPage';
-import CommunityHubPage from './pages/CommunityHubPage';
-import DiscussionDetailPage from './pages/DiscussionDetailPage';
-import NewDiscussionPage from './pages/NewDiscussionPage';
-import MyCommunityActivityPage from './pages/MyCommunityActivityPage';
-import CommunityProfilePage from './pages/CommunityProfilePage';
 import AdminCommunityPage from './pages/AdminCommunityPage';
-import AskFitriPage from './pages/AskFitriPage';
 import AdminFitriDashboardPage from './pages/AdminFitriDashboardPage';
-// TODO: klasifikasi — sekolah atau digital?
-import ChildProfile from './pages/DashboardPages/ChildProfile';
+
+// Dashboard Tier 2
 import DashboardShellTier2 from './pages/DashboardPages/Tier2/DashboardShellTier2';
-import BerandaTier2 from './pages/DashboardPages/Tier2/BerandaTier2';
+import BerandaRekah from './pages/DashboardPages/Tier2/BerandaRekah';
 import ProfilAnakTier2 from './pages/DashboardPages/Tier2/ProfilAnakTier2';
-import CoursesTier2 from './pages/DashboardPages/Tier2/CoursesTier2';
-import LearningStrategiesTier2 from './pages/DashboardPages/Tier2/LearningStrategiesTier2';
-import StrategyDetailTier2 from './pages/DashboardPages/Tier2/StrategyDetailTier2';
-import CommunityTier2 from './pages/DashboardPages/Tier2/CommunityTier2';
-import ThreadDetailTier2 from './pages/DashboardPages/Tier2/ThreadDetailTier2';
-import KonsultasiTier2 from './pages/DashboardPages/Tier2/KonsultasiTier2';
 import SubscriptionTier2 from './pages/DashboardPages/Tier2/SubscriptionTier2';
-import KnowledgeGallery from './pages/DashboardPages/Tier2/KnowledgeGallery';
-import KnowledgeCardSummary from './pages/DashboardPages/Tier2/KnowledgeCardSummary';
-import KnowledgeCardScientific from './pages/DashboardPages/Tier2/KnowledgeCardScientific';
 import { AudioPlayerProvider } from './context/AudioPlayerContext';
 import { KnowledgeLibraryProvider } from './context/KnowledgeLibraryContext';
+import PartnerOrangTuaPage from './features/partner-orang-tua/parent/PartnerOrangTuaPage';
+
+// Admin shell
 import AdminShell from './pages/AdminPages/AdminShell';
 import BerandaAdmin from './pages/AdminPages/BerandaAdmin';
 import CoursesAdmin from './pages/AdminPages/CoursesAdmin';
@@ -62,43 +47,34 @@ import KonsultasiAdmin from './pages/AdminPages/KonsultasiAdmin';
 import MembersAdmin from './pages/AdminPages/MembersAdmin';
 import PaymentsAdmin from './pages/AdminPages/PaymentsAdmin';
 import SettingsAdmin from './pages/AdminPages/SettingsAdmin';
-// TODO: klasifikasi — sekolah atau digital?
 import GuruAkunAdmin from './pages/AdminPages/GuruAkunAdmin';
 import KnowledgeCardsAdmin from './pages/AdminPages/KnowledgeCardsAdmin';
 import KnowledgeCardFormAdmin from './pages/AdminPages/KnowledgeCardFormAdmin';
 import TrackerKontenAdmin from './pages/AdminPages/TrackerKonten';
-import PartnerOrangTuaPage from './features/partner-orang-tua/parent/PartnerOrangTuaPage';
 import PartnerInboxPage from './features/partner-orang-tua/admin/PartnerInboxPage';
-import JurnalPerkembanganPage from './features/jurnal-perkembangan/JurnalPerkembanganPage';
-import RekahLandingPage from './features/rekah/RekahLandingPage';
 
-const CONSULTATION_UPGRADE_MESSAGE =
-  'Anda perlu upgrade ke Tier 2 untuk melakukan booking konsultasi. Silakan pilih plan yang sesuai untuk mulai berkonsultasi.';
-
-// AdminShell routes only - deliberately NOT a blanket "/admin" prefix check,
-// since older standalone admin pages (consultations, community, enrollment-
-// requests, fitri-dashboard) still rely on the public Navbar.
+// AdminShell routes only — not a blanket "/admin" prefix check, since older
+// standalone admin pages (consultations, community, etc.) still use public Navbar.
 const ADMIN_SHELL_PATHS = [
   '/admin', '/admin/courses', '/admin/strategies',
   '/admin/forum', '/admin/konsultasi', '/admin/members', '/admin/payments', '/admin/settings',
-  '/admin/guru-akun',
-  '/admin/knowledge-cards',
-  '/admin/tracker-konten',
-  '/admin/partner-orang-tua',
+  '/admin/guru-akun', '/admin/knowledge-cards', '/admin/tracker-konten', '/admin/partner-orang-tua',
 ];
 
 function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isMemberDashboard = location.pathname.startsWith('/dashboard/tier2');
-  const isAdminShell = ADMIN_SHELL_PATHS.some(p => location.pathname === p || location.pathname.startsWith(`${p}/`));
-  // Rekah landing has its own nav + footer
-  const isRekah = location.pathname === '/rekah';
+  const isAdminShell = ADMIN_SHELL_PATHS.some(p =>
+    location.pathname === p || location.pathname.startsWith(`${p}/`)
+  );
+  // Homepage (Rekah landing) renders its own footer
+  const isStandaloneLayout = location.pathname === '/';
 
   return (
     <div className="flex min-h-screen flex-col">
-      {!isMemberDashboard && !isAdminShell && !isRekah && <Navbar />}
+      {!isMemberDashboard && !isAdminShell && !isStandaloneLayout && <Navbar />}
       <main className="flex-1">{children}</main>
-      {!isRekah && <Footer />}
+      {!isMemberDashboard && !isAdminShell && !isStandaloneLayout && <Footer />}
     </div>
   );
 }
@@ -115,25 +91,21 @@ export default function App() {
         <DashboardTier2Provider>
         <Layout>
           <Routes>
-            {/* Rekah — standalone brand landing, no Studiva chrome */}
-            <Route path="/rekah" element={<RekahLandingPage />} />
+            {/* Homepage = Rekah landing */}
+            <Route path="/" element={<RekahLandingPage />} />
+            {/* Legacy /rekah URL still works */}
+            <Route path="/rekah" element={<Navigate to="/" replace />} />
 
             {/* Public pages */}
-            {/* TODO: keputusan Raisha — jadikan /rekah sebagai homepage saat go-live */}
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/studiva-digital" element={<StudivaDigitalPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/signup" element={<Navigate to="/daftar" replace />} />
-            <Route path="/daftar" element={<DaftarPage />} />
             <Route path="/tentang" element={<TentangPage />} />
             <Route path="/kontak" element={<KontakPage />} />
+            {/* TODO: paywall Rekah dirancang setelah build 4 — pricing disembunyikan dari nav */}
             <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/resources" element={<ResourcesPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/signup" element={<Navigate to="/daftar" replace />} />
+            <Route path="/daftar" element={<DaftarPage />} />
             <Route path="/payment-success" element={<PaymentSuccessPage />} />
             <Route path="/payment-failed" element={<PaymentFailedPage />} />
-
             <Route
               path="/subscription-settings"
               element={
@@ -143,117 +115,12 @@ export default function App() {
               }
             />
 
-            <Route
-              path="/consultation"
-              element={
-                <PrivateRoute>
-                  <SubscriptionGuard message={CONSULTATION_UPGRADE_MESSAGE}>
-                    <ConsultationPage />
-                  </SubscriptionGuard>
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/consultations/my-bookings"
-              element={
-                <PrivateRoute>
-                  <SubscriptionGuard message={CONSULTATION_UPGRADE_MESSAGE}>
-                    <MyConsultationsPage />
-                  </SubscriptionGuard>
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/admin/consultations"
-              element={
-                <AdminRoute>
-                  <AdminConsultationsPage />
-                </AdminRoute>
-              }
-            />
-            <Route
-              path="/admin/consultations/manage"
-              element={
-                <AdminRoute>
-                  <AdminConsultationsPage />
-                </AdminRoute>
-              }
-            />
-            <Route
-              path="/admin/enrollment-requests"
-              element={
-                <AdminRoute>
-                  <AdminEnrollmentRequestsPage />
-                </AdminRoute>
-              }
-            />
-            <Route
-              path="/admin/community"
-              element={
-                <AdminRoute>
-                  <AdminCommunityPage />
-                </AdminRoute>
-              }
-            />
-            <Route
-              path="/admin/fitri-dashboard"
-              element={
-                <AdminRoute>
-                  <AdminFitriDashboardPage />
-                </AdminRoute>
-              }
-            />
-
-            <Route
-              path="/community"
-              element={
-                <PrivateRoute>
-                  <CommunityHubPage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/community/ask-fitri"
-              element={
-                <PrivateRoute>
-                  <AskFitriPage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/community/new"
-              element={
-                <PrivateRoute>
-                  <SubscriptionGuard message="Anda perlu subscription Tier 2 aktif untuk membuat diskusi.">
-                    <NewDiscussionPage />
-                  </SubscriptionGuard>
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/community/myactivity"
-              element={
-                <PrivateRoute>
-                  <MyCommunityActivityPage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/community/profile/:userId"
-              element={
-                <PrivateRoute>
-                  <CommunityProfilePage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/community/discussions/:id"
-              element={
-                <PrivateRoute>
-                  <DiscussionDetailPage />
-                </PrivateRoute>
-              }
-            />
+            {/* Admin standalone (use public Navbar) */}
+            <Route path="/admin/consultations" element={<AdminRoute><AdminConsultationsPage /></AdminRoute>} />
+            <Route path="/admin/consultations/manage" element={<AdminRoute><AdminConsultationsPage /></AdminRoute>} />
+            <Route path="/admin/enrollment-requests" element={<AdminRoute><AdminEnrollmentRequestsPage /></AdminRoute>} />
+            <Route path="/admin/community" element={<AdminRoute><AdminCommunityPage /></AdminRoute>} />
+            <Route path="/admin/fitri-dashboard" element={<AdminRoute><AdminFitriDashboardPage /></AdminRoute>} />
 
             {/* Tier 2 member dashboard */}
             <Route
@@ -266,40 +133,25 @@ export default function App() {
                 </ParentRoute>
               }
             >
-              <Route index element={<BerandaTier2 />} />
+              <Route index element={<BerandaRekah />} />
               <Route path="profil-anak" element={<ProfilAnakTier2 />} />
               <Route path="subscription" element={<SubscriptionTier2 />} />
-              <Route path="knowledge" element={<KnowledgeGallery />} />
-              <Route path="knowledge/:cardId" element={<KnowledgeCardSummary />} />
-              <Route path="knowledge/:cardId/ilmiah" element={<KnowledgeCardScientific />} />
-              <Route path="courses" element={<CoursesTier2 />} />
-              <Route path="strategies" element={<LearningStrategiesTier2 />} />
-              <Route path="strategies/:id" element={<StrategyDetailTier2 />} />
-              <Route path="community" element={<CommunityTier2 />} />
-              <Route path="community/:id" element={<ThreadDetailTier2 />} />
-              <Route path="konsultasi" element={<KonsultasiTier2 />} />
               <Route path="partner-orang-tua" element={<PartnerOrangTuaPage tierContext="tier2" />} />
-              <Route path="jurnal-perkembangan" element={<JurnalPerkembanganPage />} />
+              {/* TODO: tambahkan Akar Keluarga, Rencana Pekan Ini setelah build 2 */}
+              {/* PARKIR: knowledge, courses, strategies, community, konsultasi, jurnal — build 4 */}
             </Route>
 
-            {/* Admin Digital — CMS/content, courses, strategies, forum, konsultasi, subscriptions */}
-            <Route
-              path="/admin"
-              element={
-                <AdminRoute>
-                  <AdminShell />
-                </AdminRoute>
-              }
-            >
+            {/* Admin Digital — CMS, konten, manajemen langganan */}
+            <Route path="/admin" element={<AdminRoute><AdminShell /></AdminRoute>}>
               <Route index element={<BerandaAdmin />} />
               <Route path="courses" element={<CoursesAdmin />} />
               <Route path="strategies" element={<StrategiesAdmin />} />
+              {/* PARKIR: aktifkan lagi jika forum kembali */}
               <Route path="forum" element={<ForumAdmin />} />
               <Route path="konsultasi" element={<KonsultasiAdmin />} />
               <Route path="members" element={<MembersAdmin />} />
               <Route path="payments" element={<PaymentsAdmin />} />
               <Route path="settings" element={<SettingsAdmin />} />
-              {/* TODO: klasifikasi — sekolah atau digital? */}
               <Route path="guru-akun" element={<GuruAkunAdmin />} />
               <Route path="knowledge-cards" element={<KnowledgeCardsAdmin />} />
               <Route path="knowledge-cards/new" element={<KnowledgeCardFormAdmin />} />
@@ -308,22 +160,8 @@ export default function App() {
               <Route path="partner-orang-tua" element={<PartnerInboxPage />} />
             </Route>
 
-            {/* Legacy parent path → redirect to Tier 2 (digital has only Tier 2 parents) */}
-            <Route
-              path="/dashboard/parent"
-              element={<Navigate to="/dashboard/tier2" replace />}
-            />
-            {/* TODO: klasifikasi — sekolah atau digital? */}
-            <Route
-              path="/dashboard/child/:id"
-              element={
-                <PrivateRoute>
-                  <SubscriptionGuard>
-                    <ChildProfile />
-                  </SubscriptionGuard>
-                </PrivateRoute>
-              }
-            />
+            {/* Legacy redirects */}
+            <Route path="/dashboard/parent" element={<Navigate to="/dashboard/tier2" replace />} />
           </Routes>
         </Layout>
         </DashboardTier2Provider>

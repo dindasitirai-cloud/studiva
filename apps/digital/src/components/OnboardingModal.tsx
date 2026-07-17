@@ -174,10 +174,10 @@ export default function OnboardingModal({ tier, onClose }: OnboardingModalProps)
 
   const tier2Steps: OnboardingStep[] = [
     {
-      title: 'Welcome to Studiva Digital',
+      title: 'Welcome to Rekah',
       content: (
         <p className="text-textdark">
-          Selamat bergabung di Studiva Digital! Akses ribuan panduan, ikuti kursus self-paced, dan
+          Selamat bergabung di Rekah! Akses ribuan panduan, ikuti kursus self-paced, dan
           konsultasi dengan psikolog kapan saja.
         </p>
       ),
@@ -258,7 +258,7 @@ export default function OnboardingModal({ tier, onClose }: OnboardingModalProps)
       content: (
         <div>
           <p className="text-textdark">
-            Studiva Digital belum memiliki kursus/forum berjalan saat ini, namun Anda dapat
+            Rekah belum memiliki kursus/forum berjalan saat ini, namun Anda dapat
             langsung konsultasi 1-on-1 dengan psikolog kami.
           </p>
           <button

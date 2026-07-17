@@ -13,7 +13,7 @@ const STATUS_ORDER: Record<ThreadStatus, number> = {
 };
 
 const STATUS_BADGE_CLS: Record<ThreadStatus, string> = {
-  menunggu_balasan: 'bg-amber-100 text-amber-700',
+  menunggu_balasan: 'bg-mawar text-rekah-tua',
   dibalas: 'bg-stv-green-tint text-stv-green',
   selesai: 'bg-stv-border text-stv-muted',
 };
@@ -91,7 +91,7 @@ export default function PartnerInboxPage() {
           <Inbox className="h-4 w-4 text-stv-muted" strokeWidth={2} />
           <h2 className="font-baloo text-[16px] font-bold text-stv-navy">Antrian Thread</h2>
           {pendingCount > 0 && (
-            <span className="ml-auto rounded-full bg-amber-100 px-2.5 py-0.5 text-[12px] font-bold text-amber-700">
+            <span className="ml-auto rounded-full bg-mawar px-2.5 py-0.5 text-[12px] font-bold text-rekah-tua">
               {pendingCount}
             </span>
           )}
@@ -110,8 +110,8 @@ export default function PartnerInboxPage() {
                   <button
                     type="button"
                     onClick={() => setSelectedId(thread.id)}
-                    className={`w-full px-4 py-3 text-left transition hover:bg-amber-50 ${
-                      isSelected ? 'bg-amber-50' : ''
+                    className={`w-full px-4 py-3 text-left transition hover:bg-fajar ${
+                      isSelected ? 'bg-fajar' : ''
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -121,7 +121,7 @@ export default function PartnerInboxPage() {
                             {thread.childName}
                           </p>
                           {thread.status === 'menunggu_balasan' && (
-                            <span className="h-2 w-2 shrink-0 rounded-full bg-amber-500" />
+                            <span className="h-2 w-2 shrink-0 rounded-full bg-madu" />
                           )}
                         </div>
                         <p className="text-[12px] text-stv-muted">{thread.parentName}</p>

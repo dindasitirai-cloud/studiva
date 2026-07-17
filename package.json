@@ -1,9 +1,14 @@
 {
-  "name": "studiva-website",
+  "name": "studiva-monorepo",
   "private": true,
-  "description": "Monorepo root - delegates build/start to backend/ for Railway deployment. The actual app lives in frontend/ and backend/.",
+  "description": "Studiva monorepo — apps/sekolah (Sekolah Studiva) and apps/digital (Studiva Digital). Backend at backend/ is not a workspace package.",
   "scripts": {
-    "build": "cd backend && npm install && npm run build",
-    "start": "cd backend && npm start"
-  }
+    "dev:sekolah": "pnpm --filter sekolah start",
+    "dev:digital": "pnpm --filter digital start",
+    "build:sekolah": "pnpm --filter sekolah build",
+    "build:digital": "pnpm --filter digital build",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "packageManager": "pnpm@11.13.1"
 }

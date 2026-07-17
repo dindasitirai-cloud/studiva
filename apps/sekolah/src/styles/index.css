@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Nunito', 'Segoe UI', Roboto, Arial, sans-serif;
+    line-height: 1.7;
+    color: #33415c;
+    background-color: #fff8e7;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: 'Poppins', 'Nunito', sans-serif;
+  }
+
+  /* Visible keyboard focus ring everywhere, including custom button/card components. */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 3px solid #5dade2;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex min-h-[48px] items-center justify-center rounded-full bg-gold px-7 py-3 font-bold text-navy shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg hover:bg-[#FFC700];
+  }
+
+  .btn-secondary {
+    @apply inline-flex min-h-[48px] items-center justify-center rounded-full bg-skyblue px-7 py-3 font-bold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg hover:bg-[#4A9BD1];
+  }
+
+  .btn-outline {
+    @apply inline-flex min-h-[48px] items-center justify-center rounded-full border-2 border-navy px-7 py-3 font-bold text-navy transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 hover:bg-navy hover:text-white;
+  }
+
+  /* Card lift-on-hover used on landing page program/feature/testimonial cards.
+     Scoped as a utility rather than baked into the shared Card component, since
+     not every Card usage across the app (dashboards, admin lists) wants a lift. */
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-xl;
+  }
+
+  /* CSS-grid accordion trick: animating 0fr -> 1fr is smoother and more
+     reliable across content lengths than animating max-height. */
+  .accordion-rows {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease;
+    overflow: hidden;
+  }
+
+  .accordion-rows.is-open {
+    grid-template-rows: 1fr;
+  }
+
+  .accordion-rows > * {
+    min-height: 0;
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(32px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ================================================================
+   Jurnal Perkembangan — 3D Book
+   ================================================================ */
+
+.jp-scene {
+  perspective: 2200px;
+  overflow: visible;
+  display: flex;
+  justify-content: center;
+}
+
+.jp-book3d {
+  --jp-page-w: 430px;
+  --jp-page-h: 560px;
+  position: relative;
+  width: var(--jp-page-w);
+  height: var(--jp-page-h);
+  transform-style: preserve-3d;
+  transition: transform 1.2s cubic-bezier(.35,.1,.25,1);
+  transform: translateX(0);
+}
+
+.jp-book3d.open {
+  transform: translateX(calc(var(--jp-page-w) / 2));
+}
+
+.jp-flip {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform 1.2s cubic-bezier(.35,.1,.25,1);
+  z-index: 5;
+  transform: rotateY(0deg);
+}
+
+.jp-book3d.open .jp-flip {
+  transform: rotateY(-180deg);
+}
+
+.jp-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  border-radius: 4px 14px 14px 4px;
+}
+
+.jp-left-face {
+  transform: rotateY(180deg);
+  border-radius: 14px 4px 4px 14px;
+}
+
+.jp-paper {
+  background-color: #eef1f8;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(90,105,150,.10) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, rgba(90,105,150,.07) 0 1px, transparent 1px 26px);
+}
+
+.jp-washi-pink {
+  background: repeating-linear-gradient(45deg, #f6bdd1 0 8px, #fde3ee 8px 16px);
+}
+
+.jp-washi-yellow {
+  background: repeating-linear-gradient(45deg, #f7d98b 0 8px, #fdf1cf 8px 16px);
+}
+
+@keyframes jpBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+.jp-bounce {
+  animation: jpBounce 2s ease-in-out infinite;
+}
+
+@keyframes jpFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.jp-fade-in {
+  animation: jpFadeIn 0.35s ease both;
+}
+
+@keyframes jpConfettiFly {
+  0%   { opacity: 1; transform: translateY(0) scale(0.6); }
+  100% { opacity: 0; transform: translateY(-90px) scale(1.25); }
+}
+.jp-confetti {
+  position: fixed;
+  pointer-events: none;
+  font-size: 20px;
+  z-index: 70;
+  animation: jpConfettiFly 1s ease-out forwards;
+}
+
+.jp-div-tab {
+  width: 34px;
+  padding: 5px 4px 5px 8px;
+  border: none;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  color: #5a4f42;
+  text-align: left;
+  box-shadow: 2px 2px 5px rgba(60,60,90,.18);
+  transition: width .2s, font-size .2s;
+}
+.jp-div-tab:hover { width: 42px; }
+.jp-div-tab.active {
+  width: 48px;
+  font-size: 10.5px;
+  color: #fff;
+  box-shadow: 3px 3px 8px rgba(60,60,90,.3);
+}
+.jp-div-tab:focus-visible { outline: 3px solid #f2c14e; }
+
+@media (max-width: 980px) {
+  .jp-book3d {
+    --jp-page-w: min(78vw, 380px);
+    --jp-page-h: 520px;
+  }
+}
+
+@media (max-width: 700px) {
+  .jp-book3d {
+    --jp-page-w: 76vw;
+    --jp-page-h: 480px;
+  }
+  .jp-book3d.open {
+    transform: translateX(0);
+  }
+  .jp-left-face {
+    display: none !important;
+  }
+}

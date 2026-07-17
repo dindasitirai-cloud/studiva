@@ -19,4 +19,5 @@ __exportStar(require("./ageBands"), exports);
 __exportStar(require("./activityModules"), exports);
 __exportStar(require("./weeklyPlanTemplates"), exports);
 __exportStar(require("./profiles"), exports);
+__exportStar(require("./planComposer"), exports);
 //# sourceMappingURL=index.js.map

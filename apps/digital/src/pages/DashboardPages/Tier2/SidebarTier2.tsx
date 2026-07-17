@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  Home, Baby, HeartHandshake, CreditCard, Settings, LogOut, X,
+  Home, Baby, HeartHandshake, CreditCard, Settings, LogOut, X, CalendarDays,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import LogoRekah from '../../../components/LogoRekah';
@@ -9,9 +9,9 @@ import Kelopak from '../../../components/Kelopak';
 
 const navItems = [
   { to: '/dashboard/tier2', label: 'Beranda', icon: Home, end: true },
+  { to: '/dashboard/tier2/rencana', label: 'Rencana Pekan Ini', icon: CalendarDays },
   { to: '/dashboard/tier2/profil-anak', label: 'Profil Anak', icon: Baby },
   { to: '/dashboard/tier2/partner-orang-tua', label: 'Partner Orang Tua', icon: HeartHandshake },
-  // TODO: tambahkan Rencana Pekan Ini setelah build 3
   // PARKIR: aktifkan Jurnal Perkembangan lagi saat build 4
 ];
 

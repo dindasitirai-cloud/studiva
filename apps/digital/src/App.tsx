@@ -6,6 +6,7 @@ import { LearningStrategiesProvider } from './context/LearningStrategiesContext'
 import { ToastProvider } from './components/ToastProvider';
 import { FullscreenNotificationProvider } from './components/FullscreenNotificationProvider';
 import { RekahProfileProvider } from './context/RekahProfileContext';
+import { RekahPlanProvider } from './context/RekahPlanContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PrivateRoute, { AdminRoute, ParentRoute } from './components/PrivateRoute';
@@ -37,6 +38,7 @@ import SubscriptionTier2 from './pages/DashboardPages/Tier2/SubscriptionTier2';
 import { AudioPlayerProvider } from './context/AudioPlayerContext';
 import { KnowledgeLibraryProvider } from './context/KnowledgeLibraryContext';
 import PartnerOrangTuaPage from './features/partner-orang-tua/parent/PartnerOrangTuaPage';
+import RencanaPage from './pages/DashboardPages/Tier2/RencanaPage';
 
 // Admin shell
 import AdminShell from './pages/AdminPages/AdminShell';
@@ -91,6 +93,7 @@ export default function App() {
         <FullscreenNotificationProvider>
         <DashboardTier2Provider>
         <RekahProfileProvider>
+        <RekahPlanProvider>
         <Layout>
           <Routes>
             {/* Homepage = Rekah landing */}
@@ -139,7 +142,7 @@ export default function App() {
               <Route path="profil-anak" element={<ProfilAnakTier2 />} />
               <Route path="subscription" element={<SubscriptionTier2 />} />
               <Route path="partner-orang-tua" element={<PartnerOrangTuaPage tierContext="tier2" />} />
-              {/* TODO: tambahkan Akar Keluarga, Rencana Pekan Ini setelah build 2 */}
+              <Route path="rencana" element={<RencanaPage />} />
               {/* PARKIR: knowledge, courses, strategies, community, konsultasi, jurnal — build 4 */}
             </Route>
 
@@ -166,6 +169,7 @@ export default function App() {
             <Route path="/dashboard/parent" element={<Navigate to="/dashboard/tier2" replace />} />
           </Routes>
         </Layout>
+        </RekahPlanProvider>
         </RekahProfileProvider>
         </DashboardTier2Provider>
         </FullscreenNotificationProvider>

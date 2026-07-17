@@ -15,10 +15,10 @@ const NOTIF_ICON: Record<AppNotification['kind'], typeof MessageSquare> = {
 
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard/tier2': 'Beranda',
+  '/dashboard/tier2/rencana': 'Rencana Pekan Ini',
   '/dashboard/tier2/profil-anak': 'Profil Anak',
   '/dashboard/tier2/subscription': 'Langganan',
   '/dashboard/tier2/partner-orang-tua': 'Partner Orang Tua',
-  // TODO: tambahkan Akar Keluarga & Rencana Pekan Ini (build 2)
 };
 
 // Lives inside <DashboardTier2Provider> (rendered as a child below), so it

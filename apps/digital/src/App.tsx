@@ -70,6 +70,7 @@ import TrackerKontenAdmin from './pages/AdminPages/TrackerKonten';
 import PartnerOrangTuaPage from './features/partner-orang-tua/parent/PartnerOrangTuaPage';
 import PartnerInboxPage from './features/partner-orang-tua/admin/PartnerInboxPage';
 import JurnalPerkembanganPage from './features/jurnal-perkembangan/JurnalPerkembanganPage';
+import RekahLandingPage from './features/rekah/RekahLandingPage';
 
 const CONSULTATION_UPGRADE_MESSAGE =
   'Anda perlu upgrade ke Tier 2 untuk melakukan booking konsultasi. Silakan pilih plan yang sesuai untuk mulai berkonsultasi.';
@@ -90,12 +91,14 @@ function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const isMemberDashboard = location.pathname.startsWith('/dashboard/tier2');
   const isAdminShell = ADMIN_SHELL_PATHS.some(p => location.pathname === p || location.pathname.startsWith(`${p}/`));
+  // Rekah landing has its own nav + footer
+  const isRekah = location.pathname === '/rekah';
 
   return (
     <div className="flex min-h-screen flex-col">
-      {!isMemberDashboard && !isAdminShell && <Navbar />}
+      {!isMemberDashboard && !isAdminShell && !isRekah && <Navbar />}
       <main className="flex-1">{children}</main>
-      <Footer />
+      {!isRekah && <Footer />}
     </div>
   );
 }
@@ -112,7 +115,11 @@ export default function App() {
         <DashboardTier2Provider>
         <Layout>
           <Routes>
+            {/* Rekah — standalone brand landing, no Studiva chrome */}
+            <Route path="/rekah" element={<RekahLandingPage />} />
+
             {/* Public pages */}
+            {/* TODO: keputusan Raisha — jadikan /rekah sebagai homepage saat go-live */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/studiva-digital" element={<StudivaDigitalPage />} />
             <Route path="/about" element={<AboutPage />} />

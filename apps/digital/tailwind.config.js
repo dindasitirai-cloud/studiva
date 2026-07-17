@@ -4,6 +4,17 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Rekah brand tokens — Fase 0 concierge landing
+        rekah:        '#E0526B',
+        'rekah-tua':  '#B93A52',
+        mawar:        '#F7C9CE',
+        fajar:        '#FBEDEA',
+        kanvas:       '#FDF8F5',
+        daun:         '#4E9C6E',
+        pucuk:        '#E3F1E4',
+        madu:         '#F6B860',
+        pekat:        '#43272E',
+
         navy: '#003366',
         gold: '#FFD700',
         skyblue: '#5DADE2',
@@ -47,6 +58,11 @@ module.exports = {
         'stv-green-tint': '#E7F7EF',
       },
       fontFamily: {
+        // Rekah typefaces (loaded per-route in RekahLandingPage)
+        bricolage: ["'Bricolage Grotesque'", 'system-ui', 'sans-serif'],
+        jakarta:   ["'Plus Jakarta Sans'", 'system-ui', 'sans-serif'],
+        fraunces:  ["'Fraunces'", 'Georgia', 'serif'],
+
         sans: ['Nunito', 'Segoe UI', 'Roboto', 'Arial', 'sans-serif'],
         display: ['Poppins', 'Nunito', 'Segoe UI', 'sans-serif'],
         baloo: ["'Baloo 2'", 'cursive'],
@@ -79,8 +95,13 @@ module.exports = {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(14px)' },
         },
+        rekahBloomIn: {
+          '0%':   { opacity: '0', transform: 'scale(0.92)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
       },
       animation: {
+        'rekah-bloom': 'rekahBloomIn 220ms ease-out both',
         floaty: 'floaty 6s ease-in-out infinite',
         'fade-in-up': 'fadeInUp 0.6s ease-out both',
         'stv-float': 'stvFloat 9s ease-in-out infinite',
@@ -88,5 +109,6 @@ module.exports = {
       },
     },
   },
+  safelist: ['animate-rekah-bloom'],
   plugins: [],
 };

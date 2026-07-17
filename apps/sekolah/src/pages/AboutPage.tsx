@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import FitriProfileCard from '../components/FitriProfileCard';
 
 export default function AboutPage() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
@@ -51,9 +50,6 @@ export default function AboutPage() {
       <section className="px-4 py-16 md:px-8">
         <div className="mx-auto max-w-3xl">
           <h2 className="text-h2 font-bold text-navy">Tim Kami</h2>
-          <div className="mt-8">
-            <FitriProfileCard />
-          </div>
           <p className="mt-8 text-textdark">
             Psikolog Fitri didukung oleh tim guru bersertifikat, terapis speech &amp; occupational
             therapy, serta konselor behavioral yang berdedikasi penuh pada perkembangan anak.

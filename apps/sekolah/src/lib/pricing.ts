@@ -1,11 +1,11 @@
-import { Plan, Tier } from '../types';
+// Minimal pricing shim for apps/sekolah.
+// Full Stripe subscription pricing is only in apps/digital.
+// This file only exists to satisfy legacy imports (AdminContext mock data).
+// TODO: remove PRICING/TIER_LABELS from AdminContext once mock data is dropped.
+export { formatIDR } from '@studiva/shared';
+import type { Tier, Plan } from '../types';
 
-interface PlanInfo {
-  amount: number;
-  label: string;
-  savingsPercent: number;
-}
-
+interface PlanInfo { amount: number; label: string; savingsPercent: number; }
 export const PRICING: Record<Tier, Record<Plan, PlanInfo>> = {
   tier1: {
     monthly: { amount: 500_000, label: 'Bulanan', savingsPercent: 0 },
@@ -18,16 +18,7 @@ export const PRICING: Record<Tier, Record<Plan, PlanInfo>> = {
     yearly: { amount: 650_000, label: 'Tahunan', savingsPercent: 30 },
   },
 };
-
 export const PLAN_ORDER: Plan[] = ['monthly', 'quarterly', 'yearly'];
-
-export function formatIDR(amount: number): string {
-  if (amount === 0) return 'Rp0';
-  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(
-    amount
-  );
-}
-
 export const TIER_LABELS: Record<Tier, string> = {
   tier1: 'Tier 1: Sekolah Studiva',
   tier2: 'Tier 2: Studiva Digital',

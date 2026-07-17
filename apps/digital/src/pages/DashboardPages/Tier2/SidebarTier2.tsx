@@ -10,8 +10,8 @@ import Kelopak from '../../../components/Kelopak';
 const navItems = [
   { to: '/dashboard/tier2', label: 'Beranda', icon: Home, end: true },
   { to: '/dashboard/tier2/profil-anak', label: 'Profil Anak', icon: Baby },
-  // TODO: tambahkan Akar Keluarga & Rencana Pekan Ini setelah build 2
   { to: '/dashboard/tier2/partner-orang-tua', label: 'Partner Orang Tua', icon: HeartHandshake },
+  // TODO: tambahkan Rencana Pekan Ini setelah build 3
   // PARKIR: aktifkan Jurnal Perkembangan lagi saat build 4
 ];
 

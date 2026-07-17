@@ -5,6 +5,7 @@ import { DashboardTier2Provider } from './context/DashboardTier2Context';
 import { LearningStrategiesProvider } from './context/LearningStrategiesContext';
 import { ToastProvider } from './components/ToastProvider';
 import { FullscreenNotificationProvider } from './components/FullscreenNotificationProvider';
+import { RekahProfileProvider } from './context/RekahProfileContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PrivateRoute, { AdminRoute, ParentRoute } from './components/PrivateRoute';
@@ -89,6 +90,7 @@ export default function App() {
         <LearningStrategiesProvider>
         <FullscreenNotificationProvider>
         <DashboardTier2Provider>
+        <RekahProfileProvider>
         <Layout>
           <Routes>
             {/* Homepage = Rekah landing */}
@@ -164,6 +166,7 @@ export default function App() {
             <Route path="/dashboard/parent" element={<Navigate to="/dashboard/tier2" replace />} />
           </Routes>
         </Layout>
+        </RekahProfileProvider>
         </DashboardTier2Provider>
         </FullscreenNotificationProvider>
         </LearningStrategiesProvider>

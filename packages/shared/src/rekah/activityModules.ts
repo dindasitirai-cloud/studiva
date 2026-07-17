@@ -1,0 +1,116 @@
+import type { NilaiId } from './values';
+import type { AgeBandId } from './ageBands';
+
+export type ActivityModuleId = string;
+
+export type DurasiMenit = 5 | 10 | 15 | 20 | 30;
+
+export interface ActivityModule {
+  id: ActivityModuleId;
+  judul: string;
+  deskripsi: string;
+  ageBands: AgeBandId[];
+  nilaiUtama: NilaiId;
+  nilaiPendukung?: NilaiId[];
+  durasiMenit: DurasiMenit;
+  bahan?: string[];
+  langkah: string[];
+  tipAyahBunda?: string;
+  status: 'draft' | 'review' | 'published';
+}
+
+export const ACTIVITY_MODULES: ActivityModule[] = [
+  {
+    id: 'am-001',
+    judul: 'Waktu Bebas di Lantai',
+    deskripsi: 'Beri bayi ruang aman untuk menjelajahi dan bergerak tanpa diarahkan — membangun otonomi dan rasa ingin tahu alami.',
+    ageBands: ['0-6', '7-12'],
+    nilaiUtama: 'mandiri',
+    nilaiPendukung: ['percaya-diri'],
+    durasiMenit: 15,
+    bahan: ['Matras bersih', 'Beberapa mainan kontras hitam-putih atau warna cerah'],
+    langkah: [
+      'Pastikan area bermain aman dan bebas dari benda berbahaya.',
+      'Letakkan bayi tengkurap atau telentang di matras.',
+      'Tempatkan satu atau dua mainan dalam jangkauan tapi tidak langsung di tangan.',
+      'Duduk di dekat tapi jangan langsung mengarahkan. Beri bayi waktu untuk mengeksplorasi sendiri.',
+      'Komentari apa yang bayi lakukan dengan nada hangat: "Kamu memegang mainannya!"',
+    ],
+    tipAyahBunda: 'Tahan dorongan untuk membantu segera — jedah kecil memberi bayi kesempatan membangun rasa mampu.',
+    status: 'published',
+  },
+  {
+    id: 'am-002',
+    judul: 'Menceritakan Gambar Bersama',
+    deskripsi: 'Duduk bersama dan ceritakan gambar-gambar sederhana untuk membangun kosakata dan koneksi emosional.',
+    ageBands: ['7-12', '13-18'],
+    nilaiUtama: 'komunikatif',
+    nilaiPendukung: ['empatik'],
+    durasiMenit: 10,
+    bahan: ['Buku bergambar dengan ilustrasi sederhana', 'Waktu tenang bersama'],
+    langkah: [
+      'Pilih waktu tenang — setelah makan atau sebelum tidur bekerja dengan baik.',
+      'Duduk bersama bayi di pangkuan atau berdampingan.',
+      'Tunjuk gambar dan namakan apa yang ada: "Ini anjing. Anjing bilang guk-guk."',
+      'Beri jeda dan perhatikan ke mana bayi melihat atau menunjuk.',
+      'Ikuti minat bayi — tidak apa-apa kalau tidak mengikuti urutan halaman.',
+    ],
+    tipAyahBunda: 'Kualitas lebih penting dari kuantitas. Lima menit yang terfokus lebih baik dari dua puluh menit yang terburu-buru.',
+    status: 'published',
+  },
+  {
+    id: 'am-003',
+    judul: 'Permainan Imitasi Wajah',
+    deskripsi: 'Bayi belajar membaca emosi melalui wajah pengasuh — dasar dari empati dan koneksi sosial.',
+    ageBands: ['0-6', '7-12'],
+    nilaiUtama: 'empatik',
+    nilaiPendukung: ['sosial'],
+    durasiMenit: 5,
+    langkah: [
+      'Duduk atau berbaring menghadap bayi, berjarak sekitar 30 cm.',
+      'Buat ekspresi wajah yang jelas — senyum lebar, mulut bulat terkejut, dahi berkerut heran.',
+      'Tunggu dan perhatikan respons bayi. Bayi mungkin meniru atau merespons dengan caranya sendiri.',
+      'Ulangi ekspresi yang tampaknya menarik minat bayi.',
+      'Akhiri dengan senyum dan kontak mata yang hangat.',
+    ],
+    tipAyahBunda: 'Tidak ada target yang harus dicapai. Momen koneksi itulah pelajarannya.',
+    status: 'published',
+  },
+  {
+    id: 'am-004',
+    judul: 'Rutinitas Makan yang Tenang',
+    deskripsi: 'Jadikan waktu makan sebagai momen regulasi bersama — bukan pertempuran, tapi latihan mengenali lapar dan kenyang.',
+    ageBands: ['13-18', '19-24'],
+    nilaiUtama: 'regulasi-emosi',
+    nilaiPendukung: ['mandiri'],
+    durasiMenit: 20,
+    langkah: [
+      'Siapkan meja makan yang tenang — matikan TV dan singkirkan gangguan layar.',
+      'Beri anak pilihan sederhana: "Mau mulai nasi dulu atau sayurnya?"',
+      'Namakan sinyal tubuh: "Kamu pegang perut, kamu sudah kenyang ya?"',
+      'Hindari memaksa suapan terakhir — percayai sinyal kenyang anak.',
+      'Akhiri makan dengan kalimat positif apapun hasilnya.',
+    ],
+    tipAyahBunda: 'Anak yang sering dipaksa makan cenderung kehilangan koneksi ke sinyal lapar alami mereka. Tanamkan kepercayaan lebih dari piring kosong.',
+    status: 'draft',
+  },
+  {
+    id: 'am-005',
+    judul: 'Bermain Peran Sederhana',
+    deskripsi: 'Bermain "masak-masakan" atau "dokter-dokteran" membantu anak memproses pengalaman nyata dan mengembangkan imajinasi.',
+    ageBands: ['19-24', '25-36'],
+    nilaiUtama: 'sosial',
+    nilaiPendukung: ['komunikatif', 'empatik'],
+    durasiMenit: 20,
+    bahan: ['Peralatan rumah tangga aman', 'Mainan dokter atau dapur mainan (opsional)', 'Imajinasi!'],
+    langkah: [
+      'Ikuti lead anak — tanya "Kita main apa hari ini?"',
+      'Ambil peran yang anak berikan, jangan merebut kendali cerita.',
+      'Perluas narasi dengan pertanyaan terbuka: "Oh, bonekanya sakit ya? Sakit apa?"',
+      'Beri karakter emosi yang nyata: "Dokternya baik sekali, pasiennya jadi tidak takut."',
+      'Biarkan permainan berakhir secara alami.',
+    ],
+    tipAyahBunda: 'Bermain peran adalah cara anak memproses dunia. Jika anak bermain "marah-marahan", itu normal dan sehat — ikuti dan dukung.',
+    status: 'draft',
+  },
+];

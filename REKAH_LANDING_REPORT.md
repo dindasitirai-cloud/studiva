@@ -26,16 +26,16 @@ Tanggal: 2026-07-17
 
 | # | File | TODO |
 |---|------|------|
-| 1 | `rekahLandingCopy.ts:3` | `REKAH_WA_NUMBER = '62XXXXXXXXXX'` — isi nomor WhatsApp bisnis Rekah |
-| 2 | `rekahLandingCopy.ts:86` | Ganti WhatsApp deep link dengan endpoint backend/form service saat tersedia |
-| 3 | `rekahLandingCopy.ts:94` | Foto & bio final Psikolog Fitri dari Raisha |
-| 4 | `rekahLandingCopy.ts:103` | Konfirmasi copy harga oleh Raisha (sekarang: "gratis untuk peserta terbatas") |
-| 5 | `rekahLandingCopy.ts:120` | Isi URL domain sekolah di footer |
+| 1 | ~~`rekahLandingCopy.ts`~~ | ~~Isi nomor WhatsApp bisnis Rekah~~ — **DONE** `6281211470407` |
+| 2 | `rekahLandingCopy.ts:85` | Ganti WhatsApp deep link dengan endpoint backend/form service saat tersedia |
+| 3 | `rekahLandingCopy.ts:93` | Foto & bio final Psikolog Fitri dari Raisha |
+| 4 | `rekahLandingCopy.ts:102` | Konfirmasi copy harga oleh Raisha (sekarang: "gratis untuk peserta terbatas") |
+| 5 | `rekahLandingCopy.ts:119` | Isi URL domain sekolah di footer |
 | 6 | `LogoRekah.tsx:1` | Ganti dengan logo final |
 | 7 | `RekahLandingPage.tsx` (noindex meta) | Hapus `robots: noindex` saat go-live publik |
-| 8 | `App.tsx:116` | Keputusan Raisha — jadikan `/rekah` sebagai homepage saat go-live |
+| 8 | `App.tsx:118` | Keputusan Raisha — jadikan `/rekah` sebagai homepage saat go-live |
 
-> Seluruh copy wajib review Psikolog Fitri sebelum go-live publik (lihat komentar di `rekahLandingCopy.ts` baris 1).
+> Copy disetujui Psikolog Fitri — 2026-07-17.
 
 ---
 

@@ -1,6 +1,4 @@
-// KONTEN: wajib review Psikolog Fitri sebelum go-live publik
-// TODO: isi nomor WhatsApp bisnis Rekah
-export const REKAH_WA_NUMBER = '62XXXXXXXXXX';
+export const REKAH_WA_NUMBER = '6281211470407';
 
 export const REKAH_COPY = {
   hero: {

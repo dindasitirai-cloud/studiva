@@ -25,6 +25,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/dashboard/tier2/profil-anak': 'Profil Anak',
   '/dashboard/tier2/subscription': 'Langganan',
   '/dashboard/tier2/partner-orang-tua': 'Partner Orang Tua',
+  '/dashboard/tier2/knowledge': 'Panduan Tumbuh Kembang',
 };
 
 // Lives inside <DashboardTier2Provider> (rendered as a child below), so it
@@ -137,7 +138,8 @@ export default function DashboardShellTier2() {
   const location = useLocation();
   const { user } = useAuth();
 
-  const pageTitle = PAGE_TITLES[location.pathname] ?? 'Dashboard';
+  const pageTitle = PAGE_TITLES[location.pathname]
+    ?? (location.pathname.startsWith('/dashboard/tier2/knowledge/') ? 'Panduan Tumbuh Kembang' : 'Dashboard');
 
   return (
     <Tier2Guard>

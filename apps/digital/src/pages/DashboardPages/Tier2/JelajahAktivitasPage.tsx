@@ -1,6 +1,7 @@
 // KONTEN: wajib review Psikolog Fitri sebelum rilis.
 
 import React, { useState, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   ACTIVITY_MODULES,
   NILAI_REKAH,
@@ -10,7 +11,7 @@ import {
   type AgeBandId,
   type NilaiId,
 } from '@studiva/shared';
-import { Search, X, Wrench } from 'lucide-react';
+import { Search, X, Wrench, BookOpen, ChevronRight } from 'lucide-react';
 import { useRekahProfile } from '../../../context/RekahProfileContext';
 import { useRekahPlan } from '../../../context/RekahPlanContext';
 import LangkahKecilCard from '../../../features/rekah-plan/LangkahKecilCard';
@@ -20,6 +21,7 @@ type AlatFilter = 'semua' | 'pakai' | 'tanpa';
 type DurasiFilter = 5 | 10 | 15 | null;
 
 export default function JelajahAktivitasPage() {
+  const navigate = useNavigate();
   const { profile } = useRekahProfile();
   const { plan, setPlan } = useRekahPlan();
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -136,6 +138,22 @@ export default function JelajahAktivitasPage() {
           {feedback}
         </div>
       )}
+
+      {/* ── Panduan Tumbuh Kembang entry card ───────────────────────────── */}
+      <button
+        type="button"
+        onClick={() => navigate('/dashboard/tier2/knowledge')}
+        className="flex w-full items-center gap-4 rounded-[18px] bg-white px-5 py-4 text-left shadow-[0_2px_16px_rgba(78,156,110,0.09)] transition hover:-translate-y-0.5 hover:shadow-[0_4px_24px_rgba(78,156,110,0.15)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-daun"
+      >
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[13px] bg-pucuk">
+          <BookOpen className="h-5 w-5 text-daun" strokeWidth={1.8} aria-hidden />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="font-bricolage text-[14px] font-bold text-pekat">Panduan Tumbuh Kembang</p>
+          <p className="mt-0.5 text-[12px] text-pekat/50">Jelajahi per usia & domain ilmu — berbasis riset</p>
+        </div>
+        <ChevronRight className="h-4 w-4 shrink-0 text-daun/50" strokeWidth={2} aria-hidden />
+      </button>
 
       {/* ── Search ──────────────────────────────────────────────────────── */}
       <div className="relative">

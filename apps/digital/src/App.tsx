@@ -46,6 +46,9 @@ import JurnalPage from './pages/DashboardPages/Tier2/JurnalPage';
 import PengaturanPage from './pages/DashboardPages/Tier2/PengaturanPage';
 import JurnalPerkembanganPage from './features/jurnal-perkembangan/JurnalPerkembanganPage';
 import JelajahAktivitasPage from './pages/DashboardPages/Tier2/JelajahAktivitasPage';
+import KnowledgeGallery from './pages/DashboardPages/Tier2/KnowledgeGallery';
+import KnowledgeCardSummary from './pages/DashboardPages/Tier2/KnowledgeCardSummary';
+import KnowledgeCardScientific from './pages/DashboardPages/Tier2/KnowledgeCardScientific';
 
 // Admin shell
 import AdminShell from './pages/AdminPages/AdminShell';
@@ -153,6 +156,9 @@ export default function App() {
               <Route path="partner-orang-tua" element={<PartnerOrangTuaPage tierContext="tier2" />} />
               <Route path="rencana" element={<RencanaPage />} />
               <Route path="jelajah" element={<JelajahAktivitasPage />} />
+              <Route path="knowledge" element={<KnowledgeGallery />} />
+              <Route path="knowledge/:cardId" element={<KnowledgeCardSummary />} />
+              <Route path="knowledge/:cardId/ilmiah" element={<KnowledgeCardScientific />} />
               <Route path="jejak-mekar" element={<JejakMekarPage />} />
               <Route path="jurnal" element={<JurnalPage />} />
               <Route path="jurnal-perkembangan" element={<JurnalPerkembanganPage />} />

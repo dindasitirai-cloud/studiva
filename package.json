@@ -9,7 +9,8 @@
     "build:sekolah": "pnpm build:shared && pnpm --filter sekolah build",
     "build:digital": "pnpm build:shared && pnpm --filter digital build",
     "build": "pnpm build:shared && pnpm --filter sekolah --filter digital build",
-    "typecheck": "pnpm -r typecheck"
+    "typecheck": "pnpm -r typecheck",
+    "review-pack": "npx tsx scripts/generate-review-pack.ts"
   },
   "packageManager": "pnpm@11.13.1"
 }

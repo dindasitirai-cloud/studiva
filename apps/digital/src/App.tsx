@@ -7,6 +7,8 @@ import { ToastProvider } from './components/ToastProvider';
 import { FullscreenNotificationProvider } from './components/FullscreenNotificationProvider';
 import { RekahProfileProvider } from './context/RekahProfileContext';
 import { RekahPlanProvider } from './context/RekahPlanContext';
+import { RekahRefleksiProvider } from './context/RekahRefleksiContext';
+import { JurnalRekahProvider } from './context/JurnalRekahContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PrivateRoute, { AdminRoute, ParentRoute } from './components/PrivateRoute';
@@ -39,6 +41,11 @@ import { AudioPlayerProvider } from './context/AudioPlayerContext';
 import { KnowledgeLibraryProvider } from './context/KnowledgeLibraryContext';
 import PartnerOrangTuaPage from './features/partner-orang-tua/parent/PartnerOrangTuaPage';
 import RencanaPage from './pages/DashboardPages/Tier2/RencanaPage';
+import JejakMekarPage from './pages/DashboardPages/Tier2/JejakMekarPage';
+import JurnalPage from './pages/DashboardPages/Tier2/JurnalPage';
+import PengaturanPage from './pages/DashboardPages/Tier2/PengaturanPage';
+import JurnalPerkembanganPage from './features/jurnal-perkembangan/JurnalPerkembanganPage';
+import JelajahAktivitasPage from './pages/DashboardPages/Tier2/JelajahAktivitasPage';
 
 // Admin shell
 import AdminShell from './pages/AdminPages/AdminShell';
@@ -94,6 +101,8 @@ export default function App() {
         <DashboardTier2Provider>
         <RekahProfileProvider>
         <RekahPlanProvider>
+        <RekahRefleksiProvider>
+        <JurnalRekahProvider>
         <Layout>
           <Routes>
             {/* Homepage = Rekah landing */}
@@ -143,7 +152,11 @@ export default function App() {
               <Route path="subscription" element={<SubscriptionTier2 />} />
               <Route path="partner-orang-tua" element={<PartnerOrangTuaPage tierContext="tier2" />} />
               <Route path="rencana" element={<RencanaPage />} />
-              {/* PARKIR: knowledge, courses, strategies, community, konsultasi, jurnal — build 4 */}
+              <Route path="jelajah" element={<JelajahAktivitasPage />} />
+              <Route path="jejak-mekar" element={<JejakMekarPage />} />
+              <Route path="jurnal" element={<JurnalPage />} />
+              <Route path="jurnal-perkembangan" element={<JurnalPerkembanganPage />} />
+              <Route path="pengaturan" element={<PengaturanPage />} />
             </Route>
 
             {/* Admin Digital — CMS, konten, manajemen langganan */}
@@ -169,6 +182,8 @@ export default function App() {
             <Route path="/dashboard/parent" element={<Navigate to="/dashboard/tier2" replace />} />
           </Routes>
         </Layout>
+        </JurnalRekahProvider>
+        </RekahRefleksiProvider>
         </RekahPlanProvider>
         </RekahProfileProvider>
         </DashboardTier2Provider>

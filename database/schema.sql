@@ -514,3 +514,94 @@ CREATE TABLE IF NOT EXISTS cms_review_log (
   note        TEXT,
   created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- Rekah Digital — Tabel Persistensi (Build 5)
+-- Semua tabel ber-kolom user_id → scoped per akun (MVP: 1 profil per user).
+-- TODO: multi-anak pasca-MVP — tambah child_id FK.
+-- ═══════════════════════════════════════════════════════════════════════════
+
+-- 1. Profil Rekah (1 baris per user)
+CREATE TABLE IF NOT EXISTS rekah_profiles (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id      INTEGER NOT NULL UNIQUE,
+  profile_json TEXT NOT NULL,
+  current_week INTEGER NOT NULL DEFAULT 1,
+  musim_ke     INTEGER NOT NULL DEFAULT 1,
+  created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 2. Langkah selesai per pekan
+CREATE TABLE IF NOT EXISTS rekah_completions (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id      INTEGER NOT NULL,
+  module_id    TEXT NOT NULL,
+  selesai_pada DATETIME NOT NULL,
+  minggu_ke    INTEGER NOT NULL,
+  musim_ke     INTEGER NOT NULL DEFAULT 1,
+  created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(user_id, module_id, minggu_ke, musim_ke),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_rekah_completions_user ON rekah_completions(user_id, musim_ke, minggu_ke);
+
+-- 3. Refleksi per langkah (CeritaHariIni)
+CREATE TABLE IF NOT EXISTS rekah_reflections (
+  id               TEXT PRIMARY KEY,
+  user_id          INTEGER NOT NULL,
+  module_id        TEXT NOT NULL,
+  tanggal          TEXT NOT NULL,
+  respon_anak      TEXT NOT NULL CHECK (respon_anak IN ('seru','menantang','belum-tertarik')),
+  mood_caregiver   TEXT CHECK (mood_caregiver IN ('lega','biasa','lelah')),
+  catatan          TEXT,
+  nilai_utama      TEXT,
+  simpan_ke_jurnal INTEGER NOT NULL DEFAULT 0,
+  musim_ke         INTEGER NOT NULL DEFAULT 1,
+  created_at       DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_rekah_reflections_user ON rekah_reflections(user_id, musim_ke);
+
+-- 4. Arsip musim selesai
+CREATE TABLE IF NOT EXISTS rekah_seasons (
+  id             INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id        INTEGER NOT NULL,
+  musim_ke       INTEGER NOT NULL,
+  nilai_fokus    TEXT NOT NULL,
+  mulai          TEXT NOT NULL,
+  selesai        TEXT NOT NULL,
+  total_langkah  INTEGER NOT NULL DEFAULT 0,
+  refleksi_musim TEXT,
+  created_at     DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 5. Jurnal privat per user
+CREATE TABLE IF NOT EXISTS rekah_journal_entries (
+  id         TEXT PRIMARY KEY,
+  user_id    INTEGER NOT NULL,
+  judul      TEXT NOT NULL,
+  catatan    TEXT NOT NULL,
+  tanggal    TEXT NOT NULL,
+  nilai_id   TEXT,
+  tag        TEXT CHECK (tag IN ('refleksi','penutup-musim','manual')),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_rekah_journal_user ON rekah_journal_entries(user_id);
+
+-- 6. Rencana pekan yang dimodifikasi user (Ganti/Tambah langkah)
+CREATE TABLE IF NOT EXISTS rekah_week_plans (
+  id          TEXT PRIMARY KEY,
+  user_id     INTEGER NOT NULL,
+  musim_ke    INTEGER NOT NULL DEFAULT 1,
+  minggu_ke   INTEGER NOT NULL DEFAULT 1,
+  module_ids  TEXT NOT NULL, -- JSON array of moduleId strings, ordered
+  created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (user_id, musim_ke, minggu_ke),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_rekah_week_plans_user ON rekah_week_plans(user_id, musim_ke, minggu_ke);

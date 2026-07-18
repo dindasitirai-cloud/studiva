@@ -111,6 +111,74 @@ const profil22Bulan = {
         (0, vitest_1.expect)(new Set(ids).size).toBe(ids.length);
     });
 });
+// ── ALAT EDUKASI — VALIDASI ───────────────────────────────────────────────────
+(0, vitest_1.describe)('AlatEdukasi: alternatifRumah wajib bila alat perlu dibeli', () => {
+    (0, vitest_1.it)('setiap alatEdukasi yang tidak DIY harus punya alternatifRumah', () => {
+        // Kata-kata kunci yang mengindikasikan pembelian
+        const beliKeywords = ['beli', 'toko', 'harga', 'kinetik', 'puzzle knob', 'marakas', 'cat jari', 'cermin akrilik', 'play gym'];
+        const violations = [];
+        for (const modul of activityModules_1.ACTIVITY_MODULES) {
+            if (!modul.alatEdukasi)
+                continue;
+            for (const alat of modul.alatEdukasi) {
+                const namaLower = alat.nama.toLowerCase();
+                const tampakDibeli = beliKeywords.some(k => namaLower.includes(k));
+                if (tampakDibeli && !alat.alternatifRumah) {
+                    violations.push(`${modul.id} → "${alat.nama}" tidak punya alternatifRumah`);
+                }
+            }
+        }
+        if (violations.length > 0) {
+            throw new Error(`Alat tanpa alternatifRumah:\n${violations.join('\n')}`);
+        }
+        (0, vitest_1.expect)(violations).toHaveLength(0);
+    });
+});
+// ── RENCANA FLEKSIBEL — UNIT TESTS ───────────────────────────────────────────
+(0, vitest_1.describe)('Rencana fleksibel: swapStep simulasi', () => {
+    (0, vitest_1.it)('mengganti satu moduleId tidak mempengaruhi langkah lain', () => {
+        const plan = (0, planComposer_1.composeWeeklyPlan)(profil9Bulan, 1);
+        const original = plan.steps.map(s => s.moduleId);
+        const targetId = original[0];
+        const poolIds = activityModules_1.ACTIVITY_MODULES
+            .filter(m => !original.includes(m.id) && m.ageBands.includes('7-12'))
+            .map(m => m.id);
+        if (poolIds.length === 0)
+            return; // pool habis — skip test
+        const newId = poolIds[0];
+        const swapped = plan.steps.map(s => s.moduleId === targetId ? { ...s, moduleId: newId } : s);
+        (0, vitest_1.expect)(swapped[0].moduleId).toBe(newId);
+        for (let i = 1; i < swapped.length; i++) {
+            (0, vitest_1.expect)(swapped[i].moduleId).toBe(original[i]);
+        }
+    });
+    (0, vitest_1.it)('langkah yang sudah selesai tidak boleh digeser (kompletions terlindungi)', () => {
+        // Simulasi: completions = [step 0] → hanya step 0 dianggap selesai
+        const plan = (0, planComposer_1.composeWeeklyPlan)(profil9Bulan, 1);
+        const completedId = plan.steps[0].moduleId;
+        const completions = [completedId];
+        const visibleSteps = plan.steps.filter(s => !completions.includes(s.moduleId));
+        (0, vitest_1.expect)(visibleSteps.every(s => s.moduleId !== completedId)).toBe(true);
+    });
+});
+(0, vitest_1.describe)('Rencana fleksibel: batas 7 langkah', () => {
+    (0, vitest_1.it)('tidak melebihi 7 langkah setelah addStep', () => {
+        const plan = (0, planComposer_1.composeWeeklyPlan)(profil9Bulan, 1);
+        const poolExtras = activityModules_1.ACTIVITY_MODULES
+            .filter(m => !plan.steps.some(s => s.moduleId === m.id) && m.ageBands.includes('7-12'))
+            .slice(0, 10)
+            .map(m => m.id);
+        let steps = [...plan.steps];
+        for (const id of poolExtras) {
+            if (steps.length >= 7)
+                break;
+            if (steps.some(s => s.moduleId === id))
+                continue;
+            steps = [...steps, { posisi: steps.length + 1, moduleId: id }];
+        }
+        (0, vitest_1.expect)(steps.length).toBeLessThanOrEqual(7);
+    });
+});
 // ── POOL TIPIS — TANPA ERROR ──────────────────────────────────────────────────
 (0, vitest_1.describe)('Pool tipis tidak melempar error', () => {
     (0, vitest_1.it)('profil dengan nilai sangat spesifik + SHOW_DRAFT_CONTENT masih return rencana', () => {

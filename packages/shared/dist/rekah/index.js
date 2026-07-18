@@ -20,4 +20,5 @@ __exportStar(require("./activityModules"), exports);
 __exportStar(require("./weeklyPlanTemplates"), exports);
 __exportStar(require("./profiles"), exports);
 __exportStar(require("./planComposer"), exports);
+__exportStar(require("./reflections"), exports);
 //# sourceMappingURL=index.js.map

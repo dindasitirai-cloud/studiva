@@ -7,8 +7,10 @@ import {
   SOURCES,
   type ActivityModuleId,
 } from '@studiva/shared';
-import { Copy, Check, ChevronDown, ChevronUp, Share2, AlertCircle } from 'lucide-react';
+import { Copy, Check, ChevronDown, ChevronUp, Share2, AlertCircle, Wrench, ArrowRightCircle, Plus } from 'lucide-react';
 import { PLAN_COPY } from './rekahPlanCopy';
+import { JELAJAH_COPY } from './rekahJelajahCopy';
+import CeritaHariIni from './CeritaHariIni';
 
 interface LangkahKecilCardProps {
   moduleId: ActivityModuleId;
@@ -17,6 +19,9 @@ interface LangkahKecilCardProps {
   onSelesai: () => void;
   onBelumPas: () => void;
   isLast: boolean;
+  mode?: 'rencana' | 'jelajah';
+  onJadikanHariIni?: () => void;
+  onTambahkanKePekan?: () => void;
 }
 
 export default function LangkahKecilCard({
@@ -26,11 +31,15 @@ export default function LangkahKecilCard({
   onSelesai,
   onBelumPas,
   isLast,
+  mode = 'rencana',
+  onJadikanHariIni,
+  onTambahkanKePekan,
 }: LangkahKecilCardProps) {
   const modul = ACTIVITY_MODULES.find(m => m.id === moduleId);
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(mode === 'jelajah');
   const [copied, setCopied] = useState(false);
   const [selesai, setSelesai] = useState(false);
+  const [showRefleksi, setShowRefleksi] = useState(false);
   const scriptRef = useRef<HTMLParagraphElement>(null);
 
   if (!modul) return null;
@@ -57,13 +66,17 @@ export default function LangkahKecilCard({
     setTimeout(() => setCopied(false), 2000);
   }
 
-  // ── Tandai selesai ────────────────────────────────────────────────────
+  // ── Tandai selesai → tampilkan Cerita Hari Ini ───────────────────────
   function handleSelesai() {
     setSelesai(true);
-    // Animasi celebrasi singkat sebelum trigger callback
     setTimeout(() => {
-      onSelesai();
+      setShowRefleksi(true);
     }, 700);
+  }
+
+  function handleRefleksiDone() {
+    setShowRefleksi(false);
+    onSelesai();
   }
 
   // ── Share ─────────────────────────────────────────────────────────────
@@ -92,6 +105,7 @@ export default function LangkahKecilCard({
     .filter(Boolean);
 
   return (
+  <>
     <article
       aria-label={`Langkah ${posisi} dari ${totalSteps}: ${modul.judul}`}
       className={`rounded-[20px] bg-white p-5 shadow-[0_4px_20px_rgba(224,82,107,0.08)] transition-all ${
@@ -261,67 +275,129 @@ export default function LangkahKecilCard({
               </p>
             </div>
           )}
+
+          {/* Alat Edukasi */}
+          {modul.alatEdukasi && modul.alatEdukasi.length > 0 && (
+            <div className="rounded-[14px] border border-madu/40 bg-kanvas p-4">
+              <div className="mb-2 flex items-center gap-1.5">
+                <Wrench className="h-3.5 w-3.5 text-madu" strokeWidth={2} aria-hidden />
+                <p className="text-[12px] font-bold uppercase tracking-widest text-madu/80">
+                  {JELAJAH_COPY.alatSectionLabel}
+                </p>
+              </div>
+              <div className="space-y-3">
+                {modul.alatEdukasi.map((alat, i) => (
+                  <div key={i} className="space-y-1">
+                    <p className="text-[13px] font-semibold text-pekat/80">{alat.nama}</p>
+                    {alat.caraPakai && (
+                      <p className="text-[12px] text-pekat/55">
+                        <span className="font-semibold">{JELAJAH_COPY.alatCaraPakaiLabel}:</span> {alat.caraPakai}
+                      </p>
+                    )}
+                    {alat.alternatifRumah && (
+                      <p className="text-[12px] text-daun/80">
+                        <span className="font-semibold">{JELAJAH_COPY.alatAlternatifLabel}:</span> {alat.alternatifRumah}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
       {/* ── Aksi utama ────────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        {/* Tandai selesai */}
-        <button
-          type="button"
-          disabled={selesai}
-          onClick={handleSelesai}
-          aria-label={selesai ? PLAN_COPY.selesaiCelebration : PLAN_COPY.selesaiCTA}
-          className={`relative flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-[12px] px-4 text-[14px] font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah ${
-            selesai
-              ? 'bg-daun/15 text-daun'
-              : 'bg-rekah text-white hover:bg-rekah-tua active:scale-95'
-          }`}
-        >
-          {selesai ? (
-            <>
-              <Check className="h-4 w-4" strokeWidth={2.5} />
-              {PLAN_COPY.selesaiCelebration}
-            </>
-          ) : (
-            PLAN_COPY.selesaiCTA
-          )}
-
-          {/* Bloom animation saat selesai */}
-          {selesai && (
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-0 animate-ping rounded-[12px] bg-madu/30"
-              style={{ animationDuration: '0.6s', animationIterationCount: '1' }}
-            />
-          )}
-        </button>
-
-        {/* Aksi sekunder */}
-        <div className="flex shrink-0 gap-2">
-          {/* Belum pas hari ini */}
-          {!isLast && (
+      {mode === 'jelajah' ? (
+        <div className="flex flex-col gap-2">
+          {onJadikanHariIni && (
             <button
               type="button"
-              disabled={selesai}
-              onClick={onBelumPas}
-              className="flex min-h-[44px] items-center justify-center rounded-[12px] border border-fajar px-3 text-[13px] font-semibold text-pekat/55 transition hover:bg-fajar disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
+              onClick={onJadikanHariIni}
+              aria-label={JELAJAH_COPY.jadikanHariIniAria(modul.judul)}
+              className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-[12px] bg-rekah px-4 text-[14px] font-bold text-white transition hover:bg-rekah-tua active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
             >
-              {PLAN_COPY.belumPasLabel}
+              <ArrowRightCircle className="h-4 w-4" strokeWidth={2} />
+              {JELAJAH_COPY.jadikanHariIniCTA}
             </button>
           )}
-
-          {/* Share */}
+          {onTambahkanKePekan && (
+            <button
+              type="button"
+              onClick={onTambahkanKePekan}
+              aria-label={JELAJAH_COPY.tambahkanKePekanAria(modul.judul)}
+              className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-[12px] border border-rekah px-4 text-[14px] font-bold text-rekah transition hover:bg-fajar active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
+            >
+              <Plus className="h-4 w-4" strokeWidth={2.5} />
+              {JELAJAH_COPY.tambahkanKePekanCTA}
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          {/* Tandai selesai */}
           <button
             type="button"
-            onClick={handleShare}
-            aria-label={PLAN_COPY.bagikanLabel}
-            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[12px] border border-fajar text-pekat/45 transition hover:bg-fajar hover:text-rekah focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
+            disabled={selesai}
+            onClick={handleSelesai}
+            aria-label={selesai ? PLAN_COPY.selesaiCelebration : PLAN_COPY.selesaiCTA}
+            className={`relative flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-[12px] px-4 text-[14px] font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah ${
+              selesai
+                ? 'bg-daun/15 text-daun'
+                : 'bg-rekah text-white hover:bg-rekah-tua active:scale-95'
+            }`}
           >
-            <Share2 className="h-4 w-4" strokeWidth={2} />
+            {selesai ? (
+              <>
+                <Check className="h-4 w-4" strokeWidth={2.5} />
+                {PLAN_COPY.selesaiCelebration}
+              </>
+            ) : (
+              PLAN_COPY.selesaiCTA
+            )}
+
+            {/* Bloom animation saat selesai */}
+            {selesai && (
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-0 animate-ping rounded-[12px] bg-madu/30"
+                style={{ animationDuration: '0.6s', animationIterationCount: '1' }}
+              />
+            )}
           </button>
+
+          {/* Aksi sekunder */}
+          <div className="flex shrink-0 gap-2">
+            {/* Belum pas hari ini */}
+            {!isLast && (
+              <button
+                type="button"
+                disabled={selesai}
+                onClick={onBelumPas}
+                className="flex min-h-[44px] items-center justify-center rounded-[12px] border border-fajar px-3 text-[13px] font-semibold text-pekat/55 transition hover:bg-fajar disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
+              >
+                {PLAN_COPY.belumPasLabel}
+              </button>
+            )}
+
+            {/* Share */}
+            <button
+              type="button"
+              onClick={handleShare}
+              aria-label={PLAN_COPY.bagikanLabel}
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[12px] border border-fajar text-pekat/45 transition hover:bg-fajar hover:text-rekah focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
+            >
+              <Share2 className="h-4 w-4" strokeWidth={2} />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </article>
+
+    {/* ── Cerita Hari Ini (muncul setelah Merekah!) ─────────────── */}
+    {showRefleksi && (
+      <CeritaHariIni moduleId={moduleId} onDone={handleRefleksiDone} />
+    )}
+  </>
   );
 }

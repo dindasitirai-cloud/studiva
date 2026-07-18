@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  Home, Baby, HeartHandshake, CreditCard, Settings, LogOut, X, CalendarDays,
+  Home, Baby, HeartHandshake, CreditCard, Settings, LogOut, X, CalendarDays, Sprout, BookOpen, BookHeart, Compass,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import LogoRekah from '../../../components/LogoRekah';
@@ -10,9 +10,12 @@ import Kelopak from '../../../components/Kelopak';
 const navItems = [
   { to: '/dashboard/tier2', label: 'Beranda', icon: Home, end: true },
   { to: '/dashboard/tier2/rencana', label: 'Rencana Pekan Ini', icon: CalendarDays },
+  { to: '/dashboard/tier2/jelajah', label: 'Jelajah', icon: Compass },
+  { to: '/dashboard/tier2/jejak-mekar', label: 'Jejak Mekar', icon: Sprout },
+  { to: '/dashboard/tier2/jurnal', label: 'Jurnal', icon: BookOpen },
+  { to: '/dashboard/tier2/jurnal-perkembangan', label: 'Jurnal Perkembangan', icon: BookHeart },
   { to: '/dashboard/tier2/profil-anak', label: 'Profil Anak', icon: Baby },
   { to: '/dashboard/tier2/partner-orang-tua', label: 'Partner Orang Tua', icon: HeartHandshake },
-  // PARKIR: aktifkan Jurnal Perkembangan lagi saat build 4
 ];
 
 interface SidebarTier2Props {
@@ -102,6 +105,14 @@ export default function SidebarTier2({ open, onClose }: SidebarTier2Props) {
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setSettingsOpen(false)} />
                 <div className="absolute bottom-full left-0 z-50 mb-2 w-48 rounded-[16px] bg-white p-1.5 shadow-[0_12px_32px_rgba(224,82,107,0.16)]">
+                  <button
+                    type="button"
+                    onClick={() => { setSettingsOpen(false); onClose(); navigate('/dashboard/tier2/pengaturan'); }}
+                    className="flex w-full items-center gap-2.5 rounded-[12px] px-3 py-2.5 text-left text-[13px] font-semibold text-pekat/70 transition hover:bg-fajar hover:text-rekah"
+                  >
+                    <Settings className="h-4 w-4 shrink-0" strokeWidth={2} />
+                    Profil & Nilai
+                  </button>
                   <button
                     type="button"
                     onClick={handleSubscriptionClick}

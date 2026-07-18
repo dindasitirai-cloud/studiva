@@ -5,6 +5,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { useDashboardTier2, AppNotification } from '../../../context/DashboardTier2Context';
 import SidebarTier2 from './SidebarTier2';
 import { relativeTime } from './relativeTime';
+import RekahErrorBanner from '../../../components/RekahErrorBanner';
 
 const NOTIF_ICON: Record<AppNotification['kind'], typeof MessageSquare> = {
   'forum-reply': MessageSquare,
@@ -16,6 +17,11 @@ const NOTIF_ICON: Record<AppNotification['kind'], typeof MessageSquare> = {
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard/tier2': 'Beranda',
   '/dashboard/tier2/rencana': 'Rencana Pekan Ini',
+  '/dashboard/tier2/jelajah': 'Jelajah Aktivitas',
+  '/dashboard/tier2/jejak-mekar': 'Jejak Mekar',
+  '/dashboard/tier2/jurnal': 'Jurnal',
+  '/dashboard/tier2/jurnal-perkembangan': 'Jurnal Perkembangan',
+  '/dashboard/tier2/pengaturan': 'Pengaturan',
   '/dashboard/tier2/profil-anak': 'Profil Anak',
   '/dashboard/tier2/subscription': 'Langganan',
   '/dashboard/tier2/partner-orang-tua': 'Partner Orang Tua',
@@ -166,6 +172,7 @@ export default function DashboardShellTier2() {
           </main>
         </div>
       </div>
+      <RekahErrorBanner />
     </Tier2Guard>
   );
 }

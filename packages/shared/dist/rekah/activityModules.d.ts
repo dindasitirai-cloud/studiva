@@ -2,6 +2,11 @@ import type { NilaiId } from './values';
 import type { AgeBandId } from './ageBands';
 export type ActivityModuleId = string;
 export type DurasiMenit = 5 | 10 | 15 | 20 | 30;
+export interface AlatEdukasi {
+    nama: string;
+    caraPakai?: string;
+    alternatifRumah?: string;
+}
 export interface ActivityModule {
     id: ActivityModuleId;
     judul: string;
@@ -12,6 +17,7 @@ export interface ActivityModule {
     nilaiPendukung?: NilaiId[];
     durasiMenit: DurasiMenit;
     bahan?: string[];
+    alatEdukasi?: AlatEdukasi[];
     langkah: string[];
     script?: string;
     avoid?: string;

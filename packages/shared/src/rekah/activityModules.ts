@@ -11,6 +11,12 @@ export type ActivityModuleId = string;
 
 export type DurasiMenit = 5 | 10 | 15 | 20 | 30;
 
+export interface AlatEdukasi {
+  nama: string;
+  caraPakai?: string;
+  alternatifRumah?: string; // wajib diisi bila alat perlu dibeli
+}
+
 export interface ActivityModule {
   id: ActivityModuleId;
   judul: string;
@@ -21,6 +27,7 @@ export interface ActivityModule {
   nilaiPendukung?: NilaiId[];
   durasiMenit: DurasiMenit;
   bahan?: string[];
+  alatEdukasi?: AlatEdukasi[];
   langkah: string[];
   script?: string;
   avoid?: string;
@@ -43,6 +50,9 @@ export const ACTIVITY_MODULES: ActivityModule[] = [
     nilaiPendukung: ['percaya-diri'],
     durasiMenit: 15,
     bahan: ['Matras bersih', 'Satu atau dua mainan kontras'],
+    alatEdukasi: [
+      { nama: 'Matras bermain bayi', caraPakai: 'Bentangkan di lantai sebagai area bebas', alternatifRumah: 'Selimut tebal yang dilipat atau karpet bersih — sama fungsinya' },
+    ],
     langkah: [
       'Pastikan area bermain aman dan bersih.',
       'Letakkan bayi telungkup atau telentang di matras.',
@@ -647,6 +657,9 @@ export const ACTIVITY_MODULES: ActivityModule[] = [
     nilaiPendukung: ['empatik'],
     durasiMenit: 10,
     bahan: ['Buku bergambar dengan ilustrasi sederhana'],
+    alatEdukasi: [
+      { nama: 'Buku bergambar ilustrasi sederhana', caraPakai: 'Buka di pangkuan, tunjuk gambar, ajak bicara', alternatifRumah: 'Cetak gambar dari internet atau lipat kertas HVS jadi buku kecil dan gambar benda familiar' },
+    ],
     langkah: [
       'Pilih waktu tenang — setelah makan atau sebelum tidur.',
       'Duduk bersama anak di pangkuan atau berdampingan.',
@@ -834,6 +847,371 @@ export const ACTIVITY_MODULES: ActivityModule[] = [
     avoid: 'Memaksa anak berinteraksi jika ia jelas tidak mau — beri waktu untuk mengamati dulu.',
     amati: 'Kapan anak mulai nyaman? Berapa lama ia biasanya butuh untuk "hangat" di lingkungan baru?',
     sumberIds: ['cdc-act-early'],
+    status: 'draft',
+  },
+
+  // ── Tambahan: konversi dari Learning Strategies ──────────────────────
+
+  {
+    id: 'am-kartu-kontras',
+    judul: 'Dunia Hitam-Putih Bayi',
+    deskripsi: 'Tunjukkan pola kontras tinggi pada jarak 20–30 cm dari wajah bayi untuk melatih fokus visual awal.',
+    kenapaIni: 'Penglihatan bayi baru lahir masih terbatas — yang paling jelas terlihat adalah pola kontras tinggi. Setiap momen fokus adalah latihan awal kemampuan memperhatikan, fondasi kepercayaan diri saat ia mulai mengeksplorasi dunia.',
+    ageBands: ['0-6'],
+    nilaiUtama: 'percaya-diri',
+    nilaiPendukung: ['komunikatif'],
+    durasiMenit: 5,
+    alatEdukasi: [
+      { nama: 'Kartu atau buku kontras hitam-putih', caraPakai: 'Pegang 20-30 cm dari wajah bayi, gerakkan perlahan ke kiri-kanan', alternatifRumah: 'Gambar pola garis tebal atau kotak hitam-putih di kertas HVS — sama efektifnya' },
+    ],
+    langkah: [
+      'Pilih saat bayi terjaga dan tenang.',
+      'Pegang kartu hitam-putih 20-30 cm dari wajah bayi.',
+      'Gerakkan perlahan ke kiri dan kanan — amati apakah matanya mengikuti.',
+      'Ganti pola setelah bayi tampak berpaling atau bosan.',
+      'Lakukan 3-5 menit saja — waktu singkat sudah cukup.',
+    ],
+    script: 'Lihat! Ada apa di sini ya? (gerakkan perlahan)',
+    avoid: 'Terlalu banyak pola sekaligus — satu kartu sudah cukup untuk fokus bayi.',
+    amati: 'Berapa lama ia menatap sebelum berpaling? Pola mana yang paling lama menarik perhatiannya?',
+    status: 'draft',
+  },
+
+  {
+    id: 'am-lagu-ritmis',
+    judul: 'Menyanyi Bersama',
+    deskripsi: 'Nyanyikan lagu sederhana sambil mengayun bayi — ritme dan kehangatan suaramu membangun koneksi dan rasa aman.',
+    kenapaIni: 'Otak bayi memproses ritme musik dan ritme bahasa dengan cara yang serupa. Lagu yang kamu nyanyikan bukan sekadar hiburan — ini latihan awal memproses pola suara yang menjadi fondasi bahasa.',
+    ageBands: ['0-6'],
+    nilaiUtama: 'empatik',
+    nilaiPendukung: ['sosial'],
+    durasiMenit: 10,
+    langkah: [
+      'Gendong bayi dengan nyaman, pastikan kepala tersangga.',
+      'Nyanyikan lagu apa saja yang kamu suka — tidak harus lagu anak.',
+      'Ayunkan tubuh perlahan mengikuti irama.',
+      'Perhatikan responsnya — gerakan tangan, ekspresi wajah, suara.',
+      'Variasikan tempo: lebih pelan untuk menenangkan, sedikit lebih cepat untuk ceria.',
+    ],
+    script: '(Nyanyikan lagu favorit keluarga dengan penuh kehangatan)',
+    avoid: 'Berhenti karena merasa suaramu tidak bagus — bayi tidak peduli kualitas suara, hanya kehangatan yang menyertainya.',
+    amati: 'Bagaimana tubuhnya bergerak saat mendengar irama? Kapan ia paling antusias merespons?',
+    sumberIds: ['harvard-brain'],
+    status: 'draft',
+  },
+
+  {
+    id: 'am-ciluk-ba',
+    judul: 'Ciluk Ba!',
+    deskripsi: 'Tutup wajah dengan tangan lalu muncul kembali sambil tersenyum — permainan paling sederhana yang mengandung pelajaran besar.',
+    kenapaIni: 'Saat wajahmu menghilang lalu muncul lagi, bayi belajar bahwa orang yang dicintai tetap ada meski tidak terlihat. Ini membangun rasa aman dan kepercayaan — benih dari empati dan koneksi sosial seumur hidup.',
+    ageBands: ['0-6', '7-12'],
+    nilaiUtama: 'sosial',
+    nilaiPendukung: ['empatik'],
+    durasiMenit: 5,
+    langkah: [
+      'Duduk berhadapan dengan bayi dalam jarak dekat.',
+      'Tutup wajah dengan kedua tangan selama 2-3 detik.',
+      'Buka perlahan sambil berkata dengan riang: "Cii... luk ba!"',
+      'Tunggu respons bayi — senyum, tawa, atau suara — sebelum mengulang.',
+      'Variasikan: sembunyikan di balik kain tipis, atau di balik tepi meja.',
+    ],
+    script: 'Cii... LUK BA! (dengan senyum lebar)',
+    avoid: 'Gerakan yang terlalu cepat atau terlalu dramatis — beri bayi waktu untuk mengantisipasi dan menikmati momentnya.',
+    amati: 'Di usia berapa ia mulai tersenyum atau tertawa sebelum wajahmu muncul — itulah tanda ia sudah mengantisipasi!',
+    status: 'draft',
+  },
+
+  {
+    id: 'am-meraih-mainan',
+    judul: 'Raih yang Ada di Sana',
+    deskripsi: 'Gantung mainan dalam jangkauan bayi agar ia berlatih meraih dan mengkoordinasikan tangan dengan mata.',
+    kenapaIni: 'Setiap kali bayi berhasil meraih — meski hanya menyentuh sebentar — ia merasakan rasa mampu pertamanya. Kepercayaan diri tumbuh dari momen kecil seperti ini, jauh sebelum ia bisa bicara.',
+    ageBands: ['0-6', '7-12'],
+    nilaiUtama: 'percaya-diri',
+    nilaiPendukung: ['mandiri'],
+    durasiMenit: 10,
+    alatEdukasi: [
+      { nama: 'Play gym atau mainan gantung', caraPakai: 'Gantung mainan pada posisi yang bisa dijangkau dengan sedikit usaha', alternatifRumah: 'Ikat mainan ringan ke kursi dengan tali pendek sehingga tergantung di atas bayi' },
+    ],
+    langkah: [
+      'Rebahkan bayi di bawah play gym atau gantungkan mainan di posisi yang bisa dijangkau.',
+      'Pastikan mainan cukup dekat agar bisa disentuh dengan sedikit usaha.',
+      'Tunjuk mainan dengan ekspresi antusias.',
+      'Beri waktu ia berusaha — jangan segera dekatkan.',
+      'Rayakan setiap sentuhan, bukan hanya keberhasilan penuh menggenggam.',
+    ],
+    script: 'Itu ada apa ya? Coba raih!',
+    avoid: 'Mendekatkan mainan langsung ke tangannya — justru mengurangi kesempatan ia merasakan keberhasilan.',
+    amati: 'Tangan mana yang lebih sering ia gunakan? Berapa usaha yang ia butuhkan sebelum berhasil?',
+    sumberIds: ['kemenkes-kia-kpsp'],
+    status: 'draft',
+  },
+
+  {
+    id: 'am-cermin-bayi',
+    judul: 'Hai, Siapa di Cermin?',
+    deskripsi: 'Biarkan bayi menjelajahi wajahnya sendiri di cermin — aktivitas sederhana yang membangun kesadaran diri.',
+    kenapaIni: 'Bayi tertarik pada wajah — terutama wajah yang bergerak dan merespons. Ketika melihat cermin, ia menjelajahi wajahnya sendiri sambil mengalami bahwa gerakannya menyebabkan sesuatu terjadi. Ini membangun kepercayaan diri dari dalam.',
+    ageBands: ['0-6', '7-12'],
+    nilaiUtama: 'percaya-diri',
+    nilaiPendukung: ['empatik'],
+    durasiMenit: 10,
+    alatEdukasi: [
+      { nama: 'Cermin bayi aman (akrilik)', caraPakai: 'Pasang di lantai atau dinding rendah untuk tummy time, atau pegang di depan bayi', alternatifRumah: 'Ponsel di mode kamera depan dengan layar penuh, atau permukaan foil aluminium diratakan' },
+    ],
+    langkah: [
+      'Letakkan cermin di depan bayi — bisa saat tummy time atau duduk.',
+      'Tunjuk wajahnya di cermin sambil menyebut namanya dengan hangat.',
+      'Buat ekspresi yang berbeda dan amati apakah ia mencoba meniru.',
+      'Tunjuk bagian-bagian wajah: "Ini matanya, ini hidungnya."',
+    ],
+    script: 'Hei, siapa di sana? Itu kamu lho! Hai, (nama bayi)!',
+    avoid: 'Terlalu banyak komentar sekaligus — beri jeda agar ia bisa memproses dan merespons.',
+    amati: 'Kapan ia pertama kali merespons refleksinya dengan senyum atau suara? Itu momen penting!',
+    status: 'draft',
+  },
+
+  {
+    id: 'am-eksplorasi-tekstur',
+    judul: 'Rasa yang Berbeda di Jari Kecil',
+    deskripsi: 'Perkenalkan berbagai tekstur aman ke telapak tangan bayi — kain lembut, kasar, berbulu — untuk memperkaya pengalaman sensorik.',
+    kenapaIni: 'Sentuhan adalah indra paling matang sejak lahir. Pengalaman taktil yang kaya membantu otak membangun peta sensorik tubuhnya sendiri — fondasi kemandirian gerak dan eksplorasi.',
+    ageBands: ['0-6', '7-12'],
+    nilaiUtama: 'mandiri',
+    nilaiPendukung: ['percaya-diri'],
+    durasiMenit: 10,
+    langkah: [
+      'Siapkan 3-4 potongan kain berbeda tekstur: kaos lembut, handuk berbulu, kain beludru.',
+      'Usapkan masing-masing perlahan ke telapak tangan atau kaki bayi.',
+      'Amati reaksinya: menarik tangan, menatap, atau tampak menikmati.',
+      'Ikuti selera bayi — jangan pernah memaksakan tekstur yang tidak disukai.',
+    ],
+    script: 'Ini lembut ya? Coba yang ini — beda rasanya!',
+    avoid: 'Memaksakan tekstur yang membuat bayi tidak nyaman — selalu ikuti isyaratnya.',
+    amati: 'Tekstur mana yang paling ia suka? Mana yang ia hindari? Ini petunjuk preferensi sensoriknya.',
+    tipAyahBunda: 'Kain berbeda tekstur dari lemari sendiri sudah cukup — tidak perlu membeli apa pun.',
+    status: 'draft',
+  },
+
+  {
+    id: 'am-sebab-akibat',
+    judul: 'Masuk... Jatuh!',
+    deskripsi: 'Biarkan anak memasukkan benda ke wadah dan menjatuhkannya berulang kali — ia sedang membuktikan teori pertamanya.',
+    kenapaIni: 'Bayi yang berulang kali menjatuhkan benda bukan "nakal" — ia sedang menguji sebab-akibat secara ilmiah. Setiap pengulangan adalah eksperimen yang membangun keyakinan bahwa ia bisa memengaruhi dunia di sekitarnya.',
+    ageBands: ['7-12'],
+    nilaiUtama: 'mandiri',
+    nilaiPendukung: ['percaya-diri'],
+    durasiMenit: 10,
+    bahan: ['Wadah plastik besar', 'Bola-bola kecil aman atau benda lain yang bisa dimasukkan'],
+    langkah: [
+      'Siapkan wadah plastik dan beberapa bola kecil aman.',
+      'Tunjukkan cara memasukkan satu bola ke wadah.',
+      'Biarkan ia mencoba — dan mengulangi sesukanya.',
+      'Tunjukkan cara "menjatuhkan" dari atas — amati ekspresinya!',
+    ],
+    script: 'Masuk! Wah, jatuh! Coba lagi ya.',
+    avoid: 'Mencegah ia mengulang terlalu banyak — pengulangan IS the point. Itu cara ia belajar.',
+    amati: 'Berapa kali ia mengulang sebelum beralih ke hal lain? Semakin lama fokusnya, semakin baik.',
+    sumberIds: ['kemenkes-kia-kpsp'],
+    status: 'draft',
+  },
+
+  {
+    id: 'am-musik-marakas',
+    judul: 'Kocok Bersama!',
+    deskripsi: 'Mainkan marakas bersama — kocok bergantian, ubah tempo, dan nikmati ritme yang kalian ciptakan berdua.',
+    kenapaIni: 'Bermain musik bersama mengajarkan giliran, mendengarkan, dan merespons — inti dari semua interaksi sosial. Saat kamu berhenti dan ia mengocok, kalian sedang berlatih dasar percakapan.',
+    ageBands: ['7-12', '13-18'],
+    nilaiUtama: 'sosial',
+    nilaiPendukung: ['komunikatif'],
+    durasiMenit: 10,
+    alatEdukasi: [
+      { nama: 'Marakas bayi', caraPakai: 'Berikan ke tangan bayi untuk dikocok, kocok bersama mengikuti irama', alternatifRumah: 'Botol plastik kecil berisi beras kering — tutup rapat dengan selotip dan siap dipakai' },
+    ],
+    langkah: [
+      'Berikan marakas kepada anak.',
+      'Kocok marasasmu sambil bernyanyi sederhana.',
+      'Bergantian: kamu berhenti, lihat apakah ia mengisi keheningan dengan mengocok.',
+      'Ubah tempo perlahan: lambat... cepat... lambat lagi.',
+    ],
+    script: 'Giliran kamu kocok! (berhenti dan tunggu) Nah, gitu!',
+    avoid: 'Selalu memimpin tanpa memberi ruang untuk giliran anak — jeda adalah bagian terpenting dari bermain musik bersama.',
+    amati: 'Apakah ia menyesuaikan temponya dengan tempomu? Itu tanda ia sudah memahami giliran.',
+    status: 'draft',
+  },
+
+  {
+    id: 'am-berdiri-merambat',
+    judul: 'Berdiri! Satu Langkah Kecil',
+    deskripsi: 'Dampingi anak menarik diri ke posisi berdiri dan merambat di sepanjang furnitur yang aman.',
+    kenapaIni: 'Setiap kali anak berhasil berdiri sendiri, ia membuktikan pada dirinya sendiri bahwa tubuhnya bisa melakukan hal baru. Kepercayaan pada kemampuan fisik ini menjadi fondasi kemandirian.',
+    ageBands: ['7-12', '13-18'],
+    nilaiUtama: 'mandiri',
+    nilaiPendukung: ['percaya-diri'],
+    durasiMenit: 15,
+    langkah: [
+      'Pastikan furnitur yang digunakan stabil dan tidak bergeser.',
+      'Biarkan anak menarik diri ke posisi berdiri sendiri — bantu hanya jika ia mulai frustrasi.',
+      'Letakkan mainan di ujung furnitur sebagai motivasi untuk merambat.',
+      'Dampingi dari dekat tanpa memegangi — ada di sana jika ia jatuh, bukan mencegah ia mencoba.',
+    ],
+    script: 'Wah, berdiri sendiri! Hebat! Mau ke sana juga?',
+    avoid: 'Langsung mengangkat atau membantu sebelum ia mencoba — berikan jeda agar ia bisa merasakan prosesnya sendiri.',
+    amati: 'Berapa jauh ia mau merambat sebelum duduk lagi? Apakah ia tampak menikmati prosesnya?',
+    sumberIds: ['kemenkes-kia-kpsp', 'cdc-act-early'],
+    status: 'draft',
+  },
+
+  {
+    id: 'am-lukis-jari',
+    judul: 'Jejak Jari di Atas Kertas',
+    deskripsi: 'Biarkan anak mencelupkan jari ke cat atau campuran tepung dan membuat jejak bebas di kertas — tanpa arahan, tanpa target.',
+    kenapaIni: 'Saat anak melukis bebas, ia membuat keputusan sendiri — warna mana, gerakan mana, seberapa besar. Setiap pilihan kecil itu membangun keyakinan bahwa ekspresinya punya nilai.',
+    ageBands: ['7-12', '13-18'],
+    nilaiUtama: 'percaya-diri',
+    nilaiPendukung: ['mandiri'],
+    durasiMenit: 15,
+    alatEdukasi: [
+      { nama: 'Cat jari aman (non-toxic)', caraPakai: 'Taruh sedikit di kertas besar, biarkan anak menjelajahi dengan jarinya', alternatifRumah: 'Campuran tepung terigu + air + pewarna makanan: aman tertelan, mudah dibersihkan' },
+    ],
+    langkah: [
+      'Siapkan kertas besar di tempat yang mudah dibersihkan.',
+      'Taruh sedikit cat atau adonan tepung berwarna di kertas.',
+      'Biarkan anak bereksplorasi semaunya — gosok, tekan, sentuh.',
+      'Tidak perlu mengajari cara "yang benar" — semua cara benar.',
+      'Akhiri dengan membersihkan tangan bersama.',
+    ],
+    script: 'Warna apa ini? Coba buat jejak jarimu!',
+    avoid: 'Mengarahkan atau mengoreksi cara anak memegang atau mengoles — kebebasan bereksplorasi adalah tujuannya.',
+    amati: 'Bagaimana ia menggunakan seluruh tangannya? Apakah ia tampak terkejut, geli, atau sangat menikmati?',
+    tipAyahBunda: 'Kalau kamu khawatir soal noda, gulung lengan baju dan pakai celemek — atau lakukan di kamar mandi.',
+    status: 'draft',
+  },
+
+  {
+    id: 'am-menara-balok',
+    judul: 'Susun dan Jatuhkan',
+    deskripsi: 'Susun menara balok bersama — lalu rayakan saat jatuh, dan mulai lagi.',
+    kenapaIni: 'Dalam bermain balok, anak belajar bahwa kegagalan (jatuh) bukan akhir — itu permulaan putaran berikutnya. Ini adalah latihan ketangguhan yang menyenangkan.',
+    ageBands: ['13-18', '19-24'],
+    nilaiUtama: 'percaya-diri',
+    nilaiPendukung: ['mandiri'],
+    durasiMenit: 15,
+    alatEdukasi: [
+      { nama: 'Balok kayu besar', caraPakai: 'Susun satu per satu, biarkan anak yang menambahkan balok paling atas', alternatifRumah: 'Kotak susu/jus bekas dilipat rapat, atau buku paperback yang ditumpuk' },
+    ],
+    langkah: [
+      'Duduk bersama anak di lantai dengan balok tersedia.',
+      'Tunjukkan cara menyusun satu per satu.',
+      'Biarkan anak menambahkan balok — sesukanya.',
+      'Saat menara jatuh, rayakan: "Wah, jatuh! Keren! Coba lagi yuk?"',
+    ],
+    script: 'Satu lagi... satu lagi... JATUH! Wah! Coba lagi ya!',
+    avoid: 'Mencegah menara jatuh atau memperbaikinya — jatuh adalah momen terbaik dari permainan ini.',
+    amati: 'Berapa tinggi menara yang ia coba sebelum berhenti? Apakah ia semakin berani dari sesi ke sesi?',
+    sumberIds: ['kemenkes-kia-kpsp'],
+    status: 'draft',
+  },
+
+  {
+    id: 'am-coret-bebas',
+    judul: 'Coret Sesukamu',
+    deskripsi: 'Sediakan kertas luas dan krayon — biarkan anak membuat apapun yang muncul dari tangannya.',
+    kenapaIni: 'Coretan pertama anak bukan "asal-asalan" — itu ekspresi diri yang nyata. Ketika kamu menerima hasilnya apa adanya, kamu mengajarkan bahwa apa yang ia lakukan punya nilai. Ini fondasi kepercayaan diri jangka panjang.',
+    ageBands: ['19-24', '25-36'],
+    nilaiUtama: 'percaya-diri',
+    nilaiPendukung: ['mandiri'],
+    durasiMenit: 15,
+    alatEdukasi: [
+      { nama: 'Krayon jumbo segitiga', caraPakai: 'Biarkan anak memegang dengan cara apapun yang terasa nyaman', alternatifRumah: 'Pensil warna biasa sudah cukup — atau bahkan spidol dengan tutup yang bisa dibuka-tutup sendiri' },
+    ],
+    langkah: [
+      'Siapkan kertas besar (A3 atau beberapa lembar A4 disambung selotip).',
+      'Taruh krayon dalam jangkauan anak.',
+      'Katakan di awal: "Bebas, mau buat apa saja."',
+      'Biarkan ia bereksplorasi tanpa arahan.',
+      'Apresiasi hasilnya: "Wah, kamu buat ini! Ceritakan ke aku?"',
+    ],
+    script: 'Mau buat apa? Bebas, boleh apa saja!',
+    avoid: 'Mengoreksi cara memegang atau meminta menggambar "sesuatu yang benar" — semua coretan sama berharganya.',
+    amati: 'Apakah ia mencampur warna? Bagaimana cara ia memegang krayon berkembang dari sesi ke sesi?',
+    status: 'draft',
+  },
+
+  {
+    id: 'am-puzzle-sederhana',
+    judul: 'Cocokkan dan Masukkan',
+    deskripsi: 'Ajak anak mencabut dan memasang kembali keping puzzle sederhana — latihan memecahkan masalah kecil yang nyata.',
+    kenapaIni: 'Memecahkan puzzle adalah salah satu bentuk "masalah yang bisa diselesaikan sendiri" yang paling ramah untuk anak. Saat keping akhirnya pas, ada rasa puas yang mendalam yang membangun keyakinan: "Aku bisa."',
+    ageBands: ['19-24', '25-36'],
+    nilaiUtama: 'mandiri',
+    nilaiPendukung: ['percaya-diri'],
+    durasiMenit: 15,
+    alatEdukasi: [
+      { nama: 'Puzzle knob kayu 2-3 keping', caraPakai: 'Lepas satu keping, minta anak mencoba memasang kembali', alternatifRumah: 'Potong gambar sederhana dari majalah menjadi 3 bagian dan minta anak menyusun ulang' },
+    ],
+    langkah: [
+      'Tunjukkan cara mengangkat keping menggunakan knob atau pegangan.',
+      'Lepaskan satu keping dan biarkan anak mencoba memasang kembali.',
+      'Beri petunjuk verbal jika perlu: "Coba putar sedikit."',
+      'Jangan langsung memasangkan — beri waktu ia berjuang sedikit.',
+      'Tambahkan keping kedua setelah keping pertama berhasil.',
+    ],
+    script: 'Coba yang ini dulu. Kira-kira mana yang pas ya?',
+    avoid: 'Langsung membantu saat ia tampak kesulitan — tunggu dulu, sering kali ia menemukan caranya sendiri.',
+    amati: 'Berapa kali ia mencoba sebelum berhasil? Apakah ia tampak puas saat akhirnya masuk?',
+    status: 'draft',
+  },
+
+  {
+    id: 'am-messy-play',
+    judul: 'Bermain Tepung Bersama',
+    deskripsi: 'Sediakan tepung atau pasir dalam wadah lebar — biarkan anak menggenggam, meremas, dan membentuk sesukanya.',
+    kenapaIni: 'Bermain dengan material bertekstur memberikan input sensorik yang membantu sistem saraf anak merasa tenang dan terintegrasi. Anak yang bisa bereksplorasi bebas belajar menenangkan diri sendiri melalui sensasi.',
+    ageBands: ['19-24', '25-36'],
+    nilaiUtama: 'regulasi-emosi',
+    nilaiPendukung: ['mandiri'],
+    durasiMenit: 20,
+    bahan: ['Wadah lebar (nampan atau baskom)', 'Tepung terigu atau pasir kinetik'],
+    alatEdukasi: [
+      { nama: 'Pasir kinetik', caraPakai: 'Taruh dalam wadah lebar, biarkan anak menggenggam dan membentuk', alternatifRumah: 'Tepung terigu biasa — gratis, aman, sama menyenangkannya' },
+    ],
+    langkah: [
+      'Siapkan tepung atau pasir dalam wadah lebar di tempat yang mudah dibersihkan.',
+      'Tunjukkan cara meremas, membuat cetakan, atau menggali.',
+      'Biarkan anak bereksplorasi sesukanya tanpa arahan.',
+      'Akhiri dengan membersihkan bersama — itu juga bagian dari aktivitasnya.',
+    ],
+    script: 'Remas deh! Enak rasanya ya? Bisa buat apa nih?',
+    avoid: 'Terlalu cepat menghentikan karena berantakan — sedikit kekacauan adalah harga wajar untuk pengalaman sensorik yang berharga.',
+    amati: 'Apakah ia tampak lebih tenang saat bermain material ini? Ini tanda input sensorik yang sedang dibutuhkannya.',
+    tipAyahBunda: 'Untuk hari yang emosional, messy play adalah cara anak melepaskan ketegangan tanpa kata-kata.',
+    status: 'draft',
+  },
+
+  {
+    id: 'am-tendang-bola',
+    judul: 'Tendang ke Sana!',
+    deskripsi: 'Latihan menendang bola ke gawang sederhana — aktivitas aktif yang membangun koordinasi dan rasa berhasil.',
+    kenapaIni: 'Saat anak berhasil menendang bola ke arah yang dituju, ia merasakan tubuhnya melakukan hal yang ia rencanakan. Kontrol ini — rencana lalu eksekusi — membangun kepercayaan diri dari dalam tubuh.',
+    ageBands: ['25-36'],
+    nilaiUtama: 'percaya-diri',
+    nilaiPendukung: ['sosial'],
+    durasiMenit: 20,
+    alatEdukasi: [
+      { nama: 'Bola ukuran sedang', caraPakai: 'Letakkan di depan kaki anak, beri contoh menendang perlahan', alternatifRumah: 'Bola dari kaos kaki yang digulung rapat, atau bantal kecil yang dilipat' },
+    ],
+    langkah: [
+      'Buat gawang sederhana dari dua benda (kursi, kotak) yang jaraknya cukup lebar.',
+      'Letakkan bola di depan kaki anak.',
+      'Tunjukkan cara menendang — perlahan dan tidak terlalu keras.',
+      'Rayakan setiap tendangan tanpa mempersoalkan akurasi.',
+      'Pindah lebih jauh atau perkecil gawang secara bertahap jika ia mau tantangan lebih.',
+    ],
+    script: 'Tendang ke sana! Gooool! Wah keren!',
+    avoid: 'Menekankan apakah masuk atau tidak — fokus pada kesenangan bergerak, bukan akurasi.',
+    amati: 'Apakah ia berencana sebelum menendang, atau langsung saja? Keduanya menunjukkan perkembangan yang berbeda tapi keduanya menarik.',
     status: 'draft',
   },
 ];

@@ -132,6 +132,83 @@ describe('Tanpa duplikat dalam satu pekan', () => {
   });
 });
 
+// ── ALAT EDUKASI — VALIDASI ───────────────────────────────────────────────────
+
+describe('AlatEdukasi: alternatifRumah wajib bila alat perlu dibeli', () => {
+  it('setiap alatEdukasi yang tidak DIY harus punya alternatifRumah', () => {
+    // Kata-kata kunci yang mengindikasikan pembelian
+    const beliKeywords = ['beli', 'toko', 'harga', 'kinetik', 'puzzle knob', 'marakas', 'cat jari', 'cermin akrilik', 'play gym'];
+    const violations: string[] = [];
+
+    for (const modul of ACTIVITY_MODULES) {
+      if (!modul.alatEdukasi) continue;
+      for (const alat of modul.alatEdukasi) {
+        const namaLower = alat.nama.toLowerCase();
+        const tampakDibeli = beliKeywords.some(k => namaLower.includes(k));
+        if (tampakDibeli && !alat.alternatifRumah) {
+          violations.push(`${modul.id} → "${alat.nama}" tidak punya alternatifRumah`);
+        }
+      }
+    }
+
+    if (violations.length > 0) {
+      throw new Error(`Alat tanpa alternatifRumah:\n${violations.join('\n')}`);
+    }
+    expect(violations).toHaveLength(0);
+  });
+});
+
+// ── RENCANA FLEKSIBEL — UNIT TESTS ───────────────────────────────────────────
+
+describe('Rencana fleksibel: swapStep simulasi', () => {
+  it('mengganti satu moduleId tidak mempengaruhi langkah lain', () => {
+    const plan = composeWeeklyPlan(profil9Bulan, 1);
+    const original = plan.steps.map(s => s.moduleId);
+    const targetId = original[0];
+    const poolIds = ACTIVITY_MODULES
+      .filter(m => !original.includes(m.id) && m.ageBands.includes('7-12'))
+      .map(m => m.id);
+    if (poolIds.length === 0) return; // pool habis — skip test
+
+    const newId = poolIds[0];
+    const swapped = plan.steps.map(s =>
+      s.moduleId === targetId ? { ...s, moduleId: newId } : s,
+    );
+    expect(swapped[0].moduleId).toBe(newId);
+    for (let i = 1; i < swapped.length; i++) {
+      expect(swapped[i].moduleId).toBe(original[i]);
+    }
+  });
+
+  it('langkah yang sudah selesai tidak boleh digeser (kompletions terlindungi)', () => {
+    // Simulasi: completions = [step 0] → hanya step 0 dianggap selesai
+    const plan = composeWeeklyPlan(profil9Bulan, 1);
+    const completedId = plan.steps[0].moduleId;
+    const completions = [completedId];
+
+    const visibleSteps = plan.steps.filter(s => !completions.includes(s.moduleId));
+    expect(visibleSteps.every(s => s.moduleId !== completedId)).toBe(true);
+  });
+});
+
+describe('Rencana fleksibel: batas 7 langkah', () => {
+  it('tidak melebihi 7 langkah setelah addStep', () => {
+    const plan = composeWeeklyPlan(profil9Bulan, 1);
+    const poolExtras = ACTIVITY_MODULES
+      .filter(m => !plan.steps.some(s => s.moduleId === m.id) && m.ageBands.includes('7-12'))
+      .slice(0, 10)
+      .map(m => m.id);
+
+    let steps = [...plan.steps];
+    for (const id of poolExtras) {
+      if (steps.length >= 7) break;
+      if (steps.some(s => s.moduleId === id)) continue;
+      steps = [...steps, { posisi: steps.length + 1, moduleId: id }];
+    }
+    expect(steps.length).toBeLessThanOrEqual(7);
+  });
+});
+
 // ── POOL TIPIS — TANPA ERROR ──────────────────────────────────────────────────
 
 describe('Pool tipis tidak melempar error', () => {

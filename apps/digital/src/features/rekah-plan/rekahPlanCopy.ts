@@ -46,6 +46,26 @@ export const PLAN_COPY = {
   poolTipisNote:
     'Kami sedang menambahkan lebih banyak aktivitas untuk usia ini. Rencana pekan ini dari yang tersedia.',
 
+  // ── Ganti langkah ────────────────────────────────────────────────────
+  gantiLabel: 'Ganti',
+  gantiJudul: 'Pilih pengganti',
+  gantiSub: 'Aktivitas di bawah ini sesuai dengan usia dan nilai fokusmu.',
+  gantiTidakAda: 'Tidak ada alternatif yang tersedia — coba Jelajah untuk lebih banyak pilihan.',
+  gantiPilihAria: (judul: string) => `Pilih ${judul} sebagai pengganti`,
+  gantiTutupLabel: 'Batal',
+
+  // ── Tambah langkah ────────────────────────────────────────────────────
+  tambahLangkahCTA: '+ Tambah langkah',
+  tambahLangkahAria: 'Tambahkan langkah ke rencana pekan ini',
+  tambahLangkahPenuh: 'Tujuh sudah penuh mekar — sisanya simpan untuk pekan depan ya 🌸',
+
+  // ── Belum pas — bottom-sheet ─────────────────────────────────────────
+  belumPasJudul: 'Mau coba yang mana dulu?',
+  belumPasSub: 'Langkah lain dari pekan ini yang bisa kamu coba sekarang.',
+  belumPasCobaLangkahIni: 'Coba langkah ini',
+  belumPasJelajahLink: 'Jelajahi pilihan lain →',
+  belumPasTutupLabel: 'Lewati dulu',
+
   // ── Semua selesai ─────────────────────────────────────────────────────
   semuaSelesaiJudul: 'Pekan ini penuh mekar!',
   semuaSelesaiEmoji: '🌸',

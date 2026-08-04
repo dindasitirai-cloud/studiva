@@ -1,7 +1,6 @@
 // REVIEW: menunggu approval Psikolog Fitri Effendy sebelum rilis
 import React, { useState, useMemo } from 'react';
 import type { NilaiAkar } from '../akar-keluarga/content';
-import { REGISTRY_BUNGA } from '../akar-keluarga/registryBunga';
 import { resolveSikap } from '../beranda-usia/adapter/sikapAdapter';
 import type { ItemSikap } from '../beranda-usia/adapter/sikapAdapter';
 import type { SapaanSet } from '../beranda-usia/useChildProfile';
@@ -46,29 +45,33 @@ const TOKEN_NILAI: Record<string, { soft: string; ink: string; accent: string }>
 };
 const TOKEN_DEFAULT = { soft: '#F3EDFC', ink: '#8A6DC7', accent: '#A98CDD' };
 
-// ─── Ikon bunga mini di header grup ──────────────────────────────────────────
+// ─── Ikon bunga dalam lingkaran putih ────────────────────────────────────────
 
-function BungaMini({ warna, mekar }: { warna: string; mekar: number }) {
+function BungaMini({ accent, mekar }: { accent: string; mekar: number }) {
   const fraksi = mekar / TINGKAT_MAKS;
-  const ukuran = Math.round(10 + fraksi * 16); // 10px–26px
-  const opacity = mekar === 0 ? 0.14 : 0.32 + fraksi * 0.68;
+  // Ukuran kelopak 14px (belum mekar) hingga 30px (mekar penuh) dalam lingkaran 46px
+  const ukuranKelopak = Math.round(14 + fraksi * 16);
+  const opacity = mekar === 0 ? 0.18 : 0.35 + fraksi * 0.65;
   return (
     <div
       style={{
-        width: 26,
-        height: 26,
+        width: 46,
+        height: 46,
+        borderRadius: '50%',
+        background: '#fff',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         flexShrink: 0,
+        boxShadow: '0 7px 16px -11px rgba(90,50,70,.6)',
       }}
     >
       <div
         style={{
-          width: ukuran,
-          height: ukuran,
+          width: ukuranKelopak,
+          height: ukuranKelopak,
           borderRadius: RADIUS_KELOPAK,
-          backgroundColor: warna,
+          backgroundColor: accent,
           opacity,
         }}
       />
@@ -183,8 +186,6 @@ function GrupNilai({
 }: PropsGrupNilai) {
   const [buka, setBuka] = useState(defaultBuka);
 
-  const bunga = REGISTRY_BUNGA.find(b => b.nama === nilai);
-  const warna = bunga?.warnaPetal ?? '#C9B8F0';
   const token = TOKEN_NILAI[nilai] ?? TOKEN_DEFAULT;
 
   const jumlahCentang = butirList.filter(b =>
@@ -193,9 +194,28 @@ function GrupNilai({
 
   const idHeader = `grup-nilai-${nilai.replace(/\s+/g, '-').toLowerCase()}`;
 
+  // Label mekar: bergantung pada butirList dan tingkat mekar
+  const stateLabel =
+    butirList.length === 0
+      ? COPY.LABEL_SEDANG_DISIAPKAN
+      : mekarLevel >= TINGKAT_MAKS
+      ? COPY.LABEL_MEKAR_PENUH
+      : mekarLevel > 0
+      ? COPY.LABEL_SEDANG_MEKAR
+      : COPY.LABEL_ISTIRAHAT;
+
   return (
-    <div style={{ borderTop: '1px solid rgba(110,59,87,.09)' }}>
-      {/* Header grup */}
+    <div
+      style={{
+        background: token.soft,
+        borderRadius: 22,
+        padding: '16px 16px 15px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 13,
+      }}
+    >
+      {/* Header: toggle accordion */}
       <button
         type="button"
         aria-expanded={buka}
@@ -205,36 +225,49 @@ function GrupNilai({
           width: '100%',
           display: 'flex',
           alignItems: 'center',
-          gap: 10,
-          padding: '13px 0 10px',
+          gap: 11,
           background: 'none',
           border: 'none',
           cursor: 'pointer',
           textAlign: 'left',
+          padding: 0,
         }}
       >
-        <BungaMini warna={warna} mekar={mekarLevel} />
-        <span
-          style={{
-            flex: 1,
-            fontFamily: 'Fredoka, system-ui, sans-serif',
-            fontSize: 17,
-            fontWeight: 600,
-            color: '#6E3B57',
-          }}
-        >
-          {nilai}
-        </span>
+        <BungaMini accent={token.accent} mekar={mekarLevel} />
+        <div style={{ minWidth: 0, flex: '1 1 auto' }}>
+          <div
+            style={{
+              fontFamily: 'Fredoka, system-ui, sans-serif',
+              fontWeight: 600,
+              fontSize: 17,
+              color: '#6E3B57',
+              lineHeight: 1.1,
+            }}
+          >
+            {nilai}
+          </div>
+          <div
+            style={{
+              fontFamily: 'Nunito, system-ui, sans-serif',
+              fontWeight: 700,
+              fontSize: 12,
+              color: token.ink,
+              marginTop: 1,
+            }}
+          >
+            {stateLabel}
+          </div>
+        </div>
         {jumlahCentang > 0 && (
           <span
             style={{
               fontFamily: 'Nunito, system-ui, sans-serif',
-              fontSize: 11.5,
-              fontWeight: 700,
-              color: warna === '#FFE29A' ? '#8A5A14' : '#6E3B57',
-              backgroundColor: warna + '28',
+              fontSize: 12.5,
+              fontWeight: 800,
+              color: token.ink,
+              background: '#fff',
+              padding: '4px 11px',
               borderRadius: 999,
-              padding: '3px 10px',
               flexShrink: 0,
             }}
           >
@@ -251,7 +284,8 @@ function GrupNilai({
             flexShrink: 0,
             transform: buka ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 200ms ease',
-            color: '#B98FAD',
+            color: token.ink,
+            opacity: 0.55,
           }}
         >
           <path
@@ -269,21 +303,21 @@ function GrupNilai({
         id={idHeader + '-isi'}
         role="group"
         aria-label={`Kebiasaan untuk nilai ${nilai}`}
-        style={{ display: buka ? undefined : 'none', paddingBottom: 4 }}
+        style={{ display: buka ? undefined : 'none' }}
       >
         {butirList.length === 0 ? (
           <p
             style={{
               fontFamily: 'Nunito, system-ui, sans-serif',
               fontSize: 13,
-              color: '#A98DA0',
-              padding: '4px 0 12px',
+              color: token.ink,
+              opacity: 0.7,
             }}
           >
             {COPY.BELUM_SIAP(nilai)}
           </p>
         ) : (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, paddingBottom: 4 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {butirList.map(butir => (
               <ButirSikap
                 key={butir.id}
@@ -418,25 +452,27 @@ export default function KartuKebiasaanBaik({
           fontSize: 22,
           fontWeight: 700,
           color: '#6E3B57',
-          margin: '0 0 2px',
+          margin: '0 0 16px',
         }}
       >
         {COPY.JUDUL}
       </h3>
 
-      {nilaiFokus.map(nilai => (
-        <GrupNilai
-          key={nilai}
-          nilai={nilai}
-          butirList={butirPerNilai.get(nilai) ?? []}
-          centangKebiasaan={centangKebiasaan}
-          tanggalHariIni={tanggalHariIni}
-          mekarLevel={riwayatPerNilai.get(nilai) ?? 0}
-          defaultBuka={defaultBuka}
-          sapaan={sapaan}
-          onToggleButir={onCentangToggle}
-        />
-      ))}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {nilaiFokus.map(nilai => (
+          <GrupNilai
+            key={nilai}
+            nilai={nilai}
+            butirList={butirPerNilai.get(nilai) ?? []}
+            centangKebiasaan={centangKebiasaan}
+            tanggalHariIni={tanggalHariIni}
+            mekarLevel={riwayatPerNilai.get(nilai) ?? 0}
+            defaultBuka={defaultBuka}
+            sapaan={sapaan}
+            onToggleButir={onCentangToggle}
+          />
+        ))}
+      </div>
     </section>
   );
 }

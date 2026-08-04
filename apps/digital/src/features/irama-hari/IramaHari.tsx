@@ -12,7 +12,9 @@ import { PilihanHarianProvider, usePilihanHarian } from './PilihanHarianContext'
 import type { PilihanHarian } from './PilihanHarianContext';
 import type { ItemBekal } from '../beranda-usia/bekal';
 import type { SapaanSet } from '../beranda-usia/useChildProfile';
-import KartuRutinitas from './KartuRutinitas';
+import KartuKebiasaanBaik from './KartuKebiasaanBaik';
+import type { CentangKebiasaan } from '@studiva/shared';
+import type { ItemSikap } from '../beranda-usia/adapter/sikapAdapter';
 import PilihanHariIni from './PilihanHariIni';
 import SusunanHari from './SusunanHari';
 import CatatanHari from './CatatanHari';
@@ -51,6 +53,14 @@ interface PropsIramaHari {
   tanggalLahir?: string;
   /** Dipanggil tiap kali state PilihanHarian berubah — dipakai IramaMingguan sebagai jembatan data. */
   onPilihanChange?: (pilihan: PilihanHarian, kolamAnak: readonly ItemBekal[]) => void;
+  /** Status centang kebiasaan harian; dikelola oleh IramaHariPage. */
+  centangKebiasaan: CentangKebiasaan;
+  /** Tanggal hari ini YYYY-MM-DD (WIB), dihitung sekali di IramaHariPage. */
+  tanggalHariIni: string;
+  /** Toggle satu butir sikap untuk nilai tertentu hari ini. */
+  onCentangToggle: (nilaiId: NilaiAkar, butirId: string) => void;
+  /** Navigasi ke halaman Bekal. */
+  onBekal: () => void;
 }
 
 // ─── Hero banner ──────────────────────────────────────────────────────────────
@@ -119,7 +129,7 @@ function HeroBanner({ sapaan, usiaBulan }: { sapaan: SapaanSet; usiaBulan: numbe
 
 // ─── Komponen utama ───────────────────────────────────────────────────────────
 
-export default function IramaHari({ nilaiFokus = [], namaAnak, tanggalLahir, onPilihanChange }: PropsIramaHari) {
+export default function IramaHari({ nilaiFokus = [], namaAnak, tanggalLahir, onPilihanChange, centangKebiasaan, tanggalHariIni, onCentangToggle, onBekal }: PropsIramaHari) {
   const { profile, sapaan, usiaBulan } = useChildProfile({ namaAnak, tanggalLahir });
   const isDev = process.env.NODE_ENV !== 'production';
 
@@ -245,6 +255,12 @@ export default function IramaHari({ nilaiFokus = [], namaAnak, tanggalLahir, onP
           usiaBulan={usiaBulanOk}
           idAnak={idAnak}
           onPilihanChange={onPilihanChange}
+          nilaiFokus={nilaiFokus}
+          katalogSikap={katalogSikap}
+          centangKebiasaan={centangKebiasaan}
+          tanggalHariIni={tanggalHariIni}
+          onCentangToggle={onCentangToggle}
+          onBekal={onBekal}
         />
       </PilihanHarianProvider>
     </article>
@@ -430,11 +446,17 @@ interface PropsIramaHariIsi {
   usiaBulan: number;
   idAnak: string;
   onPilihanChange?: (pilihan: PilihanHarian, kolamAnak: readonly ItemBekal[]) => void;
+  nilaiFokus: readonly NilaiAkar[];
+  katalogSikap: readonly ItemSikap[];
+  centangKebiasaan: CentangKebiasaan;
+  tanggalHariIni: string;
+  onCentangToggle: (nilaiId: NilaiAkar, butirId: string) => void;
+  onBekal: () => void;
 }
 
-function IramaHariIsi({ sapaan, wizardBelumDiisi, namaAnak, usiaBulan, idAnak, onPilihanChange }: PropsIramaHariIsi) {
+function IramaHariIsi({ sapaan, wizardBelumDiisi, namaAnak, usiaBulan, idAnak, onPilihanChange, nilaiFokus, katalogSikap, centangKebiasaan, tanggalHariIni, onCentangToggle, onBekal }: PropsIramaHariIsi) {
   const navigate = useNavigate();
-  const { sikapHariIni, pilihanHarianRaw, kolamAnak } = usePilihanHarian();
+  const { pilihanHarianRaw, kolamAnak } = usePilihanHarian();
   const [showTambahPopup, setShowTambahPopup] = useState(false);
 
   useEffect(() => {
@@ -443,13 +465,17 @@ function IramaHariIsi({ sapaan, wizardBelumDiisi, namaAnak, usiaBulan, idAnak, o
 
   return (
     <div className="bg-kanvas">
-      {/* Rutinitas — lebar penuh */}
+      {/* Kebiasaan Baik — lebar penuh */}
       <div className="px-6 pt-6 sm:px-10">
-        <KartuRutinitas
-          sikap={sikapHariIni}
-          wizardBelumDiisi={wizardBelumDiisi}
+        <KartuKebiasaanBaik
+          nilaiFokus={nilaiFokus}
+          usiaBulan={usiaBulan}
+          katalogSikap={katalogSikap}
+          centangKebiasaan={centangKebiasaan}
+          tanggalHariIni={tanggalHariIni}
           sapaan={sapaan}
-          onKeTamanAkar={() => navigate('/dashboard/tier2/bekal?tab=kebiasaan-baik')}
+          onCentangToggle={onCentangToggle}
+          onBekal={onBekal}
         />
       </div>
 

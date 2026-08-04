@@ -23,4 +23,5 @@ __exportStar(require("./planComposer"), exports);
 __exportStar(require("./reflections"), exports);
 __exportStar(require("./mingguan"), exports);
 __exportStar(require("./mekar"), exports);
+__exportStar(require("./centang"), exports);
 //# sourceMappingURL=index.js.map

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import type { OnboardingData } from '../../../features/onboarding/types';
 import { useAkarStateSync } from '../../../features/akar-keluarga/state';
@@ -7,7 +7,8 @@ import IramaHari from '../../../features/irama-hari/IramaHari';
 import IramaMingguan from '../../../features/irama-hari/IramaMingguan';
 import type { PilihanHarian } from '../../../features/irama-hari/PilihanHarianContext';
 import type { ItemBekal } from '../../../features/beranda-usia/bekal';
-import { tanggalDariTimestampWIB } from '@studiva/shared';
+import { tanggalDariTimestampWIB, toggleCentang } from '@studiva/shared';
+import type { CentangKebiasaan } from '@studiva/shared';
 
 interface OutletCtx {
   onboardingData: OnboardingData;
@@ -29,9 +30,18 @@ export default function IramaHariPage() {
   const [akarState] = useAkarStateSync(idAnak);
   const [pilihanHariIni, setPilihanHariIni] = useState<PilihanHarian | undefined>(undefined);
   const [kolamAnak, setKolamAnak] = useState<readonly ItemBekal[]>([]);
+  const [centangKebiasaan, setCentangKebiasaan] = useState<CentangKebiasaan>({});
 
-  const tglHariIni = tanggalDariTimestampWIB(new Date().toISOString());
+  const tanggalHariIni = useMemo(() => tanggalDariTimestampWIB(new Date().toISOString()), []);
   const nilaiFokus = akarState.nilai as NilaiAkar[];
+
+  const handleCentangToggle = useCallback(
+    (nilaiId: NilaiAkar, butirId: string) => {
+      setCentangKebiasaan(prev => toggleCentang(prev, nilaiId, butirId, tanggalHariIni));
+      // TODO: simpan ke backend
+    },
+    [tanggalHariIni],
+  );
 
   const handlePilihanChange = useCallback(
     (pilihan: PilihanHarian, kolam: readonly ItemBekal[]) => {
@@ -84,6 +94,10 @@ export default function IramaHariPage() {
           namaAnak={d.namaAnak}
           tanggalLahir={d.tanggalLahir}
           onPilihanChange={handlePilihanChange}
+          centangKebiasaan={centangKebiasaan}
+          tanggalHariIni={tanggalHariIni}
+          onCentangToggle={handleCentangToggle}
+          onBekal={() => navigate('/dashboard/tier2/bekal')}
         />
       </div>
 
@@ -91,7 +105,7 @@ export default function IramaHariPage() {
       <div style={{ display: tab === 'mingguan' ? 'block' : 'none', padding: '20px 0' }}>
         <IramaMingguan
           idAnak={idAnak ?? 'anak-default'}
-          tanggalHariIni={tglHariIni}
+          tanggalHariIni={tanggalHariIni}
           kolam={kolamAnak}
           nilaiFokus={nilaiFokus}
           pilihanHariIni={pilihanHariIni}

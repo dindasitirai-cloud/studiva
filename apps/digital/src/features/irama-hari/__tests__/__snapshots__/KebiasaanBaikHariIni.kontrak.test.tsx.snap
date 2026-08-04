@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Kontrak: aria-checked KartuKebiasaanBaik hanya butir yang dicentang menjadi true 1`] = `
+Array [
+  Object {
+    "checked": true,
+    "label": "kasih-sayang, Kontak mata dan sapaan lembut",
+  },
+  Object {
+    "checked": false,
+    "label": "kasih-sayang, Merespons tangisan dengan tenang",
+  },
+  Object {
+    "checked": false,
+    "label": "kejujuran, Cerita jujur tentang kejadian tadi",
+  },
+]
+`;
+
+exports[`Kontrak: aria-checked KartuKebiasaanBaik membatalkan centang mengembalikan ke false 1`] = `
+Array [
+  Object {
+    "checked": false,
+    "label": "kasih-sayang, Kontak mata dan sapaan lembut",
+  },
+  Object {
+    "checked": false,
+    "label": "kasih-sayang, Merespons tangisan dengan tenang",
+  },
+  Object {
+    "checked": false,
+    "label": "kejujuran, Cerita jujur tentang kejadian tadi",
+  },
+]
+`;
+
+exports[`Kontrak: aria-checked KartuKebiasaanBaik semua false saat centangKebiasaan kosong 1`] = `
+Array [
+  Object {
+    "checked": false,
+    "label": "kasih-sayang, Kontak mata dan sapaan lembut",
+  },
+  Object {
+    "checked": false,
+    "label": "kasih-sayang, Merespons tangisan dengan tenang",
+  },
+  Object {
+    "checked": false,
+    "label": "kejujuran, Cerita jujur tentang kejadian tadi",
+  },
+]
+`;
+
+exports[`Kontrak: aria-label KartuKebiasaanBaik pola aria-label seluruh butir, terurut 1`] = `
+Array [
+  "kasih-sayang, Kontak mata dan sapaan lembut",
+  "kasih-sayang, Merespons tangisan dengan tenang",
+  "kejujuran, Cerita jujur tentang kejadian tadi",
+]
+`;
+
+exports[`Kontrak: disiramPada snapshot: kondisi mixed 1`] = `
+Object {
+  "kasih-sayang": true,
+  "kejujuran": true,
+}
+`;

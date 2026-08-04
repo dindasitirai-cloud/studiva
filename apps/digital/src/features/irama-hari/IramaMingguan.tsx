@@ -5,12 +5,6 @@ import type { NilaiAkar } from '../akar-keluarga/content';
 import type { ItemBekal } from '../beranda-usia/bekal';
 import type { ItemIrama, BlokWaktu, HariIrama } from '@studiva/shared';
 import { getMingguIrama, getSeninMinggu, tambahHari } from '@studiva/shared';
-export interface JadwalManualItem {
-  id: string;
-  judul: string;
-  tipe: 'kegiatan' | 'buku';
-  warnaCover?: string;
-}
 import GridMingguan from './GridMingguan';
 import BungaKebiasaan from './BungaKebiasaan';
 import RingkasanMinggu from './RingkasanMinggu';
@@ -18,6 +12,13 @@ import LegendaIrama from './LegendaIrama';
 import { pilihanKeHari, buatKolamMap } from './mingguanAdapter';
 import type { PilihanHarian } from './PilihanHarianContext';
 import { JUDUL_LAYAR, ARIA_MINGGU_SEBELUMNYA, ARIA_MINGGU_BERIKUTNYA } from './contentMingguan';
+
+export interface JadwalManualItem {
+  id: string;
+  judul: string;
+  tipe: 'kegiatan' | 'buku';
+  warnaCover?: string;
+}
 
 interface PropsIramaMingguan {
   idAnak: string;

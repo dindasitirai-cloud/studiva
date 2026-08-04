@@ -1,8 +1,6 @@
 import React from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import type { OnboardingData } from '../onboarding/types';
-import KartuPekanIni from './KartuPekanIni';
-import KartuSorotan from './KartuSorotan';
 // TODO: posisi final BerandaUsia di beranda menunggu keputusan tata letak
 import BerandaUsia from '../beranda-usia/BerandaUsia';
 
@@ -20,7 +18,6 @@ interface OutletCtx {
 
 export default function BerandaPage() {
   const { onboardingData: d } = useOutletContext<OutletCtx>();
-  const navigate = useNavigate();
   // TODO: nama dari profil; sementara "Ayah/Bunda"
   const namaOrangTua = 'Ayah/Bunda';
 
@@ -47,20 +44,6 @@ export default function BerandaPage() {
             <span className="text-[13px] font-semibold text-pekat">{d.namaAnak}</span>
             <span className="text-[11px] text-pekat/40">{bandLabel}</span>
           </div>
-        </div>
-      </div>
-
-      {/* Kartu-kartu */}
-      <div className="px-4 sm:px-6">
-        <div className="mx-auto flex max-w-lg flex-col gap-4">
-          <KartuPekanIni
-            namaAnak={d.namaAnak}
-            band={d.band}
-            nilai={d.nilai}
-            fokus={d.fokus}
-          />
-
-          <KartuSorotan band={d.band} />
         </div>
       </div>
 

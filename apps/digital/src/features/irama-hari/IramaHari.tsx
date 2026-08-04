@@ -25,6 +25,8 @@ import {
   LAYAR_MELEWATI_RENTANG,
   LAYAR_KONTEN_BELUM_SIAP,
 } from './content';
+import FilterSubUsia, { resolveSubUsia } from '../../components/FilterSubUsia';
+import type { IdSubUsia } from '../../components/FilterSubUsia';
 
 // ─── Utilitas tanggal (Indonesia) ────────────────────────────────────────────
 
@@ -198,7 +200,17 @@ export default function IramaHari({ nilaiFokus = [], namaAnak, tanggalLahir, onP
     .flatMap(b => b.subTahap)
     .find(st => st.id === hasil.subTahap.id);
 
-  const kolam = subTahapPopulated?.kegiatan ?? [];
+  // Untuk band 0-1 tahun, perluas kolam ke semua sub tahap agar orang tua
+  // bisa menjadwalkan kegiatan dari sub tahap lain melalui filter.
+  // TODO: validasi klinis oleh Psikolog Fitri bahwa lintas sub tahap diizinkan
+  const SUB_TAHAP_YEAR_ONE = ['b03', 'b36', 'b69', 'b912'];
+  const isYearOneBand = usiaBulanOk < 12;
+  const kolam: ItemBekal[] = isYearOneBand
+    ? bekalRakit
+        .flatMap(b => b.subTahap)
+        .filter(st => SUB_TAHAP_YEAR_ONE.includes(st.id))
+        .flatMap(st => st.kegiatan.map(item => ({ ...item, subTahapId: st.id })))
+    : (subTahapPopulated?.kegiatan ?? []);
   const kolamOrangTua = subTahapPopulated?.panduan ?? [];
   const maksItem = subTahapPopulated?.maksItemPerHari ?? hasil.subTahap.maksItemPerHari;
   const idAnak = profile.namaAnak || 'anak-default';
@@ -259,9 +271,13 @@ const TIPE_LABEL: Record<string, string> = {
 
 // ─── PopupPilihKegiatan ───────────────────────────────────────────────────────
 
-function PopupPilihKegiatan({ onTutup }: { onTutup: () => void }) {
+function PopupPilihKegiatan({ usiaBulan, onTutup }: { usiaBulan: number; onTutup: () => void }) {
   const { kolamAnak, pilihanEfektif, tambah, hapus } = usePilihanHarian();
   const elRef = useRef<HTMLDivElement>(null);
+  const isYearOne = usiaBulan < 12;
+  const [subUsia, setSubUsia] = useState<IdSubUsia>(
+    () => resolveSubUsia(usiaBulan),
+  );
 
   const pilihanSet = useMemo(
     () => new Set(pilihanEfektif.map(i => i.id)),
@@ -276,12 +292,17 @@ function PopupPilihKegiatan({ onTutup }: { onTutup: () => void }) {
 
   useEffect(() => { elRef.current?.focus(); }, []);
 
+  const kolamFiltered = useMemo(() => {
+    if (!isYearOne) return kolamAnak;
+    return kolamAnak.filter(item => item.subTahapId === subUsia);
+  }, [kolamAnak, isYearOne, subUsia]);
+
   const grouped = useMemo(() => {
-    const aktivitas = kolamAnak.filter(i => i.tipe === 'aktivitas');
-    const alat      = kolamAnak.filter(i => i.tipe === 'alatEdukasi');
-    const unduhan   = kolamAnak.filter(i => i.tipe === 'unduhan');
+    const aktivitas = kolamFiltered.filter(i => i.tipe === 'aktivitas');
+    const alat      = kolamFiltered.filter(i => i.tipe === 'alatEdukasi');
+    const unduhan   = kolamFiltered.filter(i => i.tipe === 'unduhan');
     return { aktivitas, alat, unduhan };
-  }, [kolamAnak]);
+  }, [kolamFiltered]);
 
   function KartuPilih({ item }: { item: import('../beranda-usia/bekal').ItemBekal }) {
     const sudahDipilih = pilihanSet.has(item.id);
@@ -354,24 +375,31 @@ function PopupPilihKegiatan({ onTutup }: { onTutup: () => void }) {
         style={{ maxHeight: '88dvh' }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 pt-5 pb-3">
-          <div>
-            <p className="font-bricolage text-[17px] font-bold text-pekat">Pilih kegiatan</p>
-            <p className="text-[12px] text-pekat/50">dari koleksi Ajak Main</p>
+        <div className="px-5 pt-5 pb-2">
+          <div className="flex items-center justify-between pb-1">
+            <div>
+              <p className="font-bricolage text-[17px] font-bold text-pekat">Pilih kegiatan</p>
+              <p className="text-[12px] text-pekat/50">dari koleksi Ajak Main</p>
+            </div>
+            <button
+              type="button"
+              aria-label="Tutup"
+              onClick={onTutup}
+              className="flex h-8 w-8 items-center justify-center rounded-full text-[18px] text-pekat/40 hover:bg-mawar/20 hover:text-pekat focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
-          <button
-            type="button"
-            aria-label="Tutup"
-            onClick={onTutup}
-            className="flex h-8 w-8 items-center justify-center rounded-full text-[18px] text-pekat/40 hover:bg-mawar/20 hover:text-pekat focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
-          >
-            <X className="h-4 w-4" />
-          </button>
+
+          {/* Filter sub tahap usia */}
+          {isYearOne && (
+            <FilterSubUsia nilai={subUsia} onPilih={setSubUsia} />
+          )}
         </div>
 
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto px-5 pb-6">
-          {kolamAnak.length === 0 ? (
+          {kolamFiltered.length === 0 ? (
             <p className="py-10 text-center text-[14px] text-pekat/45">
               Belum ada kegiatan tersedia untuk saat ini.
             </p>
@@ -444,7 +472,7 @@ function IramaHariIsi({ sapaan, wizardBelumDiisi, namaAnak, usiaBulan, idAnak, o
       </div>
 
       {showTambahPopup && (
-        <PopupPilihKegiatan onTutup={() => setShowTambahPopup(false)} />
+        <PopupPilihKegiatan usiaBulan={usiaBulan} onTutup={() => setShowTambahPopup(false)} />
       )}
     </div>
   );

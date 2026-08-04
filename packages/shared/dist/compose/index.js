@@ -52,7 +52,8 @@ function composeScientific(card, modules, sources) {
     // Legacy / TODO cards: any ref-type markers → already in final shape.
     const isNew = sections.some(hasType) || stats.some(hasType);
     if (!isNew) {
-        return { ...sci };
+        const legacy = sci;
+        return { ...legacy, takeaways: sci.takeaways };
     }
     // 1. Resolve stats to intermediate { value, label, sourceId? }
     const resolvedStats = stats.map((st) => {
@@ -135,9 +136,11 @@ function composeScientific(card, modules, sources) {
         readMinutes: sci.readMinutes,
         reviewedBy: sci.reviewedBy,
         figure: sci.figure,
+        figures: sci.figures,
         stats: outStats.length ? outStats : undefined,
         sections: outSections,
         references: references.length ? references : undefined,
+        takeaways: sci.takeaways,
     };
 }
 exports.composeScientific = composeScientific;

@@ -62,9 +62,11 @@ export interface ComposeCard {
             date: string;
         };
         figure?: ComposeFigure;
+        figures?: ComposeFigure[];
         sections?: (SectionRef | LegacySection)[];
         stats?: (StatRef | LegacyStat)[];
         paragraphs?: string[];
+        takeaways?: string[];
     };
 }
 export interface ResolvedStat {
@@ -90,9 +92,11 @@ export interface ScientificResolved {
     };
     stats?: ResolvedStat[];
     figure?: ComposeFigure;
+    figures?: ComposeFigure[];
     sections?: ResolvedSection[];
     references?: ResolvedReference[];
     paragraphs?: string[];
+    takeaways?: string[];
 }
 /**
  * Resolve a card's composable scientific payload into the concrete shape the

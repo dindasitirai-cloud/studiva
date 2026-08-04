@@ -21,4 +21,6 @@ __exportStar(require("./weeklyPlanTemplates"), exports);
 __exportStar(require("./profiles"), exports);
 __exportStar(require("./planComposer"), exports);
 __exportStar(require("./reflections"), exports);
+__exportStar(require("./mingguan"), exports);
+__exportStar(require("./mekar"), exports);
 //# sourceMappingURL=index.js.map

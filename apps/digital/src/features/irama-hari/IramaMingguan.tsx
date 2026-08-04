@@ -5,7 +5,7 @@ import type { ItemBekal } from '../beranda-usia/bekal';
 import type { ItemIrama, BlokWaktu, HariIrama } from '@studiva/shared';
 import { getMingguIrama, getSeninMinggu, tambahHari } from '@studiva/shared';
 import GridMingguan from './GridMingguan';
-import PitaKebiasaan from './PitaKebiasaan';
+import BungaKebiasaan from './BungaKebiasaan';
 import RingkasanMinggu from './RingkasanMinggu';
 import LegendaIrama from './LegendaIrama';
 import { pilihanKeHari, buatKolamMap } from './mingguanAdapter';
@@ -130,11 +130,6 @@ export default function IramaMingguan({
 
   // TODO: fetch riwayat siram dari backend.
   const riwayatSiram: Record<string, NilaiAkar[]> = {};
-
-  const handleToggleSiram = useCallback((_nilai: NilaiAkar, _tanggal: string) => {
-    // TODO: kirim ke backend: simpanSiram(idAnak, nilai, tanggal)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleKetukItem = useCallback((_item: ItemIrama, _tanggal: string, _blok: BlokWaktu) => {
     // TODO: buka bottom sheet detail item
@@ -288,16 +283,12 @@ export default function IramaMingguan({
         <LegendaIrama />
       </div>
 
-      {/* Pita Kebiasaan */}
-      <PitaKebiasaan
+      {/* Bunga Kebiasaan */}
+      <BungaKebiasaan
         nilaiFokus={nilaiFokus as NilaiAkar[]}
         riwayatSiram={riwayatSiram}
         mulaiSenin={mulaiSenin}
         tanggalHariIni={tanggalHariIni}
-        onToggleSiram={handleToggleSiram}
-        onKetukLabel={(_nilai) => {
-          // TODO: navigasi ke bunga di Taman Akar
-        }}
         onKetukAkarKeluarga={() => onAkarKeluargaPress?.()}
       />
 

@@ -21,6 +21,7 @@ __exportStar(require("./content/domains"), exports);
 __exportStar(require("./content/sources"), exports);
 __exportStar(require("./content/modules"), exports);
 __exportStar(require("./content/knowledgeCardData"), exports);
+__exportStar(require("./content/modules-islam"), exports);
 // Rekah data foundation
 __exportStar(require("./rekah/index"), exports);
 //# sourceMappingURL=index.js.map

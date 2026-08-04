@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Kontrak: aria-label tetap GridMingguan grid container 1`] = `"Grid Irama Hari Mingguan"`;
+
+exports[`Kontrak: aria-label tetap GridMingguan sel grid: hari × blok 1`] = `
+Array [
+  "Senin Pagi",
+  "Senin Siang",
+  "Senin Sore",
+  "Senin Jelang tidur",
+  "Selasa Pagi",
+  "Selasa Siang",
+  "Selasa Sore",
+  "Selasa Jelang tidur",
+  "Rabu Pagi",
+  "Rabu Siang",
+  "Rabu Sore",
+  "Rabu Jelang tidur",
+  "Kamis Pagi",
+  "Kamis Siang",
+  "Kamis Sore",
+  "Kamis Jelang tidur",
+  "Jumat Pagi",
+  "Jumat Siang",
+  "Jumat Sore",
+  "Jumat Jelang tidur",
+  "Sabtu Pagi",
+  "Sabtu Siang",
+  "Sabtu Sore",
+  "Sabtu Jelang tidur",
+  "Minggu Pagi",
+  "Minggu Siang",
+  "Minggu Sore",
+  "Minggu Jelang tidur",
+]
+`;
+
+exports[`Kontrak: aria-label tetap GridMingguan tombol header hari 1`] = `
+Array [
+  "Senin, buka Irama Hari harian",
+  "Selasa, buka Irama Hari harian",
+  "Rabu, buka Irama Hari harian",
+  "Kamis, buka Irama Hari harian",
+  "Jumat, buka Irama Hari harian",
+  "Sabtu, buka Irama Hari harian",
+  "Minggu, buka Irama Hari harian",
+]
+`;
+
+exports[`Kontrak: aria-label tetap LegendaIrama section label 1`] = `"Legenda Irama Hari Mingguan"`;
+
+exports[`Kontrak: pola aria-label KotakIrama ajak main selesai 1`] = `"Rabu Siang. Ajak Main: Membuat gelembung. Sosial-Emosional. Selesai."`;
+
+exports[`Kontrak: pola aria-label KotakIrama ajak main terjadwal 1`] = `"Senin Pagi. Ajak Main: Berlari bersama. Motorik Kasar. Terjadwal."`;
+
+exports[`Kontrak: pola aria-label KotakIrama semua blok × hari Senin 1`] = `
+Array [
+  "Senin Pagi. Ajak Main: Bermain pasir. Sensorik. Terjadwal.",
+  "Senin Siang. Ajak Main: Bermain pasir. Sensorik. Terjadwal.",
+  "Senin Sore. Ajak Main: Bermain pasir. Sensorik. Terjadwal.",
+  "Senin Jelang tidur. Ajak Main: Bermain pasir. Sensorik. Terjadwal.",
+]
+`;
+
+exports[`Kontrak: pola aria-label KotakIrama wawasan selesai 1`] = `"Jumat Sore. Wawasan Tumbuh: Kisah Semut. Selesai."`;
+
+exports[`Kontrak: pola aria-label KotakIrama wawasan terjadwal 1`] = `"Minggu Jelang tidur. Wawasan Tumbuh: Mengapa Langit Biru?. Terjadwal."`;
+
+exports[`Kontrak: string tetap contentMingguan judul layar 1`] = `"Irama Hari"`;
+
+exports[`Kontrak: string tetap contentMingguan judul ringkasan + pita 1`] = `
+Object {
+  "pita": "Pita Kebiasaan",
+  "ringkasan": "Irama Minggu Ini",
+}
+`;
+
+exports[`Kontrak: string tetap contentMingguan kebiasaan: state strings 1`] = `
+Object {
+  "disiram": "Syukur disiram di 5 hari minggu ini.",
+  "istirahat": "Sabar sedang istirahat minggu ini.",
+  "kosong": "Tanam nilai pertama di Akar Keluarga",
+  "lihatSemua": "Lihat semua nilai",
+}
+`;
+
+exports[`Kontrak: string tetap contentMingguan label blok waktu 1`] = `
+Object {
+  "jelangTidur": "Jelang tidur",
+  "pagi": "Pagi",
+  "siang": "Siang",
+  "sore": "Sore",
+}
+`;
+
+exports[`Kontrak: string tetap contentMingguan label domain 1`] = `
+Object {
+  "bhs": "Bahasa",
+  "fe": "Fungsi Eksekutif",
+  "kog": "Kognitif",
+  "mh": "Motorik Halus",
+  "mk": "Motorik Kasar",
+  "sen": "Sensorik",
+  "sos": "Sosial-Emosional",
+}
+`;
+
+exports[`Kontrak: string tetap contentMingguan legenda 1`] = `
+Object {
+  "ajak": "Ajak Main",
+  "wawasan": "Wawasan Tumbuh",
+}
+`;
+
+exports[`Kontrak: string tetap contentMingguan nama domain ramah 1`] = `
+Object {
+  "bhs": "obrolan",
+  "fe": "mengatur diri",
+  "kog": "berpikir dan mencari tahu",
+  "mh": "gerak jemari",
+  "mk": "gerak besar",
+  "sen": "meraba dan merasakan",
+  "sos": "rasa dan hubungan",
+}
+`;
+
+exports[`Kontrak: string tetap contentMingguan navigasi minggu 1`] = `
+Object {
+  "berikutnya": "Minggu berikutnya",
+  "sebelumnya": "Minggu sebelumnya",
+}
+`;
+
+exports[`Kontrak: string tetap contentMingguan ringkasan: state strings 1`] = `
+Object {
+  "bacaan": "Minggu ini banyak membaca bersama.",
+  "beragam": "Minggu ini beragam.",
+  "dominan": "Minggu ini banyak gerak besar.",
+  "kosong": "Minggu ini belum ada catatan.",
+}
+`;

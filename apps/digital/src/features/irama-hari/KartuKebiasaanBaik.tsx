@@ -421,12 +421,34 @@ export default function KartuKebiasaanBaik({
     return (
       <section aria-labelledby="kartu-kebiasaan-baik-judul" style={STYLE_KARTU_LUAR}>
         {JUDUL_NODE}
+        {/* Dekorasi kelopak kosong */}
+        <div
+          aria-hidden="true"
+          style={{ display: 'flex', justifyContent: 'center', gap: 10, marginBottom: 16 }}
+        >
+          {[TOKEN_DEFAULT, TOKEN_NILAI['kasih-sayang'] ?? TOKEN_DEFAULT, TOKEN_NILAI['syukur'] ?? TOKEN_DEFAULT].map(
+            (tok, i) => (
+              <div
+                key={i}
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: RADIUS_KELOPAK,
+                  background: tok.soft,
+                  border: `1.5px solid ${tok.accent}30`,
+                  opacity: 0.7 + i * 0.1,
+                }}
+              />
+            ),
+          )}
+        </div>
         <p
           style={{
             fontFamily: 'Nunito, system-ui, sans-serif',
             fontSize: 14,
             color: '#8A7080',
-            marginBottom: 14,
+            marginBottom: 16,
+            lineHeight: 1.5,
           }}
         >
           {COPY.AJAKAN_KOSONG}
@@ -435,11 +457,15 @@ export default function KartuKebiasaanBaik({
           type="button"
           onClick={onBekal}
           style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: 44,
             background: '#F06BA8',
             color: '#fff',
             border: 'none',
             borderRadius: 999,
-            padding: '8px 20px',
+            padding: '0 22px',
             fontFamily: 'Nunito, system-ui, sans-serif',
             fontSize: 13,
             fontWeight: 700,

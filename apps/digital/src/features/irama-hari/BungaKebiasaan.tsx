@@ -193,7 +193,7 @@ interface PropsBungaKebiasaan {
   mulaiSenin: string;
   tanggalHariIni: string;
   onToggleSiram?: (nilai: NilaiAkar, tanggal: string) => void;
-  onKetukAkarKeluarga: () => void;
+  onTanamNilai: () => void;
 }
 
 export default function BungaKebiasaan({
@@ -202,7 +202,7 @@ export default function BungaKebiasaan({
   mulaiSenin,
   tanggalHariIni,
   onToggleSiram,
-  onKetukAkarKeluarga,
+  onTanamNilai,
 }: PropsBungaKebiasaan) {
   const [lihatSemua, setLihatSemua] = useState(false);
 
@@ -215,7 +215,7 @@ export default function BungaKebiasaan({
       <div style={{ padding: '8px 0' }}>
         <button
           type="button"
-          onClick={onKetukAkarKeluarga}
+          onClick={onTanamNilai}
           style={{
             background: 'none',
             border: 'none',

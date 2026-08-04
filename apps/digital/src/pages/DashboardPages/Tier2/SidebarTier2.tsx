@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  Home, Baby, HeartHandshake, CreditCard, Settings, LogOut, X, CalendarDays, Sprout, BookOpen, BookHeart, Compass,
+  Home, Baby, HeartHandshake, CreditCard, Settings, LogOut, X, CalendarDays, Sprout, BookOpen, BookHeart, Compass, Lightbulb, Sun,
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import LogoRekah from '../../../components/LogoRekah';
@@ -9,9 +9,11 @@ import Kelopak from '../../../components/Kelopak';
 
 const navItems = [
   { to: '/dashboard/tier2', label: 'Beranda', icon: Home, end: true },
+  { to: '/dashboard/tier2/irama-hari', label: 'Irama Hari', icon: Sun },
   { to: '/dashboard/tier2/rencana', label: 'Rencana Pekan Ini', icon: CalendarDays },
   { to: '/dashboard/tier2/jelajah', label: 'Jelajah', icon: Compass },
   { to: '/dashboard/tier2/jejak-mekar', label: 'Jejak Mekar', icon: Sprout },
+  { to: '/dashboard/tier2/strategies', label: 'Learning Strategies', icon: Lightbulb },
   { to: '/dashboard/tier2/jurnal', label: 'Jurnal', icon: BookOpen },
   { to: '/dashboard/tier2/jurnal-perkembangan', label: 'Jurnal Perkembangan', icon: BookHeart },
   { to: '/dashboard/tier2/profil-anak', label: 'Profil Anak', icon: Baby },

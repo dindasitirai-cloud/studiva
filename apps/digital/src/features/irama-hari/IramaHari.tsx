@@ -421,7 +421,7 @@ function IramaHariIsi({ sapaan, wizardBelumDiisi, namaAnak, usiaBulan, idAnak, o
           sikap={sikapHariIni}
           wizardBelumDiisi={wizardBelumDiisi}
           sapaan={sapaan}
-          onKeTamanAkar={() => navigate('/dashboard/tier2/akar-keluarga')}
+          onKeTamanAkar={() => navigate('/dashboard/tier2/bekal?tab=kebiasaan-baik')}
         />
       </div>
 

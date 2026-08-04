@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import type { NilaiAkar } from '../akar-keluarga/content';
 import type { ItemBekal } from '../beranda-usia/bekal';
 import type { ItemIrama, BlokWaktu, HariIrama } from '@studiva/shared';
@@ -24,10 +25,10 @@ interface PropsIramaMingguan {
   nilaiFokus: readonly NilaiAkar[];
   /** Pilihan hari ini dari IramaHari — jembatan data tanpa fetch backend. */
   pilihanHariIni?: PilihanHarian;
+  /** Nama anak — untuk header cetak. */
+  namaAnak?: string;
   /** Callback untuk navigasi ke Bekal. */
   onBekalPress?: () => void;
-  /** Callback untuk navigasi ke Akar Keluarga. */
-  onAkarKeluargaPress?: () => void;
 }
 
 /**
@@ -43,9 +44,10 @@ export default function IramaMingguan({
   kolam,
   nilaiFokus,
   pilihanHariIni,
+  namaAnak,
   onBekalPress,
-  onAkarKeluargaPress,
 }: PropsIramaMingguan) {
+  const navigate = useNavigate();
   // Minggu yang sedang ditampilkan (Senin ISO).
   const senin = getSeninMinggu(tanggalHariIni);
   const [mulaiSenin, setMulaiSenin] = useState(senin);
@@ -260,6 +262,32 @@ export default function IramaMingguan({
             <ChevronRight style={{ width: 20, height: 20 }} />
           </button>
         </div>
+
+        {/* Tombol simpan minggu */}
+        <div style={{ marginTop: 8, textAlign: 'center' }}>
+          <button
+            type="button"
+            onClick={() => {
+              // TODO: arsip mingguan otomatis butuh backend
+              navigate(`/dashboard/tier2/irama-hari/minggu/${mulaiSenin}/cetak`, {
+                state: { mulaiSenin, namaAnak: namaAnak ?? '', minggu, riwayatSiram },
+              });
+            }}
+            style={{
+              background: 'none',
+              border: '1.5px solid #B98FAD',
+              borderRadius: 999,
+              padding: '7px 20px',
+              fontFamily: 'Nunito, system-ui, sans-serif',
+              fontSize: 13,
+              fontWeight: 700,
+              color: '#6E3B57',
+              cursor: 'pointer',
+            }}
+          >
+            Simpan minggu ini
+          </button>
+        </div>
       </div>
 
       {/* Dua kolom: grid kiri, kebiasaan kanan — wrap ke satu kolom di layar sempit */}
@@ -303,7 +331,7 @@ export default function IramaMingguan({
             mulaiSenin={mulaiSenin}
             tanggalHariIni={tanggalHariIni}
             onToggleSiram={handleToggleSiram}
-            onKetukAkarKeluarga={() => onAkarKeluargaPress?.()}
+            onTanamNilai={() => navigate('/dashboard/tier2/bekal?tab=kebiasaan-baik')}
           />
         </div>
       </div>

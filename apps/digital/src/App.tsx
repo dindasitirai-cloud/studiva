@@ -11,7 +11,14 @@ import { RekahRefleksiProvider } from './context/RekahRefleksiContext';
 import { JurnalRekahProvider } from './context/JurnalRekahContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import PrivateRoute, { AdminRoute, ParentRoute } from './components/PrivateRoute';
+import PrivateRoute, { AdminRoute, ParentRoute, PeninjauRoute } from './components/PrivateRoute';
+import RekahAdminShell from './pages/RekahAdmin/RekahAdminShell';
+import BerandaRekahAdmin from './pages/RekahAdmin/BerandaRekahAdmin';
+import AntreanTinjauan from './pages/RekahAdmin/AntreanTinjauan';
+import LayarDiff from './pages/RekahAdmin/LayarDiff';
+import EditorSikap from './pages/RekahAdmin/EditorSikap';
+import SemuaDraf from './pages/RekahAdmin/SemuaDraf';
+import WawasanTumbuhAdmin from './pages/RekahAdmin/WawasanTumbuhAdmin';
 import SubscriptionGuard from './components/SubscriptionGuard';
 
 // Public pages
@@ -49,6 +56,12 @@ import JelajahAktivitasPage from './pages/DashboardPages/Tier2/JelajahAktivitasP
 import KnowledgeGallery from './pages/DashboardPages/Tier2/KnowledgeGallery';
 import KnowledgeCardSummary from './pages/DashboardPages/Tier2/KnowledgeCardSummary';
 import KnowledgeCardScientific from './pages/DashboardPages/Tier2/KnowledgeCardScientific';
+import IramaHariPage from './pages/DashboardPages/Tier2/IramaHariPage';
+import CetakMingguPage from './pages/DashboardPages/Tier2/CetakMingguPage';
+import BerandaPage from './features/beranda/BerandaPage';
+import LearningStrategiesTier2 from './pages/DashboardPages/Tier2/LearningStrategiesTier2';
+import StrategyDetailTier2 from './pages/DashboardPages/Tier2/StrategyDetailTier2';
+import BekalPage from './pages/DashboardPages/Tier2/BekalPage';
 
 // Admin shell
 import AdminShell from './pages/AdminPages/AdminShell';
@@ -72,6 +85,7 @@ const ADMIN_SHELL_PATHS = [
   '/admin', '/admin/courses', '/admin/strategies',
   '/admin/forum', '/admin/konsultasi', '/admin/members', '/admin/payments', '/admin/settings',
   '/admin/guru-akun', '/admin/knowledge-cards', '/admin/tracker-konten', '/admin/partner-orang-tua',
+  '/rekah-admin',
 ];
 
 function Layout({ children }: { children: React.ReactNode }) {
@@ -150,7 +164,7 @@ export default function App() {
                 </ParentRoute>
               }
             >
-              <Route index element={<BerandaRekah />} />
+              <Route index element={<BerandaPage />} />
               <Route path="profil-anak" element={<ProfilAnakTier2 />} />
               <Route path="subscription" element={<SubscriptionTier2 />} />
               <Route path="partner-orang-tua" element={<PartnerOrangTuaPage tierContext="tier2" />} />
@@ -163,6 +177,13 @@ export default function App() {
               <Route path="jurnal" element={<JurnalPage />} />
               <Route path="jurnal-perkembangan" element={<JurnalPerkembanganPage />} />
               <Route path="pengaturan" element={<PengaturanPage />} />
+              <Route path="irama-hari" element={<IramaHariPage />} />
+              <Route path="irama-hari/minggu/:tanggalSenin/cetak" element={<CetakMingguPage />} />
+              <Route path="akar-keluarga" element={<Navigate to="../irama-hari" replace />} />
+              <Route path="cermin-tumbuh" element={<Navigate to="../irama-hari" replace />} />
+              <Route path="strategies" element={<LearningStrategiesTier2 />} />
+              <Route path="strategies/:id" element={<StrategyDetailTier2 />} />
+              <Route path="bekal" element={<BekalPage />} />
             </Route>
 
             {/* Admin Digital — CMS, konten, manajemen langganan */}
@@ -182,6 +203,23 @@ export default function App() {
               <Route path="knowledge-cards/:id/edit" element={<KnowledgeCardFormAdmin />} />
               <Route path="tracker-konten" element={<TrackerKontenAdmin />} />
               <Route path="partner-orang-tua" element={<PartnerInboxPage />} />
+            </Route>
+
+            {/* Rekah Admin — pipeline tinjauan konten, staf Rekah */}
+            <Route
+              path="/rekah-admin"
+              element={<PeninjauRoute><RekahAdminShell /></PeninjauRoute>}
+            >
+              <Route index element={<BerandaRekahAdmin />} />
+              <Route path="ajak-main" element={<StrategiesAdmin pipelineOnly />} />
+              <Route path="wawasan" element={<WawasanTumbuhAdmin />} />
+              <Route path="wawasan/new" element={<KnowledgeCardFormAdmin pipelineOnly backPath="/rekah-admin/wawasan" />} />
+              <Route path="wawasan/:id/edit" element={<KnowledgeCardFormAdmin pipelineOnly backPath="/rekah-admin/wawasan" />} />
+              <Route path="sikap" element={<EditorSikap />} />
+              <Route path="tracker" element={<TrackerKontenAdmin />} />
+              <Route path="antrean" element={<AntreanTinjauan />} />
+              <Route path="diff/:id" element={<LayarDiff />} />
+              <Route path="semua" element={<SemuaDraf />} />
             </Route>
 
             {/* Legacy redirects */}

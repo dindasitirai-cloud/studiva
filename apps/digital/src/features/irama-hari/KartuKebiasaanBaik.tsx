@@ -381,29 +381,46 @@ export default function KartuKebiasaanBaik({
 
   const defaultBuka = nilaiFokus.length <= AMBANG_LIPAT_OTOMATIS;
 
-  if (nilaiFokus.length === 0) {
-    return (
-      <section
-        aria-labelledby="kartu-kebiasaan-baik-judul"
+  const STYLE_KARTU_LUAR = {
+    background: 'white',
+    borderRadius: 30,
+    padding: '26px 30px 28px',
+    boxShadow: '0 18px 40px -30px rgba(90,50,70,.55)',
+  } as const;
+
+  const JUDUL_NODE = (
+    <div style={{ marginBottom: 20 }}>
+      <h3
+        id="kartu-kebiasaan-baik-judul"
         style={{
-          background: 'white',
-          borderRadius: 26,
-          padding: '22px 26px',
-          boxShadow: '0 20px 40px -26px rgba(90,50,70,.55)',
+          fontFamily: 'Fredoka, system-ui, sans-serif',
+          fontWeight: 700,
+          fontSize: 26,
+          color: '#6E3B57',
+          margin: 0,
+          letterSpacing: '-0.3px',
         }}
       >
-        <h3
-          id="kartu-kebiasaan-baik-judul"
-          style={{
-            fontFamily: 'Fredoka, system-ui, sans-serif',
-            fontSize: 22,
-            fontWeight: 700,
-            color: '#6E3B57',
-            margin: '0 0 8px',
-          }}
-        >
-          {COPY.JUDUL}
-        </h3>
+        {COPY.JUDUL}
+      </h3>
+      <div
+        style={{
+          fontFamily: "'Shantell Sans', cursive, system-ui",
+          fontWeight: 600,
+          fontSize: 16,
+          color: '#F06BA8',
+          marginTop: 3,
+        }}
+      >
+        {COPY.SUBJUDUL}
+      </div>
+    </div>
+  );
+
+  if (nilaiFokus.length === 0) {
+    return (
+      <section aria-labelledby="kartu-kebiasaan-baik-judul" style={STYLE_KARTU_LUAR}>
+        {JUDUL_NODE}
         <p
           style={{
             fontFamily: 'Nunito, system-ui, sans-serif',
@@ -436,27 +453,8 @@ export default function KartuKebiasaanBaik({
   }
 
   return (
-    <section
-      aria-labelledby="kartu-kebiasaan-baik-judul"
-      style={{
-        background: 'white',
-        borderRadius: 26,
-        padding: '22px 26px 16px',
-        boxShadow: '0 20px 40px -26px rgba(90,50,70,.55)',
-      }}
-    >
-      <h3
-        id="kartu-kebiasaan-baik-judul"
-        style={{
-          fontFamily: 'Fredoka, system-ui, sans-serif',
-          fontSize: 22,
-          fontWeight: 700,
-          color: '#6E3B57',
-          margin: '0 0 16px',
-        }}
-      >
-        {COPY.JUDUL}
-      </h3>
+    <section aria-labelledby="kartu-kebiasaan-baik-judul" style={STYLE_KARTU_LUAR}>
+      {JUDUL_NODE}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {nilaiFokus.map(nilai => (

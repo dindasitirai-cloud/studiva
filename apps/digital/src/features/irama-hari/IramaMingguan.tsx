@@ -262,47 +262,51 @@ export default function IramaMingguan({
         </div>
       </div>
 
-      {/* Grid mingguan + legenda dalam kartu putih */}
-      <div
-        style={{
-          background: '#fff',
-          borderRadius: 28,
-          padding: '24px 20px 20px',
-          boxShadow: '0 14px 34px -26px rgba(90,50,70,.55)',
-          transition: prefersReducedMotion ? 'none' : 'opacity 160ms ease',
-        }}
-      >
-        <GridMingguan
-          minggu={minggu}
-          tanggalHariIni={tanggalHariIni}
-          tanggalDaftarAnak={tanggalDaftarAnak}
-          kotakUkuran={kotakUkuran}
-          onKetukItem={handleKetukItem}
-          onKetukHari={handleKetukHari}
-          onKetukLebih={(_hari, _blok) => {
-            // TODO: buka bottom sheet daftar item slot
-          }}
-        />
+      {/* Dua kolom: grid kiri, kebiasaan kanan — wrap ke satu kolom di layar sempit */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 28, alignItems: 'flex-start' }}>
+        {/* Kolom kiri: grid mingguan + ringkasan */}
+        <div style={{ flex: '1.55 1 280px', display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
+          <div
+            style={{
+              background: '#fff',
+              borderRadius: 28,
+              padding: '24px 20px 20px',
+              boxShadow: '0 14px 34px -26px rgba(90,50,70,.55)',
+              transition: prefersReducedMotion ? 'none' : 'opacity 160ms ease',
+            }}
+          >
+            <GridMingguan
+              minggu={minggu}
+              tanggalHariIni={tanggalHariIni}
+              tanggalDaftarAnak={tanggalDaftarAnak}
+              kotakUkuran={kotakUkuran}
+              onKetukItem={handleKetukItem}
+              onKetukHari={handleKetukHari}
+              onKetukLebih={(_hari, _blok) => {
+                // TODO: buka bottom sheet daftar item slot
+              }}
+            />
+            <LegendaIrama />
+          </div>
 
-        {/* Legenda di dalam kartu */}
-        <LegendaIrama />
+          <RingkasanMinggu
+            minggu={minggu}
+            onBekalPress={onBekalPress}
+          />
+        </div>
+
+        {/* Kolom kanan: pita kebiasaan */}
+        <div style={{ flex: '1 1 240px', minWidth: 0 }}>
+          <BungaKebiasaan
+            nilaiFokus={nilaiFokus as NilaiAkar[]}
+            riwayatSiram={riwayatSiram}
+            mulaiSenin={mulaiSenin}
+            tanggalHariIni={tanggalHariIni}
+            onToggleSiram={handleToggleSiram}
+            onKetukAkarKeluarga={() => onAkarKeluargaPress?.()}
+          />
+        </div>
       </div>
-
-      {/* Bunga Kebiasaan */}
-      <BungaKebiasaan
-        nilaiFokus={nilaiFokus as NilaiAkar[]}
-        riwayatSiram={riwayatSiram}
-        mulaiSenin={mulaiSenin}
-        tanggalHariIni={tanggalHariIni}
-        onToggleSiram={handleToggleSiram}
-        onKetukAkarKeluarga={() => onAkarKeluargaPress?.()}
-      />
-
-      {/* Ringkasan minggu */}
-      <RingkasanMinggu
-        minggu={minggu}
-        onBekalPress={onBekalPress}
-      />
     </div>
   );
 }

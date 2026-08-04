@@ -1,8 +1,8 @@
 import React from 'react';
-import { CheckCircle2, Bookmark } from 'lucide-react';
-import { KnowledgeCard, AGE_RANGES, DOMAIN_MAP, AgeKey, DomainCode, getCardContentStatus } from './knowledgeCardData';
-import { DOMAIN_CONFIGS } from './domains';
-import { CoverImage } from './BookCarousel';
+import { KnowledgeCard, AGE_RANGES, AgeKey, DomainCode, getCardContentStatus } from './knowledgeCardData';
+import { getBookColors, DOMAIN_CODE_LABEL } from './bekalDomainTokens';
+import { splitTitle } from './BookCarousel';
+import BotanicalStem from '../../../components/BotanicalStem';
 
 const ALL_DOMAIN = '__all__' as const;
 type ViewTab = 'semua' | 'dibaca' | 'disimpan';
@@ -19,69 +19,143 @@ interface BookGridProps {
   isBookmarked: (id: string) => boolean;
   toggleBookmark: (id: string) => void;
   onBookClick: (card: KnowledgeCard) => void;
-  hideHeader?: boolean;     // header is rendered by parent (KnowledgeGallery)
-  hideAgeFilter?: boolean;  // age is auto-set in personal mode
+  onJadwalkan?: (card: KnowledgeCard) => void;
+  hideHeader?: boolean;
+  hideAgeFilter?: boolean;
 }
 
-function BookCover({ card, isRead, isBookmarked, onToggleBookmark, onClick }: {
+interface Book3DProps {
   card: KnowledgeCard;
+  index: number;
   isRead: boolean;
   isBookmarked: boolean;
   onToggleBookmark: (e: React.MouseEvent) => void;
   onClick: () => void;
-}) {
+  onJadwalkan?: (card: KnowledgeCard) => void;
+}
+
+function Book3D({ card, index: i, isRead: read, isBookmarked: bookmarked, onToggleBookmark, onClick, onJadwalkan }: Book3DProps) {
   const comingSoon = getCardContentStatus(card) === 'segera-hadir';
+  const { soft, ink, blob, border, coverLo, spineHi, spineDark } = getBookColors(card.domain);
+  const domainLabel = DOMAIN_CODE_LABEL[card.domain] ?? card.domain;
+  const ageLabel = AGE_RANGES.find(a => a.key === card.ageKey)?.label ?? card.ageKey;
+  const { pre, keyword, post } = splitTitle(card.title);
+  const baseRotate = i % 2 === 0 ? 26 : 21;
+  const baseTransform = `rotateY(${baseRotate}deg) translateY(-4px)`;
 
   return (
-    <div className="group relative w-full">
+    <div style={{ perspective:1500, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'flex-end' }}>
+      <div style={{ height: 392, display:'flex', alignItems:'flex-end', justifyContent:'center' }}>
       <div
-        className={`relative w-full overflow-hidden ${comingSoon ? '' : 'motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:-translate-y-1'}`}
-        style={{
-          paddingBottom: '133%',
-          borderRadius: '5px 11px 11px 5px',
-          boxShadow: '4px 4px 14px rgba(0,0,0,.18), inset -2px 0 4px rgba(0,0,0,.08)',
-          cursor: comingSoon ? 'default' : 'pointer',
-          opacity: comingSoon ? 0.7 : 1,
-        }}
         onClick={comingSoon ? undefined : onClick}
-        aria-disabled={comingSoon ? true : undefined}
+        style={{
+          position:'relative', width:280, height:344,
+          cursor: comingSoon ? 'default' : 'pointer',
+          transformStyle:'preserve-3d',
+          transform: baseTransform,
+          transition:'transform .45s cubic-bezier(.2,.7,.2,1)',
+          opacity: comingSoon ? 0.65 : 1,
+        }}
+        onMouseEnter={e => { if (!comingSoon) (e.currentTarget as HTMLDivElement).style.transform = 'rotateY(0deg) translateY(-14px)'; }}
+        onMouseLeave={e => { if (!comingSoon) (e.currentTarget as HTMLDivElement).style.transform = baseTransform; }}
         role={comingSoon ? undefined : 'button'}
+        aria-disabled={comingSoon ? true : undefined}
       >
-        {/* Typographic illustrated cover (same as carousel) */}
-        <CoverImage card={card} />
+        {/* Ground shadow */}
+        <div style={{ position:'absolute', left:'4%', bottom:-30, width:'94%', height:40, background:'rgba(90,50,70,.30)', filter:'blur(15px)', borderRadius:'50%' }} />
 
-        {/* "Segera hadir" badge for placeholder cards */}
-        {comingSoon && (
-          <div className="absolute bottom-3 left-3 right-3 z-30 rounded-full bg-black/50 px-2 py-1 text-center text-[10px] font-bold text-white">
-            Segera hadir
-          </div>
-        )}
+        {/* Pages (fore-edge right) */}
+        <div style={{ position:'absolute', top:5, right:-21, width:42, height:334, transform:'rotateY(90deg)', background:'repeating-linear-gradient(to bottom,#F7F0E1 0 2px,#DCCBB0 2px 3.4px)', borderRadius:2 }} />
 
-        {/* Read indicator (non-interactive badge, button is inside BookReader) */}
-        {!comingSoon && isRead && (
-          <div className="absolute right-2 top-9 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-stv-green shadow">
-            <CheckCircle2 className="h-3 w-3 text-white" strokeWidth={2.5} />
+        {/* Spine (left) */}
+        <div style={{ position:'absolute', top:0, left:-21, width:42, height:344, transform:'rotateY(90deg)', background:`linear-gradient(90deg,${spineHi},${ink} 32%,${spineDark})`, borderRadius:3 }}>
+          <div style={{ position:'absolute', top:24, left:0, right:0, height:2, background:'rgba(255,255,255,.4)' }} />
+          <div style={{ position:'absolute', bottom:24, left:0, right:0, height:2, background:'rgba(255,255,255,.4)' }} />
+        </div>
+
+        {/* Cover face */}
+        <div style={{
+          position:'absolute', inset:0, transform:'translateZ(21px)',
+          borderRadius:'3px 16px 16px 3px', overflow:'hidden',
+          border:`2px solid ${border}`,
+          boxShadow:'inset 4px 0 0 rgba(0,0,0,.06), 0 20px 34px -26px rgba(90,50,70,.6)',
+          background:`linear-gradient(135deg,${soft},${coverLo})`,
+        }}>
+          {/* Blobs */}
+          <div style={{ position:'absolute', right:-36, bottom:-44, width:180, height:180, borderRadius:'50%', background:blob, opacity:.5 }} />
+          <div style={{ position:'absolute', left:-24, top:28, width:100, height:100, borderRadius:'50%', background:blob, opacity:.32 }} />
+
+          {/* Cover content */}
+          <div style={{ position:'relative', zIndex:1, height:'100%', padding:'18px 18px 18px 22px', display:'flex', flexDirection:'column' }}>
+            <div>
+              <div style={{ fontFamily:'Nunito', fontWeight:800, fontSize:10, letterSpacing:.6, color:ink, textTransform:'uppercase' }}>{domainLabel}</div>
+              <div style={{ fontFamily:'Nunito', fontWeight:700, fontSize:11, color:'#A98DA0', marginTop:2 }}>{ageLabel}</div>
+            </div>
+            <div style={{ flex:1, display:'flex', alignItems:'center' }}>
+              <div style={{ fontFamily:'Fredoka', fontWeight:700, fontSize:24, lineHeight:1.1, color:'#6E3B57', textTransform:'uppercase', letterSpacing:-.3 }}>
+                {pre && <>{pre}<br /></>}
+                {keyword && (
+                  <span style={{ backgroundImage:`linear-gradient(transparent 58%, ${blob} 58%)`, padding:'0 2px' }}>{keyword}</span>
+                )}
+                {post && <><br />{post}</>}
+              </div>
+            </div>
           </div>
+
+          {/* Segera hadir badge */}
+          {comingSoon && (
+            <div style={{ position:'absolute', bottom:10, left:8, right:8, zIndex:10, borderRadius:999, background:'rgba(0,0,0,.48)', padding:'4px 8px', textAlign:'center', fontFamily:'Nunito', fontWeight:700, fontSize:10, color:'white' }}>
+              Segera hadir
+            </div>
+          )}
+
+          {/* Read indicator */}
+          {!comingSoon && read && (
+            <div style={{ position:'absolute', right:8, top:36, width:20, height:20, borderRadius:'50%', background:'#3FBF6A', display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 2px 6px rgba(63,191,106,.4)', zIndex:10 }}>
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                <path d="M2 5.5l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+          )}
+        </div>
+
+        {/* Ribbon bookmark */}
+        {!comingSoon && (
+          <div
+            onClick={onToggleBookmark}
+            style={{
+              position:'absolute', top:0, right:30, width:24,
+              height: bookmarked ? 104 : 58,
+              background: bookmarked ? ink : border,
+              clipPath:'polygon(0 0,100% 0,100% 100%,50% 74%,0 100%)',
+              transition:'height .3s ease',
+              zIndex:2, cursor:'pointer',
+              boxShadow:'2px 3px 6px -3px rgba(0,0,0,.35)',
+            }}
+            role="button"
+            aria-label={bookmarked ? 'Hapus bookmark' : 'Simpan bookmark'}
+          />
         )}
       </div>
+      </div>
 
-      {/* Bookmark toggle — hidden for placeholder cards */}
-      {!comingSoon && (
+      {/* Tombol jadwalkan */}
+      {!comingSoon && onJadwalkan && (
         <button
           type="button"
-          onClick={onToggleBookmark}
-          aria-label={isBookmarked ? 'Hapus bookmark' : 'Simpan bookmark'}
-          className={`absolute right-1.5 top-1.5 z-40 flex h-7 w-7 items-center justify-center rounded-full shadow-[0_2px_8px_rgba(0,0,0,.18)] transition hover:scale-110 ${
-            isBookmarked
-              ? 'bg-amber-400 text-white'
-              : 'bg-white/85 text-stv-muted hover:bg-white hover:text-amber-500'
-          }`}
+          onClick={e => { e.stopPropagation(); onJadwalkan(card); }}
+          style={{
+            marginTop: 10, width: '100%', maxWidth: 220,
+            padding: '8px 0',
+            background: '#F06BA8',
+            color: '#fff', border: 'none', borderRadius: 999,
+            fontFamily: 'Nunito, system-ui, sans-serif',
+            fontSize: 12, fontWeight: 700,
+            cursor: 'pointer',
+            transition: 'background 150ms ease',
+          }}
         >
-          <Bookmark
-            className="h-3.5 w-3.5"
-            fill={isBookmarked ? 'currentColor' : 'none'}
-            strokeWidth={2}
-          />
+          Jadwalkan baca buku ini
         </button>
       )}
     </div>
@@ -91,128 +165,59 @@ function BookCover({ card, isRead, isBookmarked, onToggleBookmark, onClick }: {
 export default function BookGrid({
   cards, selectedAge, setSelectedAge, selectedDomain, setSelectedDomain,
   viewTab, setViewTab, isRead, isBookmarked, toggleBookmark, onBookClick,
+  onJadwalkan,
   hideHeader = false, hideAgeFilter = false,
 }: BookGridProps) {
+  const showAll = viewTab === 'semua' && selectedDomain === ALL_DOMAIN;
+  const n = cards.length;
 
   return (
-    <div className="flex flex-col gap-5">
-      {/* Header — hidden when KnowledgeGallery renders its own */}
-      {!hideHeader && (
-        <div>
-          <h2 className="font-bricolage text-[22px] font-extrabold text-stv-navy">Panduan Tumbuh Kembang</h2>
-          <p className="text-[14px] text-stv-muted">
-            Kartu pengetahuan tumbuh kembang anak usia 0–6 tahun, berbasis riset.
-          </p>
-        </div>
-      )}
-
-      {/* View tabs */}
-      <div className="flex flex-wrap gap-2">
-        {([
-          { id: 'semua',    label: 'Semua Buku' },
-          { id: 'dibaca',   label: 'Sudah Dibaca' },
-          { id: 'disimpan', label: 'Disimpan' },
-        ] as { id: ViewTab; label: string }[]).map(tab => (
-          <button
-            key={tab.id}
-            type="button"
-            onClick={() => setViewTab(tab.id)}
-            className={`rounded-full border px-4 py-1.5 text-[13px] font-semibold transition ${
-              viewTab === tab.id
-                ? 'border-stv-navy bg-stv-navy text-white'
-                : 'border-stv-border bg-white text-stv-body hover:border-stv-navy/40'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Age range pills — hidden in personal mode (age auto-set from child profile) */}
-      {viewTab === 'semua' && !hideAgeFilter && (
-        <div className="-mx-4 px-4 sm:-mx-0 sm:px-0">
-          <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
-            {AGE_RANGES.map(ar => {
-              const isActive = selectedAge === ar.key;
-              return (
-                <button
-                  key={ar.key}
-                  type="button"
-                  onClick={() => setSelectedAge(ar.key)}
-                  className="shrink-0 rounded-full border px-4 py-1.5 text-[13px] font-bold transition"
-                  style={isActive
-                    ? { background: ar.fill, color: ar.ink, borderColor: ar.ink }
-                    : { background: 'white', color: '#888', borderColor: '#E5E7EB' }}
-                >
-                  {ar.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Domain filter chips */}
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => setSelectedDomain(ALL_DOMAIN)}
-          className={`rounded-full border px-3 py-1 text-[12px] font-semibold transition ${
-            selectedDomain === ALL_DOMAIN
-              ? 'border-stv-navy bg-stv-navy text-white'
-              : 'border-stv-border bg-white text-stv-body hover:border-stv-navy/40'
-          }`}
-        >
-          Semua
-        </button>
-        {DOMAIN_CONFIGS.map((dc) => {
-          const isActive = selectedDomain === dc.code;
-          const Icon = dc.icon;
-          return (
-            <button
-              key={dc.code}
-              type="button"
-              onClick={() => setSelectedDomain(dc.code)}
-              className="flex items-center gap-1.5 rounded-full border px-3 py-1 text-[12px] font-semibold transition"
-              style={isActive
-                ? { background: dc.bg, color: dc.fg, borderColor: dc.fg }
-                : { background: 'white', color: '#888', borderColor: '#E5E7EB' }}
-            >
-              <Icon className="h-3.5 w-3.5" strokeWidth={2} />
-              {dc.label}
-            </button>
-          );
-        })}
+    <div>
+      {/* Result line */}
+      <div style={{ display:'flex', alignItems:'baseline', justifyContent:'space-between', marginBottom:20 }}>
+        <span style={{ fontFamily:'Fredoka', fontWeight:600, fontSize:20, color:'#6E3B57' }}>
+          {n} buku {showAll ? 'di rak' : 'ditemukan'}
+        </span>
+        <span style={{ fontFamily:'Nunito', fontWeight:800, fontSize:14, color:'#A98DA0' }}>Urut · Termuda</span>
       </div>
 
       {/* Book grid */}
       {cards.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-stv-border bg-white py-16 text-center text-stv-muted">
-          <p className="text-[15px] font-semibold">
-            {viewTab === 'dibaca' ? 'Belum ada buku yang sudah dibaca.' :
-             viewTab === 'disimpan' ? 'Belum ada buku yang disimpan.' :
-             'Belum ada buku untuk filter ini.'}
-          </p>
-          <p className="mt-1 text-[13px]">
-            {viewTab !== 'semua'
-              ? 'Buka sebuah buku dan tandai sudah dibaca, atau simpan lewat ikon bookmark.'
-              : 'Coba pilih rentang usia atau domain yang berbeda.'}
-          </p>
+        <div className="rounded-[24px] bg-white p-12 text-center shadow-[0_16px_34px_-26px_rgba(90,50,70,.5)]">
+          <p className="font-shantell text-[24px] text-[#C7A9BE]">Belum ada buku di rak ini…</p>
+          <p className="font-nunito text-[15px] text-[#A98DA0] mt-2">Coba ubah filter atau kata pencarian.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-          {cards.map(card => (
-            <BookCover
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3 md:grid-cols-4">
+          {cards.map((card, i) => (
+            <Book3D
               key={card.id}
               card={card}
+              index={i}
               isRead={isRead(card.id)}
               isBookmarked={isBookmarked(card.id)}
               onToggleBookmark={e => { e.stopPropagation(); toggleBookmark(card.id); }}
               onClick={() => onBookClick(card)}
+              onJadwalkan={onJadwalkan}
             />
           ))}
         </div>
       )}
+
+      {/* Footer botanical */}
+      <div className="flex items-end justify-center gap-5 mt-10 opacity-90">
+        <div style={{ width:56, height:90 }}>
+          <BotanicalStem
+            cfg={{ type:'fivepetal', bloom:'#F8B9D4', center:'#F06BA8' }}
+          />
+        </div>
+        <span className="font-shantell text-[18px] text-[#C7A9BE] pb-2">mekar pada waktunya</span>
+        <div style={{ width:48, height:78 }}>
+          <BotanicalStem
+            cfg={{ type:'bell', bloom:'#8FB8F7', bloom2:'#5F84E6' }}
+          />
+        </div>
+      </div>
     </div>
   );
 }

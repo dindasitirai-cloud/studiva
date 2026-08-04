@@ -5,6 +5,7 @@ import type { NilaiAkar } from '../akar-keluarga/content';
 import type { ItemBekal } from '../beranda-usia/bekal';
 import type { ItemIrama, BlokWaktu, HariIrama } from '@studiva/shared';
 import { getMingguIrama, getSeninMinggu, tambahHari } from '@studiva/shared';
+import type { JadwalManualItem } from '../../pages/DashboardPages/Tier2/IramaHariPage';
 import GridMingguan from './GridMingguan';
 import BungaKebiasaan from './BungaKebiasaan';
 import RingkasanMinggu from './RingkasanMinggu';
@@ -25,6 +26,8 @@ interface PropsIramaMingguan {
   nilaiFokus: readonly NilaiAkar[];
   /** Pilihan hari ini dari IramaHari — jembatan data tanpa fetch backend. */
   pilihanHariIni?: PilihanHarian;
+  /** Item yang dijadwalkan manual dari Bekal (tanpa backend). */
+  jadwalManual?: Record<string, JadwalManualItem[]>;
   /** Nama anak — untuk header cetak. */
   namaAnak?: string;
   /** Callback untuk navigasi ke Bekal. */
@@ -44,6 +47,7 @@ export default function IramaMingguan({
   kolam,
   nilaiFokus,
   pilihanHariIni,
+  jadwalManual,
   namaAnak,
   onBekalPress,
 }: PropsIramaMingguan) {
@@ -125,9 +129,40 @@ export default function IramaMingguan({
     return hasil;
   }, [pilihanHariIni, dataPerHari, kolamMap]);
 
+  // Gabungkan jadwal manual dari Bekal ke dalam data hari yang ada
+  const hariIramaFinal = useMemo<Partial<Record<string, HariIrama>>>(() => {
+    if (!jadwalManual || Object.keys(jadwalManual).length === 0) return hariIramaPerTanggal;
+    const hasil = { ...hariIramaPerTanggal };
+    for (const [tgl, items] of Object.entries(jadwalManual)) {
+      const existing: HariIrama = hasil[tgl] ?? {
+        tanggal: tgl,
+        slot: { pagi: [], siang: [], sore: [], jelangTidur: [] },
+      };
+      const mergedSlot = {
+        pagi: [...existing.slot.pagi],
+        siang: [...existing.slot.siang],
+        sore: [...existing.slot.sore],
+        jelangTidur: [...existing.slot.jelangTidur],
+      };
+      for (const item of items) {
+        const sudahAda = (['pagi', 'siang', 'sore', 'jelangTidur'] as const).some(
+          blok => mergedSlot[blok].some(i => i.id === item.id),
+        );
+        if (sudahAda) continue;
+        const iramaItem: ItemIrama =
+          item.tipe === 'buku'
+            ? { id: item.id, jenis: 'wawasanTumbuh', judul: item.judul, urutan: 9999, selesai: false, warnaCover: item.warnaCover ?? '#EDE9F8', kartuId: item.id }
+            : { id: item.id, jenis: 'ajakMain', judul: item.judul, urutan: 9999, selesai: false };
+        mergedSlot.pagi = [...mergedSlot.pagi, iramaItem];
+      }
+      hasil[tgl] = { ...existing, slot: mergedSlot };
+    }
+    return hasil;
+  }, [hariIramaPerTanggal, jadwalManual]);
+
   const minggu = useMemo(
-    () => getMingguIrama(hariIramaPerTanggal, mulaiSenin),
-    [hariIramaPerTanggal, mulaiSenin],
+    () => getMingguIrama(hariIramaFinal, mulaiSenin),
+    [hariIramaFinal, mulaiSenin],
   );
 
   // TODO: fetch riwayat siram dari backend.

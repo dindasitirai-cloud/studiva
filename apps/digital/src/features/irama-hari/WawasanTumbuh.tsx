@@ -3,13 +3,67 @@ import React, { useMemo, useState } from 'react';
 import { X, BookOpen, RefreshCw, CheckCircle2 } from 'lucide-react';
 import FilterSubUsia, { resolveSubUsia, SUB_USIA_TO_AGE_KEY } from '../../components/FilterSubUsia';
 import type { IdSubUsia } from '../../components/FilterSubUsia';
-import { CARDS } from '../../pages/DashboardPages/Tier2/knowledgeCardData';
+import { CARDS, AGE_RANGES } from '../../pages/DashboardPages/Tier2/knowledgeCardData';
 import type { KnowledgeCard } from '../../pages/DashboardPages/Tier2/knowledgeCardData';
+import { getBookColors, DOMAIN_CODE_LABEL } from '../../pages/DashboardPages/Tier2/bekalDomainTokens';
 import { benihDariTeks, kocok } from '../beranda-usia/adapter/acakDeterministik';
 import { usePilihanHarian } from './PilihanHarianContext';
 import BotanicalStem from '../../components/BotanicalStem';
 
 const SPRIG_CFG = { type: 'sprig' as const, bloom: '#C79020', bloom2: '#FFE29A' };
+
+// ─── Buku 3D mini ─────────────────────────────────────────────────────────────
+
+function BukuMini({ kartu }: { kartu: KnowledgeCard }) {
+  const { soft, ink, blob, coverLo, spineHi, spineDark } = getBookColors(kartu.domain);
+  const domainLabel = DOMAIN_CODE_LABEL[kartu.domain] ?? kartu.domain;
+  const ageLabel = AGE_RANGES.find(a => a.key === kartu.ageKey)?.label ?? kartu.ageKey;
+  const W = 80, H = 104, SPINE = 12;
+
+  return (
+    <div style={{ perspective: 600, width: W, height: H + 18, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', flexShrink: 0 }}>
+      <div style={{
+        position: 'relative', width: W, height: H,
+        transformStyle: 'preserve-3d',
+        transform: 'rotateY(26deg) translateY(-3px)',
+      }}>
+        {/* Ground shadow */}
+        <div style={{ position: 'absolute', left: '6%', bottom: -10, width: '88%', height: 14, background: 'rgba(90,50,70,.22)', filter: 'blur(8px)', borderRadius: '50%' }} />
+
+        {/* Pages right */}
+        <div style={{ position: 'absolute', top: 3, right: -SPINE / 2, width: SPINE, height: H - 4, transform: 'rotateY(90deg)', background: 'repeating-linear-gradient(to bottom,#F7F0E1 0 1.5px,#DCCBB0 1.5px 2.5px)', borderRadius: 1 }} />
+
+        {/* Spine left */}
+        <div style={{ position: 'absolute', top: 0, left: -SPINE / 2, width: SPINE, height: H, transform: 'rotateY(90deg)', background: `linear-gradient(90deg,${spineHi},${ink} 32%,${spineDark})`, borderRadius: 2 }}>
+          <div style={{ position: 'absolute', top: 10, left: 0, right: 0, height: 1.5, background: 'rgba(255,255,255,.4)' }} />
+          <div style={{ position: 'absolute', bottom: 10, left: 0, right: 0, height: 1.5, background: 'rgba(255,255,255,.4)' }} />
+        </div>
+
+        {/* Cover face */}
+        <div style={{
+          position: 'absolute', inset: 0, transform: `translateZ(${SPINE / 2}px)`,
+          borderRadius: '2px 8px 8px 2px', overflow: 'hidden',
+          border: `1.5px solid rgba(110,59,87,.12)`,
+          background: `linear-gradient(135deg,${soft},${coverLo})`,
+          boxShadow: 'inset 3px 0 0 rgba(0,0,0,.05)',
+        }}>
+          {/* Blob */}
+          <div style={{ position: 'absolute', right: -20, bottom: -20, width: 70, height: 70, borderRadius: '50%', background: blob, opacity: .45 }} />
+          {/* Content */}
+          <div style={{ position: 'relative', zIndex: 1, padding: '8px 8px 8px 10px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div>
+              <div style={{ fontFamily: 'Nunito, system-ui', fontWeight: 800, fontSize: 7.5, letterSpacing: .5, color: ink, textTransform: 'uppercase' }}>{domainLabel}</div>
+              <div style={{ fontFamily: 'Nunito, system-ui', fontWeight: 600, fontSize: 7, color: '#A98DA0', marginTop: 1 }}>{ageLabel}</div>
+            </div>
+            <div style={{ fontFamily: 'Fredoka, system-ui', fontWeight: 700, fontSize: 11, lineHeight: 1.15, color: '#6E3B57', textTransform: 'uppercase' }}>
+              {kartu.title.length > 40 ? kartu.title.slice(0, 38) + '…' : kartu.title}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Age band mapping (mirip KnowledgeGallery)
 const AGE_BAND_KEYS: ReadonlyArray<{ maxMonths: number; keys: string[] }> = [
@@ -89,20 +143,15 @@ export default function WawasanTumbuh({ usiaBulan, idAnak }: PropsWawasanTumbuh)
           Belum ada konten tersedia untuk usia ini.
         </p>
       ) : (
-        <div className="flex items-start gap-3 pr-14">
-          {/* Book icon */}
-          <div
-            aria-hidden
-            className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-[14px] bg-white/70"
-          >
-            <BookOpen className="h-5 w-5 text-[#E0A21F]" strokeWidth={1.5} />
-          </div>
+        <div className="flex items-start gap-4 pr-12">
+          {/* 3D book visual */}
+          <BukuMini kartu={tampilKartu} />
 
           <div className="min-w-0 flex-1">
-            <p className="font-fredoka text-[15px] font-semibold leading-snug text-pekat">
+            <p className="font-fredoka text-[14px] font-semibold leading-snug text-pekat">
               {tampilKartu.title}
             </p>
-            <p className="mt-0.5 font-nunito text-[12px] text-pekat/55">
+            <p className="mt-0.5 font-nunito text-[11px] text-pekat/55">
               {tampilKartu.readMinutes} menit membaca
             </p>
 
@@ -118,7 +167,7 @@ export default function WawasanTumbuh({ usiaBulan, idAnak }: PropsWawasanTumbuh)
                   onClick={() => pilihWawasan(kartuHariIni?.id ?? null)}
                   className="rounded-full bg-[#E0A21F] px-4 py-1.5 font-nunito text-[13px] font-bold text-white transition hover:bg-[#C79020]"
                 >
-                  Pelajari hari ini →
+                  Pelajari hari ini
                 </button>
               )}
 

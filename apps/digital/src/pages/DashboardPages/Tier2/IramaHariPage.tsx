@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import { useOutletContext, useNavigate } from 'react-router-dom';
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import { useOutletContext, useNavigate, useLocation } from 'react-router-dom';
 import type { OnboardingData } from '../../../features/onboarding/types';
 import { useAkarStateSync } from '../../../features/akar-keluarga/state';
 import type { NilaiAkar } from '../../../features/akar-keluarga/content';
@@ -23,17 +23,43 @@ const LABEL_TAB: Record<TabId, string> = {
   'mingguan': 'Minggu Ini',
 };
 
+export interface JadwalManualItem {
+  id: string;
+  judul: string;
+  tipe: 'kegiatan' | 'buku';
+  warnaCover?: string;
+}
+
 export default function IramaHariPage() {
   const { onboardingData: d, idAnak } = useOutletContext<OutletCtx>();
   const navigate = useNavigate();
+  const location = useLocation();
   const [tab, setTab] = useState<TabId>('hari-ini');
   const [akarState] = useAkarStateSync(idAnak);
   const [pilihanHariIni, setPilihanHariIni] = useState<PilihanHarian | undefined>(undefined);
   const [kolamAnak, setKolamAnak] = useState<readonly ItemBekal[]>([]);
   const [centangKebiasaan, setCentangKebiasaan] = useState<CentangKebiasaan>({});
+  const [jadwalManual, setJadwalManual] = useState<Record<string, JadwalManualItem[]>>({});
+  const jadwalProcessedRef = useRef<string | null>(null);
 
   const tanggalHariIni = useMemo(() => tanggalDariTimestampWIB(new Date().toISOString()), []);
   const nilaiFokus = akarState.nilai as NilaiAkar[];
+
+  // Baca item yang dijadwalkan dari navigasi Bekal → IramaHari
+  useEffect(() => {
+    const j = (location.state as { jadwalkan?: JadwalManualItem & { tanggal: string } } | null)?.jadwalkan;
+    if (!j) return;
+    const kunci = `${j.id}:${j.tanggal}`;
+    if (jadwalProcessedRef.current === kunci) return;
+    jadwalProcessedRef.current = kunci;
+    setJadwalManual(prev => {
+      const daftar = prev[j.tanggal] ?? [];
+      if (daftar.some(d => d.id === j.id)) return prev;
+      const { tanggal: _t, ...item } = j;
+      return { ...prev, [j.tanggal]: [...daftar, item] };
+    });
+    setTab('mingguan');
+  }, [location.state]);
 
   const handleCentangToggle = useCallback(
     (nilaiId: NilaiAkar, butirId: string) => {
@@ -109,6 +135,7 @@ export default function IramaHariPage() {
           kolam={kolamAnak}
           nilaiFokus={nilaiFokus}
           pilihanHariIni={pilihanHariIni}
+          jadwalManual={jadwalManual}
           namaAnak={d.namaAnak}
           onBekalPress={() => navigate('/dashboard/tier2/bekal')}
         />

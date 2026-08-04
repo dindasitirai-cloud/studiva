@@ -13,8 +13,13 @@ import type { ItemSikap } from '../beranda-usia/adapter/sikapAdapter';
 import { resolveSikap } from '../beranda-usia/adapter/sikapAdapter';
 import { BUNGA_DARI_NAMA } from '../akar-keluarga/registryBunga';
 import KnowledgeGallery from '../../pages/DashboardPages/Tier2/KnowledgeGallery';
+import type { KnowledgeCard } from '../../pages/DashboardPages/Tier2/knowledgeCardData';
+import { AGE_RANGES } from '../../pages/DashboardPages/Tier2/knowledgeCardData';
 import FilterSubUsia, { resolveSubUsia, OPSI_SUB_USIA } from '../../components/FilterSubUsia';
 import type { IdSubUsia } from '../../components/FilterSubUsia';
+import PopupPilihHari from '../../components/PopupPilihHari';
+import type { JadwalItem } from '../../components/PopupPilihHari';
+import { tanggalDariTimestampWIB } from '@studiva/shared';
 import {
   ActivityCard, ActivityModal,
   ToolCard, ToolModal,
@@ -687,7 +692,8 @@ function AjakMainPanel({ usiaBulan }: { usiaBulan: number }) {
   const [openActivity, setOpenActivity] = useState<Activity | null>(null);
   const [openTool, setOpenTool] = useState<EduTool | null>(null);
   const [openDownload, setOpenDownload] = useState<Downloadable | null>(null);
-  const [jadwalkanFeedback, setJadwalkanFeedback] = useState<string | null>(null);
+  const [jadwalItem, setJadwalItem] = useState<JadwalItem | null>(null);
+  const tanggalHariIni = useMemo(() => tanggalDariTimestampWIB(new Date().toISOString()), []);
 
   const isYearOne = usiaBulan < 12;
   const [subUsia, setSubUsia] = useState<IdSubUsia>(
@@ -730,19 +736,18 @@ function AjakMainPanel({ usiaBulan }: { usiaBulan: number }) {
     [publishedDownloads, band, isYearOne, subUsiaBand],
   );
 
-  const handleJadwalkan = useCallback((itemId: string, label: string) => {
-    try {
-      const raw = sessionStorage.getItem('studiva_jadwalkan_queue');
-      const ids: string[] = raw ? JSON.parse(raw) : [];
-      if (!ids.includes(itemId)) ids.push(itemId);
-      sessionStorage.setItem('studiva_jadwalkan_queue', JSON.stringify(ids));
-    } catch {}
-    setJadwalkanFeedback(label);
-    setTimeout(() => {
-      setJadwalkanFeedback(null);
-      navigate('/dashboard/tier2/irama-hari');
-    }, 900);
-  }, [navigate]);
+  const handleBukaJadwal = useCallback((itemId: string, label: string) => {
+    setJadwalItem({ id: itemId, judul: label, tipe: 'kegiatan' });
+  }, []);
+
+  const handleKonfirmasiJadwal = useCallback((tanggal: string) => {
+    if (!jadwalItem) return;
+    setJadwalItem(null);
+    navigate('/dashboard/tier2/irama-hari', {
+      state: { jadwalkan: { id: jadwalItem.id, judul: jadwalItem.judul, tipe: 'kegiatan', tanggal } },
+    });
+  // TODO: simpan ke backend (jadwal kegiatan per tanggal)
+  }, [navigate, jadwalItem]);
 
   const TABS = [
     { id: 'aktivitas' as const, label: 'Aktivitas',    count: activities.length },
@@ -752,12 +757,13 @@ function AjakMainPanel({ usiaBulan }: { usiaBulan: number }) {
 
   return (
     <>
-      {jadwalkanFeedback !== null && (
-        <div className="mb-3 flex items-center gap-2 rounded-[14px] bg-rekah/10 px-4 py-3">
-          <span className="text-[13px] font-semibold text-rekah">
-            ✓ "{jadwalkanFeedback}" dijadwalkan — membuka Irama Hari…
-          </span>
-        </div>
+      {jadwalItem && (
+        <PopupPilihHari
+          item={jadwalItem}
+          tanggalHariIni={tanggalHariIni}
+          onPilih={handleKonfirmasiJadwal}
+          onTutup={() => setJadwalItem(null)}
+        />
       )}
 
       {isYearOne && (
@@ -791,7 +797,7 @@ function AjakMainPanel({ usiaBulan }: { usiaBulan: number }) {
                   key={a.id}
                   activity={a}
                   onOpen={() => setOpenActivity(a)}
-                  onJadwalkan={() => handleJadwalkan(`ls-act-${a.id}`, a.judul)}
+                  onJadwalkan={() => handleBukaJadwal(`ls-act-${a.id}`, a.judul)}
                 />
               ))}
             </div>
@@ -805,7 +811,7 @@ function AjakMainPanel({ usiaBulan }: { usiaBulan: number }) {
                   key={t.id}
                   tool={t}
                   onOpen={() => setOpenTool(t)}
-                  onJadwalkan={() => handleJadwalkan(`ls-tool-${t.id}`, t.nama)}
+                  onJadwalkan={() => handleBukaJadwal(`ls-tool-${t.id}`, t.nama)}
                 />
               ))}
             </div>
@@ -819,7 +825,7 @@ function AjakMainPanel({ usiaBulan }: { usiaBulan: number }) {
                   key={d.id}
                   item={d}
                   onOpen={() => setOpenDownload(d)}
-                  onJadwalkan={() => handleJadwalkan(`ls-dl-${d.id}`, d.nama)}
+                  onJadwalkan={() => handleBukaJadwal(`ls-dl-${d.id}`, d.nama)}
                 />
               ))}
             </div>
@@ -861,8 +867,21 @@ function IsiBekal({
   isDev,
   bekalLabel,
 }: PropsIsiBekal) {
+  const navigate = useNavigate();
   const [tabAktif, setTabAktif] = useState<TabId>(tabAwal);
   const [nilaiDibuka, setNilaiDibuka] = useState<NilaiAkar | null>(null);
+  const [jadwalkanBuku, setJadwalkanBuku] = useState<KnowledgeCard | null>(null);
+  const tanggalHariIni = useMemo(() => tanggalDariTimestampWIB(new Date().toISOString()), []);
+
+  const handleKonfirmasiJadwalBuku = useCallback((tanggal: string) => {
+    if (!jadwalkanBuku) return;
+    const warnaCover = AGE_RANGES.find(r => r.key === jadwalkanBuku.ageKey)?.fill ?? '#EDE9F8';
+    setJadwalkanBuku(null);
+    navigate('/dashboard/tier2/irama-hari', {
+      state: { jadwalkan: { id: jadwalkanBuku.id, judul: jadwalkanBuku.title, tipe: 'buku', tanggal, warnaCover } },
+    });
+    // TODO: simpan ke backend (jadwal buku per tanggal)
+  }, [navigate, jadwalkanBuku]);
 
   const nilaiFokusSet = useMemo(() => new Set<string>(nilaiFokus), [nilaiFokus]);
 
@@ -1053,8 +1072,18 @@ function IsiBekal({
           tabAktif !== 'wawasan-tumbuh' ? 'hidden' : '',
         ].join(' ')}
       >
-        <KnowledgeGallery defaultAgeMonths={usiaBulan} />
+        <KnowledgeGallery defaultAgeMonths={usiaBulan} onJadwalkanBuku={setJadwalkanBuku} />
       </div>
+
+      {/* Popup pilih hari untuk buku */}
+      {jadwalkanBuku !== null && (
+        <PopupPilihHari
+          item={{ id: jadwalkanBuku.id, judul: jadwalkanBuku.title, tipe: 'buku' }}
+          tanggalHariIni={tanggalHariIni}
+          onPilih={handleKonfirmasiJadwalBuku}
+          onTutup={() => setJadwalkanBuku(null)}
+        />
+      )}
 
       {/* Popup detail nilai */}
       {nilaiDibuka !== null && (

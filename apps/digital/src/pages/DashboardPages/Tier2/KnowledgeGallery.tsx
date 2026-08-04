@@ -95,7 +95,12 @@ const DOMAIN_KEYS = Object.keys(BEKAL_DOMAIN_TOKENS) as DomainCode[];
 
 // ── Main component ───────────────────────────────────────────────────────────
 
-export default function KnowledgeGallery({ defaultAgeMonths }: { defaultAgeMonths?: number } = {}) {
+interface PropsKnowledgeGallery {
+  defaultAgeMonths?: number;
+  onJadwalkanBuku?: (card: KnowledgeCard) => void;
+}
+
+export default function KnowledgeGallery({ defaultAgeMonths, onJadwalkanBuku }: PropsKnowledgeGallery = {}) {
   const { setSegments } = useAudioPlayer();
   const { isBookmarked, toggleBookmark, publishedCards } = useKnowledgeLibrary();
   const { children } = useDashboardTier2();
@@ -441,6 +446,7 @@ export default function KnowledgeGallery({ defaultAgeMonths }: { defaultAgeMonth
           isBookmarked={isBookmarked}
           toggleBookmark={toggleBookmark}
           onBookClick={handleBookClick}
+          onJadwalkan={onJadwalkanBuku}
           hideHeader={true}
           hideAgeFilter={true}
         />

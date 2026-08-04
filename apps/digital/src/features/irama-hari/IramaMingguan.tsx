@@ -5,7 +5,12 @@ import type { NilaiAkar } from '../akar-keluarga/content';
 import type { ItemBekal } from '../beranda-usia/bekal';
 import type { ItemIrama, BlokWaktu, HariIrama } from '@studiva/shared';
 import { getMingguIrama, getSeninMinggu, tambahHari } from '@studiva/shared';
-import type { JadwalManualItem } from '../../pages/DashboardPages/Tier2/IramaHariPage';
+export interface JadwalManualItem {
+  id: string;
+  judul: string;
+  tipe: 'kegiatan' | 'buku';
+  warnaCover?: string;
+}
 import GridMingguan from './GridMingguan';
 import BungaKebiasaan from './BungaKebiasaan';
 import RingkasanMinggu from './RingkasanMinggu';

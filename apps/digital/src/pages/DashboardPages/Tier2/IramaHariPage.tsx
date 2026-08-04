@@ -5,6 +5,7 @@ import { useAkarStateSync } from '../../../features/akar-keluarga/state';
 import type { NilaiAkar } from '../../../features/akar-keluarga/content';
 import IramaHari from '../../../features/irama-hari/IramaHari';
 import IramaMingguan from '../../../features/irama-hari/IramaMingguan';
+import type { JadwalManualItem } from '../../../features/irama-hari/IramaMingguan';
 import type { PilihanHarian } from '../../../features/irama-hari/PilihanHarianContext';
 import type { ItemBekal } from '../../../features/beranda-usia/bekal';
 import { tanggalDariTimestampWIB, toggleCentang } from '@studiva/shared';
@@ -23,12 +24,6 @@ const LABEL_TAB: Record<TabId, string> = {
   'mingguan': 'Minggu Ini',
 };
 
-export interface JadwalManualItem {
-  id: string;
-  judul: string;
-  tipe: 'kegiatan' | 'buku';
-  warnaCover?: string;
-}
 
 export default function IramaHariPage() {
   const { onboardingData: d, idAnak } = useOutletContext<OutletCtx>();

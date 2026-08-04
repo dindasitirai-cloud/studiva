@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import type { NilaiAkar } from '../akar-keluarga/content';
 import { REGISTRY_BUNGA } from '../akar-keluarga/registryBunga';
-import { tingkatMekar, TINGKAT_MAKS } from '@studiva/shared';
-import { tambahHari } from '@studiva/shared';
+import { tingkatMekar, TINGKAT_MAKS, tambahHari } from '@studiva/shared';
 import {
   JUDUL_PITA,
   KEBIASAAN_DISIRAM,
@@ -11,11 +10,11 @@ import {
   KEBIASAAN_KOSONG,
 } from './contentMingguan';
 
-// Radius kelopak — tanda tangan brand Rekah.
 const RADIUS_KELOPAK = '70% 70% 70% 4px';
 const MAKS_BARIS_TAMPIL = 3;
+const GRACE_WINDOW_HARI = 2;
+const NAMA_HARI_PENDEK = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
 
-// State chip: istirahat vs sedang mekar.
 const CHIP_ISTIRAHAT = { ink: '#A98DA0', bg: '#F3E8EF', label: 'Istirahat' };
 const CHIP_AKTIF     = { ink: '#B98900', bg: '#FFF3D0', label: 'Sedang mekar' };
 
@@ -27,7 +26,7 @@ interface BungaIkonProps {
 
 function BungaIkon({ warna, mekar, gerak }: BungaIkonProps) {
   const fraksi = mekar / TINGKAT_MAKS;
-  const ukuran = Math.round(10 + fraksi * 20); // 10px pada 0, 30px pada 7
+  const ukuran = Math.round(10 + fraksi * 20); // 10px saat 0, 30px saat 7
   const opacity = mekar === 0 ? 0.12 : 0.3 + fraksi * 0.7;
 
   return (
@@ -59,19 +58,26 @@ interface PropsBarisNilai {
   riwayatSiram: Record<string, NilaiAkar[]>;
   mulaiSenin: string;
   tanggalHariIni: string;
+  onToggleSiram?: (nilai: NilaiAkar, tanggal: string) => void;
   gerak: boolean;
 }
 
-function BarisNilai({ nilai, riwayatSiram, mulaiSenin, gerak }: PropsBarisNilai) {
+function BarisNilai({
+  nilai,
+  riwayatSiram,
+  mulaiSenin,
+  tanggalHariIni,
+  onToggleSiram,
+  gerak,
+}: PropsBarisNilai) {
   const bunga = REGISTRY_BUNGA.find(b => b.nama === nilai);
   const warna = bunga?.warnaPetal ?? '#C9B8F0';
 
-  const riwayat = Array.from({ length: 7 }, (_, i) => {
-    const tgl = tambahHari(mulaiSenin, i);
-    return (riwayatSiram[tgl] ?? []).includes(nilai);
-  });
-
+  // Susun riwayat boolean 7 hari untuk tingkatMekar.
+  const tanggalMinggu = Array.from({ length: 7 }, (_, i) => tambahHari(mulaiSenin, i));
+  const riwayat = tanggalMinggu.map(tgl => (riwayatSiram[tgl] ?? []).includes(nilai));
   const levels = tingkatMekar(riwayat);
+
   const jumlahDisiram = riwayat.filter(Boolean).length;
   const chip = jumlahDisiram === 0 ? CHIP_ISTIRAHAT : CHIP_AKTIF;
 
@@ -121,19 +127,48 @@ function BarisNilai({ nilai, riwayatSiram, mulaiSenin, gerak }: PropsBarisNilai)
         </span>
       </div>
 
-      {/* 7 slot mekar */}
+      {/* 7 slot toggle — area sentuh 44×44px, ikon bunga 30×30 di tengah */}
       <div
         style={{
           display: 'flex',
           alignItems: 'flex-end',
-          justifyContent: 'space-between',
           marginLeft: 44,
-          gap: 4,
         }}
       >
-        {Array.from({ length: 7 }, (_, i) => (
-          <BungaIkon key={i} warna={warna} mekar={levels[i] ?? 0} gerak={gerak} />
-        ))}
+        {tanggalMinggu.map((tgl, i) => {
+          const disiram = riwayat[i] ?? false;
+          const selisihHari = Math.floor(
+            (new Date(tanggalHariIni + 'T00:00:00Z').getTime() -
+              new Date(tgl + 'T00:00:00Z').getTime()) / 86400000,
+          );
+          const bisaToggle = selisihHari >= 0 && selisihHari <= GRACE_WINDOW_HARI;
+          const namaHari = NAMA_HARI_PENDEK[i] ?? '';
+
+          return (
+            <button
+              key={tgl}
+              type="button"
+              role="checkbox"
+              aria-checked={disiram}
+              aria-label={`${nilai}, ${namaHari}, ${disiram ? 'sudah disiram' : 'belum disiram'}`}
+              disabled={!bisaToggle}
+              onClick={() => onToggleSiram?.(nilai, tgl)}
+              style={{
+                flex: 1,
+                height: 44,
+                display: 'flex',
+                alignItems: 'flex-end',
+                justifyContent: 'center',
+                paddingBottom: 4,
+                background: 'none',
+                border: 'none',
+                cursor: bisaToggle ? 'pointer' : 'default',
+              }}
+            >
+              <BungaIkon warna={warna} mekar={levels[i] ?? 0} gerak={gerak} />
+            </button>
+          );
+        })}
       </div>
 
       {/* Kalimat info */}
@@ -157,6 +192,7 @@ interface PropsBungaKebiasaan {
   riwayatSiram: Record<string, NilaiAkar[]>;
   mulaiSenin: string;
   tanggalHariIni: string;
+  onToggleSiram?: (nilai: NilaiAkar, tanggal: string) => void;
   onKetukAkarKeluarga: () => void;
 }
 
@@ -165,11 +201,11 @@ export default function BungaKebiasaan({
   riwayatSiram,
   mulaiSenin,
   tanggalHariIni,
+  onToggleSiram,
   onKetukAkarKeluarga,
 }: PropsBungaKebiasaan) {
   const [lihatSemua, setLihatSemua] = useState(false);
 
-  // Hormati prefers-reduced-motion — hanya boleh diakses di browser.
   const gerak =
     typeof window !== 'undefined' &&
     !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -242,6 +278,7 @@ export default function BungaKebiasaan({
           riwayatSiram={riwayatSiram}
           mulaiSenin={mulaiSenin}
           tanggalHariIni={tanggalHariIni}
+          onToggleSiram={onToggleSiram}
           gerak={gerak}
         />
       ))}

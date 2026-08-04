@@ -131,6 +131,11 @@ export default function IramaMingguan({
   // TODO: fetch riwayat siram dari backend.
   const riwayatSiram: Record<string, NilaiAkar[]> = {};
 
+  const handleToggleSiram = useCallback((_nilai: NilaiAkar, _tanggal: string) => {
+    // TODO: kirim ke backend: simpanSiram(idAnak, nilai, tanggal)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleKetukItem = useCallback((_item: ItemIrama, _tanggal: string, _blok: BlokWaktu) => {
     // TODO: buka bottom sheet detail item
   }, []);
@@ -289,6 +294,7 @@ export default function IramaMingguan({
         riwayatSiram={riwayatSiram}
         mulaiSenin={mulaiSenin}
         tanggalHariIni={tanggalHariIni}
+        onToggleSiram={handleToggleSiram}
         onKetukAkarKeluarga={() => onAkarKeluargaPress?.()}
       />
 

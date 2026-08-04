@@ -3,8 +3,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { NilaiAkar } from '../akar-keluarga/content';
 import type { ItemBekal } from '../beranda-usia/bekal';
-import type { ItemIrama, BlokWaktu, HariIrama } from '@studiva/shared';
-import { getMingguIrama, getSeninMinggu, tambahHari } from '@studiva/shared';
+import type { ItemIrama, BlokWaktu, HariIrama, CentangKebiasaan } from '@studiva/shared';
+import { getMingguIrama, getSeninMinggu, tambahHari, derivedRiwayatSiram } from '@studiva/shared';
 import GridMingguan from './GridMingguan';
 import BungaKebiasaan from './BungaKebiasaan';
 import RingkasanMinggu from './RingkasanMinggu';
@@ -34,6 +34,8 @@ interface PropsIramaMingguan {
   pilihanHariIni?: PilihanHarian;
   /** Item yang dijadwalkan manual dari Bekal (tanpa backend). */
   jadwalManual?: Record<string, JadwalManualItem[]>;
+  /** Centang kebiasaan hari ini dari KartuKebiasaanBaik — dipakai untuk pita kebiasaan. */
+  centangKebiasaan?: CentangKebiasaan;
   /** Nama anak — untuk header cetak. */
   namaAnak?: string;
   /** Callback untuk navigasi ke Bekal. */
@@ -54,6 +56,7 @@ export default function IramaMingguan({
   nilaiFokus,
   pilihanHariIni,
   jadwalManual,
+  centangKebiasaan,
   namaAnak,
   onBekalPress,
 }: PropsIramaMingguan) {
@@ -171,8 +174,11 @@ export default function IramaMingguan({
     [hariIramaFinal, mulaiSenin],
   );
 
-  // TODO: fetch riwayat siram dari backend.
-  const riwayatSiram: Record<string, NilaiAkar[]> = {};
+  // TODO: gabungkan dengan riwayat siram dari backend saat tersedia.
+  const riwayatSiram = useMemo<Record<string, NilaiAkar[]>>(
+    () => (centangKebiasaan ? derivedRiwayatSiram(centangKebiasaan) as Record<string, NilaiAkar[]> : {}),
+    [centangKebiasaan],
+  );
 
   const handleToggleSiram = useCallback((_nilai: NilaiAkar, _tanggal: string) => {
     // TODO: kirim ke backend: simpanSiram(idAnak, nilai, tanggal)

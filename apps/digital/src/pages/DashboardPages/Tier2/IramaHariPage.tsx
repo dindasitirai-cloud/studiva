@@ -131,6 +131,7 @@ export default function IramaHariPage() {
           nilaiFokus={nilaiFokus}
           pilihanHariIni={pilihanHariIni}
           jadwalManual={jadwalManual}
+          centangKebiasaan={centangKebiasaan}
           namaAnak={d.namaAnak}
           onBekalPress={() => navigate('/dashboard/tier2/bekal')}
         />

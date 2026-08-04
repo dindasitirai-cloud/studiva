@@ -285,19 +285,68 @@ const TIPE_LABEL: Record<string, string> = {
   panduan:     'Panduan',
 };
 
+// ─── KartuPilih ──────────────────────────────────────────────────────────────
+// Didefinisikan DI LUAR PopupPilihKegiatan agar React tidak membuat tipe
+// komponen baru di setiap render parent (yang menyebabkan unmount paksa).
+
+function KartuPilih({ item }: { item: ItemBekal }) {
+  const { pilihanEfektif, tambah, hapus } = usePilihanHarian();
+  const sudahDipilih = pilihanEfektif.some(i => i.id === item.id);
+  const ds = DOMAIN_STYLE_POPUP[item.domain] ?? { bg: '#F1ECFB', ink: '#8A6DC7', label: item.domain };
+
+  return (
+    <div
+      className={[
+        'flex flex-col gap-2 rounded-[18px] border p-3 transition',
+        sudahDipilih ? 'border-daun/40 bg-daun/5' : 'border-mawar/20 bg-white',
+      ].join(' ')}
+    >
+      <div
+        className="flex h-14 items-center justify-center rounded-[12px]"
+        style={{ background: ds.bg }}
+      >
+        <span className="font-nunito text-[10px] font-[800] uppercase tracking-wider" style={{ color: ds.ink }}>
+          {ds.label}
+        </span>
+      </div>
+      <div className="flex flex-wrap items-center gap-1">
+        <span className="rounded-full bg-kanvas px-2 py-0.5 font-nunito text-[10px] text-pekat/55">
+          {TIPE_LABEL[item.tipe] ?? item.tipe}
+        </span>
+      </div>
+      <p className="font-bricolage text-[12px] font-semibold leading-snug text-pekat">
+        {item.judul}
+      </p>
+      {!!item.perkiraanDurasiMenit && item.perkiraanDurasiMenit > 0 && (
+        <p className="text-[11px] text-pekat/45">{item.perkiraanDurasiMenit} mnt</p>
+      )}
+      <button
+        type="button"
+        onClick={() => sudahDipilih ? hapus(item.id) : tambah(item)}
+        className={[
+          'mt-auto flex w-full items-center justify-center gap-1.5 rounded-full py-1.5 font-nunito text-[12px] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah',
+          sudahDipilih
+            ? 'bg-daun/10 text-daun hover:bg-daun/20'
+            : 'bg-rekah/8 text-rekah hover:bg-rekah/15',
+        ].join(' ')}
+      >
+        {sudahDipilih
+          ? <><Check className="h-3.5 w-3.5" strokeWidth={3} /> Dijadwalkan</>
+          : <><Plus className="h-3.5 w-3.5" strokeWidth={2.5} /> Tambahkan</>
+        }
+      </button>
+    </div>
+  );
+}
+
 // ─── PopupPilihKegiatan ───────────────────────────────────────────────────────
 
 function PopupPilihKegiatan({ usiaBulan, onTutup }: { usiaBulan: number; onTutup: () => void }) {
-  const { kolamAnak, pilihanEfektif, tambah, hapus } = usePilihanHarian();
+  const { kolamAnak } = usePilihanHarian();
   const elRef = useRef<HTMLDivElement>(null);
   const isYearOne = usiaBulan < 12;
   const [subUsia, setSubUsia] = useState<IdSubUsia>(
     () => resolveSubUsia(usiaBulan),
-  );
-
-  const pilihanSet = useMemo(
-    () => new Set(pilihanEfektif.map(i => i.id)),
-    [pilihanEfektif],
   );
 
   useEffect(() => {
@@ -319,55 +368,6 @@ function PopupPilihKegiatan({ usiaBulan, onTutup }: { usiaBulan: number; onTutup
     const unduhan   = kolamFiltered.filter(i => i.tipe === 'unduhan');
     return { aktivitas, alat, unduhan };
   }, [kolamFiltered]);
-
-  function KartuPilih({ item }: { item: import('../beranda-usia/bekal').ItemBekal }) {
-    const sudahDipilih = pilihanSet.has(item.id);
-    const ds = DOMAIN_STYLE_POPUP[item.domain] ?? { bg: '#F1ECFB', ink: '#8A6DC7', label: item.domain };
-
-    return (
-      <div
-        className={[
-          'flex flex-col gap-2 rounded-[18px] border p-3 transition',
-          sudahDipilih ? 'border-daun/40 bg-daun/5' : 'border-mawar/20 bg-white',
-        ].join(' ')}
-      >
-        <div
-          className="flex h-14 items-center justify-center rounded-[12px]"
-          style={{ background: ds.bg }}
-        >
-          <span className="font-nunito text-[10px] font-[800] uppercase tracking-wider" style={{ color: ds.ink }}>
-            {ds.label}
-          </span>
-        </div>
-        <div className="flex flex-wrap items-center gap-1">
-          <span className="rounded-full bg-kanvas px-2 py-0.5 font-nunito text-[10px] text-pekat/55">
-            {TIPE_LABEL[item.tipe] ?? item.tipe}
-          </span>
-        </div>
-        <p className="font-bricolage text-[12px] font-semibold leading-snug text-pekat">
-          {item.judul}
-        </p>
-        {!!item.perkiraanDurasiMenit && item.perkiraanDurasiMenit > 0 && (
-          <p className="text-[11px] text-pekat/45">{item.perkiraanDurasiMenit} mnt</p>
-        )}
-        <button
-          type="button"
-          onClick={() => sudahDipilih ? hapus(item.id) : tambah(item)}
-          className={[
-            'mt-auto flex w-full items-center justify-center gap-1.5 rounded-full py-1.5 font-nunito text-[12px] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah',
-            sudahDipilih
-              ? 'bg-daun/10 text-daun hover:bg-daun/20'
-              : 'bg-rekah/8 text-rekah hover:bg-rekah/15',
-          ].join(' ')}
-        >
-          {sudahDipilih
-            ? <><Check className="h-3.5 w-3.5" strokeWidth={3} /> Dijadwalkan</>
-            : <><Plus className="h-3.5 w-3.5" strokeWidth={2.5} /> Tambahkan</>
-          }
-        </button>
-      </div>
-    );
-  }
 
   const sections = [
     { label: 'Aktivitas', items: grouped.aktivitas },

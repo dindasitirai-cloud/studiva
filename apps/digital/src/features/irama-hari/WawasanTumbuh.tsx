@@ -18,45 +18,45 @@ function BukuMini({ kartu }: { kartu: KnowledgeCard }) {
   const { soft, ink, blob, coverLo, spineHi, spineDark } = getBookColors(kartu.domain);
   const domainLabel = DOMAIN_CODE_LABEL[kartu.domain] ?? kartu.domain;
   const ageLabel = AGE_RANGES.find(a => a.key === kartu.ageKey)?.label ?? kartu.ageKey;
-  const W = 80, H = 104, SPINE = 12;
+  const W = 160, H = 208, SPINE = 24;
 
   return (
-    <div style={{ perspective: 600, width: W, height: H + 18, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', flexShrink: 0 }}>
+    <div style={{ perspective: 900, width: W, height: H + 28, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', flexShrink: 0 }}>
       <div style={{
         position: 'relative', width: W, height: H,
         transformStyle: 'preserve-3d',
-        transform: 'rotateY(26deg) translateY(-3px)',
+        transform: 'rotateY(26deg) translateY(-6px)',
       }}>
         {/* Ground shadow */}
-        <div style={{ position: 'absolute', left: '6%', bottom: -10, width: '88%', height: 14, background: 'rgba(90,50,70,.22)', filter: 'blur(8px)', borderRadius: '50%' }} />
+        <div style={{ position: 'absolute', left: '6%', bottom: -20, width: '88%', height: 28, background: 'rgba(90,50,70,.22)', filter: 'blur(14px)', borderRadius: '50%' }} />
 
         {/* Pages right */}
-        <div style={{ position: 'absolute', top: 3, right: -SPINE / 2, width: SPINE, height: H - 4, transform: 'rotateY(90deg)', background: 'repeating-linear-gradient(to bottom,#F7F0E1 0 1.5px,#DCCBB0 1.5px 2.5px)', borderRadius: 1 }} />
+        <div style={{ position: 'absolute', top: 6, right: -SPINE / 2, width: SPINE, height: H - 8, transform: 'rotateY(90deg)', background: 'repeating-linear-gradient(to bottom,#F7F0E1 0 2px,#DCCBB0 2px 4px)', borderRadius: 2 }} />
 
         {/* Spine left */}
-        <div style={{ position: 'absolute', top: 0, left: -SPINE / 2, width: SPINE, height: H, transform: 'rotateY(90deg)', background: `linear-gradient(90deg,${spineHi},${ink} 32%,${spineDark})`, borderRadius: 2 }}>
-          <div style={{ position: 'absolute', top: 10, left: 0, right: 0, height: 1.5, background: 'rgba(255,255,255,.4)' }} />
-          <div style={{ position: 'absolute', bottom: 10, left: 0, right: 0, height: 1.5, background: 'rgba(255,255,255,.4)' }} />
+        <div style={{ position: 'absolute', top: 0, left: -SPINE / 2, width: SPINE, height: H, transform: 'rotateY(90deg)', background: `linear-gradient(90deg,${spineHi},${ink} 32%,${spineDark})`, borderRadius: 3 }}>
+          <div style={{ position: 'absolute', top: 20, left: 0, right: 0, height: 2, background: 'rgba(255,255,255,.4)' }} />
+          <div style={{ position: 'absolute', bottom: 20, left: 0, right: 0, height: 2, background: 'rgba(255,255,255,.4)' }} />
         </div>
 
         {/* Cover face */}
         <div style={{
           position: 'absolute', inset: 0, transform: `translateZ(${SPINE / 2}px)`,
-          borderRadius: '2px 8px 8px 2px', overflow: 'hidden',
-          border: `1.5px solid rgba(110,59,87,.12)`,
+          borderRadius: '4px 16px 16px 4px', overflow: 'hidden',
+          border: `2px solid rgba(110,59,87,.12)`,
           background: `linear-gradient(135deg,${soft},${coverLo})`,
-          boxShadow: 'inset 3px 0 0 rgba(0,0,0,.05)',
+          boxShadow: 'inset 5px 0 0 rgba(0,0,0,.05)',
         }}>
           {/* Blob */}
-          <div style={{ position: 'absolute', right: -20, bottom: -20, width: 70, height: 70, borderRadius: '50%', background: blob, opacity: .45 }} />
+          <div style={{ position: 'absolute', right: -40, bottom: -40, width: 140, height: 140, borderRadius: '50%', background: blob, opacity: .45 }} />
           {/* Content */}
-          <div style={{ position: 'relative', zIndex: 1, padding: '8px 8px 8px 10px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={{ position: 'relative', zIndex: 1, padding: '14px 14px 14px 18px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
-              <div style={{ fontFamily: 'Nunito, system-ui', fontWeight: 800, fontSize: 7.5, letterSpacing: .5, color: ink, textTransform: 'uppercase' }}>{domainLabel}</div>
-              <div style={{ fontFamily: 'Nunito, system-ui', fontWeight: 600, fontSize: 7, color: '#A98DA0', marginTop: 1 }}>{ageLabel}</div>
+              <div style={{ fontFamily: 'Nunito, system-ui', fontWeight: 800, fontSize: 11, letterSpacing: 1, color: ink, textTransform: 'uppercase' }}>{domainLabel}</div>
+              <div style={{ fontFamily: 'Nunito, system-ui', fontWeight: 600, fontSize: 10, color: '#A98DA0', marginTop: 3 }}>{ageLabel}</div>
             </div>
-            <div style={{ fontFamily: 'Fredoka, system-ui', fontWeight: 700, fontSize: 11, lineHeight: 1.15, color: '#6E3B57', textTransform: 'uppercase' }}>
-              {kartu.title.length > 40 ? kartu.title.slice(0, 38) + '…' : kartu.title}
+            <div style={{ fontFamily: 'Fredoka, system-ui', fontWeight: 700, fontSize: 16, lineHeight: 1.2, color: '#6E3B57', textTransform: 'uppercase' }}>
+              {kartu.title.length > 36 ? kartu.title.slice(0, 34) + '…' : kartu.title}
             </div>
           </div>
         </div>
@@ -143,43 +143,34 @@ export default function WawasanTumbuh({ usiaBulan, idAnak }: PropsWawasanTumbuh)
           Belum ada konten tersedia untuk usia ini.
         </p>
       ) : (
-        <div className="flex items-start gap-4 pr-12">
-          {/* 3D book visual */}
+        <div className="flex flex-col items-center gap-5">
+          {/* 3D book visual - tengah */}
           <BukuMini kartu={tampilKartu} />
 
-          <div className="min-w-0 flex-1">
-            <p className="font-fredoka text-[14px] font-semibold leading-snug text-pekat">
-              {tampilKartu.title}
-            </p>
-            <p className="mt-0.5 font-nunito text-[11px] text-pekat/55">
-              {tampilKartu.readMinutes} menit membaca
-            </p>
-
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              {sudahDipilih ? (
-                <span className="flex items-center gap-1.5 rounded-full bg-daun/15 px-3 py-1.5 font-nunito text-[12px] font-semibold text-daun">
-                  <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={2.5} />
-                  Masuk susunan hari
-                </span>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => pilihWawasan(kartuHariIni?.id ?? null)}
-                  className="rounded-full bg-[#E0A21F] px-4 py-1.5 font-nunito text-[13px] font-bold text-white transition hover:bg-[#C79020]"
-                >
-                  Pelajari hari ini
-                </button>
-              )}
-
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {sudahDipilih ? (
+              <span className="flex items-center gap-1.5 rounded-full bg-daun/15 px-3 py-1.5 font-nunito text-[12px] font-semibold text-daun">
+                <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={2.5} />
+                Masuk susunan hari
+              </span>
+            ) : (
               <button
                 type="button"
-                onClick={() => setShowBrowse(true)}
-                className="flex items-center gap-1 font-nunito text-[12px] font-semibold text-pekat/50 hover:text-rekah"
+                onClick={() => pilihWawasan(kartuHariIni?.id ?? null)}
+                className="rounded-full bg-[#E0A21F] px-4 py-1.5 font-nunito text-[13px] font-bold text-white transition hover:bg-[#C79020]"
               >
-                <RefreshCw className="h-3 w-3" />
-                Pilih lain
+                Pelajari hari ini
               </button>
-            </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setShowBrowse(true)}
+              className="flex items-center gap-1 font-nunito text-[12px] font-semibold text-pekat/50 hover:text-rekah"
+            >
+              <RefreshCw className="h-3 w-3" />
+              Pilih lain
+            </button>
           </div>
         </div>
       )}

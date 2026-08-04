@@ -10,15 +10,14 @@
  * Kalau gagal, artinya kamu mengubah perilaku yang sudah dibekukan.
  */
 
-import { disiramPada, toggleCentang } from '@studiva/shared';
-// CentangKebiasaan used only as type annotation — regular import so CRA Babel doesn't choke
-import { CentangKebiasaan } from '@studiva/shared';
+import { describe, it, expect } from 'vitest';
+import { disiramPada, toggleCentang } from './centang';
+import type { CentangKebiasaan } from './centang';
 
 // ─── Fixture tetap ────────────────────────────────────────────────────────────
 
 const TANGGAL = '2026-08-04';
 
-/** Dua nilai dengan butir nyata. Id butir bersifat tetap — bukan diambil dari katalog dinamis. */
 const FIXTURE_BUTIR = [
   { id: 'kb-001', judul: 'Kontak mata dan sapaan lembut', nilai: 'kasih-sayang' as const },
   { id: 'kb-002', judul: 'Merespons tangisan dengan tenang', nilai: 'kasih-sayang' as const },
@@ -45,7 +44,13 @@ function ariaChecked(
 describe('Kontrak: aria-label KartuKebiasaanBaik', () => {
   it('pola aria-label seluruh butir, terurut', () => {
     const labels = FIXTURE_BUTIR.map(b => ariaLabel(b.nilai, b.judul)).sort();
-    expect(labels).toMatchSnapshot();
+    expect(labels).toMatchInlineSnapshot(`
+      [
+        "kasih-sayang, Kontak mata dan sapaan lembut",
+        "kasih-sayang, Merespons tangisan dengan tenang",
+        "kejujuran, Cerita jujur tentang kejadian tadi",
+      ]
+    `);
   });
 });
 
@@ -58,7 +63,7 @@ describe('Kontrak: aria-checked KartuKebiasaanBaik', () => {
       label: ariaLabel(b.nilai, b.judul),
       checked: ariaChecked(centang, TANGGAL, b.nilai, b.id),
     }));
-    expect(hasil).toMatchSnapshot();
+    expect(hasil.every(h => h.checked === false)).toBe(true);
   });
 
   it('hanya butir yang dicentang menjadi true', () => {
@@ -67,7 +72,22 @@ describe('Kontrak: aria-checked KartuKebiasaanBaik', () => {
       label: ariaLabel(b.nilai, b.judul),
       checked: ariaChecked(centang, TANGGAL, b.nilai, b.id),
     }));
-    expect(hasil).toMatchSnapshot();
+    expect(hasil).toMatchInlineSnapshot(`
+      [
+        {
+          "checked": true,
+          "label": "kasih-sayang, Kontak mata dan sapaan lembut",
+        },
+        {
+          "checked": false,
+          "label": "kasih-sayang, Merespons tangisan dengan tenang",
+        },
+        {
+          "checked": false,
+          "label": "kejujuran, Cerita jujur tentang kejadian tadi",
+        },
+      ]
+    `);
   });
 
   it('membatalkan centang mengembalikan ke false', () => {
@@ -77,7 +97,7 @@ describe('Kontrak: aria-checked KartuKebiasaanBaik', () => {
       label: ariaLabel(b.nilai, b.judul),
       checked: ariaChecked(centang, TANGGAL, b.nilai, b.id),
     }));
-    expect(hasil).toMatchSnapshot();
+    expect(hasil.every(h => h.checked === false)).toBe(true);
   });
 });
 
@@ -106,13 +126,11 @@ describe('Kontrak: disiramPada', () => {
     expect(disiramPada(centang, 'kasih-sayang', TANGGAL)).toBe(false);
   });
 
-  it('snapshot: kondisi mixed', () => {
+  it('kondisi mixed: dua nilai berbeda, keduanya disiram', () => {
     let centang = toggleCentang({}, 'kasih-sayang', 'kb-001', TANGGAL);
     centang = toggleCentang(centang, 'kasih-sayang', 'kb-002', TANGGAL);
     centang = toggleCentang(centang, 'kejujuran', 'kj-001', TANGGAL);
-    expect({
-      'kasih-sayang': disiramPada(centang, 'kasih-sayang', TANGGAL),
-      'kejujuran': disiramPada(centang, 'kejujuran', TANGGAL),
-    }).toMatchSnapshot();
+    expect(disiramPada(centang, 'kasih-sayang', TANGGAL)).toBe(true);
+    expect(disiramPada(centang, 'kejujuran', TANGGAL)).toBe(true);
   });
 });

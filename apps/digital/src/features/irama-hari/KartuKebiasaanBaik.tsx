@@ -16,11 +16,16 @@ import type { CentangKebiasaan } from '@studiva/shared';
 
 // TODO: review Fitri
 const COPY = {
-  JUDUL: 'Kebiasaan Baik hari ini',
+  JUDUL: 'Kebiasaan baik hari ini',
+  SUBJUDUL: 'Bunganya mekar tiap kebiasaan dirawat.', // TODO: review Fitri
   AJAKAN_KOSONG: 'Belum ada nilai yang ditanam. Pilih satu di Bekal.',
   CTA_KOSONG: 'Buka Bekal',
   BELUM_SIAP: (nilai: string) => `Kebiasaan untuk ${nilai} di usia ini sedang disiapkan.`,
   DILAKUKAN: (n: number) => `${n} dilakukan`,
+  LABEL_ISTIRAHAT: 'Istirahat', // TODO: review Fitri
+  LABEL_SEDANG_MEKAR: 'Sedang mekar', // TODO: review Fitri
+  LABEL_MEKAR_PENUH: 'Mekar penuh', // TODO: review Fitri
+  LABEL_SEDANG_DISIAPKAN: 'Sedang disiapkan', // TODO: review Fitri
 };
 
 /**
@@ -30,6 +35,16 @@ const COPY = {
 const AMBANG_LIPAT_OTOMATIS = 4;
 
 const RADIUS_KELOPAK = '70% 70% 70% 4px';
+
+// TODO: review Fitri — token warna per nilai, dari desain Langit Peony
+const TOKEN_NILAI: Record<string, { soft: string; ink: string; accent: string }> = {
+  'syukur':       { soft: '#FFF6DC', ink: '#B98900', accent: '#E0A21F' },
+  'kemandirian':  { soft: '#FDEEDD', ink: '#C1741B', accent: '#E0872B' },
+  'keberanian':   { soft: '#FCE3EE', ink: '#E0428A', accent: '#F06BA8' },
+  'kejujuran':    { soft: '#E7EEFC', ink: '#4A6BD6', accent: '#5F84E6' },
+  'kasih-sayang': { soft: '#F1ECFB', ink: '#8A6DC7', accent: '#A98CDD' },
+};
+const TOKEN_DEFAULT = { soft: '#F3EDFC', ink: '#8A6DC7', accent: '#A98CDD' };
 
 // ─── Ikon bunga mini di header grup ──────────────────────────────────────────
 
@@ -66,13 +81,13 @@ function BungaMini({ warna, mekar }: { warna: string; mekar: number }) {
 interface PropsButir {
   butir: ItemSikap;
   nilai: NilaiAkar;
-  warna: string;
+  accent: string;
   disiram: boolean;
   onToggle: () => void;
   sapaan: SapaanSet;
 }
 
-function ButirSikap({ butir, nilai, warna, disiram, onToggle, sapaan }: PropsButir) {
+function ButirSikap({ butir, nilai, accent, disiram, onToggle, sapaan }: PropsButir) {
   return (
     <button
       type="button"
@@ -81,53 +96,60 @@ function ButirSikap({ butir, nilai, warna, disiram, onToggle, sapaan }: PropsBut
       aria-label={`${nilai}, ${butir.judul}`}
       onClick={onToggle}
       style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: 12,
-        width: '100%',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 8,
+        /* area sentuh minimal 44px — chip mungkin lebih pendek secara visual */
         minHeight: 44,
-        padding: '10px 0',
-        background: 'none',
-        border: 'none',
+        padding: '7px 13px 7px 8px',
+        borderRadius: 999,
+        background: disiram ? accent + '22' : '#ffffff',
+        border: `1.5px solid ${disiram ? accent : 'rgba(110,59,87,.12)'}`,
         cursor: 'pointer',
+        transition: 'background .18s ease, border-color .18s ease',
         textAlign: 'left',
+        userSelect: 'none',
       }}
     >
-      {/* Kotak centang 24x24, area sentuh diperluas lewat minHeight */}
+      {/* Lingkaran centang — bentuk berubah antara tercentang dan tidak */}
       <span
         aria-hidden="true"
         style={{
           flexShrink: 0,
-          width: 22,
-          height: 22,
-          marginTop: 1,
-          borderRadius: 6,
-          border: disiram ? `2px solid ${warna}` : '1.5px solid rgba(110,59,87,.25)',
-          background: disiram ? warna + '20' : 'transparent',
+          width: 20,
+          height: 20,
+          borderRadius: '50%',
+          background: disiram ? accent : 'transparent',
+          border: `1.5px solid ${disiram ? accent : 'rgba(110,59,87,.28)'}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
         {disiram && (
-          <svg width="11" height="9" viewBox="0 0 11 9" fill="none" aria-hidden>
-            <path
-              d="M1 4.5L4 7.5L10 1.5"
-              stroke={warna}
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
+          <svg
+            width="11"
+            height="11"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth="3.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <path d="M20 6L9 17l-5-5" />
           </svg>
         )}
       </span>
+      {/* Teks #6E3B57 di kedua state — kontras aman pada bg putih maupun tinted */}
       <span
         style={{
           fontFamily: 'Nunito, system-ui, sans-serif',
-          fontSize: 14,
-          lineHeight: 1.5,
-          color: disiram ? '#6E3B57' : '#5A4250',
-          fontWeight: disiram ? 600 : 400,
+          fontSize: 13,
+          fontWeight: 700,
+          lineHeight: 1.15,
+          color: '#6E3B57',
         }}
       >
         {renderRichText(butir.judul, sapaan)}
@@ -163,6 +185,7 @@ function GrupNilai({
 
   const bunga = REGISTRY_BUNGA.find(b => b.nama === nilai);
   const warna = bunga?.warnaPetal ?? '#C9B8F0';
+  const token = TOKEN_NILAI[nilai] ?? TOKEN_DEFAULT;
 
   const jumlahCentang = butirList.filter(b =>
     (centangKebiasaan[tanggalHariIni]?.[nilai] ?? []).includes(b.id),
@@ -260,17 +283,19 @@ function GrupNilai({
             {COPY.BELUM_SIAP(nilai)}
           </p>
         ) : (
-          butirList.map(butir => (
-            <ButirSikap
-              key={butir.id}
-              butir={butir}
-              nilai={nilai}
-              warna={warna}
-              disiram={(centangKebiasaan[tanggalHariIni]?.[nilai] ?? []).includes(butir.id)}
-              onToggle={() => onToggleButir(nilai, butir.id)}
-              sapaan={sapaan}
-            />
-          ))
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, paddingBottom: 4 }}>
+            {butirList.map(butir => (
+              <ButirSikap
+                key={butir.id}
+                butir={butir}
+                nilai={nilai}
+                accent={token.accent}
+                disiram={(centangKebiasaan[tanggalHariIni]?.[nilai] ?? []).includes(butir.id)}
+                onToggle={() => onToggleButir(nilai, butir.id)}
+                sapaan={sapaan}
+              />
+            ))}
+          </div>
         )}
       </div>
     </div>

@@ -1,121 +1,18 @@
-import React, { useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, Bell, MessageSquare, Video, Clock as ClockIcon, CalendarCheck } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Outlet } from 'react-router-dom';
+import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
 import { useAuth } from '../../../context/AuthContext';
-import { useDashboardTier2, AppNotification } from '../../../context/DashboardTier2Context';
-import SidebarTier2 from './SidebarTier2';
-import { relativeTime } from './relativeTime';
+import { useNavigate } from 'react-router-dom';
 import RekahErrorBanner from '../../../components/RekahErrorBanner';
+import OnboardingFlow from '../../../features/onboarding/OnboardingFlow';
+import type { OnboardingData } from '../../../features/onboarding/types';
+import SidebarRekah from '../../../components/SidebarRekah';
+import HeaderMobileRekah from '../../../components/HeaderMobileRekah';
+import NavigasiBawah from '../../../components/NavigasiBawah';
+import { getAnakList, upsertAnak } from '../../../lib/supabase/rekah';
+import { hitungBand } from '../../../lib/band';
 
-const NOTIF_ICON: Record<AppNotification['kind'], typeof MessageSquare> = {
-  'forum-reply': MessageSquare,
-  'webinar-registered': Video,
-  'webinar-reminder': ClockIcon,
-  'consultation-confirmed': CalendarCheck,
-};
-
-const PAGE_TITLES: Record<string, string> = {
-  '/dashboard/tier2': 'Beranda',
-  '/dashboard/tier2/rencana': 'Rencana Pekan Ini',
-  '/dashboard/tier2/jelajah': 'Jelajah Aktivitas',
-  '/dashboard/tier2/jejak-mekar': 'Jejak Mekar',
-  '/dashboard/tier2/jurnal': 'Jurnal',
-  '/dashboard/tier2/jurnal-perkembangan': 'Jurnal Perkembangan',
-  '/dashboard/tier2/pengaturan': 'Pengaturan',
-  '/dashboard/tier2/profil-anak': 'Profil Anak',
-  '/dashboard/tier2/subscription': 'Langganan',
-  '/dashboard/tier2/partner-orang-tua': 'Partner Orang Tua',
-  '/dashboard/tier2/knowledge': 'Panduan Tumbuh Kembang',
-};
-
-// Lives inside <DashboardTier2Provider> (rendered as a child below), so it
-// can call useDashboardTier2() - the parent DashboardShellTier2 component
-// itself can't, since it's the one rendering the provider, not a descendant
-// of it.
-function NotificationBell() {
-  const navigate = useNavigate();
-  const { notifications, unreadNotificationCount, markNotificationRead, markAllNotificationsRead } = useDashboardTier2();
-  const [open, setOpen] = useState(false);
-
-  function handleClickNotification(n: AppNotification) {
-    markNotificationRead(n.id);
-    setOpen(false);
-    // TODO: update destinations after build 2 (community / konsultasi features parked)
-    navigate('/dashboard/tier2');
-  }
-
-  return (
-    <div className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen(o => !o)}
-        aria-label="Notifikasi"
-        className="relative flex h-9 w-9 items-center justify-center rounded-xl text-pekat/50 transition hover:bg-fajar hover:text-rekah"
-      >
-        <Bell className="h-5 w-5" strokeWidth={2} />
-        {unreadNotificationCount > 0 && (
-          <span className="absolute right-1 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rekah px-1 text-[10px] font-bold text-white">
-            {unreadNotificationCount > 9 ? '9+' : unreadNotificationCount}
-          </span>
-        )}
-      </button>
-
-      {open && (
-        <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-12 z-50 w-[320px] rounded-[20px] bg-white p-3 shadow-[0_20px_50px_rgba(224,82,107,0.14)]">
-            <div className="mb-2 flex items-center justify-between px-1">
-              <p className="font-bricolage text-[15px] font-bold text-pekat">Notifikasi</p>
-              {unreadNotificationCount > 0 && (
-                <button
-                  type="button"
-                  onClick={markAllNotificationsRead}
-                  className="text-[12px] font-semibold text-rekah hover:underline"
-                >
-                  Tandai semua dibaca
-                </button>
-              )}
-            </div>
-
-            {notifications.length === 0 ? (
-              <p className="px-1 py-6 text-center text-[13px] text-pekat/50">
-                Belum ada notifikasi.
-              </p>
-            ) : (
-              <div className="flex max-h-[360px] flex-col gap-1 overflow-y-auto">
-                {notifications.map(n => {
-                  const Icon = NOTIF_ICON[n.kind];
-                  return (
-                    <button
-                      key={n.id}
-                      type="button"
-                      onClick={() => handleClickNotification(n)}
-                      className={`flex items-start gap-2.5 rounded-[14px] p-2.5 text-left transition hover:bg-fajar ${
-                        n.read ? '' : 'bg-fajar/60'
-                      }`}
-                    >
-                      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-mawar text-rekah">
-                        <Icon className="h-3.5 w-3.5" />
-                      </span>
-                      <span className="flex-1">
-                        <span className="block text-[13px] font-semibold leading-[1.4] text-pekat">{n.title}</span>
-                        <span className="mt-0.5 block text-[12px] leading-[1.4] text-pekat/65">{n.message}</span>
-                        <span className="mt-0.5 block text-[11px] text-pekat/40">{relativeTime(n.createdAt)}</span>
-                      </span>
-                      {!n.read && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-rekah" />}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
-// Guard: tier2 users only. Tier1 parents who somehow land here get sent back.
+// Guard: tier2 users only
 function Tier2Guard({ children }: { children: React.ReactNode }) {
   const { tier, loading } = useAuth();
   const navigate = useNavigate();
@@ -134,46 +31,98 @@ function Tier2Guard({ children }: { children: React.ReactNode }) {
 }
 
 export default function DashboardShellTier2() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const location = useLocation();
-  const { user } = useAuth();
+  const [melipat, setMelipat] = useState(false);
+  const [onboardingData, setOnboardingData] = useState<OnboardingData | null>(null);
+  const [idAnak, setIdAnak] = useState<string | null>(null);
+  const [loadingAnak, setLoadingAnak] = useState(true);
+  const { supabaseUser } = useAuth();
 
-  const pageTitle = PAGE_TITLES[location.pathname]
-    ?? (location.pathname.startsWith('/dashboard/tier2/knowledge/') ? 'Panduan Tumbuh Kembang' : 'Dashboard');
+  // Muat data anak dari Supabase saat mount — hindari flash layar onboarding bagi pengguna lama.
+  const muatAnak = useCallback(async () => {
+    if (!supabaseUser) { setLoadingAnak(false); return; }
+    try {
+      const daftar = await getAnakList();
+      if (daftar.length > 0) {
+        const anak = daftar[0];
+        const { band, diLuarRentang } = hitungBand(new Date(anak.tanggal_lahir));
+        setIdAnak(anak.id);
+        setOnboardingData({
+          namaAnak: anak.nama_anak,
+          tanggalLahir: anak.tanggal_lahir,
+          band,
+          diLuarRentang,
+          // Nilai/fokus/tanah/visi dimuat oleh AkarKeluargaContext secara terpisah.
+          nilai: [],
+          fokus: [],
+          tanah: [],
+          visi: '',
+        });
+      }
+    } catch {
+      // Gagal muat anak — tampilkan onboarding agar pengguna bisa mengisi ulang.
+    } finally {
+      setLoadingAnak(false);
+    }
+  }, [supabaseUser]);
+
+  useEffect(() => { muatAnak(); }, [muatAnak]);
+
+  async function handleSelesai(data: OnboardingData) {
+    // Simpan anak ke Supabase sebelum masuk ke dashboard.
+    if (supabaseUser) {
+      try {
+        const baris = await upsertAnak({
+          namaAnak: data.namaAnak,
+          tanggalLahir: data.tanggalLahir,
+        });
+        setIdAnak(baris.id);
+      } catch {
+        // Tidak blokir masuk dashboard bila sinkronisasi gagal.
+      }
+    }
+    setOnboardingData(data);
+  }
+
+  if (loadingAnak) {
+    return (
+      <Tier2Guard>
+        <div className="flex h-48 items-center justify-center text-pekat/50">Memuat...</div>
+      </Tier2Guard>
+    );
+  }
+
+  if (!onboardingData) {
+    return (
+      <Tier2Guard>
+        <OnboardingFlow onSelesai={handleSelesai} />
+      </Tier2Guard>
+    );
+  }
 
   return (
     <Tier2Guard>
-      <div className="flex">
-        <SidebarTier2 open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex min-h-screen bg-kanvas">
+        {/* Desktop: sidebar animasi */}
+        <div className="hidden lg:block">
+          <SidebarRekah melipat={melipat} onToggle={() => setMelipat(m => !m)} />
+        </div>
 
-        <div className="flex min-h-screen flex-1 flex-col bg-kanvas">
-          {/* Topbar */}
-          <header className="sticky top-0 z-30 flex h-[60px] items-center justify-between border-b border-fajar bg-white px-4 sm:px-6">
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setSidebarOpen(true)}
-                aria-label="Buka menu"
-                className="flex h-9 w-9 items-center justify-center rounded-[12px] text-pekat/50 transition hover:bg-fajar hover:text-rekah lg:hidden"
-              >
-                <Menu className="h-5 w-5" strokeWidth={2} />
-              </button>
-              <h1 className="font-bricolage text-[18px] font-bold text-pekat sm:text-[20px]">{pageTitle}</h1>
+        {/* Area konten utama */}
+        <div className="flex flex-1 flex-col min-w-0">
+          {/* Mobile: header atas dengan logo + avatar */}
+          <HeaderMobileRekah />
+
+          <main className="flex-1">
+            <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 pb-[80px] lg:pb-0">
+              <Outlet context={{ onboardingData, idAnak }} />
             </div>
-
-            <div className="flex items-center gap-3">
-              <span className="hidden text-[14px] text-pekat/60 sm:block">
-                Halo, <strong className="text-pekat">{user?.name?.split(' ')[0] ?? 'Ayah-Bunda'}</strong>
-              </span>
-              <NotificationBell />
-            </div>
-          </header>
-
-          <main className="flex-1 px-4 py-6 sm:px-6 sm:py-8">
-            <Outlet />
           </main>
         </div>
+
+        {/* Mobile: navigasi bawah */}
+        <NavigasiBawah />
       </div>
+
       <RekahErrorBanner />
     </Tier2Guard>
   );

@@ -9,9 +9,16 @@
  * belanja muncul, penargetan, profiling, atau analitik per individu.
  * Jangan menambahkan fungsi agregat atau ekspor di berkas ini.
  *
- * caregiverId di sini adalah id ORANG TUA (auth.uid()), bukan id anak.
- * Catatan nifas milik ibu; menyimpannya per anak akan membelah riwayat ibu
- * yang punya lebih dari satu anak.
+ * caregiverId di sini adalah id ANAK.
+ *
+ * Migrasi 013 sempat memakai id orang tua, dengan alasan "catatan nifas milik
+ * ibu". Alasan itu terbalik: nifas adalah peristiwa per-KELAHIRAN, jadi ibu
+ * yang melahirkan dua kali memang punya dua catatan terpisah. Kunci per orang
+ * tua membuat data satu anak muncul di layar anak lain. Dikoreksi di 014.
+ *
+ * Nama parameter tetap `caregiverId` karena itu yang dipakai kontraknya —
+ * kontrak tidak peduli entitas mana yang jadi kuncinya, hanya bahwa satu
+ * caregiver punya satu rangkaian catatan harian.
  */
 
 import { supabase } from '../../../lib/supabase/client';
@@ -64,7 +71,7 @@ export class CatatanHarianSupabase implements CatatanHarianRepository {
     const { data, error } = await supabase
       .from('catatan_harian_ibu')
       .select(KOLOM)
-      .eq('id_orang_tua', caregiverId)
+      .eq('id_anak', caregiverId)
       .gte('tanggal', dariTanggal)
       .lte('tanggal', sampaiTanggal)
       .order('tanggal');
@@ -97,7 +104,7 @@ export class CatatanHarianSupabase implements CatatanHarianRepository {
     const { data, error } = await supabase
       .from('catatan_harian_ibu')
       .update(perubahan)
-      .eq('id_orang_tua', caregiverId)
+      .eq('id_anak', caregiverId)
       .eq('tanggal', diff.tanggal)
       .select('id');
 
@@ -107,7 +114,7 @@ export class CatatanHarianSupabase implements CatatanHarianRepository {
     // Belum ada baris untuk tanggal itu.
     const { error: errSisip } = await supabase
       .from('catatan_harian_ibu')
-      .insert({ id_orang_tua: caregiverId, tanggal: diff.tanggal, ...perubahan });
+      .insert({ id_anak: caregiverId, tanggal: diff.tanggal, ...perubahan });
 
     if (!errSisip) return;
 
@@ -117,7 +124,7 @@ export class CatatanHarianSupabase implements CatatanHarianRepository {
       const { error: errUlang } = await supabase
         .from('catatan_harian_ibu')
         .update(perubahan)
-        .eq('id_orang_tua', caregiverId)
+        .eq('id_anak', caregiverId)
         .eq('tanggal', diff.tanggal);
       if (errUlang) throw errUlang;
       return;
@@ -131,7 +138,7 @@ export class CatatanHarianSupabase implements CatatanHarianRepository {
     const { error } = await supabase
       .from('catatan_harian_ibu')
       .delete()
-      .eq('id_orang_tua', caregiverId);
+      .eq('id_anak', caregiverId);
 
     if (error) throw error;
   }
@@ -146,11 +153,11 @@ export interface CentangPersiapan {
   barang: Record<string, boolean>;
 }
 
-export async function ambilCentangPersiapan(idOrangTua: string): Promise<CentangPersiapan> {
+export async function ambilCentangPersiapan(idAnak: string): Promise<CentangPersiapan> {
   const { data, error } = await supabase
     .from('centang_persiapan')
     .select('kesiapan, barang')
-    .eq('id_orang_tua', idOrangTua)
+    .eq('id_anak', idAnak)
     .maybeSingle();
 
   if (error) throw error;
@@ -161,7 +168,7 @@ export async function ambilCentangPersiapan(idOrangTua: string): Promise<Centang
 }
 
 export async function simpanCentangPersiapan(
-  idOrangTua: string,
+  idAnak: string,
   centang: CentangPersiapan,
 ): Promise<void> {
   // Upsert aman di sini: tabelnya hanya punya kedua kolom itu, jadi tidak ada
@@ -169,8 +176,8 @@ export async function simpanCentangPersiapan(
   const { error } = await supabase
     .from('centang_persiapan')
     .upsert(
-      { id_orang_tua: idOrangTua, kesiapan: centang.kesiapan, barang: centang.barang },
-      { onConflict: 'id_orang_tua' },
+      { id_anak: idAnak, kesiapan: centang.kesiapan, barang: centang.barang },
+      { onConflict: 'id_anak' },
     );
 
   if (error) throw error;

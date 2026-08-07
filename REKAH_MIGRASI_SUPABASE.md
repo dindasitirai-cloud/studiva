@@ -165,16 +165,42 @@ Konsekuensi teknis yang sengaja dipilih:
   membaca `catatan_harian_ibu`. Kalau suatu saat perlu, itu keputusan tersendiri
   yang butuh dasar hukum dan persetujuan eksplisit ibu — bukan sekadar policy baru.
 - **Tidak ada kolom turunan atau agregat.** Pola dihitung di klien dari baris mentah.
-- **`caregiverId` diganti dari `idAnak` ke `auth.uid()` lebih dulu.** Catatan
-  nifas milik ibu; menyimpannya per anak akan membelah riwayat ibu yang punya
-  lebih dari satu anak, dan memperbaikinya belakangan berarti memigrasikan data
-  kesehatan. Diperbaiki sebelum baris pertama tersimpan.
+- **`caregiverId` = `id_anak`** (migrasi 014). Lihat koreksi di bawah.
 - **Checklist "Menyambut Si Kecil" ditaruh di tabel terpisah** (`centang_persiapan`)
   karena bukan data kesehatan dan bukan per-tanggal. Batasnya sengaja dibuat
   terlihat di skema, bukan hanya di komentar.
 
 Komponen tidak berubah sama sekali — `PenyimpananProvider` sudah menerima prop
 `repository`, persis seperti yang diantisipasi `dalamMemori.ts`.
+
+### Koreksi: kunci per anak, bukan per orang tua (migrasi 014)
+
+Migrasi 013 me-key `catatan_harian_ibu` dan `centang_persiapan` ke
+`id_orang_tua`, dengan alasan "catatan nifas milik ibu, bukan milik anak".
+**Alasan itu terbalik**, dan Raisha menemukannya saat uji dua anak: seluruh data
+Ruang Teduh anak pertama muncul di layar anak kedua.
+
+Nifas adalah peristiwa **per-kelahiran**, bukan keadaan per-ibu. Ibu yang
+melahirkan dua kali punya dua masa nifas dengan tanggal mulai, hitungan 42 hari,
+dan masa menyusui masing-masing. Menggabungkannya yang salah, bukan memisahkannya.
+
+Tiga dari empat layar jelas terikat satu kelahiran:
+
+| Layar | Terikat pada |
+|---|---|
+| Lembar Nifas | 42 hari sejak melahirkan |
+| Piring Ibu | masa menyusui bayi tertentu |
+| Menyambut Si Kecil | persiapan satu kelahiran |
+| Cuaca Hati | suasana hati selama masa nifas itu |
+
+Petunjuknya sudah ada sejak awal dan terlewat: `RuangTeduh.tsx` hanya tampil
+untuk anak 0–12 bulan, dan `tanggalMelahirkan` diturunkan dari tanggal lahir
+anak aktif. Cakupannya memang per-anak; kunci per orang tua tidak pernah cocok.
+
+Migrasi 014 membuat ulang kedua tabel dengan `id_anak`. Baris lama **dibuang,
+tidak dipetakan** — memetakan satu orang tua ke salah satu anaknya berarti
+menebak kelahiran mana yang dimaksud sebuah catatan nifas, dan pada data
+kesehatan tebakan lebih buruk daripada kosong. Saat itu isinya hanya data uji.
 
 ### Yang belum diverifikasi
 

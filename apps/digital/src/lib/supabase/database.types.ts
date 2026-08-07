@@ -502,12 +502,14 @@ export interface Database {
        * muncul, penargetan, profiling, atau analitik per individu.
        * Lihat penyimpanan/kontrak.ts dan kepala migrasi 013.
        *
-       * Di-key ke id_orang_tua, bukan id_anak — ini data ibu.
+       * Di-key ke id_anak: nifas adalah peristiwa per-kelahiran, bukan keadaan
+       * per-ibu. Migrasi 013 sempat memakai id_orang_tua dan itu membuat data
+       * satu anak muncul di layar anak lain — dikoreksi di migrasi 014.
        */
       catatan_harian_ibu: {
         Row: {
           id: string;
-          id_orang_tua: string;
+          id_anak: string;
           tanggal: string; // ISO date 'YYYY-MM-DD'
           cuaca_hati: 'cerah' | 'berawan' | 'mendung' | 'hujan' | 'badai' | null;
           kondisi_nifas: string[];
@@ -519,7 +521,7 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          id_orang_tua: string;
+          id_anak: string;
           tanggal: string;
           cuaca_hati?: 'cerah' | 'berawan' | 'mendung' | 'hujan' | 'badai' | null;
           kondisi_nifas?: string[];
@@ -537,16 +539,19 @@ export interface Database {
         Relationships: [];
       };
 
-      /** Checklist "Menyambut Si Kecil". BUKAN data kesehatan. */
+      /**
+       * Checklist "Menyambut Si Kecil". BUKAN data kesehatan.
+       * Per anak: persiapan kelahiran milik satu kelahiran, bukan milik akun.
+       */
       centang_persiapan: {
         Row: {
-          id_orang_tua: string;
+          id_anak: string;
           kesiapan: Record<string, boolean>;
           barang: Record<string, boolean>;
           diperbarui_pada: string;
         };
         Insert: {
-          id_orang_tua: string;
+          id_anak: string;
           kesiapan?: Record<string, boolean>;
           barang?: Record<string, boolean>;
         };

@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { useAnakAktif } from '../../context/AnakContext';
-import { useAuth } from '../../context/AuthContext';
 import { CatatanHarianSupabase } from './penyimpanan/supabase';
 import type { SubTahapRuangTeduh, RingkasNifas } from './types';
 import { TEKS_DILUAR_RENTANG } from './content';
@@ -16,7 +15,6 @@ function resolveSubTahap(usiaBulan: number): SubTahapRuangTeduh | null {
 export default function RuangTeduh() {
   // Anak aktif dari AnakContext, sumber tunggal data anak.
   const { anak, sapaan, usiaBulan } = useAnakAktif();
-  const { supabaseUser } = useAuth();
 
   // Dibuat sekali agar identitasnya stabil; PenyimpananProvider menyimpannya
   // di useRef dan hanya mengganti bila instansnya berubah.
@@ -66,34 +64,20 @@ export default function RuangTeduh() {
     );
   }
 
-  // caregiverId = id ORANG TUA, bukan id anak.
+  // caregiverId = id ANAK.
   //
-  // Sebelumnya diproksi dari idAnak dengan tanda TODO. Catatan nifas adalah
-  // data ibu: memakai id anak akan membelah riwayat ibu yang punya lebih dari
-  // satu anak, dan — karena ini data kesehatan — memperbaikinya belakangan
-  // berarti memigrasikan data kesehatan. Diperbaiki sebelum data pertama
-  // tersimpan, bukan sesudah.
+  // Sempat diubah ke id orang tua di migrasi 013 dengan alasan "catatan nifas
+  // milik ibu". Alasan itu terbalik: nifas adalah peristiwa per-KELAHIRAN.
+  // Lembar Nifas menghitung 42 hari sejak melahirkan, Piring Ibu soal masa
+  // menyusui bayi tertentu, dan Menyambut Si Kecil adalah persiapan satu
+  // kelahiran. Kunci per orang tua membuat data anak pertama muncul di layar
+  // anak kedua. Dikoreksi di migrasi 014.
+  //
+  // Cakupan layar ini memang sudah per-anak: hanya tampil untuk 0–12 bulan,
+  // dan tanggalMelahirkan di atas diturunkan dari tanggal lahir anak aktif.
   //
   // Masih TODO: CaregiverProfile penuh (peran, tanggalMelahirkan sungguhan).
-  // tanggalMelahirkan masih diproksi dari tanggal lahir anak di atas — tepat
-  // untuk kelahiran tunggal, dan itulah yang menghitung 42 hari Lembar Nifas.
-  const caregiverId = supabaseUser?.id ?? null;
-
-  if (!caregiverId) {
-    return (
-      <div style={{ paddingTop: 40, textAlign: 'center' }}>
-        <p
-          style={{
-            fontFamily: 'Nunito, system-ui, sans-serif',
-            fontSize: 15,
-            color: '#8A7A80',
-          }}
-        >
-          Memuat...
-        </p>
-      </div>
-    );
-  }
+  const caregiverId = anak.id;
 
   return (
     <PenyimpananProvider caregiverId={caregiverId} repository={repo}>

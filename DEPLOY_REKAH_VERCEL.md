@@ -140,10 +140,37 @@ Di layar import, klik **Edit** di sebelah **Root Directory** lalu pilih `apps/di
 | **Root Directory** | `apps/digital` |
 | Include source files outside of the Root Directory | **ON** |
 | Build / Install / Output Command | biarkan kosong → diambil dari `apps/digital/vercel.json` |
+| Install Command | **jangan diisi di mana pun** — lihat peringatan di bawah |
 | Production Branch | `feat/kebiasaan-baik-visual` sementara; ganti ke `main` setelah merge |
 | Ignored Build Step | **kosongkan** (pakai skipping bawaan Vercel) |
 
 Isi Environment Variables (bagian 4) sebelum klik **Deploy**. Kalau lupa, build tetap jalan tapi Supabase-nya `undefined`.
+
+> ### ⚠️ Jangan pernah menyetel Install Command
+>
+> Vercel memilih versi pnpm dari `lockfileVersion` di `pnpm-lock.yaml` —
+> `9.0` → pnpm 9 atau 10. Deteksi itu bekerja dengan benar.
+>
+> Tapi begitu kamu menyetel Install Command (di `vercel.json` maupun di
+> dashboard), Vercel memakai **versi pnpm PALING TUA yang tersedia di build
+> container, yaitu pnpm 6** — apa pun isi perintahnya. pnpm 6 tidak bisa
+> membaca lockfile format 9.0, dan build gagal dengan:
+>
+> ```
+> WARN  Ignoring not compatible lockfile at /vercel/path0/pnpm-lock.yaml
+> ERROR  Headless installation requires a pnpm-lock.yaml file
+> ```
+>
+> Ini pernah terjadi: `"installCommand": "pnpm install --frozen-lockfile"`
+> sempat ada di kedua `vercel.json` dan menggagalkan preview pertama.
+> Sudah dihapus.
+>
+> `--frozen-lockfile` juga tidak perlu ditulis: pnpm menyalakannya sendiri
+> ketika `CI=true`, dan Vercel selalu menyetel itu.
+>
+> `packageManager: pnpm@11.13.1` di root `package.json` **diabaikan** Vercel
+> kecuali env var `ENABLE_EXPERIMENTAL_COREPACK=1` disetel. Jangan disetel —
+> Vercel hanya mendukung pnpm sampai versi 10.
 
 ### Langkah 4 — verifikasi preview Rekah
 

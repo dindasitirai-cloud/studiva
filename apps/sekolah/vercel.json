@@ -3,7 +3,6 @@
   "framework": "create-react-app",
   "buildCommand": "pnpm --filter @studiva/shared build && pnpm --filter sekolah build",
   "outputDirectory": "build",
-  "installCommand": "pnpm install --frozen-lockfile",
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],

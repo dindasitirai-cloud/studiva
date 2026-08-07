@@ -171,6 +171,25 @@ Isi Environment Variables (bagian 4) sebelum klik **Deploy**. Kalau lupa, build 
 > `packageManager: pnpm@11.13.1` di root `package.json` **diabaikan** Vercel
 > kecuali env var `ENABLE_EXPERIMENTAL_COREPACK=1` disetel. Jangan disetel —
 > Vercel hanya mendukung pnpm sampai versi 10.
+>
+> ### ⚠️ Jangan biarkan package-lock.json di dalam apps/
+>
+> Vercel mencari lock file **di Root Directory**, bukan di root repo. Karena
+> Root Directory di sini `apps/sekolah` dan `apps/digital`, adanya
+> `package-lock.json` di folder itu membuat Vercel menyimpulkan **npm** dan
+> tidak pernah melihat `pnpm-lock.yaml` di root. Gejalanya:
+>
+> ```
+> npm error code EUNSUPPORTEDPROTOCOL
+> npm error Unsupported URL Type "workspace:": workspace:*
+> ```
+>
+> npm tidak mengerti protokol `workspace:` milik pnpm. Kedua berkas itu sisa
+> dari struktur pra-monorepo dan sudah dihapus.
+>
+> `backend/package-lock.json` sengaja **dibiarkan** — `backend/` bukan bagian
+> dari pnpm workspace (lihat deskripsi di root `package.json`) dan dideploy
+> terpisah, jadi ia memang memakai npm.
 
 ### Langkah 4 — verifikasi preview Rekah
 

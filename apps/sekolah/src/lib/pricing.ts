@@ -2,8 +2,9 @@
 // Full Stripe subscription pricing is only in apps/digital.
 // This file only exists to satisfy legacy imports (AdminContext mock data).
 // TODO: remove PRICING/TIER_LABELS from AdminContext once mock data is dropped.
-export { formatIDR } from '@studiva/shared';
 import type { Tier, Plan } from '../types';
+
+export { formatIDR } from '@studiva/shared';
 
 interface PlanInfo { amount: number; label: string; savingsPercent: number; }
 export const PRICING: Record<Tier, Record<Plan, PlanInfo>> = {

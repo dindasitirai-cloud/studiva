@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import {
   Star, CheckCircle2, Download, ShoppingBag,
-  Dumbbell, X, FlaskConical, Clock,
-  Wrench, FileDown, Calendar, ChevronRight, Check,
-  User, Sparkles,
+  X, FlaskConical, Clock,
+  Calendar, ChevronRight, Check,
+  Sparkles,
 } from 'lucide-react';
 import {
   DOMAIN_META, AGE_RANGES,
@@ -22,6 +22,9 @@ function ageLabel(minBulan: number, maxBulan: number): string {
   return `${fmt(minBulan)} - ${fmt(maxBulan)}`;
 }
 
+// Tidak dipakai saat ini — penyaringan usia kini lewat FilterSubUsia.
+// Disimpan karena logikanya masih jadi rujukan; hapus kalau sudah pasti mati.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function matchesAge(minBulan: number, maxBulan: number, filterAgeId: string): boolean {
   if (filterAgeId === 'all') return true;
   const range = AGE_RANGES.find(r => r.id === filterAgeId);
@@ -998,10 +1001,14 @@ function StratActivityCard({ act, saved, tried, onSave, onTry }: {
 // ── Tab types & config ────────────────────────────────────────────────────────
 
 type Tab = 'aktivitas' | 'alat' | 'unduhan' | 'selesai';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type ViewMode = 'personal' | 'browse';
 
 // ── PersonalView ──────────────────────────────────────────────────────────────
 
+// Komponen ini belum terpasang di mana pun — toggle Personal/Browse belum
+// dihidupkan. Dibiarkan utuh, bukan dihapus, karena ia kerja yang sudah jadi.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function PersonalView({
   onOpenActivity,
   onOpenPlan,
@@ -1414,7 +1421,6 @@ export default function LearningStrategiesTier2() {
             const isAll = key === 'Semua Domain';
             const isActive = domain === key;
             const ink = isAll ? '#6E3B57' : STR_DOM[key as DomainKey].ink;
-            const soft = isAll ? '#F2E8FF' : STR_DOM[key as DomainKey].soft;
             const bord = isAll ? '#F2E4D2' : STR_DOM[key as DomainKey].border;
             const icon = isAll
               ? ['M4 6h16','M4 12h16','M4 18h10']

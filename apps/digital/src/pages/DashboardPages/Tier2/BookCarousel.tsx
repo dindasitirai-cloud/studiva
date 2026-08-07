@@ -176,10 +176,9 @@ export default function BookCarousel({ cards, selectedId, onSelect, onOpen, onBa
   if (nextIdx >= 0) stage.push({ card: cards[nextIdx], idx: nextIdx, transform:'translateX(330px) scale(.82) rotateY(-18deg)', opacity:.5, z:1, blur:'blur(1.2px)', isCurr:false });
 
   const curTokens = getBookColors(selected.domain);
-  const { soft, ink, blob, border, coverLo, spineHi, spineDark } = curTokens;
+  const { soft, ink } = curTokens;
   const domainLabel = DOMAIN_CODE_LABEL[selected.domain] ?? DOMAIN_MAP[selected.domain]?.label ?? '';
   const ageLabel = AGE_RANGES.find(a => a.key === selected.ageKey)?.label ?? selected.ageKey;
-  const { pre, keyword, post } = splitTitle(selected.title);
 
   return (
     <div className="flex flex-col gap-5">

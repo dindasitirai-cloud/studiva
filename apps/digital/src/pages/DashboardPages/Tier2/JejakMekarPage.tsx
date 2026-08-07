@@ -72,35 +72,27 @@ function BungaMusim({ nilaiId, selesaiCount }: { nilaiId: NilaiId; selesaiCount:
 // ── JejakMekarPage ─────────────────────────────────────────────────────────
 
 export default function JejakMekarPage() {
-  const { profile, setProfile } = useRekahProfile();
+  const { profile } = useRekahProfile();
   const { entries } = useRekahRefleksi();
   const { currentWeek } = useRekahPlan();
   const [arsipOpen, setArsipOpen] = useState(false);
 
-  if (!profile) {
-    return (
-      <div className="flex h-48 items-center justify-center text-[14px] text-pekat/50">
-        Memuat profil...
-      </div>
-    );
-  }
+  // ── SEMUA HOOK DI ATAS GERBANG `if (!profile)` ─────────────────────────────
+  //
+  // Ketiga useMemo di bawah dulu berada SESUDAH early return. Akibatnya render
+  // pertama (profil masih dimuat) mendaftarkan 4 hook dan render berikutnya 7,
+  // lalu React melempar "Rendered more hooks than during the previous render"
+  // dan halaman menjadi kosong. Karena profil dimuat asinkron, itu bukan kasus
+  // tepi. Jangan menambahkan hook di bawah gerbang itu.
 
-  const [nilai1Id, nilai2Id] = profile.akar.nilaiFokus;
-  const nilai1 = NILAI_REKAH.find(n => n.id === nilai1Id);
-  const nilai2 = NILAI_REKAH.find(n => n.id === nilai2Id);
-
-  // Hitung kelopak terisi per nilai dari completions refleksi
-  const selesai1 = entries.filter(e => e.nilaiUtama === nilai1Id).length;
-  const selesai2 = entries.filter(e => e.nilaiUtama === nilai2Id).length;
+  // ── Pola lembut ─────────────────────────────────────────────────────
+  const cukupData = entries.length >= 5;
 
   // Momen tersimpan (hanya yang punya catatan)
   const momenList = useMemo(
     () => entries.filter(e => e.catatan).sort((a, b) => b.tanggal.localeCompare(a.tanggal)),
     [entries],
   );
-
-  // ── Pola lembut ─────────────────────────────────────────────────────
-  const cukupData = entries.length >= 5;
 
   const dominanSeru = useMemo(() => {
     if (!cukupData) return null;
@@ -121,6 +113,23 @@ export default function JejakMekarPage() {
     const lelahCount = entries.filter(e => e.moodCaregiver === 'lelah').length;
     return lelahCount / entries.length > 0.5;
   }, [entries, cukupData]);
+
+  if (!profile) {
+    return (
+      <div className="flex h-48 items-center justify-center text-[14px] text-pekat/50">
+        Memuat profil...
+      </div>
+    );
+  }
+
+  // Di bawah sini `profile` dijamin ada. Nilai turunan biasa, bukan hook.
+  const [nilai1Id, nilai2Id] = profile.akar.nilaiFokus;
+  const nilai1 = NILAI_REKAH.find(n => n.id === nilai1Id);
+  const nilai2 = NILAI_REKAH.find(n => n.id === nilai2Id);
+
+  // Hitung kelopak terisi per nilai dari completions refleksi
+  const selesai1 = entries.filter(e => e.nilaiUtama === nilai1Id).length;
+  const selesai2 = entries.filter(e => e.nilaiUtama === nilai2Id).length;
 
   function handleRingankan() {
     // TIDAK ADA EFEK YANG TERSIMPAN — dan itu memang keadaannya sejak dulu.

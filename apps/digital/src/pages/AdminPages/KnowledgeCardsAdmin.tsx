@@ -292,7 +292,7 @@ export default function KnowledgeCardsAdmin() {
   const [filterStatus, setFilterStatus] = useState<'all' | 'published' | 'draft'>('all');
   const [modal, setModal]               = useState<{ form: CardForm; existing?: KnowledgeCard } | null>(null);
   const [previewCard, setPreviewCard]   = useState<KnowledgeCard | null>(null);
-  const [previewView, setPreviewView]   = useState<'carousel' | 'reader'>('carousel');
+  const [, setPreviewView]              = useState<'carousel' | 'reader'>('carousel');
   const [syncing, setSyncing]           = useState(false);
   const [syncMsg, setSyncMsg]           = useState('');
 

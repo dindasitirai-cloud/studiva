@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CheckCircle2, AlertTriangle, BookOpen, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import { CoverImage } from './BookCarousel';
-import { KnowledgeCard, DOMAIN_MAP, AGE_RANGES } from './knowledgeCardData';
-import { FIGURE_REGISTRY } from '../../../components/figures';
+import { KnowledgeCard, DOMAIN_MAP } from './knowledgeCardData';
 import AudioPlayerWidget from './AudioPlayerWidget';
 import { useAudioPlayer } from '../../../context/AudioPlayerContext';
 import { composeScientific } from '../../../lib/composeScientific';
@@ -12,15 +11,6 @@ import { SCI_DATA } from './scienceDetailData';
 function useReducedMotion() {
   const [r] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   return r;
-}
-
-function renderCitations(text: string) {
-  const parts = text.split(/(\[\d+\])/g);
-  return parts.map((part, i) => {
-    const m = part.match(/^\[(\d+)\]$/);
-    if (m) return <sup key={i}><a href={`#ref-${m[1]}`} className="font-semibold text-amber-700 no-underline hover:underline">[{m[1]}]</a></sup>;
-    return <React.Fragment key={i}>{part}</React.Fragment>;
-  });
 }
 
 interface BookReaderProps {
@@ -43,12 +33,10 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
   const [imgErr, setImgErr] = useState(false);
   const domain = DOMAIN_MAP[card.domain];
   const DomainIcon = domain.icon;
-  const ageRange = AGE_RANGES.find(a => a.key === card.ageKey);
   const sci = composeScientific(card);
   const hasSections = (sci.sections?.length ?? 0) > 0;
   const hasParagraphs = (sci.paragraphs?.length ?? 0) > 0;
   const hasScientific = hasSections || hasParagraphs;
-  const FigureComp = sci.figure ? FIGURE_REGISTRY[sci.figure.id] : null;
 
   // Open to summary after mounting (cover → summary), unless caller wants to start on cover
   useEffect(() => {
@@ -86,7 +74,6 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
   const prevTokens = prevCard ? getBookColors(prevCard.domain) : null;
   const nextTokens = nextCard ? getBookColors(nextCard.domain) : null;
 
-  const AMBER = '#E0A21F';
 
   // ── Render ──
   return (
@@ -361,7 +348,6 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
       {page === 'scientific' && (() => {
         // Derive pseudo-sections from flat paragraphs for cards published via admin pipeline
         // before the sci_sections column existed. Paragraphs may carry "Judul: isi" encoding.
-        const sciDataKey = `${card.domain}-${card.ageKey}`;
         // Kartu statis Studiva punya ID prefix "RL-"; kartu admin DB tidak.
         // Kartu admin DB: konten tersimpan selalu menang atas SCI_DATA statis.
         // Kartu statis: gunakan SCI_DATA (lebih fokus) sebagai prioritas utama.
@@ -382,7 +368,7 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
 
         // Priority 1: konten admin yang dimasukkan via pipeline (hanya kartu DB)
         if (useAdminLayout) {
-          const { soft, ink, border } = curTokens;
+          const { soft, ink } = curTokens;
           const domainLabel = DOMAIN_CODE_LABEL[card.domain] ?? '';
           const domainIconPaths = curTokens.iconPaths ?? [];
           return (
@@ -557,7 +543,7 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
             </div>
           );
         }
-        const { soft, ink, blob, border } = curTokens;
+        const { soft, ink, border } = curTokens;
         const domainIconPaths = curTokens.iconPaths ?? [];
         const domainLabel = DOMAIN_CODE_LABEL[card.domain] ?? '';
         return (

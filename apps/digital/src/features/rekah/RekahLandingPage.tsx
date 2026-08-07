@@ -311,7 +311,9 @@ export default function RekahLandingPage() {
                   <legend className="text-sm font-semibold text-pekat mb-3">
                     {REKAH_COPY.formulir.labelUsia} <span className="text-rekah" aria-hidden="true">*</span>
                   </legend>
-                  <div className="flex flex-wrap gap-2" role="group" aria-required="true">
+                  {/* aria-required tidak didukung role="group". Kewajiban isian
+                      sudah disampaikan lewat tanda * di <legend> di atas. */}
+                  <div className="flex flex-wrap gap-2" role="group">
                     {REKAH_COPY.formulir.usiaOpsi.map(opsi => {
                       const active = form.usia === opsi;
                       return (

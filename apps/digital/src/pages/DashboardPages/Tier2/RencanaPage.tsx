@@ -116,6 +116,14 @@ export default function RencanaPage() {
     if (idx !== -1) setActiveIndex(idx);
   }
 
+  // BELUM TERPASANG: tidak ada tombol yang memanggil ini.
+  //
+  // Sisa mesinnya lengkap — addStep() di RekahPlanContext kini benar-benar
+  // menyimpan ke rekah_rencana_pekan, dan pesan "rencana penuh" masih dirender
+  // di bawah. Yang hilang hanya afordansi UI-nya, kemungkinan terlepas saat
+  // redesain. Dibiarkan utuh supaya tinggal disambungkan ke tombol, bukan
+  // dibangun ulang.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function handleTambahLangkah() {
     const result = addStep(gantiPool[0]?.id ?? ('' as ActivityModuleId));
     if (result === 'penuh') {

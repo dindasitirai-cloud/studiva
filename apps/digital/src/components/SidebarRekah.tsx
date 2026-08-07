@@ -35,7 +35,7 @@ interface PropsSidebarRekah {
 
 export default function SidebarRekah({ melipat, onToggle }: PropsSidebarRekah) {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const [konfirmasi, setKonfirmasi] = useState(false);
 
   const prefersReducedMotion =

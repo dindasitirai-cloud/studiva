@@ -11,7 +11,6 @@ const DOMAINS = [
 
 export function FigureSchoolReadinessDomains() {
   const cx = 300; const cy = 190;
-  const rx = 150; const ry = 130;
 
   return (
     <svg

@@ -319,7 +319,7 @@ export default function JelajahAktivitasPage() {
 
       {/* ── Grid of compact cards ────────────────────────────────────────── */}
       {!selectedId && filtered.length > 0 && (
-        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2" role="list">
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {filtered.map(m => {
             const nilai = NILAI_REKAH.find(n => n.id === m.nilaiUtama);
             return (

@@ -20,7 +20,6 @@ type MusimRow = Database['public']['Tables']['rekah_musim']['Row'];
 type LangkahRow = Database['public']['Tables']['rekah_langkah_selesai']['Row'];
 type RefleksiRow = Database['public']['Tables']['rekah_refleksi']['Row'];
 type JurnalRow = Database['public']['Tables']['rekah_jurnal']['Row'];
-type RencanaRow = Database['public']['Tables']['rekah_rencana_pekan']['Row'];
 
 /** Kode PostgREST untuk "nol baris padahal diminta satu". Bukan error. */
 const TIDAK_ADA_BARIS = 'PGRST116';

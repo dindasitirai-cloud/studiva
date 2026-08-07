@@ -5,7 +5,7 @@ import LogoRekah from './LogoRekah';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const { user, tier, logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   function handleLogout() {

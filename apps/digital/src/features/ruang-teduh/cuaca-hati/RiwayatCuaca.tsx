@@ -1,7 +1,7 @@
 import React, { useId } from 'react';
 import type { CuacaHati } from '../types';
 import { RIWAYAT_JUDUL, RIWAYAT_KETERANGAN, RIWAYAT_KUTIPAN, CUACA_LABEL } from '../content';
-import { cuacaGelap, perluCerminPola } from '../logika';
+import { perluCerminPola } from '../logika';
 import { usePenyimpanan, useRiwayat } from '../penyimpanan/PenyimpananProvider';
 import CerminPola from './CerminPola';
 

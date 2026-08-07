@@ -4,7 +4,7 @@ import { useKnowledgeLibrary } from '../../../context/KnowledgeLibraryContext';
 import { useAnak } from '../../../context/AnakContext';
 import { api } from '../../../api/client';
 import {
-  AgeKey, DomainCode, KnowledgeCard, AGE_RANGES,
+  AgeKey, DomainCode, KnowledgeCard,
 } from './knowledgeCardData';
 import BookGrid from './BookGrid';
 import BookCarousel from './BookCarousel';
@@ -241,10 +241,6 @@ export default function KnowledgeGallery({ defaultAgeMonths, onJadwalkanBuku }: 
   function handleBackToGrid() {
     setView('grid');
     setSelectedId(null);
-  }
-
-  function handleBackToCarousel() {
-    setView('carousel');
   }
 
   // ── Render ──

@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import {
-  Home, Sun, Package, BookHeart, Sprout,
-  Baby, LogOut, ChevronLeft, ChevronRight,
-} from 'lucide-react';
+import { LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
 import LogoRekah from './LogoRekah';
 import { useAuth } from '../context/AuthContext';
+import { MENU_UTAMA, PROFIL_ANAK } from '../config/fiturRekah';
 
 // TODO: review Fitri — semua label di bawah ini
 const TEKS = {
@@ -17,17 +15,7 @@ const TEKS = {
   KELUAR: 'Keluar',
 };
 
-const MENU_UTAMA = [
-  { to: '/dashboard/tier2',                     label: 'Beranda',         icon: Home,      end: true  },
-  { to: '/dashboard/tier2/irama-hari',           label: 'Irama Hari',      icon: Sun,       end: false },
-  { to: '/dashboard/tier2/bekal',                label: 'Bekal',           icon: Package,   end: false },
-  { to: '/dashboard/tier2/jurnal-perkembangan',  label: 'Jurnal dan Galeri', icon: BookHeart, end: false },
-  { to: '/dashboard/tier2/jejak-mekar',          label: 'Panen',           icon: Sprout,    end: false },
-] as const;
-
-const MENU_BAWAH = [
-  { to: '/dashboard/tier2/profil-anak', label: 'Profil Anak', icon: Baby, end: false },
-] as const;
+const MENU_BAWAH = [PROFIL_ANAK];
 
 // Warna brand (tidak dihardcode di luar sini — diambil dari desain token Rekah)
 const CLR = {

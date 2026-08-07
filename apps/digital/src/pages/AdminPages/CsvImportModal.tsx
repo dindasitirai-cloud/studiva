@@ -230,9 +230,13 @@ export default function CsvImportModal({ type, onClose }: CsvImportModalProps) {
     const slRaw = data.statusLink?.trim();
     const statusLink = ['KOSONG', 'TERPASANG', 'PERLU_CEK', 'MATI'].includes(slRaw ?? '') ? (slRaw as EduTool['statusLink']) : 'KOSONG';
 
+    const domainTool = DOMAIN_KEYS.includes(data.domain?.trim() as DomainKey)
+      ? (data.domain.trim() as DomainKey)
+      : 'kog';
     return {
       icon: data.icon?.trim() || '🧸',
       nama: data.nama?.trim() ?? '',
+      domain: domainTool,
       hargaEstimasi: data.hargaEstimasi?.trim() ?? '',
       pilihanPsikolog: data.pilihanPsikolog?.trim().toUpperCase() === 'YA',
       minBulan: Number(data.minBulan) || 0,
@@ -254,9 +258,13 @@ export default function CsvImportModal({ type, onClose }: CsvImportModalProps) {
     const katRaw = data.kategori?.trim() as DownloadKategori;
     const kategori: DownloadKategori = VALID_KATEGORI.has(katRaw) ? katRaw : 'Panduan';
 
+    const domainDl = DOMAIN_KEYS.includes(data.domain?.trim() as DomainKey)
+      ? (data.domain.trim() as DomainKey)
+      : 'kog';
     return {
       icon: data.icon?.trim() || '📄',
       nama: data.nama?.trim() ?? '',
+      domain: domainDl,
       kategori,
       minBulan: Number(data.minBulan) || 0,
       maxBulan: Number(data.maxBulan) || 72,

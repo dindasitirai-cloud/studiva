@@ -49,9 +49,10 @@ interface PropsBekal {
   bekalId?: BekalId;
   nilaiFokus?: readonly NilaiAkar[];
   onTanamNilai?: (nilai: NilaiAkar) => void;
+  onCabutNilai?: (nilai: NilaiAkar) => void;
   tabAwal?: TabId;
-  namaAnak?: string;
-  tanggalLahir?: string;
+  // Nama dan tanggal lahir tidak lagi dioper lewat props.
+  // Diambil dari AnakContext lewat useChildProfile.
 }
 
 // ─── Nilai palette — nilai-specific UI colors (data object, established exception) ─
@@ -229,12 +230,14 @@ function PopupDetailNilai({
   sikapList,
   sudahDitanam,
   onTanam,
+  onCabut,
   onTutup,
 }: {
   nilai: NilaiAkar;
   sikapList: ItemSikap[];
   sudahDitanam: boolean;
   onTanam: () => void;
+  onCabut?: () => void;
   onTutup: () => void;
 }) {
   const info = PENJELASAN_NILAI[nilai];
@@ -329,6 +332,15 @@ function PopupDetailNilai({
             <p className="font-nunito text-[13px] font-semibold text-daun">
               {KEBIASAAN_BAIK.sudahDiTaman}
             </p>
+            {onCabut && (
+              <button
+                type="button"
+                onClick={onCabut}
+                className="mt-2 font-nunito text-[12px] text-pekat/40 hover:text-pekat/70 transition"
+              >
+                {KEBIASAAN_BAIK.tombolCabut}
+              </button>
+            )}
           </div>
         ) : (
           <div className="rounded-[16px] border border-mawar/30 bg-fajar/50 px-4 py-4">
@@ -565,11 +577,10 @@ function PapanKartu({
 export default function Bekal({
   nilaiFokus = [],
   onTanamNilai,
+  onCabutNilai,
   tabAwal = 'kebiasaan-baik',
-  namaAnak,
-  tanggalLahir,
 }: PropsBekal) {
-  const { profile, sapaan, usiaBulan } = useChildProfile({ namaAnak, tanggalLahir });
+  const { profile, sapaan, usiaBulan } = useChildProfile();
   const isDev = process.env.NODE_ENV !== 'production';
 
   const { bekal: bekalRakit, katalogSikap } = useMemo(() => rakitBekal(), []);
@@ -662,6 +673,7 @@ export default function Bekal({
       usiaBulan={usiaBulanOk}
       katalogSikap={katalogSikap}
       onTanamNilai={onTanamNilai}
+      onCabutNilai={onCabutNilai}
       tabAwal={tabAwal}
       namaDisplay={sapaan.low ?? undefined}
       isDev={isDev}
@@ -831,7 +843,16 @@ function AjakMainPanel({ usiaBulan }: { usiaBulan: number }) {
             </div>
       )}
 
-      {openActivity && <ActivityModal activity={openActivity} onClose={() => setOpenActivity(null)} />}
+      {openActivity && (
+        <ActivityModal
+          activity={openActivity}
+          onClose={() => setOpenActivity(null)}
+          onJadwalkan={() => {
+            handleBukaJadwal(`ls-act-${openActivity.id}`, openActivity.judul);
+            setOpenActivity(null);
+          }}
+        />
+      )}
       {openTool     && <ToolModal     tool={openTool}         onClose={() => setOpenTool(null)}     />}
       {openDownload && <DownloadModal item={openDownload}     onClose={() => setOpenDownload(null)} />}
     </>
@@ -845,6 +866,7 @@ interface PropsIsiBekal {
   usiaBulan:     number;
   katalogSikap:  readonly ItemSikap[];
   onTanamNilai?: (nilai: NilaiAkar) => void;
+  onCabutNilai?: (nilai: NilaiAkar) => void;
   tabAwal:       TabId;
   namaDisplay?:  string;
   isDev:         boolean;
@@ -862,6 +884,7 @@ function IsiBekal({
   usiaBulan,
   katalogSikap,
   onTanamNilai,
+  onCabutNilai,
   tabAwal,
   namaDisplay,
   isDev,
@@ -1092,6 +1115,7 @@ function IsiBekal({
           sikapList={sikapDibuka}
           sudahDitanam={nilaiFokusSet.has(nilaiDibuka)}
           onTanam={() => { onTanamNilai?.(nilaiDibuka); }}
+          onCabut={onCabutNilai ? () => { onCabutNilai(nilaiDibuka); setNilaiDibuka(null); } : undefined}
           onTutup={() => setNilaiDibuka(null)}
         />
       )}

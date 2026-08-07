@@ -4,6 +4,7 @@ import { X, Check, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { NilaiAkar } from '../akar-keluarga/content';
 import { useChildProfile } from '../beranda-usia/useChildProfile';
+import { useAnak } from '../../context/AnakContext';
 import { renderRichText } from '../beranda-usia/renderRichText';
 import { resolveTahapAktif } from '../beranda-usia/resolveTahap';
 import type { ProfilAnak } from '../beranda-usia/resolveTahap';
@@ -29,6 +30,7 @@ import {
 } from './content';
 import FilterSubUsia, { resolveSubUsia } from '../../components/FilterSubUsia';
 import type { IdSubUsia } from '../../components/FilterSubUsia';
+import { useLearningStrategies } from '../../context/LearningStrategiesContext';
 
 // ─── Utilitas tanggal (Indonesia) ────────────────────────────────────────────
 
@@ -47,10 +49,8 @@ function formatTanggalHero(): string {
 
 interface PropsIramaHari {
   nilaiFokus?: readonly NilaiAkar[];
-  /** Dari OnboardingData — sementara sampai profil dibaca dari API. */
-  namaAnak?: string;
-  /** ISO date string dari OnboardingData — sementara sampai profil dibaca dari API. */
-  tanggalLahir?: string;
+  // Nama dan tanggal lahir anak diambil dari AnakContext lewat useChildProfile,
+  // bukan dioper lewat props.
   /** Dipanggil tiap kali state PilihanHarian berubah — dipakai IramaMingguan sebagai jembatan data. */
   onPilihanChange?: (pilihan: PilihanHarian, kolamAnak: readonly ItemBekal[]) => void;
   /** Status centang kebiasaan harian; dikelola oleh IramaHariPage. */
@@ -129,11 +129,14 @@ function HeroBanner({ sapaan, usiaBulan }: { sapaan: SapaanSet; usiaBulan: numbe
 
 // ─── Komponen utama ───────────────────────────────────────────────────────────
 
-export default function IramaHari({ nilaiFokus = [], namaAnak, tanggalLahir, onPilihanChange, centangKebiasaan, tanggalHariIni, onCentangToggle, onBekal }: PropsIramaHari) {
-  const { profile, sapaan, usiaBulan } = useChildProfile({ namaAnak, tanggalLahir });
+export default function IramaHari({ nilaiFokus = [], onPilihanChange, centangKebiasaan, tanggalHariIni, onCentangToggle, onBekal }: PropsIramaHari) {
+  const { profile, sapaan, usiaBulan } = useChildProfile();
+  const { anakAktif } = useAnak();
   const isDev = process.env.NODE_ENV !== 'production';
 
   const { bekal: bekalRakit, katalogSikap } = useMemo(() => rakitBekal(), []);
+  // TODO: review Fitri — unduhan dari Ajak Main disertakan dalam pilih kegiatan
+  const { publishedDownloads } = useLearningStrategies();
 
   const profilAnak = useMemo<ProfilAnak | null>(() => {
     if (!profile.tanggalLahir) return null;
@@ -215,15 +218,32 @@ export default function IramaHari({ nilaiFokus = [], namaAnak, tanggalLahir, onP
   // TODO: validasi klinis oleh Psikolog Fitri bahwa lintas sub tahap diizinkan
   const SUB_TAHAP_YEAR_ONE = ['b03', 'b36', 'b69', 'b912'];
   const isYearOneBand = usiaBulanOk < 12;
-  const kolam: ItemBekal[] = isYearOneBand
+  const kolamBase: ItemBekal[] = isYearOneBand
     ? bekalRakit
         .flatMap(b => b.subTahap)
         .filter(st => SUB_TAHAP_YEAR_ONE.includes(st.id))
         .flatMap(st => st.kegiatan.map(item => ({ ...item, subTahapId: st.id })))
     : (subTahapPopulated?.kegiatan ?? []);
+
+  const unduhAnak: ItemBekal[] = publishedDownloads
+    .filter(d => d.minBulan <= usiaBulanOk && d.maxBulan > usiaBulanOk && (d.pemilik ?? 'anak') === 'anak')
+    .map(d => ({
+      id: `ls-dl-${d.id}`,
+      judul: d.nama,
+      tipe: 'unduhan' as const,
+      domain: d.domain,
+      nilai: [],
+      tanpaTemaNilai: d.tanpaTemaNilai,
+      pemilik: 'anak' as const,
+      sumberId: `ls-dl-${d.id}`,
+    }));
+
+  const kolam: ItemBekal[] = [...kolamBase, ...unduhAnak];
   const kolamOrangTua = subTahapPopulated?.panduan ?? [];
   const maksItem = subTahapPopulated?.maksItemPerHari ?? hasil.subTahap.maksItemPerHari;
-  const idAnak = profile.namaAnak || 'anak-default';
+  // ID anak asli dari AnakContext. Dulu memakai nama anak sebagai kunci,
+  // yang menabrakkan data dua anak dengan nama sama.
+  const idAnak = anakAktif?.id ?? 'anak-default';
   const wizardBelumDiisi = nilaiFokus.length === 0;
 
   return (
@@ -251,7 +271,7 @@ export default function IramaHari({ nilaiFokus = [], namaAnak, tanggalLahir, onP
         <IramaHariIsi
           sapaan={sapaan}
           wizardBelumDiisi={wizardBelumDiisi}
-          namaAnak={namaAnak}
+          namaAnak={profile.namaAnak}
           usiaBulan={usiaBulanOk}
           idAnak={idAnak}
           onPilihanChange={onPilihanChange}

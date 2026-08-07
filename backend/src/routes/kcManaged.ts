@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { asyncHandler, ApiError } from '../middleware/errorHandler';
 import { authenticate, requireRole } from '../middleware/auth';
-import { kcGetAll, kcGetById, kcUpsert, kcUpdate, kcDelete, kcCount } from '../models/KcManaged';
+import { kcGetAll, kcGetAllMerged, kcGetById, kcCardFromKnowledgeCards, kcUpsert, kcUpdate, kcDelete, kcCount } from '../models/KcManaged';
 
 const router = Router();
 
@@ -17,24 +17,44 @@ router.get(
   })
 );
 
-// ── Public: get published cards ───────────────────────────────────────────────
-
-router.get(
-  '/',
-  asyncHandler(async (_req: Request, res: Response) => {
-    const cards = await kcGetAll('published');
-    res.json({ cards });
-  })
-);
-
-// ── Admin: get all cards (all statuses) ──────────────────────────────────────
+// ── Admin: get all cards (merged from kc_managed + knowledge_cards) ───────────
+// HARUS sebelum /admin/:id agar "all" tidak ditangkap sebagai :id
 
 router.get(
   '/admin/all',
   authenticate,
   requireRole('admin'),
   asyncHandler(async (_req: Request, res: Response) => {
-    const cards = await kcGetAll();
+    const cards = await kcGetAllMerged();
+    res.json({ cards });
+  })
+);
+
+// ── Admin: get single card by id ─────────────────────────────────────────────
+// Coba kc_managed dulu; jika tidak ada, cari di knowledge_cards by slug.
+
+router.get(
+  '/admin/:id',
+  authenticate,
+  requireRole('admin'),
+  asyncHandler(async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const card = await kcGetById(id);
+    if (card) { res.json({ card }); return; }
+
+    // Fallback: kartu tayang dari pipeline (ada di knowledge_cards, belum di kc_managed)
+    const fromKC = await kcCardFromKnowledgeCards(id);
+    if (!fromKC) throw new ApiError(404, 'Card not found');
+    res.json({ card: fromKC });
+  })
+);
+
+// ── Public: get published cards (merged from kc_managed + knowledge_cards) ────
+
+router.get(
+  '/',
+  asyncHandler(async (_req: Request, res: Response) => {
+    const cards = await kcGetAllMerged('published');
     res.json({ cards });
   })
 );

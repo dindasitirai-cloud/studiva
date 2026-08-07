@@ -10,7 +10,12 @@
     "build:digital": "pnpm build:shared && pnpm --filter digital build",
     "build": "pnpm build:shared && pnpm --filter sekolah --filter digital build",
     "typecheck": "pnpm -r typecheck",
-    "review-pack": "npx tsx scripts/generate-review-pack.ts"
+    "review-pack": "npx tsx scripts/generate-review-pack.ts",
+    "rekah:konversi": "apps/digital/node_modules/.bin/tsx scripts/rekah/konversiKonten.ts",
+    "rekah:validasi": "apps/digital/node_modules/.bin/tsx scripts/rekah/validasi.ts"
   },
-  "packageManager": "pnpm@11.13.1"
+  "packageManager": "pnpm@11.13.1",
+  "devDependencies": {
+    "xlsx": "^0.18.5"
+  }
 }

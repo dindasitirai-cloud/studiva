@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import { useOutletContext, useNavigate, useLocation } from 'react-router-dom';
-import type { OnboardingData } from '../../../features/onboarding/types';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAnakAktif } from '../../../context/AnakContext';
 import { useAkarStateSync } from '../../../features/akar-keluarga/state';
 import type { NilaiAkar } from '../../../features/akar-keluarga/content';
 import IramaHari from '../../../features/irama-hari/IramaHari';
@@ -10,13 +10,21 @@ import type { PilihanHarian } from '../../../features/irama-hari/PilihanHarianCo
 import type { ItemBekal } from '../../../features/beranda-usia/bekal';
 import { tanggalDariTimestampWIB, toggleCentang } from '@studiva/shared';
 import type { CentangKebiasaan } from '@studiva/shared';
-
-interface OutletCtx {
-  onboardingData: OnboardingData;
-  idAnak: string | null;
-}
+import {
+  getCentangKebiasaan,
+  simpanCentangKebiasaan,
+  jadwalkanKeTanggal,
+} from '../../../lib/supabase/rekah';
+import { dispatchRekahError } from '../../../utils/rekahApiError';
 
 type TabId = 'hari-ini' | 'mingguan';
+
+/**
+ * Berapa hari ke belakang centang dimuat. Tab "Minggu Ini" butuh tujuh hari;
+ * 14 memberi ruang untuk pekan berjalan plus pekan sebelumnya tanpa menarik
+ * seluruh riwayat anak setiap kali halaman dibuka.
+ */
+const HARI_RIWAYAT_CENTANG = 14;
 
 // TODO: review Fitri — label tab
 const LABEL_TAB: Record<TabId, string> = {
@@ -26,7 +34,9 @@ const LABEL_TAB: Record<TabId, string> = {
 
 
 export default function IramaHariPage() {
-  const { onboardingData: d, idAnak } = useOutletContext<OutletCtx>();
+  // Anak aktif dari AnakContext, sumber tunggal data anak.
+  const { anak } = useAnakAktif();
+  const idAnak = anak.id;
   const navigate = useNavigate();
   const location = useLocation();
   const [tab, setTab] = useState<TabId>('hari-ini');
@@ -34,34 +44,72 @@ export default function IramaHariPage() {
   const [pilihanHariIni, setPilihanHariIni] = useState<PilihanHarian | undefined>(undefined);
   const [kolamAnak, setKolamAnak] = useState<readonly ItemBekal[]>([]);
   const [centangKebiasaan, setCentangKebiasaan] = useState<CentangKebiasaan>({});
-  const [jadwalManual, setJadwalManual] = useState<Record<string, JadwalManualItem[]>>({});
+  // Dinaikkan setelah sebuah item berhasil dijadwalkan, agar IramaMingguan
+  // memuat ulang minggunya dari database.
+  const [versiJadwal, setVersiJadwal] = useState(0);
   const jadwalProcessedRef = useRef<string | null>(null);
 
   const tanggalHariIni = useMemo(() => tanggalDariTimestampWIB(new Date().toISOString()), []);
   const nilaiFokus = akarState.nilai as NilaiAkar[];
 
-  // Baca item yang dijadwalkan dari navigasi Bekal → IramaHari
+  // Item yang dijadwalkan dari Bekal → tulis ke pilihan_harian tanggal tujuan.
+  //
+  // Dulu hanya masuk state lokal `jadwalManual`, jadi hilang setiap refresh.
+  // Judul dan warna sampul sengaja tidak ikut disimpan — IramaMingguan
+  // me-resolve-nya dari kolam anak, sehingga tidak ada salinan judul yang bisa
+  // basi setelah kontennya diperbarui.
   useEffect(() => {
     const j = (location.state as { jadwalkan?: JadwalManualItem & { tanggal: string } } | null)?.jadwalkan;
     if (!j) return;
     const kunci = `${j.id}:${j.tanggal}`;
     if (jadwalProcessedRef.current === kunci) return;
     jadwalProcessedRef.current = kunci;
-    setJadwalManual(prev => {
-      const daftar = prev[j.tanggal] ?? [];
-      if (daftar.some(d => d.id === j.id)) return prev;
-      const { tanggal: _t, ...item } = j;
-      return { ...prev, [j.tanggal]: [...daftar, item] };
-    });
+
     setTab('mingguan');
-  }, [location.state]);
+    void jadwalkanKeTanggal(idAnak, j.tanggal, { id: j.id, tipe: j.tipe })
+      .then(() => setVersiJadwal(v => v + 1))
+      .catch(err => {
+        console.error('[Rekah] gagal menjadwalkan item:', err);
+        dispatchRekahError('Koneksi terputus — kegiatan tadi belum terjadwal. Coba lagi ya.');
+        // Izinkan percobaan ulang untuk kunci yang sama.
+        jadwalProcessedRef.current = null;
+      });
+  }, [location.state, idAnak]);
+
+  // Muat centang beberapa hari terakhir. Rentang, bukan hari ini saja, karena
+  // tab "Minggu Ini" menurunkan riwayat siram dari data yang sama.
+  useEffect(() => {
+    let batal = false;
+    const sejak = new Date();
+    sejak.setDate(sejak.getDate() - HARI_RIWAYAT_CENTANG);
+    const sejakTanggal = sejak.toISOString().slice(0, 10);
+
+    void getCentangKebiasaan(idAnak, sejakTanggal)
+      .then(hasil => { if (!batal) setCentangKebiasaan(hasil); })
+      .catch(err => {
+        // Layar tetap jalan dengan centang kosong, tapi penyebabnya jangan
+        // ditelan — tanpa ini, "kolom belum ada" dan "koneksi putus" terlihat
+        // sama persis dari sisi pengguna maupun pengembang.
+        console.error('[Rekah] gagal memuat centang kebiasaan:', err);
+      });
+
+    return () => { batal = true; };
+  }, [idAnak]);
 
   const handleCentangToggle = useCallback(
     (nilaiId: NilaiAkar, butirId: string) => {
-      setCentangKebiasaan(prev => toggleCentang(prev, nilaiId, butirId, tanggalHariIni));
-      // TODO: simpan ke backend
+      setCentangKebiasaan(prev => {
+        const berikutnya = toggleCentang(prev, nilaiId, butirId, tanggalHariIni);
+        // Simpan hari ini saja; hari lain tidak berubah oleh toggle ini.
+        void simpanCentangKebiasaan(idAnak, tanggalHariIni, berikutnya[tanggalHariIni] ?? {})
+          .catch(err => {
+            console.error('[Rekah] gagal menyimpan centang kebiasaan:', err);
+            dispatchRekahError('Koneksi terputus — centang tadi belum tersimpan. Coba lagi ya.');
+          });
+        return berikutnya;
+      });
     },
-    [tanggalHariIni],
+    [idAnak, tanggalHariIni],
   );
 
   const handlePilihanChange = useCallback(
@@ -112,8 +160,6 @@ export default function IramaHariPage() {
       <div style={{ display: tab === 'hari-ini' ? 'block' : 'none' }}>
         <IramaHari
           nilaiFokus={nilaiFokus}
-          namaAnak={d.namaAnak}
-          tanggalLahir={d.tanggalLahir}
           onPilihanChange={handlePilihanChange}
           centangKebiasaan={centangKebiasaan}
           tanggalHariIni={tanggalHariIni}
@@ -125,14 +171,14 @@ export default function IramaHariPage() {
       {/* IramaMingguan — selalu terpasang */}
       <div style={{ display: tab === 'mingguan' ? 'block' : 'none', padding: '20px 0' }}>
         <IramaMingguan
-          idAnak={idAnak ?? 'anak-default'}
+          idAnak={idAnak}
           tanggalHariIni={tanggalHariIni}
           kolam={kolamAnak}
           nilaiFokus={nilaiFokus}
           pilihanHariIni={pilihanHariIni}
-          jadwalManual={jadwalManual}
+          versiData={versiJadwal}
           centangKebiasaan={centangKebiasaan}
-          namaAnak={d.namaAnak}
+          namaAnak={anak.namaAnak}
           onBekalPress={() => navigate('/dashboard/tier2/bekal')}
         />
       </div>

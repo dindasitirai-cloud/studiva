@@ -18,6 +18,7 @@ export interface KnowledgeCardRow {
   sci_title: string | null;
   sci_read_minutes: number | null;
   sci_paragraphs: string; // JSON string
+  sci_sections: string; // JSON string — array of {judul, isi}
   sources: string; // JSON string
   status: string;
   reviewer_notes: string | null;
@@ -47,6 +48,7 @@ export interface KnowledgeCard {
   sci_title: string | null;
   sci_read_minutes: number | null;
   sci_paragraphs: string[];
+  sci_sections: Array<{ judul: string; isi: string }>;
   sources: string[];
   status: string;
   reviewer_notes: string | null;
@@ -64,6 +66,7 @@ function parseRow(row: KnowledgeCardRow): KnowledgeCard {
     is_medical: row.is_medical === 1,
     lakukan: safeParseJson(row.lakukan, []),
     sci_paragraphs: safeParseJson(row.sci_paragraphs, []),
+    sci_sections: safeParseJson(row.sci_sections ?? '[]', []),
     sources: safeParseJson(row.sources, []),
   };
 }
@@ -93,6 +96,7 @@ export interface CreateKnowledgeCardData {
   sci_title?: string | null;
   sci_read_minutes?: number | null;
   sci_paragraphs?: string[];
+  sci_sections?: Array<{ judul: string; isi: string }>;
   sources?: string[];
   status?: string;
   reviewer_notes?: string | null;
@@ -117,6 +121,7 @@ export interface UpdateKnowledgeCardData {
   sci_title?: string | null;
   sci_read_minutes?: number | null;
   sci_paragraphs?: string[];
+  sci_sections?: Array<{ judul: string; isi: string }>;
   sources?: string[];
   status?: string;
   reviewer_notes?: string | null;
@@ -231,6 +236,7 @@ export async function updateKnowledgeCard(
   if (data.sci_title !== undefined) { sets.push('sci_title = ?'); params.push(data.sci_title); }
   if (data.sci_read_minutes !== undefined) { sets.push('sci_read_minutes = ?'); params.push(data.sci_read_minutes); }
   if (data.sci_paragraphs !== undefined) { sets.push('sci_paragraphs = ?'); params.push(JSON.stringify(data.sci_paragraphs)); }
+  if (data.sci_sections !== undefined) { sets.push('sci_sections = ?'); params.push(JSON.stringify(data.sci_sections)); }
   if (data.sources !== undefined) { sets.push('sources = ?'); params.push(JSON.stringify(data.sources)); }
   if (data.status !== undefined) { sets.push('status = ?'); params.push(data.status); }
   if (data.reviewer_notes !== undefined) { sets.push('reviewer_notes = ?'); params.push(data.reviewer_notes); }

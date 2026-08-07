@@ -44,7 +44,7 @@ export const LAYAR_KONTEN_BELUM_SIAP = {
 
 // MENUNGGU REVIEW PSIKOLOG FITRI
 export const PILIHAN_HARI_INI = {
-  judul: 'Kegiatan hari ini',
+  judul: 'Kegiatan Ajak Main Hari Ini', // TODO: review Fitri
   // MENUNGGU REVIEW PSIKOLOG FITRI
   gantiAriaLabel: 'Ganti kegiatan ini',
   // MENUNGGU REVIEW PSIKOLOG FITRI

@@ -10,6 +10,7 @@ import BungaKebiasaan from './BungaKebiasaan';
 import RingkasanMinggu from './RingkasanMinggu';
 import LegendaIrama from './LegendaIrama';
 import { pilihanKeHari, buatKolamMap } from './mingguanAdapter';
+import { getPilihanHarianRentang } from '../../lib/supabase/rekah';
 import type { PilihanHarian } from './PilihanHarianContext';
 import { JUDUL_LAYAR, ARIA_MINGGU_SEBELUMNYA, ARIA_MINGGU_BERIKUTNYA } from './contentMingguan';
 
@@ -32,8 +33,11 @@ interface PropsIramaMingguan {
   nilaiFokus: readonly NilaiAkar[];
   /** Pilihan hari ini dari IramaHari — jembatan data tanpa fetch backend. */
   pilihanHariIni?: PilihanHarian;
-  /** Item yang dijadwalkan manual dari Bekal (tanpa backend). */
-  jadwalManual?: Record<string, JadwalManualItem[]>;
+  /**
+   * Dinaikkan setiap kali ada item baru dijadwalkan, agar minggu ini dimuat
+   * ulang. Item yang baru ditulis ke tanggal lain tidak terlihat tanpa ini.
+   */
+  versiData?: number;
   /** Centang kebiasaan hari ini dari KartuKebiasaanBaik — dipakai untuk pita kebiasaan. */
   centangKebiasaan?: CentangKebiasaan;
   /** Nama anak — untuk header cetak. */
@@ -45,8 +49,10 @@ interface PropsIramaMingguan {
 /**
  * Layar Irama Hari Mingguan — grid 7 hari + Pita Kebiasaan + Ringkasan + Legenda.
  *
- * Integrasi backend: semua fetch data per-hari ditandai TODO di bawah.
- * Saat ini komponen menampilkan data hari ini saja; hari lain tampil kosong.
+ * Ketujuh hari kini dibaca dari `pilihan_harian` di Supabase. Yang masih belum
+ * tersambung backend: riwayat siram lintas pekan, arsip mingguan otomatis,
+ * bottom sheet detail item, dan navigasi ke hari tertentu — semuanya bertanda
+ * TODO di bawah dan tidak menyebabkan kehilangan data.
  */
 export default function IramaMingguan({
   idAnak,
@@ -55,7 +61,7 @@ export default function IramaMingguan({
   kolam,
   nilaiFokus,
   pilihanHariIni,
-  jadwalManual,
+  versiData,
   centangKebiasaan,
   namaAnak,
   onBekalPress,
@@ -91,22 +97,32 @@ export default function IramaMingguan({
   const bisaMundur = mulaiSenin > seninMingguAnak;
   const bisMaju = mulaiSenin < seninMingguDepan;
 
-  // TODO: fetch PilihanHarian dari Supabase untuk ke-7 hari minggu ini.
-  // Setiap hari butuh: getPilihanHarian(idAnak, tanggal).
-  // Untuk sementara, hanya hari ini yang terisi data aktual.
+  // Ketujuh hari minggu yang sedang dilihat, dimuat dalam satu query.
+  // Sebelumnya blok ini hanya `setDataPerHari({})` dengan fetch berupa komentar,
+  // sehingga apa pun yang dijadwalkan ke hari lain tidak pernah tampil kembali
+  // setelah halaman dimuat ulang.
   const [dataPerHari, setDataPerHari] = useState<Partial<Record<string, PilihanHarian>>>({});
 
-  // TODO: ganti dengan actual fetch saat backend siap.
   useEffect(() => {
-    setDataPerHari({});
-    // TODO: fetch 7 hari dari Supabase:
-    // const tanggalMinggu = Array.from({length: 7}, (_, i) => tambahHari(mulaiSenin, i));
-    // Promise.all(tanggalMinggu.map(t => getPilihanHarian(idAnak, t))).then(results => {
-    //   const map: Record<string, PilihanHarian> = {};
-    //   results.forEach((r, i) => { if (r) map[tanggalMinggu[i]] = r.diff as PilihanHarian; });
-    //   setDataPerHari(map);
-    // });
-  }, [mulaiSenin, idAnak]);
+    let batal = false;
+    const tanggalMinggu = Array.from({ length: 7 }, (_, i) => tambahHari(mulaiSenin, i));
+
+    void getPilihanHarianRentang(idAnak, tanggalMinggu)
+      .then(baris => {
+        if (batal) return;
+        const peta: Partial<Record<string, PilihanHarian>> = {};
+        for (const [tgl, row] of Object.entries(baris)) {
+          peta[tgl] = row.diff as unknown as PilihanHarian;
+        }
+        setDataPerHari(peta);
+      })
+      .catch(err => {
+        // Grid tetap tampil dengan hari-hari kosong; penyebabnya jangan ditelan.
+        console.error('[Rekah] gagal memuat pilihan harian mingguan:', err);
+      });
+
+    return () => { batal = true; };
+  }, [mulaiSenin, idAnak, versiData]);
 
   const kolamMap = useMemo(() => buatKolamMap(kolam), [kolam]);
 
@@ -138,40 +154,20 @@ export default function IramaMingguan({
     return hasil;
   }, [pilihanHariIni, dataPerHari, kolamMap]);
 
-  // Gabungkan jadwal manual dari Bekal ke dalam data hari yang ada
-  const hariIramaFinal = useMemo<Partial<Record<string, HariIrama>>>(() => {
-    if (!jadwalManual || Object.keys(jadwalManual).length === 0) return hariIramaPerTanggal;
-    const hasil = { ...hariIramaPerTanggal };
-    for (const [tgl, items] of Object.entries(jadwalManual)) {
-      const existing: HariIrama = hasil[tgl] ?? {
-        tanggal: tgl,
-        slot: { pagi: [], siang: [], sore: [], jelangTidur: [] },
-      };
-      const mergedSlot = {
-        pagi: [...existing.slot.pagi],
-        siang: [...existing.slot.siang],
-        sore: [...existing.slot.sore],
-        jelangTidur: [...existing.slot.jelangTidur],
-      };
-      for (const item of items) {
-        const sudahAda = (['pagi', 'siang', 'sore', 'jelangTidur'] as const).some(
-          blok => mergedSlot[blok].some(i => i.id === item.id),
-        );
-        if (sudahAda) continue;
-        const iramaItem: ItemIrama =
-          item.tipe === 'buku'
-            ? { id: item.id, jenis: 'wawasanTumbuh', judul: item.judul, urutan: 9999, selesai: false, warnaCover: item.warnaCover ?? '#EDE9F8', kartuId: item.id }
-            : { id: item.id, jenis: 'ajakMain', judul: item.judul, urutan: 9999, selesai: false };
-        mergedSlot.pagi = [...mergedSlot.pagi, iramaItem];
-      }
-      hasil[tgl] = { ...existing, slot: mergedSlot };
-    }
-    return hasil;
-  }, [hariIramaPerTanggal, jadwalManual]);
+  // Penggabungan jadwal manual DIHAPUS.
+  //
+  // Dulu item yang dijadwalkan dari Bekal ditempelkan di sini dari state lokal
+  // milik IramaHariPage, lengkap dengan judul dan warna sampulnya. Dua akibat:
+  // datanya hilang setiap refresh, dan judul yang tampil adalah salinan yang
+  // bisa berbeda dari konten sebenarnya setelah konten diperbarui.
+  //
+  // Kini item ditulis ke pilihan_harian tanggal tujuan (ditambah / wawasanIds),
+  // lalu ikut terbaca oleh pemuatan tujuh hari di atas dan di-resolve
+  // pilihanKeHari lewat kolamMap. Satu jalur, satu sumber kebenaran.
 
   const minggu = useMemo(
-    () => getMingguIrama(hariIramaFinal, mulaiSenin),
-    [hariIramaFinal, mulaiSenin],
+    () => getMingguIrama(hariIramaPerTanggal, mulaiSenin),
+    [hariIramaPerTanggal, mulaiSenin],
   );
 
   // TODO: gabungkan dengan riwayat siram dari backend saat tersedia.

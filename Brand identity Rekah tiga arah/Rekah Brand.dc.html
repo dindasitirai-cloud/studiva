@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="design_doc_mode" content="canvas">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Mulish:wght@400;600;700&family=Grand+Hotel&family=Sacramento&family=Pacifico&family=Caveat:wght@500;700&family=Shantell+Sans:wght@500;700&family=Gochi+Hand&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#F5EFE0;font-family:'Nunito',sans-serif}
+    a{color:#7A3F5E;text-decoration:none}
+    a:hover{color:#F06BA8}
+    @keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+  </style>
+</helmet>
+
+<section style="padding:56px 48px 40px;display:flex;flex-direction:column;gap:34px">
+  <div style="display:flex;flex-direction:column;gap:10px;max-width:900px">
+    <div style="font-family:'Shantell Sans',cursive;font-size:30px;font-weight:700;color:#F06BA8;line-height:1">putaran 5 — Langit Peony + botanical</div>
+    <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:44px;line-height:1.05;color:#5A3247">3a dengan ilustrasi botanical baru</div>
+    <div style="font-family:'Nunito',sans-serif;font-size:17px;line-height:1.5;color:#6E4A63;max-width:790px">Arah <b>3a Langit Peony</b> dengan set ilustrasi & ornamen gaya <b>botanical flat sticker</b> seperti referensi — bunga bertangkai (tulip, daisy, bunga lonceng, sprig), dedaunan, dan bentuk abstrak (bintang, squiggle), semua diwarnai palet Langit Peony.</div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:34px;align-items:flex-start">
+    <div id="5a" style="position:relative;width:560px">
+      <div style="position:absolute;top:-14px;left:-14px;z-index:2;font-family:'Fredoka',sans-serif;font-weight:700;font-size:15px;color:#fff;background:#F06BA8;padding:7px 15px;border-radius:20px;box-shadow:0 6px 16px -6px rgba(240,107,168,.7)">5a</div>
+      <dc-import name="DirectionBot" d="{{ dir5 }}" hint-size="560px,1500px"></dc-import>
+    </div>
+  </div>
+</section>
+
+<section style="padding:16px 48px 40px;display:flex;flex-direction:column;gap:34px">
+  <div style="display:flex;flex-direction:column;gap:10px;max-width:900px">
+    <div style="font-family:'Shantell Sans',cursive;font-size:30px;font-weight:700;color:#D96FA3;line-height:1;opacity:.6">putaran 4 — palet "Berry Much"</div>
+    <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:44px;line-height:1.05;color:#6E3B57">Palet pastel Berry Much diterapkan</div>
+    <div style="font-family:'Nunito',sans-serif;font-size:17px;line-height:1.5;color:#6E4A63;max-width:780px">Delapan warna pastel dari palet yang kamu kirim, dipakai apa adanya. Karena semuanya terang, saya tambahkan dua turunan gelap — <b>Berry</b> (aksen/tombol) dan <b>Plum</b> (teks) — supaya kontras cukup. Struktur, tipografi (Fredoka + Shantell Sans), dan gaya bunga mengikuti <b>3a</b>.</div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:34px;align-items:flex-start">
+    <div id="4a" style="position:relative;width:560px">
+      <div style="position:absolute;top:-14px;left:-14px;z-index:2;font-family:'Fredoka',sans-serif;font-weight:700;font-size:15px;color:#fff;background:#D96FA3;padding:7px 15px;border-radius:20px;box-shadow:0 6px 16px -6px rgba(217,111,163,.7)">4a</div>
+      <dc-import name="Direction" d="{{ dir4a }}" hint-size="560px,1500px"></dc-import>
+    </div>
+  </div>
+</section>
+
+<section style="padding:16px 48px 40px;display:flex;flex-direction:column;gap:34px">
+  <div style="display:flex;flex-direction:column;gap:10px;max-width:900px">
+    <div style="font-family:'Shantell Sans',cursive;font-size:30px;font-weight:700;color:#F06BA8;line-height:1;opacity:.6">putaran 3 — biru & pink</div>
+    <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:44px;line-height:1.05;color:#5A3247">Vibe 2a, kini dengan biru & pink</div>
+    <div style="font-family:'Nunito',sans-serif;font-size:17px;line-height:1.5;color:#6E4A63;max-width:770px">Basis cream hangat & playful dari <b>2a</b> dipertahankan, tapi warna utama jadi <b>biru + pink</b>. Accent font <b>Shantell Sans</b>. Ilustrasi bunga pakai gaya baru yang lebih goyah — beragam bentuk (cosmos bertakik, kelopak membulat, aster tipis, bintang). Dua keseimbangan: <b>3a</b> pink memimpin, <b>3b</b> biru memimpin.</div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:34px;align-items:flex-start">
+    <div id="3a" style="position:relative;width:560px">
+      <div style="position:absolute;top:-14px;left:-14px;z-index:2;font-family:'Fredoka',sans-serif;font-weight:700;font-size:15px;color:#fff;background:#F06BA8;padding:7px 15px;border-radius:20px;box-shadow:0 6px 16px -6px rgba(240,107,168,.7)">3a</div>
+      <dc-import name="Direction" d="{{ dir3a }}" hint-size="560px,1500px"></dc-import>
+    </div>
+    <div id="3b" style="position:relative;width:560px">
+      <div style="position:absolute;top:-14px;left:-14px;z-index:2;font-family:'Fredoka',sans-serif;font-weight:700;font-size:15px;color:#fff;background:#5F84E6;padding:7px 15px;border-radius:20px;box-shadow:0 6px 16px -6px rgba(95,132,230,.7)">3b</div>
+      <dc-import name="Direction" d="{{ dir3b }}" hint-size="560px,1500px"></dc-import>
+    </div>
+  </div>
+</section>
+
+<section style="padding:16px 48px 40px;display:flex;flex-direction:column;gap:34px">
+  <div style="display:flex;flex-direction:column;gap:10px;max-width:900px">
+    <div style="font-family:'Caveat',cursive;font-size:32px;font-weight:700;color:#F06BA8;line-height:1;opacity:.6">putaran 2 — arsip</div>
+    <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:44px;line-height:1.05;color:#5A3247">Tiga palet baru, bunga lebih organik</div>
+    <div style="font-family:'Nunito',sans-serif;font-size:17px;line-height:1.5;color:#6E4A63;max-width:760px">Tema warna tetap seputar <b>1a</b> (hangat penuh warna) dan <b>1c</b> (hijau segar). Accent font baru (bukan Grand Hotel), dan bunganya kini beragam jenis — gerbera, marigold berlapis, poppy, dan bunga liar — dengan bentuk yang tak lagi kaku/simetris. Sebut <b>2a</b>, <b>2b</b>, atau <b>2c</b>.</div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:34px;align-items:flex-start">
+    <div id="2a" style="position:relative;width:560px">
+      <div style="position:absolute;top:-14px;left:-14px;z-index:2;font-family:'Fredoka',sans-serif;font-weight:700;font-size:15px;color:#fff;background:#F06BA8;padding:7px 15px;border-radius:20px;box-shadow:0 6px 16px -6px rgba(240,107,168,.7)">2a</div>
+      <dc-import name="Direction" d="{{ dir2a }}" hint-size="560px,1500px"></dc-import>
+    </div>
+    <div id="2b" style="position:relative;width:560px">
+      <div style="position:absolute;top:-14px;left:-14px;z-index:2;font-family:'Quicksand',sans-serif;font-weight:700;font-size:15px;color:#fff;background:#F075A6;padding:7px 15px;border-radius:20px;box-shadow:0 6px 16px -6px rgba(240,117,166,.7)">2b</div>
+      <dc-import name="Direction" d="{{ dir2b }}" hint-size="560px,1500px"></dc-import>
+    </div>
+    <div id="2c" style="position:relative;width:560px">
+      <div style="position:absolute;top:-14px;left:-14px;z-index:2;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:15px;color:#fff;background:#96BF3A;padding:7px 15px;border-radius:20px;box-shadow:0 6px 16px -6px rgba(150,191,58,.7)">2c</div>
+      <dc-import name="Direction" d="{{ dir2c }}" hint-size="560px,1500px"></dc-import>
+    </div>
+  </div>
+</section>
+
+<section style="padding:16px 48px 80px;display:flex;flex-direction:column;gap:34px">
+  <div style="display:flex;flex-direction:column;gap:10px;max-width:900px">
+    <div style="font-family:'Grand Hotel',cursive;font-size:30px;color:#F06BA8;line-height:1;opacity:.6">putaran 1 — arsip</div>
+    <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:44px;line-height:1.05;color:#5A3247">Tiga arah untuk dipilih</div>
+    <div style="font-family:'Nunito',sans-serif;font-size:17px;line-height:1.5;color:#6E4A63;max-width:720px">Semua bertema bunga & ornamen groovy seperti referensi, tapi dengan nuansa lebih terang. Logo Rekah = bunga yang belum mekar penuh (3 dari 5 kelopak). Lihat masing-masing, lalu sebut <b>1a</b>, <b>1b</b>, atau <b>1c</b> dan saya kembangkan jadi halaman brand guideline penuh.</div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:34px;align-items:flex-start">
+    <div id="1a" style="position:relative;width:560px">
+      <div style="position:absolute;top:-14px;left:-14px;z-index:2;font-family:'Fredoka',sans-serif;font-weight:700;font-size:15px;color:#fff;background:#F06BA8;padding:7px 15px;border-radius:20px;box-shadow:0 6px 16px -6px rgba(240,107,168,.7)">1a</div>
+      <dc-import name="Direction" d="{{ dirA }}" hint-size="560px,1500px"></dc-import>
+    </div>
+    <div id="1b" style="position:relative;width:560px">
+      <div style="position:absolute;top:-14px;left:-14px;z-index:2;font-family:'Quicksand',sans-serif;font-weight:700;font-size:15px;color:#fff;background:#F08CB4;padding:7px 15px;border-radius:20px;box-shadow:0 6px 16px -6px rgba(240,140,180,.7)">1b</div>
+      <dc-import name="Direction" d="{{ dirB }}" hint-size="560px,1500px"></dc-import>
+    </div>
+    <div id="1c" style="position:relative;width:560px">
+      <div style="position:absolute;top:-14px;left:-14px;z-index:2;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:15px;color:#fff;background:#A7C63E;padding:7px 15px;border-radius:20px;box-shadow:0 6px 16px -6px rgba(167,198,62,.7)">1c</div>
+      <dc-import name="Direction" d="{{ dirC }}" hint-size="560px,1500px"></dc-import>
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    // ---------- 1a KEBUN CERIA (hangat, paling dekat referensi) ----------
+    const dirA = {
+      label: 'Kebun Ceria', tag: 'Warna-warni penuh & hangat — playful, paling dekat referensi.',
+      cardBg: '#FFFBF0', paper: '#FFF3D6', ink: '#6E3B57', accent: '#F06BA8', green: '#C7D65C', green2: '#E6EE8F', leafVein: '#8FA83F',
+      logoBg: '#FFEBB8',
+      headingFont: "'Fredoka',sans-serif", headingName: 'Fredoka',
+      bodyFont: "'Nunito',sans-serif", bodyName: 'Nunito',
+      scriptFont: "'Grand Hotel',cursive", scriptName: 'Grand Hotel',
+      tagline: 'tumbuh & mekar', typeHeading: 'Rekah', typeScript: 'setiap anak, mekar seindahnya',
+      typeBody: 'Panduan tumbuh kembang yang hangat dan berbasis jurnal ilmiah, disesuaikan dengan nilai keluargamu.',
+      palette: [
+        { name: 'Cream', hex: '#FFF3D6' }, { name: 'Peony', hex: '#F8B9D4' }, { name: 'Pink', hex: '#F06BA8' }, { name: 'Sun', hex: '#FFDE6B' },
+        { name: 'Orange', hex: '#FF9A4D' }, { name: 'Pistachio', hex: '#E6EE8F' }, { name: 'Green', hex: '#C7D65C' }, { name: 'Plum', hex: '#7A3F5E' }
+      ],
+      logoFlower: { petalCount: 5, budIndices: [2, 3], petalDist: 30, petalW: 15, petalLen: 34, centerR: 18, budColor: '#C7D65C', petalColors: ['#F06BA8', '#FF9A4D', '#FFDE6B', '#F8B9D4', '#C7D65C'], centerColors: ['#7A3F5E', '#FF9A4D', '#FFDE6B'] },
+      illos: [
+        { box: '84px', petalCount: 16, petalW: 6, petalLen: 40, petalDist: 34, centerR: 20, petalColors: ['#F06BA8'], centerColors: ['#7A3F5E', '#F06BA8', '#FF9A4D', '#FFDE6B'] },
+        { box: '76px', petalCount: 12, petalW: 9, petalLen: 32, petalDist: 34, centerR: 20, petalColors: ['#FFDE6B'], centerColors: ['#7A3F5E', '#F06BA8', '#FF9A4D'] },
+        { box: '80px', petalCount: 12, petalW: 9, petalLen: 34, petalDist: 34, centerR: 22, petalColors: ['#FF9A4D'], centerColors: ['#F06BA8', '#FFDE6B', '#FFF3D6'] },
+        { box: '58px', petalCount: 8, petalW: 11, petalLen: 26, petalDist: 26, centerR: 18, petalColors: ['#A9C6FF'], centerColors: ['#F06BA8', '#FFDE6B'] }
+      ],
+      web: {
+        nav: ['Beranda', 'Tahap', 'Nilai'], cta: 'Coba gratis',
+        title: 'Tumbuh bersama, mekar bersama.',
+        sub: 'Dampingi setiap tahap perkembangan si kecil dengan panduan berbasis jurnal ilmiah dan nilai keluargamu.',
+        f1: { petalCount: 16, petalW: 6, petalLen: 40, petalDist: 34, centerR: 20, petalColors: ['#F06BA8'], centerColors: ['#7A3F5E', '#F06BA8', '#FF9A4D', '#FFDE6B'] },
+        f2: { petalCount: 12, petalW: 9, petalLen: 32, petalDist: 34, centerR: 20, petalColors: ['#FFDE6B'], centerColors: ['#7A3F5E', '#FF9A4D'] },
+        f3: { petalCount: 12, petalW: 9, petalLen: 32, petalDist: 34, centerR: 20, petalColors: ['#FF9A4D'], centerColors: ['#F06BA8', '#FFDE6B'] },
+        cards: [
+          { title: '0–1 thn', body: 'Ikatan & sensorik', color: '#F06BA8' },
+          { title: '1–3 thn', body: 'Bahasa & motorik', color: '#FF9A4D' },
+          { title: '3–5 thn', body: 'Sosial & emosi', color: '#A9C6FF' }
+        ]
+      }
+    };
+
+    // ---------- 1b MEKAR LEMBUT (feminin, pastel, sejuk) ----------
+    const dirB = {
+      label: 'Mekar Lembut', tag: 'Pastel feminin & sejuk — lembut, banyak ruang napas.',
+      cardBg: '#FFF6F8', paper: '#FDECF1', ink: '#6E4A63', accent: '#F08CB4', green: '#DCE79B', green2: '#E7EFB6', leafVein: '#A9BE63',
+      logoBg: '#F6E0EA',
+      headingFont: "'Quicksand',sans-serif", headingName: 'Quicksand',
+      bodyFont: "'Mulish',sans-serif", bodyName: 'Mulish',
+      scriptFont: "'Sacramento',cursive", scriptName: 'Sacramento',
+      tagline: 'pelan tapi pasti', typeHeading: 'Rekah', typeScript: 'mekar dengan waktunya',
+      typeBody: 'Ruang yang tenang bagi orang tua untuk memahami dan menemani setiap fase kecil pertumbuhan anak.',
+      palette: [
+        { name: 'Blush Cream', hex: '#FDECF1' }, { name: 'Peony', hex: '#F6C2D6' }, { name: 'Blush', hex: '#F08CB4' }, { name: 'Lavender', hex: '#C9B8F0' },
+        { name: 'Cloud', hex: '#C4D8FF' }, { name: 'Mint', hex: '#DCE79B' }, { name: 'Butter', hex: '#FCE79A' }, { name: 'Plum', hex: '#6E4A63' }
+      ],
+      logoFlower: { petalCount: 5, budIndices: [2, 3], petalDist: 30, petalW: 15, petalLen: 34, centerR: 18, budColor: '#DCE79B', petalColors: ['#F08CB4', '#C9B8F0', '#FCE79A', '#F6C2D6', '#C4D8FF'], centerColors: ['#6E4A63', '#F08CB4', '#FCE79A'] },
+      illos: [
+        { box: '84px', petalCount: 16, petalW: 6, petalLen: 40, petalDist: 34, centerR: 20, petalColors: ['#F08CB4'], centerColors: ['#6E4A63', '#F08CB4', '#C9B8F0', '#FCE79A'] },
+        { box: '76px', petalCount: 12, petalW: 9, petalLen: 32, petalDist: 34, centerR: 20, petalColors: ['#C9B8F0'], centerColors: ['#F08CB4', '#FCE79A', '#FDECF1'] },
+        { box: '80px', petalCount: 10, petalW: 11, petalLen: 32, petalDist: 32, centerR: 22, petalColors: ['#FCE79A'], centerColors: ['#F08CB4', '#C9B8F0'] },
+        { box: '58px', petalCount: 8, petalW: 11, petalLen: 26, petalDist: 26, centerR: 18, petalColors: ['#C4D8FF'], centerColors: ['#F08CB4', '#FCE79A'] }
+      ],
+      web: {
+        nav: ['Beranda', 'Tahap', 'Nilai'], cta: 'Mulai',
+        title: 'Setiap anak mekar dengan waktunya.',
+        sub: 'Panduan lembut berbasis jurnal ilmiah untuk menemani tumbuh kembang si kecil, selaras dengan nilai keluargamu.',
+        f1: { petalCount: 16, petalW: 6, petalLen: 40, petalDist: 34, centerR: 20, petalColors: ['#F08CB4'], centerColors: ['#6E4A63', '#F08CB4', '#C9B8F0', '#FCE79A'] },
+        f2: { petalCount: 12, petalW: 9, petalLen: 32, petalDist: 34, centerR: 20, petalColors: ['#C9B8F0'], centerColors: ['#F08CB4', '#FCE79A'] },
+        f3: { petalCount: 10, petalW: 11, petalLen: 30, petalDist: 30, centerR: 20, petalColors: ['#FCE79A'], centerColors: ['#F08CB4', '#C4D8FF'] },
+        cards: [
+          { title: '0–1 thn', body: 'Ikatan & sensorik', color: '#F08CB4' },
+          { title: '1–3 thn', body: 'Bahasa & motorik', color: '#C9B8F0' },
+          { title: '3–5 thn', body: 'Sosial & emosi', color: '#C4D8FF' }
+        ]
+      }
+    };
+
+    // ---------- 1c TAMAN SEGAR (hijau pistachio memimpin) ----------
+    const dirC = {
+      label: 'Taman Segar', tag: 'Hijau pistachio memimpin dengan pop pink — segar & natural.',
+      cardBg: '#FBFDEF', paper: '#F1F7DA', ink: '#4F5A2A', accent: '#F075A6', green: '#A7C63E', green2: '#D3E36A', leafVein: '#7C9A2E',
+      logoBg: '#E4EFB4',
+      headingFont: "'Baloo 2',sans-serif", headingName: 'Baloo 2',
+      bodyFont: "'Nunito',sans-serif", bodyName: 'Nunito',
+      scriptFont: "'Pacifico',cursive", scriptName: 'Pacifico',
+      tagline: 'akar kuat, bunga indah', typeHeading: 'Rekah', typeScript: 'tumbuh dari nilai keluarga',
+      typeBody: 'Berakar pada nilai keluarga, bertumbuh dengan sains — panduan segar untuk setiap tahap perkembangan anak.',
+      palette: [
+        { name: 'Sprout', hex: '#F1F7DA' }, { name: 'Pistachio', hex: '#D3E36A' }, { name: 'Green', hex: '#A7C63E' }, { name: 'Pink', hex: '#F075A6' },
+        { name: 'Peony', hex: '#F8BFD6' }, { name: 'Sun', hex: '#FFD95E' }, { name: 'Sky', hex: '#9FC0FF' }, { name: 'Plum', hex: '#6D3A52' }
+      ],
+      logoFlower: { petalCount: 5, budIndices: [2, 3], petalDist: 30, petalW: 15, petalLen: 34, centerR: 18, budColor: '#A7C63E', petalColors: ['#F075A6', '#FFD95E', '#9FC0FF', '#F8BFD6', '#D3E36A'], centerColors: ['#6D3A52', '#F075A6', '#FFD95E'] },
+      illos: [
+        { box: '84px', petalCount: 16, petalW: 6, petalLen: 40, petalDist: 34, centerR: 20, petalColors: ['#F075A6'], centerColors: ['#6D3A52', '#F075A6', '#FFD95E', '#D3E36A'] },
+        { box: '76px', petalCount: 12, petalW: 9, petalLen: 32, petalDist: 34, centerR: 20, petalColors: ['#FFD95E'], centerColors: ['#F075A6', '#A7C63E'] },
+        { box: '80px', petalCount: 12, petalW: 9, petalLen: 34, petalDist: 34, centerR: 22, petalColors: ['#D3E36A'], centerColors: ['#F075A6', '#FFD95E', '#6D3A52'] },
+        { box: '58px', petalCount: 8, petalW: 11, petalLen: 26, petalDist: 26, centerR: 18, petalColors: ['#9FC0FF'], centerColors: ['#F075A6', '#FFD95E'] }
+      ],
+      web: {
+        nav: ['Beranda', 'Tahap', 'Nilai'], cta: 'Coba gratis',
+        title: 'Berakar pada nilai, mekar dengan sains.',
+        sub: 'Panduan tumbuh kembang anak yang segar — memadukan jurnal ilmiah dengan nilai yang kamu tentukan sendiri.',
+        f1: { petalCount: 16, petalW: 6, petalLen: 40, petalDist: 34, centerR: 20, petalColors: ['#F075A6'], centerColors: ['#6D3A52', '#F075A6', '#FFD95E', '#D3E36A'] },
+        f2: { petalCount: 12, petalW: 9, petalLen: 32, petalDist: 34, centerR: 20, petalColors: ['#D3E36A'], centerColors: ['#F075A6', '#FFD95E'] },
+        f3: { petalCount: 12, petalW: 9, petalLen: 32, petalDist: 34, centerR: 20, petalColors: ['#FFD95E'], centerColors: ['#F075A6', '#A7C63E'] },
+        cards: [
+          { title: '0–1 thn', body: 'Ikatan & sensorik', color: '#F075A6' },
+          { title: '1–3 thn', body: 'Bahasa & motorik', color: '#A7C63E' },
+          { title: '3–5 thn', body: 'Sosial & emosi', color: '#FFD95E' }
+        ]
+      }
+    };
+
+    // ================= PUTARAN 2 =================
+
+    // ---------- 2a KEBUN SENJA (hangat, keluarga 1a) ----------
+    const dir2a = {
+      label: 'Kebun Senja', tag: 'Hangat penuh warna seperti 1a — coral, pink, marigold.',
+      cardBg: '#FFFBF2', paper: '#FFF6E9', ink: '#6E3B57', accent: '#F06BA8', green: '#C7D65C', green2: '#E6EE8F', leafVein: '#8FA83F',
+      logoBg: '#FFE6C6',
+      headingFont: "'Fredoka',sans-serif", headingName: 'Fredoka',
+      bodyFont: "'Nunito',sans-serif", bodyName: 'Nunito',
+      scriptFont: "'Caveat',cursive", scriptName: 'Caveat',
+      tagline: 'tumbuh & mekar', typeHeading: 'Rekah', typeScript: 'setiap anak, mekar seindahnya',
+      typeBody: 'Panduan tumbuh kembang yang hangat dan berbasis jurnal ilmiah, disesuaikan dengan nilai keluargamu.',
+      palette: [
+        { name: 'Cream', hex: '#FFF3D6' }, { name: 'Coral', hex: '#FF8A6B' }, { name: 'Pink', hex: '#F06BA8' }, { name: 'Marigold', hex: '#FFC24D' },
+        { name: 'Peony', hex: '#F8B9D4' }, { name: 'Sky', hex: '#A9C6FF' }, { name: 'Pistachio', hex: '#E6EE8F' }, { name: 'Plum', hex: '#7A3F5E' }
+      ],
+      logoFlower: { shape: 'bud', petalCount: 5, budIndices: [2, 3], petalW: 15, petalLen: 34, centerR: 15, jitter: 0.06, budColor: '#C7D65C', petalColors: ['#F06BA8', '#FFC24D', '#FF8A6B', '#F8B9D4', '#C7D65C'], centerColors: ['#7A3F5E', '#FF8A6B', '#FFC24D'] },
+      illos: [
+        { box: '88px', shape: 'gerbera', seed: 3, petalColors: ['#F06BA8'], centerColors: ['#7A3F5E', '#F06BA8', '#FF8A6B', '#FFC24D'] },
+        { box: '80px', shape: 'round', double: true, seed: 11, petalColors: ['#FFC24D'], innerColors: ['#FF8A6B'], centerColors: ['#7A3F5E', '#FF8A6B'] },
+        { box: '82px', shape: 'poppy', seed: 5, petalColors: ['#FF8A6B'], centerColors: ['#F06BA8', '#FFC24D', '#7A3F5E'] },
+        { box: '58px', shape: 'wobble', seed: 8, petalColors: ['#A9C6FF'], centerColors: ['#F06BA8', '#FFC24D'] }
+      ],
+      web: {
+        nav: ['Beranda', 'Tahap', 'Nilai'], cta: 'Coba gratis',
+        title: 'Tumbuh hangat di setiap tahap.',
+        sub: 'Dampingi tiap fase perkembangan si kecil dengan panduan berbasis jurnal ilmiah dan nilai keluargamu.',
+        f1: { shape: 'gerbera', seed: 3, petalColors: ['#F06BA8'], centerColors: ['#7A3F5E', '#F06BA8', '#FF8A6B', '#FFC24D'] },
+        f2: { shape: 'round', double: true, seed: 11, petalColors: ['#FFC24D'], innerColors: ['#FF8A6B'], centerColors: ['#7A3F5E', '#FF8A6B'] },
+        f3: { shape: 'poppy', seed: 5, petalColors: ['#FF8A6B'], centerColors: ['#F06BA8', '#FFC24D'] },
+        cards: [
+          { title: '0–1 thn', body: 'Ikatan & sensorik', color: '#F06BA8' },
+          { title: '1–3 thn', body: 'Bahasa & motorik', color: '#FF8A6B' },
+          { title: '3–5 thn', body: 'Sosial & emosi', color: '#A9C6FF' }
+        ]
+      }
+    };
+
+    // ---------- 2b MANGGIS & DAUN (jembatan 1a & 1c) ----------
+    const dir2b = {
+      label: 'Manggis & Daun', tag: 'Perpaduan hangat & hijau — pink manggis bertemu pistachio.',
+      cardBg: '#FCFDF1', paper: '#F6FADF', ink: '#6D3A52', accent: '#F075A6', green: '#A7C63E', green2: '#D3E36A', leafVein: '#7C9A2E',
+      logoBg: '#E7F0BE',
+      headingFont: "'Quicksand',sans-serif", headingName: 'Quicksand',
+      bodyFont: "'Nunito',sans-serif", bodyName: 'Nunito',
+      scriptFont: "'Shantell Sans',cursive", scriptName: 'Shantell Sans',
+      tagline: 'akar & bunga', typeHeading: 'Rekah', typeScript: 'berakar hangat, tumbuh subur',
+      typeBody: 'Berakar pada nilai keluarga, bertumbuh dengan sains — panduan hangat untuk setiap tahap perkembangan anak.',
+      palette: [
+        { name: 'Sprout', hex: '#F3F8E2' }, { name: 'Pistachio', hex: '#D3E36A' }, { name: 'Green', hex: '#A7C63E' }, { name: 'Pink', hex: '#F075A6' },
+        { name: 'Marigold', hex: '#FFC24D' }, { name: 'Peony', hex: '#F8BFD6' }, { name: 'Sky', hex: '#9FC0FF' }, { name: 'Plum', hex: '#6D3A52' }
+      ],
+      logoFlower: { shape: 'bud', petalCount: 5, budIndices: [2, 3], petalW: 15, petalLen: 34, centerR: 15, jitter: 0.06, budColor: '#A7C63E', petalColors: ['#F075A6', '#FFC24D', '#A7C63E', '#F8BFD6', '#9FC0FF'], centerColors: ['#6D3A52', '#F075A6', '#FFC24D'] },
+      illos: [
+        { box: '88px', shape: 'gerbera', seed: 6, petalColors: ['#F075A6'], centerColors: ['#6D3A52', '#F075A6', '#FFC24D', '#A7C63E'] },
+        { box: '80px', shape: 'round', double: true, seed: 2, petalColors: ['#FFC24D'], innerColors: ['#F075A6'], centerColors: ['#6D3A52', '#F075A6'] },
+        { box: '82px', shape: 'poppy', seed: 9, petalColors: ['#D3E36A'], centerColors: ['#F075A6', '#FFC24D', '#6D3A52'] },
+        { box: '58px', shape: 'wobble', seed: 4, petalColors: ['#9FC0FF'], centerColors: ['#F075A6', '#FFC24D'] }
+      ],
+      web: {
+        nav: ['Beranda', 'Tahap', 'Nilai'], cta: 'Mulai',
+        title: 'Berakar hangat, tumbuh subur.',
+        sub: 'Panduan tumbuh kembang yang memadukan jurnal ilmiah dengan nilai yang kamu tentukan sendiri.',
+        f1: { shape: 'gerbera', seed: 6, petalColors: ['#F075A6'], centerColors: ['#6D3A52', '#F075A6', '#FFC24D', '#A7C63E'] },
+        f2: { shape: 'round', double: true, seed: 2, petalColors: ['#FFC24D'], innerColors: ['#F075A6'], centerColors: ['#6D3A52', '#F075A6'] },
+        f3: { shape: 'poppy', seed: 9, petalColors: ['#D3E36A'], centerColors: ['#F075A6', '#FFC24D'] },
+        cards: [
+          { title: '0–1 thn', body: 'Ikatan & sensorik', color: '#F075A6' },
+          { title: '1–3 thn', body: 'Bahasa & motorik', color: '#A7C63E' },
+          { title: '3–5 thn', body: 'Sosial & emosi', color: '#FFC24D' }
+        ]
+      }
+    };
+
+    // ---------- 2c TAMAN CERIA (hijau memimpin, keluarga 1c) ----------
+    const dir2c = {
+      label: 'Taman Ceria', tag: 'Hijau segar memimpin seperti 1c — dengan pop coral & pink.',
+      cardBg: '#FBFDF0', paper: '#F3F8DE', ink: '#4F5A2A', accent: '#F06BA8', green: '#96BF3A', green2: '#C7DB4E', leafVein: '#6E8A28',
+      logoBg: '#DCE9AE',
+      headingFont: "'Baloo 2',sans-serif", headingName: 'Baloo 2',
+      bodyFont: "'Nunito',sans-serif", bodyName: 'Nunito',
+      scriptFont: "'Gochi Hand',cursive", scriptName: 'Gochi Hand',
+      tagline: 'akar kuat, bunga indah', typeHeading: 'Rekah', typeScript: 'tumbuh dari nilai keluarga',
+      typeBody: 'Berakar pada nilai keluarga, bertumbuh dengan sains — panduan segar untuk setiap tahap perkembangan anak.',
+      palette: [
+        { name: 'Sprout', hex: '#EFF6D6' }, { name: 'Lime', hex: '#C7DB4E' }, { name: 'Green', hex: '#96BF3A' }, { name: 'Coral', hex: '#FF9A4D' },
+        { name: 'Pink', hex: '#F06BA8' }, { name: 'Butter', hex: '#FFDE6B' }, { name: 'Lilac', hex: '#C9B8F0' }, { name: 'Forest', hex: '#4F5A2A' }
+      ],
+      logoFlower: { shape: 'bud', petalCount: 5, budIndices: [2, 3], petalW: 15, petalLen: 34, centerR: 15, jitter: 0.06, budColor: '#96BF3A', petalColors: ['#F06BA8', '#FFDE6B', '#96BF3A', '#FF9A4D', '#C9B8F0'], centerColors: ['#4F5A2A', '#F06BA8', '#FFDE6B'] },
+      illos: [
+        { box: '88px', shape: 'gerbera', seed: 12, petalColors: ['#F06BA8'], centerColors: ['#4F5A2A', '#F06BA8', '#FFDE6B', '#C7DB4E'] },
+        { box: '80px', shape: 'round', double: true, seed: 7, petalColors: ['#FFDE6B'], innerColors: ['#FF9A4D'], centerColors: ['#4F5A2A', '#F06BA8'] },
+        { box: '82px', shape: 'poppy', seed: 1, petalColors: ['#C7DB4E'], centerColors: ['#F06BA8', '#FFDE6B', '#4F5A2A'] },
+        { box: '58px', shape: 'wobble', seed: 10, petalColors: ['#C9B8F0'], centerColors: ['#F06BA8', '#FFDE6B'] }
+      ],
+      web: {
+        nav: ['Beranda', 'Tahap', 'Nilai'], cta: 'Coba gratis',
+        title: 'Bertumbuh dari nilai, mekar seindahnya.',
+        sub: 'Panduan tumbuh kembang anak yang segar — memadukan jurnal ilmiah dengan nilai yang kamu tentukan.',
+        f1: { shape: 'gerbera', seed: 12, petalColors: ['#F06BA8'], centerColors: ['#4F5A2A', '#F06BA8', '#FFDE6B', '#C7DB4E'] },
+        f2: { shape: 'round', double: true, seed: 7, petalColors: ['#FFDE6B'], innerColors: ['#FF9A4D'], centerColors: ['#4F5A2A', '#F06BA8'] },
+        f3: { shape: 'poppy', seed: 1, petalColors: ['#C7DB4E'], centerColors: ['#F06BA8', '#FFDE6B'] },
+        cards: [
+          { title: '0–1 thn', body: 'Ikatan & sensorik', color: '#F06BA8' },
+          { title: '1–3 thn', body: 'Bahasa & motorik', color: '#96BF3A' },
+          { title: '3–5 thn', body: 'Sosial & emosi', color: '#FFDE6B' }
+        ]
+      }
+    };
+
+    // ================= PUTARAN 3 — biru & pink, vibe 2a =================
+
+    // ---------- 3a LANGIT PEONY (pink memimpin, biru pendamping) ----------
+    const dir3a = {
+      label: 'Langit Peony', tag: 'Pink memimpin, biru langit sebagai pendamping — vibe 2a.',
+      cardBg: '#FFFBF3', paper: '#FFF6EC', ink: '#6E3B57', accent: '#F06BA8', green: '#A7C63E', green2: '#C7DB4E', leafVein: '#7C9A2E',
+      logoBg: '#FCE3EE',
+      headingFont: "'Fredoka',sans-serif", headingName: 'Fredoka',
+      bodyFont: "'Nunito',sans-serif", bodyName: 'Nunito',
+      scriptFont: "'Shantell Sans',cursive", scriptName: 'Shantell Sans',
+      tagline: 'tumbuh & mekar', typeHeading: 'Rekah', typeScript: 'setiap anak, mekar seindahnya',
+      typeBody: 'Panduan tumbuh kembang yang hangat dan berbasis jurnal ilmiah, disesuaikan dengan nilai keluargamu.',
+      palette: [
+        { name: 'Cream', hex: '#FFF3E6' }, { name: 'Peony', hex: '#F8B9D4' }, { name: 'Pink', hex: '#F06BA8' }, { name: 'Sky', hex: '#8FB8F7' },
+        { name: 'Cornflower', hex: '#5F84E6' }, { name: 'Lilac', hex: '#C9B8F0' }, { name: 'Butter', hex: '#FFE29A' }, { name: 'Plum', hex: '#6E3B57' }
+      ],
+      logoFlower: { shape: 'bud', petalCount: 5, budIndices: [2, 3], petalW: 15, petalLen: 34, centerR: 15, jitter: 0.05, spin: 0, budColor: '#8FB8F7', petalColors: ['#F06BA8', '#8FB8F7', '#F8B9D4', '#5F84E6', '#FFE29A'], centerColors: ['#6E3B57', '#F06BA8', '#8FB8F7'] },
+      illos: [
+        { box: '90px', shape: 'gerbera', seed: 3, petalColors: ['#F06BA8'], centerColors: ['#6E3B57', '#F06BA8', '#8FB8F7', '#FFE29A'] },
+        { box: '82px', shape: 'cosmos', seed: 14, petalColors: ['#8FB8F7'], centerColors: ['#6E3B57', '#F06BA8', '#FFE29A'] },
+        { box: '84px', shape: 'scallop', double: true, seed: 5, petalColors: ['#F8B9D4'], innerColors: ['#F06BA8'], centerColors: ['#5F84E6', '#FFE29A'] },
+        { box: '60px', shape: 'star', seed: 21, petalColors: ['#C9B8F0'], centerColors: ['#F06BA8', '#FFE29A'] }
+      ],
+      web: {
+        nav: ['Beranda', 'Tahap', 'Nilai'], cta: 'Coba gratis',
+        title: 'Tumbuh hangat di setiap tahap.',
+        sub: 'Dampingi tiap fase perkembangan si kecil dengan panduan berbasis jurnal ilmiah dan nilai keluargamu.',
+        f1: { shape: 'gerbera', seed: 3, petalColors: ['#F06BA8'], centerColors: ['#6E3B57', '#F06BA8', '#8FB8F7', '#FFE29A'] },
+        f2: { shape: 'cosmos', seed: 14, petalColors: ['#8FB8F7'], centerColors: ['#6E3B57', '#F06BA8', '#FFE29A'] },
+        f3: { shape: 'scallop', double: true, seed: 5, petalColors: ['#F8B9D4'], innerColors: ['#F06BA8'], centerColors: ['#5F84E6', '#FFE29A'] },
+        cards: [
+          { title: '0–1 thn', body: 'Ikatan & sensorik', color: '#F06BA8' },
+          { title: '1–3 thn', body: 'Bahasa & motorik', color: '#8FB8F7' },
+          { title: '3–5 thn', body: 'Sosial & emosi', color: '#C9B8F0' }
+        ]
+      }
+    };
+
+    // ---------- 3b BIRU MEKAR (biru memimpin, pink pendamping) ----------
+    const dir3b = {
+      label: 'Biru Mekar', tag: 'Biru langit memimpin, pink sebagai aksen ceria — vibe 2a.',
+      cardBg: '#FCFBF6', paper: '#F4F7FD', ink: '#3D4373', accent: '#5F84E6', green: '#A7C63E', green2: '#C7DB4E', leafVein: '#7C9A2E',
+      logoBg: '#DDE8FB',
+      headingFont: "'Fredoka',sans-serif", headingName: 'Fredoka',
+      bodyFont: "'Nunito',sans-serif", bodyName: 'Nunito',
+      scriptFont: "'Shantell Sans',cursive", scriptName: 'Shantell Sans',
+      tagline: 'tumbuh & mekar', typeHeading: 'Rekah', typeScript: 'setiap anak, mekar seindahnya',
+      typeBody: 'Panduan tumbuh kembang yang hangat dan berbasis jurnal ilmiah, disesuaikan dengan nilai keluargamu.',
+      palette: [
+        { name: 'Cream', hex: '#FBF4E9' }, { name: 'Sky', hex: '#8FB8F7' }, { name: 'Cornflower', hex: '#5F84E6' }, { name: 'Pink', hex: '#F06BA8' },
+        { name: 'Peony', hex: '#F8B9D4' }, { name: 'Lilac', hex: '#C9B8F0' }, { name: 'Butter', hex: '#FFE29A' }, { name: 'Indigo', hex: '#3D4373' }
+      ],
+      logoFlower: { shape: 'bud', petalCount: 5, budIndices: [2, 3], petalW: 15, petalLen: 34, centerR: 15, jitter: 0.05, spin: 0, budColor: '#F06BA8', petalColors: ['#5F84E6', '#F06BA8', '#8FB8F7', '#F8B9D4', '#FFE29A'], centerColors: ['#3D4373', '#5F84E6', '#F06BA8'] },
+      illos: [
+        { box: '90px', shape: 'gerbera', seed: 8, petalColors: ['#5F84E6'], centerColors: ['#3D4373', '#5F84E6', '#F06BA8', '#FFE29A'] },
+        { box: '82px', shape: 'cosmos', seed: 16, petalColors: ['#F06BA8'], centerColors: ['#3D4373', '#5F84E6', '#FFE29A'] },
+        { box: '84px', shape: 'scallop', double: true, seed: 2, petalColors: ['#8FB8F7'], innerColors: ['#5F84E6'], centerColors: ['#F06BA8', '#FFE29A'] },
+        { box: '60px', shape: 'star', seed: 19, petalColors: ['#C9B8F0'], centerColors: ['#5F84E6', '#FFE29A'] }
+      ],
+      web: {
+        nav: ['Beranda', 'Tahap', 'Nilai'], cta: 'Coba gratis',
+        title: 'Tumbuh hangat di setiap tahap.',
+        sub: 'Dampingi tiap fase perkembangan si kecil dengan panduan berbasis jurnal ilmiah dan nilai keluargamu.',
+        f1: { shape: 'gerbera', seed: 8, petalColors: ['#5F84E6'], centerColors: ['#3D4373', '#5F84E6', '#F06BA8', '#FFE29A'] },
+        f2: { shape: 'cosmos', seed: 16, petalColors: ['#F06BA8'], centerColors: ['#3D4373', '#5F84E6', '#FFE29A'] },
+        f3: { shape: 'scallop', double: true, seed: 2, petalColors: ['#8FB8F7'], innerColors: ['#5F84E6'], centerColors: ['#F06BA8', '#FFE29A'] },
+        cards: [
+          { title: '0–1 thn', body: 'Ikatan & sensorik', color: '#5F84E6' },
+          { title: '1–3 thn', body: 'Bahasa & motorik', color: '#F06BA8' },
+          { title: '3–5 thn', body: 'Sosial & emosi', color: '#8FB8F7' }
+        ]
+      }
+    };
+
+    // ================= PUTARAN 4 — palet "Berry Much" =================
+    const dir4a = {
+      label: 'Berry Much', tag: 'Pastel penuh dari palet kamu — pink, biru, mint, peach, lilac, kuning.',
+      cardBg: '#FFFDF9', paper: '#FFF6F0', ink: '#6E3B57', accent: '#D96FA3', green: '#8FC58A', green2: '#C2E6B8', leafVein: '#6EA76B',
+      logoBg: '#FFEAF3',
+      headingFont: "'Fredoka',sans-serif", headingName: 'Fredoka',
+      bodyFont: "'Nunito',sans-serif", bodyName: 'Nunito',
+      scriptFont: "'Shantell Sans',cursive", scriptName: 'Shantell Sans',
+      tagline: 'tumbuh & mekar', typeHeading: 'Rekah', typeScript: 'setiap anak, mekar seindahnya',
+      typeBody: 'Panduan tumbuh kembang yang hangat dan berbasis jurnal ilmiah, disesuaikan dengan nilai keluargamu.',
+      palette: [
+        { name: 'Butter', hex: '#FEF7C5' }, { name: 'Pink', hex: '#FFB4DA' }, { name: 'Mint', hex: '#D5FFC9' }, { name: 'Cream', hex: '#FFF8E9' },
+        { name: 'Lilac', hex: '#F5D1EF' }, { name: 'Sky', hex: '#BCD3F9' }, { name: 'Blush', hex: '#FFF4FD' }, { name: 'Peach', hex: '#FFCBBF' },
+        { name: 'Berry · aksen', hex: '#D96FA3' }, { name: 'Plum · teks', hex: '#6E3B57' }
+      ],
+      logoFlower: { shape: 'bud', petalCount: 5, budIndices: [2, 3], petalW: 15, petalLen: 34, centerR: 15, jitter: 0.05, spin: 0, budColor: '#D5FFC9', petalColors: ['#FFB4DA', '#BCD3F9', '#F5D1EF', '#FFCBBF', '#FEF7C5'], centerColors: ['#6E3B57', '#D96FA3', '#FEF7C5'] },
+      illos: [
+        { box: '90px', shape: 'gerbera', seed: 3, petalColors: ['#FFB4DA'], centerColors: ['#6E3B57', '#D96FA3', '#BCD3F9', '#FEF7C5'] },
+        { box: '82px', shape: 'cosmos', seed: 14, petalColors: ['#BCD3F9'], centerColors: ['#6E3B57', '#D96FA3', '#FEF7C5'] },
+        { box: '84px', shape: 'scallop', double: true, seed: 5, petalColors: ['#F5D1EF'], innerColors: ['#FFB4DA'], centerColors: ['#D96FA3', '#FEF7C5'] },
+        { box: '60px', shape: 'star', seed: 21, petalColors: ['#FFCBBF'], centerColors: ['#D96FA3', '#D5FFC9'] }
+      ],
+      web: {
+        nav: ['Beranda', 'Tahap', 'Nilai'], cta: 'Coba gratis',
+        title: 'Tumbuh hangat di setiap tahap.',
+        sub: 'Dampingi tiap fase perkembangan si kecil dengan panduan berbasis jurnal ilmiah dan nilai keluargamu.',
+        f1: { shape: 'gerbera', seed: 3, petalColors: ['#FFB4DA'], centerColors: ['#6E3B57', '#D96FA3', '#BCD3F9', '#FEF7C5'] },
+        f2: { shape: 'cosmos', seed: 14, petalColors: ['#BCD3F9'], centerColors: ['#6E3B57', '#D96FA3', '#FEF7C5'] },
+        f3: { shape: 'scallop', double: true, seed: 5, petalColors: ['#F5D1EF'], innerColors: ['#FFB4DA'], centerColors: ['#D96FA3', '#FEF7C5'] },
+        cards: [
+          { title: '0–1 thn', body: 'Ikatan & sensorik', color: '#FFB4DA' },
+          { title: '1–3 thn', body: 'Bahasa & motorik', color: '#BCD3F9' },
+          { title: '3–5 thn', body: 'Sosial & emosi', color: '#F5D1EF' }
+        ]
+      }
+    };
+
+    // ================= PUTARAN 5 — Langit Peony + ilustrasi botanical =================
+    const PP = { plum: '#6E3B57', pink: '#F06BA8', peony: '#F8B9D4', sky: '#8FB8F7', corn: '#5F84E6', lilac: '#C9B8F0', butter: '#FFE29A' };
+    const dir5 = {
+      label: 'Langit Peony', tag: 'Pink memimpin, biru langit pendamping — dengan ilustrasi botanical.',
+      cardBg: '#FFFBF3', paper: '#FFF6EC', ink: '#6E3B57', accent: '#F06BA8', green: '#A7C63E', green2: '#C7DB4E', leafVein: '#7C9A2E',
+      logoBg: '#FCE3EE',
+      headingFont: "'Fredoka',sans-serif", headingName: 'Fredoka',
+      bodyFont: "'Nunito',sans-serif", bodyName: 'Nunito',
+      scriptFont: "'Shantell Sans',cursive", scriptName: 'Shantell Sans',
+      tagline: 'tumbuh & mekar', typeHeading: 'Rekah', typeScript: 'setiap anak, mekar seindahnya',
+      typeBody: 'Panduan tumbuh kembang yang hangat dan berbasis jurnal ilmiah, disesuaikan dengan nilai keluargamu.',
+      palette: [
+        { name: 'Cream', hex: '#FFF3E6' }, { name: 'Peony', hex: '#F8B9D4' }, { name: 'Pink', hex: '#F06BA8' }, { name: 'Sky', hex: '#8FB8F7' },
+        { name: 'Cornflower', hex: '#5F84E6' }, { name: 'Lilac', hex: '#C9B8F0' }, { name: 'Butter', hex: '#FFE29A' }, { name: 'Plum', hex: '#6E3B57' }
+      ],
+      logoFlower: { shape: 'bud', petalCount: 5, budIndices: [2, 3], petalW: 15, petalLen: 34, centerR: 15, jitter: 0.05, spin: 0, budColor: '#8FB8F7', petalColors: ['#F06BA8', '#8FB8F7', '#F8B9D4', '#5F84E6', '#FFE29A'], centerColors: ['#6E3B57', '#F06BA8', '#8FB8F7'] },
+      bot: [
+        { type: 'tulip', bloom: PP.pink, bloom2: PP.peony, center: PP.plum, w: '66px', h: '124px' },
+        { type: 'daisy', bloom: PP.corn, bloom2: PP.sky, center: PP.butter, w: '70px', h: '124px' },
+        { type: 'bell', bloom: PP.sky, bloom2: PP.corn, w: '66px', h: '120px' },
+        { type: 'fivepetal', bloom: PP.peony, center: PP.pink, w: '66px', h: '120px' },
+        { type: 'sprig', bloom: PP.corn, bloom2: PP.butter, w: '66px', h: '124px' },
+        { type: 'foliage', w: '56px', h: '124px' },
+        { type: 'leaf', w: '46px', h: '120px' },
+        { type: 'star', bloom: PP.butter, w: '84px', h: '96px' },
+        { type: 'squiggle', bloom: PP.lilac, w: '54px', h: '96px' }
+      ],
+      web: {
+        nav: ['Beranda', 'Tahap', 'Nilai'], cta: 'Coba gratis',
+        title: 'Tumbuh hangat di setiap tahap.',
+        sub: 'Dampingi tiap fase perkembangan si kecil dengan panduan berbasis jurnal ilmiah dan nilai keluargamu.',
+        b1: { type: 'daisy', bloom: PP.pink, bloom2: PP.peony, center: PP.butter },
+        b2: { type: 'tulip', bloom: PP.peony, bloom2: PP.pink, center: PP.plum },
+        b3: { type: 'sprig', bloom: PP.corn, bloom2: PP.butter },
+        cards: [
+          { title: '0–1 thn', body: 'Ikatan & sensorik', color: '#F06BA8' },
+          { title: '1–3 thn', body: 'Bahasa & motorik', color: '#8FB8F7' },
+          { title: '3–5 thn', body: 'Sosial & emosi', color: '#C9B8F0' }
+        ]
+      }
+    };
+
+    return { dirA, dirB, dirC, dir2a, dir2b, dir2c, dir3a, dir3b, dir4a, dir5 };
+  }
+}
+</script>
+</body>
+</html>

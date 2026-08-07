@@ -1,16 +1,27 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Outlet } from 'react-router-dom';
-import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
+// ============================================================================
+// DashboardShellTier2 — gerbang dashboard Rekah.
+//
+// Urutan gerbang:
+//   1. memuat            → penanda muat
+//   2. belum punya anak   → WizardAnak (mode "pertama")
+//   3. sedang menambah    → WizardAnak (mode "tambah")
+//   4. belum pilih anak   → PilihAnak
+//   5. sudah pilih        → dashboard
+//
+// Shell TIDAK LAGI mengoper data anak lewat outlet context. Setiap layar
+// mengambil sendiri dari useAnakAktif(), sehingga hanya ada satu sumber data.
+// ============================================================================
+
+import React, { useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useAnak } from '../../../context/AnakContext';
 import RekahErrorBanner from '../../../components/RekahErrorBanner';
-import OnboardingFlow from '../../../features/onboarding/OnboardingFlow';
-import type { OnboardingData } from '../../../features/onboarding/types';
+import WizardAnak from '../../../features/wizard-anak/WizardAnak';
+import PilihAnak from '../../../features/pilih-anak/PilihAnak';
 import SidebarRekah from '../../../components/SidebarRekah';
 import HeaderMobileRekah from '../../../components/HeaderMobileRekah';
 import NavigasiBawah from '../../../components/NavigasiBawah';
-import { getAnakList, upsertAnak } from '../../../lib/supabase/rekah';
-import { hitungBand } from '../../../lib/band';
 
 // Guard: tier2 users only
 function Tier2Guard({ children }: { children: React.ReactNode }) {
@@ -32,58 +43,14 @@ function Tier2Guard({ children }: { children: React.ReactNode }) {
 
 export default function DashboardShellTier2() {
   const [melipat, setMelipat] = useState(false);
-  const [onboardingData, setOnboardingData] = useState<OnboardingData | null>(null);
-  const [idAnak, setIdAnak] = useState<string | null>(null);
-  const [loadingAnak, setLoadingAnak] = useState(true);
-  const { supabaseUser } = useAuth();
+  // sedangTambahAnak pindah ke AnakContext supaya layar mana pun bisa
+  // memintanya — bukan hanya PilihAnak, yang dilewati saat anaknya satu.
+  const {
+    daftarAnak, anakAktif, memuat,
+    sedangTambahAnak, mintaTambahAnak, batalTambahAnak,
+  } = useAnak();
 
-  // Muat data anak dari Supabase saat mount — hindari flash layar onboarding bagi pengguna lama.
-  const muatAnak = useCallback(async () => {
-    if (!supabaseUser) { setLoadingAnak(false); return; }
-    try {
-      const daftar = await getAnakList();
-      if (daftar.length > 0) {
-        const anak = daftar[0];
-        const { band, diLuarRentang } = hitungBand(new Date(anak.tanggal_lahir));
-        setIdAnak(anak.id);
-        setOnboardingData({
-          namaAnak: anak.nama_anak,
-          tanggalLahir: anak.tanggal_lahir,
-          band,
-          diLuarRentang,
-          // Nilai/fokus/tanah/visi dimuat oleh AkarKeluargaContext secara terpisah.
-          nilai: [],
-          fokus: [],
-          tanah: [],
-          visi: '',
-        });
-      }
-    } catch {
-      // Gagal muat anak — tampilkan onboarding agar pengguna bisa mengisi ulang.
-    } finally {
-      setLoadingAnak(false);
-    }
-  }, [supabaseUser]);
-
-  useEffect(() => { muatAnak(); }, [muatAnak]);
-
-  async function handleSelesai(data: OnboardingData) {
-    // Simpan anak ke Supabase sebelum masuk ke dashboard.
-    if (supabaseUser) {
-      try {
-        const baris = await upsertAnak({
-          namaAnak: data.namaAnak,
-          tanggalLahir: data.tanggalLahir,
-        });
-        setIdAnak(baris.id);
-      } catch {
-        // Tidak blokir masuk dashboard bila sinkronisasi gagal.
-      }
-    }
-    setOnboardingData(data);
-  }
-
-  if (loadingAnak) {
+  if (memuat) {
     return (
       <Tier2Guard>
         <div className="flex h-48 items-center justify-center text-pekat/50">Memuat...</div>
@@ -91,10 +58,33 @@ export default function DashboardShellTier2() {
     );
   }
 
-  if (!onboardingData) {
+  // Akun baru: belum ada anak sama sekali.
+  if (daftarAnak.length === 0) {
     return (
       <Tier2Guard>
-        <OnboardingFlow onSelesai={handleSelesai} />
+        <WizardAnak mode="pertama" />
+      </Tier2Guard>
+    );
+  }
+
+  // Menambah anak dari layar Pilih Anak.
+  if (sedangTambahAnak) {
+    return (
+      <Tier2Guard>
+        <WizardAnak
+          mode="tambah"
+          onSelesai={batalTambahAnak}
+          onBatal={batalTambahAnak}
+        />
+      </Tier2Guard>
+    );
+  }
+
+  // Punya anak tapi belum memilih yang mana.
+  if (!anakAktif) {
+    return (
+      <Tier2Guard>
+        <PilihAnak onTambahAnak={mintaTambahAnak} />
       </Tier2Guard>
     );
   }
@@ -114,7 +104,12 @@ export default function DashboardShellTier2() {
 
           <main className="flex-1">
             <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 pb-[80px] lg:pb-0">
-              <Outlet context={{ onboardingData, idAnak }} />
+              {/*
+                Remount seluruh subtree saat anak aktif berganti. Tanpa ini,
+                state lokal layar (pilihan harian, tab, kolam kegiatan) akan
+                terbawa dari anak sebelumnya.
+              */}
+              <Outlet key={anakAktif.id} />
             </div>
           </main>
         </div>

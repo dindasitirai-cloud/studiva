@@ -16,8 +16,8 @@ import type { CentangKebiasaan } from '@studiva/shared';
 const COPY = {
   JUDUL: 'Kebiasaan baik hari ini',
   SUBJUDUL: 'Bunganya mekar tiap kebiasaan dirawat.', // TODO: review Fitri
-  AJAKAN_KOSONG: 'Belum ada nilai yang ditanam. Pilih satu di Bekal.',
-  CTA_KOSONG: 'Buka Bekal',
+  AJAKAN_KOSONG: 'Belum ada nilai yang ditanam. Tap + Tanam Nilai', // TODO: review Fitri
+  TOMBOL_TANAM: '+ Tanam Nilai', // TODO: review Fitri
   BELUM_SIAP: (nilai: string) => `Kebiasaan untuk ${nilai} di usia ini sedang disiapkan.`,
   PILL_DIRAWAT: (done: number, total: number) => `${done} dari ${total} dirawat`, // TODO: review Fitri
   LABEL_ISTIRAHAT: 'Istirahat', // TODO: review Fitri
@@ -29,12 +29,20 @@ const COPY = {
 const AMBANG_LIPAT_OTOMATIS = 4;
 
 // TODO: review Fitri — token warna per nilai, dari desain Langit Peony
+// 5 nilai utama dari design handoff; 7 lainnya diturunkan dari palet yang sama
 const TOKEN_NILAI: Record<string, { soft: string; ink: string; accent: string }> = {
-  'syukur':       { soft: '#FFF6DC', ink: '#B98900', accent: '#E0A21F' },
-  'kemandirian':  { soft: '#FDEEDD', ink: '#C1741B', accent: '#E0872B' },
-  'keberanian':   { soft: '#FCE3EE', ink: '#E0428A', accent: '#F06BA8' },
-  'kejujuran':    { soft: '#E7EEFC', ink: '#4A6BD6', accent: '#5F84E6' },
-  'kasih-sayang': { soft: '#F1ECFB', ink: '#8A6DC7', accent: '#A98CDD' },
+  'Syukur':             { soft: '#FFF6DC', ink: '#B98900', accent: '#E0A21F' },
+  'Kemandirian':        { soft: '#FDEEDD', ink: '#C1741B', accent: '#E0872B' },
+  'Keberanian':         { soft: '#FCE3EE', ink: '#E0428A', accent: '#F06BA8' },
+  'Kejujuran':          { soft: '#E7EEFC', ink: '#4A6BD6', accent: '#5F84E6' },
+  'Kasih Sayang':       { soft: '#F1ECFB', ink: '#8A6DC7', accent: '#A98CDD' },
+  'Empati':             { soft: '#FCE7F0', ink: '#D9639A', accent: '#F8B9D4' },
+  'Sabar':              { soft: '#E4EFFD', ink: '#4A72D6', accent: '#8FB8F7' },
+  'Berbagi':            { soft: '#E6ECFC', ink: '#4A6BD6', accent: '#5F84E6' },
+  'Hormat pada Sesama': { soft: '#FFF6DC', ink: '#B98900', accent: '#E0A21F' },
+  'Kesederhanaan':      { soft: '#FCE3EE', ink: '#E0428A', accent: '#F06BA8' },
+  'Cinta Ilmu':         { soft: '#E4EFFD', ink: '#4A72D6', accent: '#8FB8F7' },
+  'Tanggung Jawab':     { soft: '#F1ECFB', ink: '#8A6DC7', accent: '#A98CDD' },
 };
 const TOKEN_DEFAULT = { soft: '#F3EDFC', ink: '#8A6DC7', accent: '#A98CDD' };
 
@@ -79,15 +87,23 @@ const _BASE: Record<_Bentuk, [number, number]> = {
 interface _BungaSpec { ch: _Bentuk; n: number; color: string; center: string; hi: string; }
 
 // TODO: review Fitri — spesifikasi bunga per-nilai, dari Bunga.dc.html
-// Warna kelopak dihitung dari tabel combos di Bunga.dc.html (C = palet Langit Peony).
+// Kunci = NilaiAkar (ejaan sama dengan type NilaiAkar, bukan kebab-case).
+// Warna dari tabel combos Bunga.dc.html (combos[i % 6], i = urutan nilai).
 const BUNGA_SPEC: Record<string, _BungaSpec> = {
-  'syukur':       { ch:'hati',   n:6, color:'#FFE29A', center:'#F06BA8', hi:'#FFF3E6' },
-  'kemandirian':  { ch:'lancip', n:6, color:'#FFE29A', center:'#F06BA8', hi:'#FFF3E6' },
-  'keberanian':   { ch:'hati',   n:9, color:'#F06BA8', center:'#FFE29A', hi:'#FFF3E6' },
-  'kejujuran':    { ch:'lancip', n:4, color:'#5F84E6', center:'#FFE29A', hi:'#FFF3E6' },
-  'kasih-sayang': { ch:'hati',   n:5, color:'#C9B8F0', center:'#FFE29A', hi:'#FFF3E6' },
+  'Kesederhanaan':      { ch:'bulat',  n:3,  color:'#F06BA8', center:'#FFE29A', hi:'#FFF3E6' },
+  'Sabar':              { ch:'bulat',  n:5,  color:'#8FB8F7', center:'#F06BA8', hi:'#FFF3E6' },
+  'Tanggung Jawab':     { ch:'bulat',  n:8,  color:'#C9B8F0', center:'#FFE29A', hi:'#FFF3E6' },
+  'Syukur':             { ch:'hati',   n:6,  color:'#FFE29A', center:'#F06BA8', hi:'#FFF3E6' },
+  'Kejujuran':          { ch:'lancip', n:4,  color:'#5F84E6', center:'#FFE29A', hi:'#FFF3E6' },
+  'Kemandirian':        { ch:'lancip', n:6,  color:'#FFE29A', center:'#F06BA8', hi:'#FFF3E6' },
+  'Keberanian':         { ch:'hati',   n:9,  color:'#F06BA8', center:'#FFE29A', hi:'#FFF3E6' },
+  'Cinta Ilmu':         { ch:'bulat',  n:12, color:'#8FB8F7', center:'#F06BA8', hi:'#FFF3E6' },
+  'Kasih Sayang':       { ch:'hati',   n:5,  color:'#C9B8F0', center:'#FFE29A', hi:'#FFF3E6' },
+  'Empati':             { ch:'hati',   n:7,  color:'#F8B9D4', center:'#5F84E6', hi:'#FFF3E6' },
+  'Berbagi':            { ch:'pita',   n:6,  color:'#5F84E6', center:'#FFE29A', hi:'#FFF3E6' },
+  'Hormat pada Sesama': { ch:'pita',   n:11, color:'#FFE29A', center:'#F06BA8', hi:'#FFF3E6' },
 };
-const BUNGA_SPEC_DEFAULT = BUNGA_SPEC['kasih-sayang'];
+const BUNGA_SPEC_DEFAULT = BUNGA_SPEC['Kasih Sayang'];
 
 function BungaSVG({ nilai, mekar, ukuran }: { nilai: string; mekar: number; ukuran: number }) {
   const spec = BUNGA_SPEC[nilai] ?? BUNGA_SPEC_DEFAULT;
@@ -480,14 +496,14 @@ export default function KartuKebiasaanBaik({
     boxShadow: '0 18px 40px -30px rgba(90,50,70,.55)',
   } as const;
 
-  // Header kartu: judul kiri + pill counter kanan
+  // Header kartu: judul kiri + tombol tanam + pill counter kanan
   const HEADER_NODE = (
     <div
       style={{
         display: 'flex',
-        alignItems: 'flex-end',
+        alignItems: 'flex-start',
         justifyContent: 'space-between',
-        gap: 16,
+        gap: 12,
         marginBottom: 20,
       }}
     >
@@ -517,35 +533,62 @@ export default function KartuKebiasaanBaik({
           {COPY.SUBJUDUL}
         </div>
       </div>
-      {/* Pill overall: hanya tampil saat ada nilai dengan item */}
-      {totAll > 0 && (
-        <div
+
+      {/* Sisi kanan: pill overall + tombol tanam */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
+        {/* Pill overall: hanya tampil saat ada nilai dengan item */}
+        {totAll > 0 && (
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 9,
+              background: '#FFF7EE',
+              borderRadius: 999,
+              padding: '8px 15px',
+            }}
+          >
+            <div style={{ width: 30, height: 30, flexShrink: 0 }}>
+              <BungaSVG nilai="Kasih Sayang" mekar={-1} ukuran={30} />
+            </div>
+            <span
+              style={{
+                fontFamily: 'Nunito, system-ui, sans-serif',
+                fontWeight: 800,
+                fontSize: 13,
+                color: '#B98900',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {COPY.PILL_DIRAWAT(totDone, totAll)}
+            </span>
+          </div>
+        )}
+
+        {/* Tombol + Tanam Nilai */}
+        <button
+          type="button"
+          onClick={onBekal}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 9,
-            background: '#FFF7EE',
+            gap: 4,
+            minHeight: 36,
+            background: '#F06BA8',
+            color: '#fff',
+            border: 'none',
             borderRadius: 999,
-            padding: '8px 15px',
-            flexShrink: 0,
+            padding: '0 16px',
+            fontFamily: 'Nunito, system-ui, sans-serif',
+            fontSize: 13,
+            fontWeight: 700,
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
           }}
         >
-          <div style={{ width: 30, height: 30, flexShrink: 0 }}>
-            <BungaSVG nilai="kasih-sayang" mekar={-1} ukuran={30} />
-          </div>
-          <span
-            style={{
-              fontFamily: 'Nunito, system-ui, sans-serif',
-              fontWeight: 800,
-              fontSize: 13,
-              color: '#B98900',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {COPY.PILL_DIRAWAT(totDone, totAll)}
-          </span>
-        </div>
-      )}
+          {COPY.TOMBOL_TANAM}
+        </button>
+      </div>
     </div>
   );
 
@@ -558,33 +601,11 @@ export default function KartuKebiasaanBaik({
             fontFamily: 'Nunito, system-ui, sans-serif',
             fontSize: 14,
             color: '#8A7080',
-            marginBottom: 16,
             lineHeight: 1.5,
           }}
         >
           {COPY.AJAKAN_KOSONG}
         </p>
-        <button
-          type="button"
-          onClick={onBekal}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: 44,
-            background: '#F06BA8',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 999,
-            padding: '0 22px',
-            fontFamily: 'Nunito, system-ui, sans-serif',
-            fontSize: 13,
-            fontWeight: 700,
-            cursor: 'pointer',
-          }}
-        >
-          {COPY.CTA_KOSONG}
-        </button>
       </section>
     );
   }

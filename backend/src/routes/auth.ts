@@ -93,4 +93,34 @@ router.get(
   }
 );
 
+// Endpoint untuk AuthContext.loadExpressUser() — mengembalikan PublicUser dari DB.
+// Dipanggil setelah login Supabase sehingga tidak ada PII plaintext di localStorage.
+router.get(
+  '/me',
+  authenticate,
+  asyncHandler(async (req: Request, res: Response) => {
+    const email = req.user?.email;
+    if (!email) {
+      res.status(401).json({ error: 'Not authenticated' });
+      return;
+    }
+
+    const dbUser = await findUserByEmail(email);
+    if (!dbUser) {
+      // Pengguna Supabase baru yang belum memiliki record Express — kembalikan profil minimal
+      res.json({
+        user: {
+          id: null,
+          email,
+          name: req.user?.name ?? '',
+          role: req.user?.role ?? 'parent',
+        },
+      });
+      return;
+    }
+
+    res.json({ user: toPublicUser(dbUser) });
+  })
+);
+
 export default router;

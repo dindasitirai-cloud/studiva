@@ -1,62 +1,62 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { api } from '../api/client';
-
-const DEFAULT_MESSAGE = 'Silakan upgrade untuk mengakses fitur ini.';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { getLangganan, statusGerbang, StatusGerbang, TEKS_GERBANG } from '../lib/supabase/langganan';
 
 interface SubscriptionGuardProps {
   children: ReactNode;
-  message?: string;
 }
 
-export default function SubscriptionGuard({ children, message = DEFAULT_MESSAGE }: SubscriptionGuardProps) {
+export default function SubscriptionGuard({ children }: SubscriptionGuardProps) {
+  const { supabaseUser, peranStaf, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const [status, setStatus] = useState<'checking' | 'allowed' | 'denied'>('checking');
+  const [status, setStatus] = useState<'memeriksa' | StatusGerbang>('memeriksa');
 
   useEffect(() => {
+    if (authLoading) return;
+
+    // Staf (admin + peninjau_klinis) lewati paywall
+    if (peranStaf && ['admin', 'peninjau_klinis'].includes(peranStaf)) {
+      setStatus('aktif');
+      return;
+    }
+
     let mounted = true;
-    async function check() {
+
+    async function periksa() {
+      if (!supabaseUser) return;
+
       try {
-        const { data } = await api.get('/subscriptions/check');
+        const langganan = await getLangganan();
         if (!mounted) return;
-        setStatus(data.hasSubscription ? 'allowed' : 'denied');
+        setStatus(statusGerbang(langganan, new Date().toISOString()));
       } catch {
-        if (mounted) setStatus('denied');
+        if (mounted) setStatus('belum_berlangganan');
       }
     }
-    check();
-    return () => {
-      mounted = false;
-    };
-  }, []);
+
+    periksa();
+    return () => { mounted = false; };
+  }, [supabaseUser, peranStaf, authLoading]);
 
   useEffect(() => {
-    if (status !== 'denied') return;
-    const timer = setTimeout(() => {
-      navigate('/pricing', { state: { message } });
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [status, navigate, message]);
+    if (status === 'kedaluwarsa' || status === 'belum_berlangganan') {
+      navigate('/pricing', {
+        replace: true,
+        state: { message: TEKS_GERBANG[status] },
+      });
+    }
+  }, [status, navigate]);
 
-  if (status === 'checking') {
-    return <div className="px-4 py-16 text-center text-textlight">Memeriksa status subscription...</div>;
-  }
-
-  if (status === 'denied') {
+  if (status === 'memeriksa') {
     return (
-      <div className="px-4 py-16 text-center">
-        <p className="text-h3 font-semibold text-navy">Please upgrade to access this feature</p>
-        <p className="mt-2 text-textlight">{message}</p>
-        <p className="mt-2 text-sm text-textlight">Anda akan diarahkan ke halaman harga dalam beberapa saat...</p>
-        <Link
-          to="/pricing"
-          className="mt-6 inline-block min-h-[48px] rounded-md bg-gold px-6 py-3 font-semibold text-navy transition hover:bg-gold/90"
-        >
-          Upgrade Sekarang
-        </Link>
+      <div className="flex h-48 items-center justify-center text-pekat/50">
+        Memeriksa akses...
       </div>
     );
   }
+
+  if (status !== 'aktif') return null;
 
   return <>{children}</>;
 }

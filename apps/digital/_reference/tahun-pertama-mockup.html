@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rekah · Tahun Pertama Si Kecil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@1,9..144,500&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rose:#E0526B;
+    --rose-deep:#C43D56;
+    --rose-soft:#F6DCE0;
+    --ivory:#FDF8F5;
+    --ink:#3D2B2E;
+    --ink-soft:#7A6467;
+    --gold:#E8B04B;
+    --sage:#8FB8A8;
+    --card:#FFFFFF;
+    /* ilustrasi default: perempuan */
+    --baby-outfit:#F0A3B0;
+    --baby-outfit-deep:#E0526B;
+    --baby-skin:#F7CDB4;
+    --baby-hair:#5A4038;
+    --bow-display:block;
+  }
+  body.putra{
+    --baby-outfit:#9FC6B8;
+    --baby-outfit-deep:#5E9C89;
+    --bow-display:none;
+  }
+  body.netral{
+    --baby-outfit:#F3C9A8;
+    --baby-outfit-deep:#E0A878;
+    --bow-display:none;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ivory);
+    color:var(--ink);
+    font-family:'Plus Jakarta Sans',sans-serif;
+    line-height:1.7;
+    font-size:16px;
+  }
+  .wrap{max-width:1020px;margin:0 auto;padding:0 24px;}
+  h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;line-height:1.15;}
+  .petal{border-radius:70% 70% 70% 4px;}
+  .hand{font-family:'Caveat',cursive;color:var(--rose-deep);}
+  .celebrate{font-family:'Fraunces',serif;font-style:italic;}
+
+  /* ---------- Hero ---------- */
+  header{padding:64px 0 40px;position:relative;overflow:hidden;}
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:48px;}
+  .brand svg{width:34px;height:34px;}
+  .brand span{font-family:'Bricolage Grotesque';font-weight:700;font-size:22px;color:var(--rose);}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;}
+  .eyebrow{
+    display:inline-block;background:var(--rose-soft);color:var(--rose-deep);
+    font-weight:600;font-size:13px;letter-spacing:.04em;
+    padding:6px 16px;border-radius:70% 70% 70% 4px;margin-bottom:18px;
+  }
+  h1{font-size:clamp(34px,5vw,52px);font-weight:700;margin-bottom:18px;}
+  h1 em{font-style:normal;color:var(--rose);}
+  .hero p.lead{font-size:18px;color:var(--ink-soft);max-width:44ch;}
+  .tagline{margin-top:22px;font-size:20px;color:var(--rose-deep);}
+  .hero-note{font-size:14px;color:var(--ink-soft);margin-top:16px;max-width:46ch;}
+
+  .hero-illo{
+    background:var(--card);padding:20px;
+    box-shadow:0 12px 40px rgba(224,82,107,.12);
+  }
+  .hero-illo svg{width:100%;height:auto;display:block;}
+
+  /* ---------- Journey spine ---------- */
+  .journey{position:relative;padding:56px 0 8px;}
+  .journey:before{
+    content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;
+    background:linear-gradient(var(--rose-soft),var(--rose));opacity:.6;
+  }
+  .chapter{
+    display:grid;grid-template-columns:1fr 92px 1fr;gap:0 28px;
+    margin-bottom:72px;position:relative;align-items:start;
+  }
+  .chapter .illo-side,.chapter .text-side{padding-top:8px;}
+  .chapter:nth-child(even) .illo-side{order:3;}
+  .chapter:nth-child(even) .text-side{order:1;}
+
+  .bloom-node{
+    grid-column:2;order:2;position:relative;z-index:2;
+    background:var(--ivory);padding:10px 0;display:flex;flex-direction:column;align-items:center;gap:8px;
+  }
+  .bloom-node svg{width:64px;height:64px;}
+  .bloom-node .stage-num{font-family:'Caveat';font-size:20px;color:var(--rose-deep);font-weight:600;}
+
+  .illo-card{
+    background:var(--card);padding:18px;
+    box-shadow:0 10px 32px rgba(61,43,46,.08);
+    transform:rotate(-1deg);
+  }
+  .chapter:nth-child(even) .illo-card{transform:rotate(1deg);}
+  .illo-card svg{width:100%;height:auto;display:block;}
+  .illo-caption{font-family:'Caveat';font-size:19px;color:var(--rose-deep);text-align:center;margin-top:8px;}
+
+  .stage-tag{
+    display:inline-block;background:var(--rose);color:#fff;font-weight:600;font-size:13px;
+    padding:5px 14px;border-radius:70% 70% 70% 4px;margin-bottom:12px;letter-spacing:.03em;
+  }
+  .chapter h2{font-size:26px;margin-bottom:12px;}
+  .chapter .story{color:var(--ink-soft);margin-bottom:18px;}
+  .chapter .story b{color:var(--ink);font-weight:600;}
+
+  details.observe{
+    background:#fff;border:1.5px solid var(--rose-soft);border-radius:18px 18px 18px 4px;
+    padding:0;overflow:hidden;
+  }
+  details.observe summary{
+    cursor:pointer;list-style:none;padding:14px 18px;font-weight:600;font-size:15px;
+    color:var(--rose-deep);display:flex;align-items:center;gap:8px;
+  }
+  details.observe summary::-webkit-details-marker{display:none;}
+  details.observe summary:after{content:"+";margin-left:auto;font-size:20px;transition:transform .2s;}
+  details.observe[open] summary:after{transform:rotate(45deg);}
+  .domains{padding:0 18px 18px;display:grid;gap:12px;}
+  .domain{font-size:14.5px;}
+  .domain b{display:block;color:var(--ink);font-size:13px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:2px;}
+  .domain span{color:var(--ink-soft);}
+
+  /* ---------- Full-width sections ---------- */
+  section.panel{padding:64px 0;}
+  .panel-card{
+    background:var(--card);border-radius:32px 32px 32px 6px;
+    padding:48px;box-shadow:0 14px 44px rgba(61,43,46,.07);
+  }
+  .panel h2{font-size:30px;margin-bottom:8px;}
+  .panel .sub{color:var(--ink-soft);max-width:60ch;margin-bottom:28px;}
+  .cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .mini{
+    background:var(--ivory);padding:22px;border-radius:22px 22px 22px 4px;font-size:14.5px;
+  }
+  .mini .ic{width:40px;height:40px;background:var(--rose-soft);border-radius:70% 70% 70% 4px;
+    display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:19px;}
+  .mini b{display:block;font-family:'Bricolage Grotesque';font-size:16px;margin-bottom:6px;}
+  .mini p{color:var(--ink-soft);}
+
+  .soft-panel{background:var(--rose-soft);border-radius:32px 32px 32px 6px;padding:48px;}
+  .soft-panel h2{color:var(--rose-deep);}
+  .flag-list{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;margin:22px 0;}
+  .flag{background:rgba(255,255,255,.75);padding:14px 18px;border-radius:16px 16px 16px 4px;font-size:14.5px;color:var(--ink);}
+  .reassure{
+    background:#fff;border-radius:20px 20px 20px 4px;padding:20px 24px;font-size:15px;
+    border-left:4px solid var(--rose);color:var(--ink-soft);
+  }
+
+  .quote{
+    text-align:center;padding:56px 24px;font-size:clamp(22px,3.4vw,30px);
+    color:var(--rose-deep);max-width:26ch;margin:0 auto;
+  }
+
+  footer{padding:40px 0 56px;border-top:1.5px solid var(--rose-soft);margin-top:24px;}
+  footer .wrap{display:grid;gap:10px;font-size:13px;color:var(--ink-soft);}
+  .review-flag{
+    display:inline-block;background:#FFF3D6;color:#8A6410;font-weight:600;
+    padding:6px 14px;border-radius:999px;font-size:12.5px;
+  }
+
+  /* ---------- Dev preview panel (hanya untuk validasi mockup) ---------- */
+  #dev-panel{
+    position:fixed;top:12px;right:12px;z-index:60;background:#fff;
+    border:1.5px solid var(--rose-soft);border-radius:14px 14px 14px 4px;
+    padding:12px 13px;box-shadow:0 10px 30px rgba(61,43,46,.14);max-width:200px;
+  }
+  #dev-panel .t{font-weight:700;color:var(--rose-deep);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:7px;}
+  #dev-panel button{
+    display:block;width:100%;text-align:left;border:0;background:var(--ivory);
+    margin:3px 0;padding:6px 9px;border-radius:8px 8px 8px 3px;cursor:pointer;
+    font-family:inherit;font-size:12px;color:var(--ink);
+  }
+  #dev-panel button.on{background:var(--rose);color:#fff;}
+  #dev-panel .hint{font-size:10px;color:var(--ink-soft);margin-top:7px;line-height:1.4;}
+
+  /* ---------- Age gate / placeholder ---------- */
+  #gate-note{display:none;}
+  body.gated{display:flex;min-height:100vh;align-items:center;justify-content:center;}
+  body.gated > *:not(#gate-note):not(#dev-panel){display:none !important;}
+  body.gated #gate-note{
+    display:block;max-width:460px;text-align:center;padding:48px 32px;
+    background:var(--card);border-radius:32px 32px 32px 6px;
+    box-shadow:0 14px 44px rgba(61,43,46,.08);margin:24px;
+  }
+  #gate-note svg{width:44px;height:44px;margin-bottom:18px;}
+  #gate-note h3{font-family:'Bricolage Grotesque';font-size:22px;color:var(--rose-deep);margin-bottom:12px;}
+  #gate-note p{color:var(--ink-soft);font-size:15px;}
+
+  @media(max-width:820px){
+    .hero-grid{grid-template-columns:1fr;}
+    .journey:before{left:31px;}
+    .chapter{grid-template-columns:62px 1fr;gap:0 18px;}
+    .bloom-node{grid-column:1;grid-row:1;order:0;}
+    .bloom-node svg{width:48px;height:48px;}
+    .chapter .text-side{grid-column:2;order:0 !important;}
+    .chapter .illo-side{grid-column:2;order:0 !important;margin-bottom:16px;}
+    .cards-3{grid-template-columns:1fr;}
+    .flag-list{grid-template-columns:1fr;}
+    .panel-card,.soft-panel{padding:28px 22px;}
+  }
+  @media(prefers-reduced-motion:no-preference){
+    .chapter,.panel-card,.soft-panel{animation:rise .7s ease both;}
+    @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <svg viewBox="0 0 40 40"><g fill="#E0526B"><path d="M20 21 C14 15 15 7 20 4 C25 7 26 15 20 21Z"/><path d="M20 21 C27 17 34 19 35 24 C31 28 23 27 20 21Z" opacity=".85"/><path d="M20 21 C25 28 22 35 17 36 C13 32 15 25 20 21Z" opacity=".7"/><path d="M20 21 C13 25 6 22 5 17 C9 13 17 15 20 21Z" opacity=".55"/><path d="M20 21 C15 16 16 10 19 8 C22 11 22 17 20 21Z" fill="#F6DCE0"/></g></svg>
+      <span>rekah</span>
+    </div>
+
+    <div class="hero-grid">
+      <div class="hero">
+        <span class="eyebrow">Panduan Tumbuh Kembang · Tahun Pertama</span>
+        <h1>Dua belas bulan pertama <em class="anak-l">si kecil</em>, satu cerita yang utuh</h1>
+        <p class="lead">Dari tangisan pertama sampai langkah pertama, inilah peta perjalanan setahun: apa yang akan terjadi, apa yang bisa Ayah Bunda amati, dan bagaimana merayakan setiap kelopak yang mekar.</p>
+        <p class="tagline celebrate">Mekar pada waktunya.</p>
+        <p class="hero-note">Setiap anak mekar dengan iramanya sendiri. Rekah membandingkan perkembangan si kecil hanya dengan dirinya sendiri, bukan dengan anak lain.</p>
+      </div>
+
+      <div class="hero-illo petal">
+        <svg viewBox="0 0 320 300" aria-label="Ilustrasi orang tua menggendong bayi">
+          <ellipse cx="160" cy="270" rx="120" ry="16" fill="#F6DCE0"/>
+          <path d="M100 270 Q95 170 160 160 Q225 170 220 270 Z" fill="#E0526B"/>
+          <circle cx="160" cy="120" r="42" fill="var(--baby-skin)"/>
+          <path d="M118 112 Q125 68 160 70 Q195 68 202 112 Q200 88 160 86 Q120 88 118 112Z" fill="#5A4038"/>
+          <circle cx="146" cy="122" r="3.5" fill="#3D2B2E"/>
+          <circle cx="174" cy="122" r="3.5" fill="#3D2B2E"/>
+          <path d="M150 138 Q160 146 170 138" stroke="#3D2B2E" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M104 200 Q130 240 200 232" stroke="#C43D56" stroke-width="26" fill="none" stroke-linecap="round"/>
+          <g>
+            <ellipse cx="158" cy="216" rx="46" ry="26" fill="var(--baby-outfit)"/>
+            <circle cx="118" cy="208" r="22" fill="var(--baby-skin)"/>
+            <path d="M100 202 Q102 188 118 187 Q133 188 136 202 Q128 193 118 193 Q107 193 100 202Z" fill="var(--baby-hair)"/>
+            <circle cx="112" cy="209" r="2.6" fill="#3D2B2E"/>
+            <circle cx="124" cy="209" r="2.6" fill="#3D2B2E"/>
+            <path d="M113 218 Q118 222 123 218" stroke="#3D2B2E" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <g style="display:var(--bow-display)"><path d="M112 186 l-7 -6 l1 9 Z M118 186 l7 -6 l-1 9 Z" fill="#E0526B"/><circle cx="115" cy="186" r="3" fill="#C43D56"/></g>
+          </g>
+          <path d="M60 70 C54 62 56 52 62 50 C68 54 68 63 60 70Z" fill="#F0A3B0"/>
+          <path d="M262 96 C256 88 258 78 264 76 C270 80 270 89 262 96Z" fill="#E8B04B" opacity=".7"/>
+          <path d="M244 40 C238 32 240 22 246 20 C252 24 252 33 244 40Z" fill="#E0526B" opacity=".5"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ==================== JOURNEY ==================== -->
+<div class="wrap journey">
+
+  <!-- ========== BABAK 1 : 0 sampai 3 bulan ========== -->
+  <div class="chapter">
+    <div class="illo-side">
+      <div class="illo-card petal">
+        <svg viewBox="0 0 300 210" aria-label="Bayi tummy time mengangkat kepala">
+          <rect x="0" y="0" width="300" height="210" rx="18" fill="#FDF8F5"/>
+          <ellipse cx="150" cy="178" rx="120" ry="14" fill="#F6DCE0"/>
+          <ellipse cx="150" cy="170" rx="110" ry="20" fill="var(--baby-outfit)" opacity=".35"/>
+          <path d="M95 160 Q140 138 200 152 Q210 156 206 166 Q150 176 98 170 Q88 166 95 160Z" fill="var(--baby-outfit)"/>
+          <circle cx="215" cy="138" r="26" fill="var(--baby-skin)"/>
+          <path d="M193 130 Q196 112 215 111 Q233 112 237 130 Q228 119 215 119 Q201 119 193 130Z" fill="var(--baby-hair)"/>
+          <circle cx="210" cy="138" r="3" fill="#3D2B2E"/>
+          <circle cx="224" cy="138" r="3" fill="#3D2B2E"/>
+          <path d="M211 149 Q217 153 223 149" stroke="#3D2B2E" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <circle cx="203" cy="146" r="4" fill="#F0A3B0" opacity=".6"/>
+          <g style="display:var(--bow-display)"><path d="M209 110 l-7 -6 l1 9Z M215 110 l7 -6 l-1 9Z" fill="#E0526B"/><circle cx="212" cy="110" r="3" fill="#C43D56"/></g>
+          <path d="M190 156 Q186 168 178 170" stroke="var(--baby-skin)" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <path d="M100 162 Q88 150 92 142" stroke="var(--baby-skin)" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <circle cx="250" cy="168" r="10" fill="#E8B04B"/>
+          <rect x="247" y="176" width="6" height="14" rx="3" fill="#C43D56"/>
+          <path d="M255 120 q8 -6 4 -14 M262 126 q12 -9 6 -21" stroke="#E0526B" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".6"/>
+        </svg>
+        <p class="illo-caption">Tummy time, kepala mungil itu mulai terangkat!</p>
+      </div>
+    </div>
+
+    <div class="bloom-node">
+      <svg viewBox="0 0 40 40"><g><path d="M20 21 C14 15 15 7 20 4 C25 7 26 15 20 21Z" fill="#E0526B"/><path d="M20 21 C27 17 34 19 35 24 C31 28 23 27 20 21Z" fill="#F6DCE0"/><path d="M20 21 C25 28 22 35 17 36 C13 32 15 25 20 21Z" fill="#F6DCE0"/><path d="M20 21 C13 25 6 22 5 17 C9 13 17 15 20 21Z" fill="#F6DCE0"/></g></svg>
+      <span class="stage-num">kelopak 1</span>
+    </div>
+
+    <div class="text-side">
+      <span class="stage-tag">0 SAMPAI 3 BULAN</span>
+      <h2>Dunia yang baru, indra yang menyala</h2>
+      <p class="story">Di awal kehidupannya, <span class="anak-l">si kecil</span> sibuk melakukan pekerjaan besar yang tak terlihat: <b>mengenali dunia lewat indranya</b>. Ia belajar membedakan suara Ayah Bunda dari suara lain, mengikuti wajahmu dengan matanya, lalu menenangkan diri dalam dekapanmu. Suatu pagi, biasanya di sekitar minggu keenam sampai kedelapan, datang hadiah pertama: <b>senyum sosial</b> yang memang ditujukan untukmu. Saat tengkurap, lehernya yang dulu lunglai mulai kuat mengangkat kepala. Tangisannya pun mulai punya "bahasa": lapar, lelah, dan ingin dipeluk terdengar berbeda.</p>
+      <details class="observe">
+        <summary>🌸 Yang bisa Ayah Bunda amati</summary>
+        <div class="domains">
+          <div class="domain"><b>Motorik kasar</b><span>Mengangkat kepala saat tengkurap; gerakan tangan dan kaki makin aktif serta simetris.</span></div>
+          <div class="domain"><b>Motorik halus</b><span>Refleks menggenggam jari; mulai membuka kepalan tangan.</span></div>
+          <div class="domain"><b>Bahasa dan komunikasi</b><span>Suara "aah ooh" (cooing); menoleh ke arah suara; tangisan berbeda untuk kebutuhan berbeda.</span></div>
+          <div class="domain"><b>Sosial emosional</b><span>Senyum sosial; tenang saat digendong; menatap wajah dengan lekat.</span></div>
+          <div class="domain"><b>Kognitif</b><span>Mengikuti benda bergerak dengan mata; mengenali suara dan aroma orang tua.</span></div>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ========== BABAK 2 : 4 sampai 6 bulan ========== -->
+  <div class="chapter">
+    <div class="illo-side">
+      <div class="illo-card petal">
+        <svg viewBox="0 0 300 210" aria-label="Bayi duduk meraih mainan">
+          <rect width="300" height="210" rx="18" fill="#FDF8F5"/>
+          <ellipse cx="150" cy="180" rx="120" ry="14" fill="#F6DCE0"/>
+          <ellipse cx="150" cy="168" rx="66" ry="18" fill="var(--baby-outfit)" opacity=".3"/>
+          <path d="M118 168 Q118 120 150 116 Q182 120 182 168 Q166 178 150 178 Q134 178 118 168Z" fill="var(--baby-outfit)"/>
+          <circle cx="150" cy="96" r="30" fill="var(--baby-skin)"/>
+          <path d="M124 88 Q128 66 150 65 Q172 66 176 88 Q166 74 150 74 Q134 74 124 88Z" fill="var(--baby-hair)"/>
+          <circle cx="142" cy="96" r="3.2" fill="#3D2B2E"/>
+          <circle cx="158" cy="96" r="3.2" fill="#3D2B2E"/>
+          <path d="M143 108 Q150 114 157 108" stroke="#3D2B2E" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <g style="display:var(--bow-display)"><path d="M144 64 l-8 -6 l2 10Z M151 64 l8 -6 l-2 10Z" fill="#E0526B"/><circle cx="147" cy="64" r="3.2" fill="#C43D56"/></g>
+          <path d="M176 132 Q205 128 222 140" stroke="var(--baby-skin)" stroke-width="11" fill="none" stroke-linecap="round"/>
+          <path d="M124 132 Q108 140 106 152" stroke="var(--baby-skin)" stroke-width="11" fill="none" stroke-linecap="round"/>
+          <rect x="222" y="140" width="22" height="22" rx="5" fill="#E8B04B"/>
+          <rect x="238" y="158" width="20" height="20" rx="5" fill="#8FB8A8"/>
+          <g font-family="Caveat" font-size="18" fill="#C43D56"><text x="190" y="66">baba!</text></g>
+        </svg>
+        <p class="illo-caption">Duduk, meraih, dan mengoceh "baba baba"</p>
+      </div>
+    </div>
+
+    <div class="bloom-node">
+      <svg viewBox="0 0 40 40"><g><path d="M20 21 C14 15 15 7 20 4 C25 7 26 15 20 21Z" fill="#E0526B"/><path d="M20 21 C27 17 34 19 35 24 C31 28 23 27 20 21Z" fill="#E0526B" opacity=".85"/><path d="M20 21 C25 28 22 35 17 36 C13 32 15 25 20 21Z" fill="#F6DCE0"/><path d="M20 21 C13 25 6 22 5 17 C9 13 17 15 20 21Z" fill="#F6DCE0"/></g></svg>
+      <span class="stage-num">kelopak 2</span>
+    </div>
+
+    <div class="text-side">
+      <span class="stage-tag">4 SAMPAI 6 BULAN</span>
+      <h2>Tubuh mungil yang menemukan kekuatannya</h2>
+      <p class="story">Inilah musim gerakan pertama. Suatu hari <span class="anak-l">si kecil</span> <b>berguling</b>, dan sejak itu tak ada permukaan yang aman dari eksplorasinya! Ia mulai <b>duduk dengan bantuan bantal</b>, meraih apa pun dalam jangkauan, lalu memindahkan mainan dari satu tangan ke tangan lain. Semua benda ia cicipi, dan itu bukan kenakalan melainkan cara ia mempelajari tekstur dunia. Telinganya kini menangkap namanya sendiri, dan ocehannya berubah jadi rangkaian suku kata seperti <b>"baba" dan "mama"</b>. Belum bermakna, tapi itu latihan orkestra sebelum kata pertama. Di penghujung babak ini, sekitar usia 6 bulan, satu petualangan besar dimulai: <b>suapan pertama MPASI</b>.</p>
+      <details class="observe">
+        <summary>🌸 Yang bisa Ayah Bunda amati</summary>
+        <div class="domains">
+          <div class="domain"><b>Motorik kasar</b><span>Berguling dua arah; duduk dengan sandaran; menumpu kaki saat dipegangi berdiri.</span></div>
+          <div class="domain"><b>Motorik halus</b><span>Meraih dan menggenggam benda; memindahkan benda antar tangan.</span></div>
+          <div class="domain"><b>Bahasa dan komunikasi</b><span>Babbling berantai; tertawa lepas; menoleh saat dipanggil namanya.</span></div>
+          <div class="domain"><b>Sosial emosional</b><span>Menikmati permainan wajah; mengenali orang terdekat dan orang asing.</span></div>
+          <div class="domain"><b>Kognitif dan kemandirian</b><span>Mengeksplorasi benda dengan mulut; menunjukkan rasa ingin tahu; mulai belajar makan (MPASI sekitar 6 bulan).</span></div>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ========== BABAK 3 : 7 sampai 9 bulan ========== -->
+  <div class="chapter">
+    <div class="illo-side">
+      <div class="illo-card petal">
+        <svg viewBox="0 0 300 210" aria-label="Bayi merangkak mengejar bola">
+          <rect width="300" height="210" rx="18" fill="#FDF8F5"/>
+          <ellipse cx="150" cy="182" rx="122" ry="13" fill="#F6DCE0"/>
+          <path d="M110 150 Q118 118 160 120 Q196 124 198 150 Q196 162 184 164 L124 164 Q110 162 110 150Z" fill="var(--baby-outfit)"/>
+          <path d="M120 158 L114 176" stroke="var(--baby-skin)" stroke-width="11" stroke-linecap="round"/>
+          <path d="M182 158 L188 176" stroke="var(--baby-skin)" stroke-width="11" stroke-linecap="round"/>
+          <path d="M150 164 Q146 176 138 178" stroke="var(--baby-outfit-deep)" stroke-width="12" fill="none" stroke-linecap="round"/>
+          <circle cx="212" cy="122" r="28" fill="var(--baby-skin)"/>
+          <path d="M188 114 Q192 94 212 93 Q232 94 236 114 Q226 101 212 101 Q198 101 188 114Z" fill="var(--baby-hair)"/>
+          <circle cx="206" cy="122" r="3" fill="#3D2B2E"/>
+          <circle cx="221" cy="122" r="3" fill="#3D2B2E"/>
+          <path d="M207 133 Q213 138 219 133" stroke="#3D2B2E" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <g style="display:var(--bow-display)"><path d="M206 92 l-8 -6 l2 10Z M213 92 l8 -6 l-2 10Z" fill="#E0526B"/><circle cx="209" cy="92" r="3" fill="#C43D56"/></g>
+          <circle cx="262" cy="168" r="16" fill="#E0526B"/>
+          <path d="M250 162 Q262 156 274 162" stroke="#FDF8F5" stroke-width="3" fill="none"/>
+          <path d="M96 140 h-14 M100 152 h-18" stroke="#F0A3B0" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <p class="illo-caption">Merangkak, dunia mendadak jadi luas sekali</p>
+      </div>
+    </div>
+
+    <div class="bloom-node">
+      <svg viewBox="0 0 40 40"><g><path d="M20 21 C14 15 15 7 20 4 C25 7 26 15 20 21Z" fill="#E0526B"/><path d="M20 21 C27 17 34 19 35 24 C31 28 23 27 20 21Z" fill="#E0526B" opacity=".85"/><path d="M20 21 C25 28 22 35 17 36 C13 32 15 25 20 21Z" fill="#E0526B" opacity=".7"/><path d="M20 21 C13 25 6 22 5 17 C9 13 17 15 20 21Z" fill="#F6DCE0"/></g></svg>
+      <span class="stage-num">kelopak 3</span>
+    </div>
+
+    <div class="text-side">
+      <span class="stage-tag">7 SAMPAI 9 BULAN</span>
+      <h2>Penjelajah kecil dan penemuan besar</h2>
+      <p class="story">Kini <span class="anak-l">si kecil</span> <b>duduk tegak tanpa bantuan</b>, dan dari posisi baru itu dunia terlihat berbeda. Banyak bayi mulai <b>merangkak</b> di babak ini, meski sebagian memilih ngesot, berguling, atau bahkan melewatkannya sama sekali. <b>Semuanya sama sehat.</b> Jarinya makin terampil: ia mulai menjumput benda kecil dengan ibu jari dan telunjuk. Ada juga penemuan besar: <b>benda yang disembunyikan ternyata tidak hilang!</b> Ia akan mencari mainan di balik selimut. Bila ia mendadak menangis saat digendong orang baru, itu bukan kemunduran. Itu tandanya ia sudah tahu persis siapa "rumahnya".</p>
+      <details class="observe">
+        <summary>🌸 Yang bisa Ayah Bunda amati</summary>
+        <div class="domains">
+          <div class="domain"><b>Motorik kasar</b><span>Duduk mandiri; merangkak atau cara berpindah lain; mulai menarik badan untuk berdiri.</span></div>
+          <div class="domain"><b>Motorik halus</b><span>Menjumput dengan ibu jari dan telunjuk (pincer grasp); membenturkan dua benda.</span></div>
+          <div class="domain"><b>Bahasa dan komunikasi</b><span>Babbling makin variatif; memahami "tidak"; merespons namanya secara konsisten.</span></div>
+          <div class="domain"><b>Sosial emosional</b><span>Cemas pada orang asing; punya orang favorit; ikut permainan cilukba.</span></div>
+          <div class="domain"><b>Kognitif</b><span>Mencari benda yang disembunyikan (object permanence); mengamati benda jatuh.</span></div>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ========== BABAK 4 : 10 sampai 12 bulan ========== -->
+  <div class="chapter">
+    <div class="illo-side">
+      <div class="illo-card petal">
+        <svg viewBox="0 0 300 210" aria-label="Bayi berdiri berpegangan dan melangkah ke tangan orang tua">
+          <rect width="300" height="210" rx="18" fill="#FDF8F5"/>
+          <ellipse cx="150" cy="184" rx="122" ry="13" fill="#F6DCE0"/>
+          <path d="M258 90 Q270 96 268 112 Q260 122 250 116" fill="var(--baby-skin)" opacity=".9"/>
+          <rect x="30" y="96" width="70" height="74" rx="14" fill="#F0A3B0" opacity=".5"/>
+          <path d="M138 108 Q138 96 158 96 Q178 96 178 108 L176 152 Q158 158 140 152 Z" fill="var(--baby-outfit)"/>
+          <circle cx="158" cy="76" r="27" fill="var(--baby-skin)"/>
+          <path d="M135 68 Q139 49 158 48 Q177 49 181 68 Q171 56 158 56 Q145 56 135 68Z" fill="var(--baby-hair)"/>
+          <circle cx="151" cy="76" r="3" fill="#3D2B2E"/>
+          <circle cx="166" cy="76" r="3" fill="#3D2B2E"/>
+          <path d="M151 87 Q158 92 165 87" stroke="#3D2B2E" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <g style="display:var(--bow-display)"><path d="M152 47 l-8 -6 l2 10Z M159 47 l8 -6 l-2 10Z" fill="#E0526B"/><circle cx="155" cy="47" r="3" fill="#C43D56"/></g>
+          <path d="M140 116 Q118 112 102 112" stroke="var(--baby-skin)" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <path d="M176 114 Q216 100 250 108" stroke="var(--baby-skin)" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <path d="M148 152 L146 182" stroke="var(--baby-skin)" stroke-width="11" stroke-linecap="round"/>
+          <path d="M168 152 Q176 168 184 174" stroke="var(--baby-skin)" stroke-width="11" stroke-linecap="round"/>
+          <path d="M226 44 C220 36 222 26 228 24 C234 28 234 37 226 44Z" fill="#E8B04B" opacity=".8"/>
+          <path d="M64 48 C58 40 60 30 66 28 C72 32 72 41 64 48Z" fill="#E0526B" opacity=".5"/>
+          <g font-family="Caveat" font-size="17" fill="#C43D56"><text x="188" y="46">mama!</text></g>
+        </svg>
+        <p class="illo-caption">Langkah pertama menuju pelukanmu</p>
+      </div>
+    </div>
+
+    <div class="bloom-node">
+      <svg viewBox="0 0 40 40"><g><path d="M20 21 C14 15 15 7 20 4 C25 7 26 15 20 21Z" fill="#E0526B"/><path d="M20 21 C27 17 34 19 35 24 C31 28 23 27 20 21Z" fill="#E0526B" opacity=".85"/><path d="M20 21 C25 28 22 35 17 36 C13 32 15 25 20 21Z" fill="#E0526B" opacity=".7"/><path d="M20 21 C13 25 6 22 5 17 C9 13 17 15 20 21Z" fill="#E0526B" opacity=".55"/></g></svg>
+      <span class="stage-num">kelopak 4</span>
+    </div>
+
+    <div class="text-side">
+      <span class="stage-tag">10 SAMPAI 12 BULAN</span>
+      <h2>Berdiri, melambai, dan kata pertama</h2>
+      <p class="story">Babak penutup tahun pertama penuh momen yang ingin kau abadikan. <span class="anak-u">Si kecil</span> <b>menarik badannya berdiri</b>, merambat menyusuri sofa, lalu mungkin melepaskan pegangan untuk <b>langkah pertama</b>. Kalau belum, tenang saja: rentang normal berjalan sangat lebar, yaitu 9 sampai 18 bulan. Ia kini melambai "dadah", menunjuk benda yang ia inginkan, dan meniru gerakanmu. Suatu hari, di antara ocehannya, muncul sebuah kata yang sungguh ditujukan padamu: "mama" atau "papa" yang bermakna. Ingat juga bahwa menunjuk, melambai, dan tatapan mata <b>sama berharganya dengan kata</b>. Semua itu adalah bahasa.</p>
+      <details class="observe">
+        <summary>🌸 Yang bisa Ayah Bunda amati</summary>
+        <div class="domains">
+          <div class="domain"><b>Motorik kasar</b><span>Berdiri berpegangan; merambat; sebagian anak mulai melangkah mandiri.</span></div>
+          <div class="domain"><b>Motorik halus</b><span>Memasukkan benda ke wadah; memegang finger food dan makan sendiri; mencoba minum dari cangkir.</span></div>
+          <div class="domain"><b>Bahasa dan komunikasi</b><span>Satu sampai dua kata bermakna; menunjuk untuk meminta; memahami perintah sederhana.</span></div>
+          <div class="domain"><b>Sosial emosional</b><span>Melambai dadah; cemas berpisah dari pengasuh utama; menunjukkan kesukaan yang jelas.</span></div>
+          <div class="domain"><b>Kognitif</b><span>Meniru gerakan; menggunakan benda sesuai fungsinya seperti sisir, sendok, dan telepon mainan.</span></div>
+        </div>
+      </details>
+    </div>
+  </div>
+</div>
+
+<p class="quote celebrate wrap">"Ia tidak sedang berlomba dengan siapa pun. Ia sedang mekar, pada waktunya."</p>
+
+<!-- ==================== EVALUASI AKHIR TAHUN ==================== -->
+<section class="panel">
+  <div class="wrap">
+    <div class="panel-card">
+      <span class="eyebrow">Ulang Tahun Pertama 🎂</span>
+      <h2>Evaluasi akhir tahun: rayakan, catat, pahami</h2>
+      <p class="sub">Evaluasi bukan rapor. Ini momen duduk bersama pasangan, membuka Jurnal Perkembangan, dan melihat sejauh apa <span class="anak-l">si kecil</span> telah tumbuh dibandingkan dengan dirinya sendiri di awal tahun, bukan dengan anak lain.</p>
+      <div class="cards-3">
+        <div class="mini">
+          <div class="ic">🌷</div>
+          <b>Rayakan yang sudah mekar</b>
+          <p>Tuliskan semua kemampuan baru tahun ini, dari senyum pertama sampai kata pertama. Daftar ini biasanya jauh lebih panjang dari yang Ayah Bunda kira.</p>
+        </div>
+        <div class="mini">
+          <div class="ic">🔍</div>
+          <b>Amati yang sedang tumbuh</b>
+          <p>Kemampuan mana yang sedang "setengah mekar"? Misalnya sudah berdiri tapi belum melangkah. Itu bukan keterlambatan, itu kuncup yang sedang bersiap.</p>
+        </div>
+        <div class="mini">
+          <div class="ic">💬</div>
+          <b>Diskusikan yang mengganjal</b>
+          <p>Ada yang membuat hati bertanya? Catat lalu bawa ke jadwal kontrol dokter anak atau posyandu. Pertanyaan Ayah Bunda selalu valid.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== DETEKSI DINI ==================== -->
+<section class="panel" style="padding-top:0;">
+  <div class="wrap">
+    <div class="soft-panel">
+      <span class="eyebrow" style="background:#fff;">Deteksi Dini</span>
+      <h2>Kapan sebaiknya berbincang dengan ahli?</h2>
+      <p class="sub">Beberapa tanda di usia 12 bulan berikut bukan vonis apa pun, hanya <b>ajakan untuk berbincang lebih awal</b> dengan dokter anak. Semakin awal berbincang, semakin banyak dukungan yang bisa disiapkan.</p>
+      <div class="flag-list">
+        <div class="flag">🌱 Belum bisa duduk tanpa bantuan</div>
+        <div class="flag">🌱 Belum mengoceh (babbling) atau tampak tidak merespons suara</div>
+        <div class="flag">🌱 Jarang melakukan kontak mata atau membalas senyum</div>
+        <div class="flag">🌱 Tidak menoleh saat namanya dipanggil</div>
+        <div class="flag">🌱 Tubuh terasa sangat kaku atau sangat lemas</div>
+        <div class="flag">🌱 Kehilangan kemampuan yang sebelumnya sudah dikuasai</div>
+      </div>
+      <div class="reassure">
+        <b class="hand" style="font-size:20px;">Catatan dari Rekah:</b> Setiap anak punya irama sendiri, dan banyak variasi yang sepenuhnya sehat. Daftar ini bukan alat diagnosis, hanya kompas kapan waktu yang baik untuk bertanya. Bertanya lebih awal adalah bentuk cinta, bukan kecemasan berlebihan.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="review-flag">⏳ DRAF · menunggu review Psikolog Fitri Effendy sebelum rilis</span>
+    <p>Konten disusun merujuk pada panduan tumbuh kembang WHO, CDC, AAP, IDAI, dan Kemenkes RI. Rentang usia bersifat panduan umum, bukan patokan kaku. Halaman ini tidak menggantikan konsultasi dengan tenaga kesehatan.</p>
+    <p>© Rekah. Mekar pada waktunya.</p>
+  </div>
+</footer>
+
+<script>
+  // TODO: Ganti objek ini dengan data profil anak aktif dari akun pengguna
+  // (diisi saat pembuatan akun).
+  //   namaAnak     : string  (dipakai sebagai sapaan)
+  //   jenisKelamin : "perempuan" | "laki-laki" | null  (hanya untuk memilih ilustrasi)
+  //   tanggalLahir : string ISO "YYYY-MM-DD"
+  // Bila namaAnak kosong, sapaan memakai fallback "si kecil".
+  const childProfile = {
+    namaAnak: "Kayla",           // demo
+    jenisKelamin: "perempuan",   // demo
+    tanggalLahir: null           // di-set oleh dev panel di bawah untuk pratinjau
+  };
+
+  // ---- Registry band usia (data-driven). Menambah band = satu entri. ----
+  const AGE_BANDS = [
+    { id: "0-1", label: "Tahun Pertama",        minBulan: 0,  maxBulan: 12, status: "aktif"  },
+    { id: "1-2", label: "Usia 1 sampai 2 Tahun", minBulan: 12, maxBulan: 24, status: "segera" },
+    { id: "2-3", label: "Usia 2 sampai 3 Tahun", minBulan: 24, maxBulan: 36, status: "segera" },
+    { id: "3-4", label: "Usia 3 sampai 4 Tahun", minBulan: 36, maxBulan: 48, status: "segera" },
+    { id: "4-5", label: "Usia 4 sampai 5 Tahun", minBulan: 48, maxBulan: 60, status: "segera" },
+    { id: "5-6", label: "Usia 5 sampai 6 Tahun", minBulan: 60, maxBulan: 72, status: "segera" }
+  ];
+
+  function usiaBulan(tanggalLahir){
+    if (!tanggalLahir) return null;
+    var lahir = new Date(tanggalLahir);
+    if (isNaN(lahir.getTime())) return null;
+    var kini = new Date();
+    var bulan = (kini.getFullYear() - lahir.getFullYear()) * 12 + (kini.getMonth() - lahir.getMonth());
+    if (kini.getDate() < lahir.getDate()) bulan -= 1;
+    return bulan;
+  }
+  function resolveBand(bulan){
+    if (bulan === null || bulan < 0) return null;
+    return AGE_BANDS.find(function(b){ return bulan >= b.minBulan && bulan < b.maxBulan; }) || null;
+  }
+
+  function applyChildProfile(profile){
+    var jk = profile && profile.jenisKelamin;
+    // Ilustrasi mengikuti jenis kelamin; bila kosong, varian netral.
+    document.body.classList.remove('putra', 'netral');
+    if (jk === "laki-laki") document.body.classList.add('putra');
+    else if (jk !== "perempuan") document.body.classList.add('netral');
+    // Sapaan memakai NAMA anak dari profil; fallback "si kecil".
+    var nama = (profile && profile.namaAnak && profile.namaAnak.trim()) ? profile.namaAnak.trim() : null;
+    var low = nama || 'si kecil';
+    var up  = nama || 'Si kecil';
+    document.querySelectorAll('.anak-l').forEach(function(el){ el.textContent = low; });
+    document.querySelectorAll('.anak-u').forEach(function(el){ el.textContent = up; });
+  }
+
+  var LOGO_SVG =
+    '<svg viewBox="0 0 40 40"><g fill="#E0526B">' +
+    '<path d="M20 21 C14 15 15 7 20 4 C25 7 26 15 20 21Z"/>' +
+    '<path d="M20 21 C27 17 34 19 35 24 C31 28 23 27 20 21Z" opacity=".7"/>' +
+    '<path d="M20 21 C25 28 22 35 17 36 C13 32 15 25 20 21Z" opacity=".5"/>' +
+    '<path d="M20 21 C13 25 6 22 5 17 C9 13 17 15 20 21Z" opacity=".35"/></g></svg>';
+
+  function ensureGateNote(){
+    var note = document.getElementById('gate-note');
+    if (!note){ note = document.createElement('div'); note.id = 'gate-note'; document.body.appendChild(note); }
+    return note;
+  }
+
+  // Resolver beranda: pilih tampilan sesuai band usia anak.
+  function renderBeranda(){
+    var band = resolveBand(usiaBulan(childProfile.tanggalLahir));
+    var note = ensureGateNote();
+
+    if (band && band.status === "aktif") {
+      // Band 0-1 punya konten penuh di halaman ini.
+      document.body.classList.remove('gated');
+      applyChildProfile(childProfile);
+      return;
+    }
+    if (band && band.status === "segera") {
+      note.innerHTML = LOGO_SVG +
+        '<h3>' + band.label + '</h3>' +
+        '<p>Beranda untuk ' + band.label.toLowerCase() +
+        ' sedang kami siapkan. Nantikan panduannya, ya.</p>';
+    } else {
+      note.innerHTML = LOGO_SVG +
+        '<h3>Lengkapi profil si kecil</h3>' +
+        '<p>Isi tanggal lahir anak agar Rekah bisa menampilkan panduan yang pas dengan usianya. ' +
+        'Panduan tersedia untuk usia 0 sampai 6 tahun.</p>';
+    }
+    document.body.classList.add('gated');
+  }
+
+  // ---- Dev preview panel: hanya untuk validasi mockup, bukan bagian UI final ----
+  (function(){
+    function usiaTengah(band){ return Math.floor((band.minBulan + band.maxBulan) / 2); }
+    function setUsia(bulan){
+      if (bulan === null){ childProfile.tanggalLahir = null; }
+      else { var d = new Date(); d.setMonth(d.getMonth() - bulan); childProfile.tanggalLahir = d.toISOString().slice(0,10); }
+      renderBeranda();
+      Array.prototype.forEach.call(panel.querySelectorAll('button'), function(b){
+        b.classList.toggle('on', b.dataset.key === String(bulan));
+      });
+    }
+    var panel = document.createElement('div');
+    panel.id = 'dev-panel';
+    var html = '<div class="t">Pratinjau usia (dev)</div>';
+    AGE_BANDS.forEach(function(b){
+      var mid = usiaTengah(b);
+      html += '<button data-key="' + mid + '">' + b.label +
+              (b.status === 'aktif' ? '' : ' · segera') + '</button>';
+    });
+    html += '<button data-key="null">Tanpa tanggal lahir</button>';
+    html += '<div class="hint">Panel ini hanya untuk menguji perpindahan beranda per usia.</div>';
+    panel.innerHTML = html;
+    document.body.appendChild(panel);
+    panel.addEventListener('click', function(e){
+      var btn = e.target.closest('button'); if (!btn) return;
+      setUsia(btn.dataset.key === 'null' ? null : parseInt(btn.dataset.key, 10));
+    });
+    // Mulai di band 0-1 supaya konten penuh langsung terlihat.
+    setUsia(usiaTengah(AGE_BANDS[0]));
+  })();
+</script>
+</body>
+</html>

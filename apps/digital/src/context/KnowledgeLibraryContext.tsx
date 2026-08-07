@@ -68,8 +68,11 @@ export function KnowledgeLibraryProvider({ children }: { children: React.ReactNo
         const adminRes = await fetch(`${API}/api/kc-managed/admin/all`, { headers }).catch(() => null);
         if (!cancelled && adminRes && adminRes.ok) {
           const data = await adminRes.json();
-          if (Array.isArray(data.cards) && data.cards.length > 0) {
-            setManagedCards(data.cards);
+          if (Array.isArray(data.cards)) {
+            // API cards take priority; static CARDS fill in what the API doesn't have yet
+            const apiIds = new Set<string>(data.cards.map((c: KnowledgeCard) => c.id));
+            const merged = [...data.cards, ...CARDS.filter(c => !apiIds.has(c.id))];
+            setManagedCards(merged);
             setApiLoaded(true);
             return;
           }
@@ -78,8 +81,10 @@ export function KnowledgeLibraryProvider({ children }: { children: React.ReactNo
         const pubRes = await fetch(`${API}/api/kc-managed`, { headers }).catch(() => null);
         if (!cancelled && pubRes && pubRes.ok) {
           const data = await pubRes.json();
-          if (Array.isArray(data.cards) && data.cards.length > 0) {
-            setManagedCards(data.cards);
+          if (Array.isArray(data.cards)) {
+            const apiIds = new Set<string>(data.cards.map((c: KnowledgeCard) => c.id));
+            const merged = [...data.cards, ...CARDS.filter(c => !apiIds.has(c.id))];
+            setManagedCards(merged);
             setApiLoaded(true);
             return;
           }

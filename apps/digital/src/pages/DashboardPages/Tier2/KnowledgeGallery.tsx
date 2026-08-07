@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { useAudioPlayer } from '../../../context/AudioPlayerContext';
 import { useKnowledgeLibrary } from '../../../context/KnowledgeLibraryContext';
-import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
+import { useAnak } from '../../../context/AnakContext';
 import { api } from '../../../api/client';
 import {
   AgeKey, DomainCode, KnowledgeCard, AGE_RANGES,
@@ -9,7 +9,7 @@ import {
 import BookGrid from './BookGrid';
 import BookCarousel from './BookCarousel';
 import BookReader from './BookReader';
-import { fmtAge, ageInMonths } from './ProfilAnakTier2';
+import { usiaDalamBulan } from '../../../types/anak';
 import { BEKAL_DOMAIN_TOKENS, SEMUA_ICON_PATHS, DOMAIN_CODE_LABEL } from './bekalDomainTokens';
 import BotanicalStem from '../../../components/BotanicalStem';
 import FilterSubUsia, { resolveSubUsia, SUB_USIA_TO_AGE_KEY } from '../../../components/FilterSubUsia';
@@ -103,7 +103,9 @@ interface PropsKnowledgeGallery {
 export default function KnowledgeGallery({ defaultAgeMonths, onJadwalkanBuku }: PropsKnowledgeGallery = {}) {
   const { setSegments } = useAudioPlayer();
   const { isBookmarked, toggleBookmark, publishedCards } = useKnowledgeLibrary();
-  const { children } = useDashboardTier2();
+  // Anak aktif dari AnakContext, sumber tunggal data anak. Komponen ini juga
+  // dipakai di dalam Bekal dengan defaultAgeMonths, jadi anak aktif boleh null.
+  const { anakAktif } = useAnak();
 
   // View state machine
   const [view, setView]                   = useState<View>('grid');
@@ -115,26 +117,25 @@ export default function KnowledgeGallery({ defaultAgeMonths, onJadwalkanBuku }: 
   const [selectedDomain, setSelectedDomain] = useState<DomainCode | typeof ALL_DOMAIN>(ALL_DOMAIN);
   const [q, setQ]                         = useState('');
 
-  // Auto-set age from first child on mount
-  const activeChild = children[0] ?? null;
+  const usiaAnakAktif = anakAktif ? usiaDalamBulan(anakAktif.tanggalLahir) : null;
 
   // Sub tahap filter (hanya aktif bila anak 0-1 tahun)
-  const usiaBulanAnak = activeChild ? ageInMonths(activeChild.birthdate) : (defaultAgeMonths ?? 0);
+  const usiaBulanAnak = usiaAnakAktif ?? defaultAgeMonths ?? 0;
   const isYearOneGallery = usiaBulanAnak < 12;
   const [subUsiaGallery, setSubUsiaGallery] = useState<IdSubUsia>(
     () => resolveSubUsia(usiaBulanAnak),
   );
   useEffect(() => {
-    if (activeChild) {
-      setSelectedAge(childAgeToAgeKey(ageInMonths(activeChild.birthdate)));
+    if (usiaAnakAktif !== null) {
+      setSelectedAge(childAgeToAgeKey(usiaAnakAktif));
     }
-  }, [activeChild?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [anakAktif?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Active age band: the full set of ageKeys to display for the child's age.
-  const activeAgeKeys = useMemo(() => {
-    if (activeChild) return childAgeToAllowedKeys(ageInMonths(activeChild.birthdate));
-    return childAgeToAllowedKeys(defaultAgeMonths ?? 0);
-  }, [activeChild, defaultAgeMonths]);
+  const activeAgeKeys = useMemo(
+    () => childAgeToAllowedKeys(usiaBulanAnak),
+    [usiaBulanAnak],
+  );
 
   // API cards (merge with static)
   const [apiCards, setApiCards] = useState<KnowledgeCard[] | null>(null);

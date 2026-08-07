@@ -76,7 +76,8 @@ export default function KnowledgeCardScientific() {
   const hasParagraphs  = (sci.paragraphs?.length ?? 0) > 0;
   const read           = isRead(card.id);
   const bookmarked     = isBookmarked(card.id);
-  const FigureComp     = sci.figure ? FIGURE_REGISTRY[sci.figure.id] : null;
+  // Support both single figure (legacy) and figures array (admin pipeline)
+  const allFigures     = sci.figures ?? (sci.figure ? [sci.figure] : []);
   const domainConfig   = DOMAIN_CONFIG_MAP[card.domain];
 
   return (
@@ -172,28 +173,39 @@ export default function KnowledgeCardScientific() {
             {sci.sections!.map((section, idx) => (
               <React.Fragment key={idx}>
                 <section className="mb-6">
-                  {/* Section heading */}
-                  <h2 className="mb-2 flex items-center gap-2 font-bricolage text-[17px] font-bold text-stv-navy">
-                    <span
-                      className="inline-block h-4 w-1 shrink-0 rounded-full"
-                      style={{ background: '#BA7517' }}
-                    />
-                    {section.judul}
-                  </h2>
+                  {section.judul && (
+                    <h2 className="mb-2 flex items-center gap-2 font-bricolage text-[17px] font-bold text-stv-navy">
+                      <span
+                        className="inline-block h-4 w-1 shrink-0 rounded-full"
+                        style={{ background: '#BA7517' }}
+                      />
+                      {section.judul}
+                    </h2>
+                  )}
                   <p className="text-[15px] leading-[1.85] text-stv-body">
                     {renderCitations(section.isi)}
                   </p>
                 </section>
 
-                {/* Insert figure after the specified section index */}
-                {FigureComp && sci.figure?.afterSectionIndex === idx && (
-                  <figure className="mb-6 overflow-hidden rounded-2xl border border-stv-border bg-white p-4 shadow-[0_4px_16px_rgba(16,58,107,.06)]">
-                    <FigureComp />
-                    <figcaption className="mt-3 text-center text-[12px] text-stv-muted">
-                      Gambar 1. {sci.figure.caption}
-                    </figcaption>
-                  </figure>
-                )}
+                {/* Insert figures after the specified section index */}
+                {allFigures.filter(f => (f.afterSectionIndex ?? 0) === idx).map((fig, fi) => {
+                  const FigComp = FIGURE_REGISTRY[fig.id];
+                  const isImgUrl = !FigComp && (fig.id.startsWith('http') || fig.id.startsWith('/'));
+                  if (!FigComp && !isImgUrl) return null;
+                  return (
+                    <figure key={fi} className="mb-6 overflow-hidden rounded-2xl border border-stv-border bg-white p-4 shadow-[0_4px_16px_rgba(16,58,107,.06)]">
+                      {FigComp
+                        ? <FigComp />
+                        : <img src={fig.id} alt={fig.caption} className="w-full rounded-xl object-contain max-h-72" />
+                      }
+                      {fig.caption && (
+                        <figcaption className="mt-3 text-center text-[12px] text-stv-muted">
+                          {fig.caption}
+                        </figcaption>
+                      )}
+                    </figure>
+                  );
+                })}
               </React.Fragment>
             ))}
           </div>
@@ -204,6 +216,21 @@ export default function KnowledgeCardScientific() {
             ))}
           </div>
         ) : null}
+
+        {/* ── Poin Penting ──────────────────────────────────────────── */}
+        {sci.takeaways && sci.takeaways.length > 0 && (
+          <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+            <h3 className="mb-3 font-bricolage text-[15px] font-bold text-amber-800">Poin Penting</h3>
+            <ul className="space-y-2">
+              {sci.takeaways.map((poin, i) => (
+                <li key={i} className="flex items-start gap-2.5 text-[14px] leading-[1.7] text-amber-900">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-600" />
+                  {poin}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* ── References ────────────────────────────────────────────── */}
         {sci.references && sci.references.length > 0 && (

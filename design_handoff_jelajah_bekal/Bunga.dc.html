@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>* { box-sizing: border-box; } body { margin: 0; }</style>
+</helmet>
+<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center">
+  <svg viewBox="-74 -74 148 148" width="{{ size }}" height="{{ size }}" role="img" aria-label="{{ label }}" style="overflow:visible;display:block">
+    <sc-for list="{{ petals }}" as="p" hint-placeholder-count="6">
+      <path d="{{ p.d }}" fill="{{ p.fill }}" opacity="{{ p.opacity }}" transform="{{ p.transform }}"></path>
+    </sc-for>
+    <sc-for list="{{ dots }}" as="d" hint-placeholder-count="2">
+      <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="{{ d.r }}" fill="{{ d.fill }}" opacity="{{ d.opacity }}"></circle>
+    </sc-for>
+  </svg>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:140,&quot;height&quot;:140},&quot;nilai&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;kasih-sayang&quot;,&quot;options&quot;:[&quot;kasih-sayang&quot;,&quot;sabar&quot;,&quot;empati&quot;,&quot;syukur&quot;,&quot;kejujuran&quot;,&quot;kemandirian&quot;,&quot;tanggung-jawab&quot;,&quot;berbagi&quot;,&quot;hormat-sesama&quot;,&quot;kesederhanaan&quot;,&quot;keberanian&quot;,&quot;cinta-ilmu&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Bunga&quot;},&quot;mekar&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:-1,&quot;min&quot;:-1,&quot;max&quot;:12,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Bunga&quot;,&quot;unit&quot;:&quot;kelopak menyala (-1 = penuh)&quot;},&quot;ukuran&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:96,&quot;min&quot;:24,&quot;max&quot;:320,&quot;step&quot;:4,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Bunga&quot;,&quot;unit&quot;:&quot;px&quot;}}">
+class Component extends DCLogic {
+  // ===== Rekah · Langit Peony — token warna =====
+  static C = { pink:'#F06BA8', sky:'#8FB8F7', corn:'#5F84E6', peony:'#F8B9D4', lilac:'#C9B8F0', butter:'#FFE29A', cream:'#FFF3E6', plum:'#6E3B57' };
+
+  // ===== token bentuk — arah terkunci 1a =====
+  static STRENGTH = 0.2;   // karakter halus
+  static REST = 'opacity'; // istirahat lewat opasitas saja
+
+  // ---- petal silhouettes (root 0,0 ; tip up) ----
+  pBulat(w, l, k) { const W = w*(1+.12*k); return `M0 0 C ${-W} ${-.15*l} ${-W} ${-.85*l} 0 ${-l} C ${W} ${-.85*l} ${W} ${-.15*l} 0 0 Z`; }
+  pLancip(w, l, k) { const W = w*(0.96+.06*k), tip = .70-.10*k; return `M0 0 C ${-W} ${-.34*l} ${-W*tip} ${-.94*l} 0 ${-l} C ${W*tip} ${-.94*l} ${W} ${-.34*l} 0 0 Z`; }
+  pHati(w, l, k) { const W = w*(1.06+.12*k), notch=(.24+.18*k)*l, dip=-(l-notch);
+    return `M0 0 C ${-W} ${-.26*l} ${-W*1.04} ${-.88*l} ${-W*.52} ${-l} C ${-W*.32} ${-l-3} ${-W*.06} ${dip} 0 ${dip} C ${W*.06} ${dip} ${W*.32} ${-l-3} ${W*.52} ${-l} C ${W*1.04} ${-.88*l} ${W} ${-.26*l} 0 0 Z`; }
+  pPita(w, l, k) { const W = w*(.56-.12*k); return `M0 0 C ${-W} ${-.08*l} ${-W} ${-.9*l} 0 ${-l} C ${W} ${-.9*l} ${W} ${-.08*l} 0 0 Z`; }
+  petal(ch, w, l, k) { return ch==='bulat'?this.pBulat(w,l,k):ch==='lancip'?this.pLancip(w,l,k):ch==='hati'?this.pHati(w,l,k):this.pPita(w,l,k); }
+
+  make(spec, lit) {
+    const k = Component.STRENGTH;
+    const base = { bulat:[26,46], lancip:[15,55], hati:[24,45], pita:[19,57] }[spec.ch];
+    const wS = base[0] * (6 / (spec.n + 3));
+    const petals = [];
+    for (let i = 0; i < spec.n; i++) {
+      const isLit = i < lit;
+      petals.push({
+        d: this.petal(spec.ch, wS, base[1], k),
+        fill: spec.color, opacity: isLit ? 1 : 0.5,
+        transform: `rotate(${(i * 360 / spec.n).toFixed(2)})`
+      });
+    }
+    const anyLit = lit > 0;
+    const dots = [
+      { cx:0, cy:0, r:(wS*0.5+6).toFixed(1),  fill:spec.center, opacity: anyLit ? 1 : 0.62 },
+      { cx:0, cy:0, r:(wS*0.27+2.6).toFixed(1), fill:spec.hi,   opacity: anyLit ? 1 : 0.62 }
+    ];
+    return { petals, dots, n: spec.n, name: spec.name };
+  }
+
+  values() {
+    const C = Component.C;
+    const combos = [
+      { color:C.pink,   center:C.butter, hi:C.cream },
+      { color:C.sky,    center:C.pink,   hi:C.cream },
+      { color:C.lilac,  center:C.butter, hi:C.cream },
+      { color:C.peony,  center:C.corn,   hi:C.cream },
+      { color:C.corn,   center:C.butter, hi:C.cream },
+      { color:C.butter, center:C.pink,   hi:C.cream },
+    ];
+    const raw = [
+      { id:'kesederhanaan',  name:'Kesederhanaan',      ch:'bulat',  n:3 },
+      { id:'sabar',          name:'Sabar',              ch:'bulat',  n:5 },
+      { id:'tanggung-jawab', name:'Tanggung Jawab',     ch:'bulat',  n:8 },
+      { id:'syukur',         name:'Syukur',             ch:'hati',   n:6, sameColorAs:'kemandirian' },
+      { id:'kejujuran',      name:'Kejujuran',          ch:'lancip', n:4 },
+      { id:'kemandirian',    name:'Kemandirian',        ch:'lancip', n:6 },
+      { id:'keberanian',     name:'Keberanian',         ch:'hati',   n:9 },
+      { id:'cinta-ilmu',     name:'Cinta Ilmu',         ch:'bulat',  n:12 },
+      { id:'kasih-sayang',   name:'Kasih Sayang',       ch:'hati',   n:5 },
+      { id:'empati',         name:'Empati',             ch:'hati',   n:7 },
+      { id:'berbagi',        name:'Berbagi',            ch:'pita',   n:6 },
+      { id:'hormat-sesama',  name:'Hormat pada Sesama', ch:'pita',   n:11 },
+    ];
+    const withColor = raw.map((v, i) => ({ ...v, ...combos[i % 6] }));
+    withColor.forEach(v => {
+      if (v.sameColorAs) { const s = withColor.find(x => x.id === v.sameColorAs); if (s) { v.color=s.color; v.center=s.center; v.hi=s.hi; } }
+    });
+    const map = {}; withColor.forEach(v => map[v.id] = v);
+    return map;
+  }
+
+  renderVals() {
+    const map = this.values();
+    const id = map[this.props.nilai] ? this.props.nilai : 'kasih-sayang';
+    const spec = map[id];
+    // mekar: -1 (default) = mekar penuh; else clamp 0..n
+    let lit = this.props.mekar;
+    lit = (lit === undefined || lit === null || lit < 0) ? spec.n : Math.max(0, Math.min(spec.n, lit|0));
+    const f = this.make(spec, lit);
+    const size = this.props.ukuran ?? 96;
+    return { petals: f.petals, dots: f.dots, size, label: spec.name + (lit >= spec.n ? ' — mekar penuh' : lit === 0 ? ' — istirahat' : ' — sedang mekar') };
+  }
+}
+</script>
+</body>
+</html>

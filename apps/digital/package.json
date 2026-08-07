@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@studiva/shared": "workspace:*",
+    "@supabase/supabase-js": "^2.111.0",
     "@types/papaparse": "^5.5.2",
     "axios": "^1.7.2",
     "lucide-react": "^1.21.0",
@@ -10,8 +12,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
-    "react-scripts": "5.0.1",
-    "@studiva/shared": "workspace:*"
+    "react-scripts": "5.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.14.2",

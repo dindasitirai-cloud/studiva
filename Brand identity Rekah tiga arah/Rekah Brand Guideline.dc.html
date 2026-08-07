@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Shantell+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#FBF3E6;font-family:'Nunito',sans-serif;color:#6E3B57}
+    a{color:#5F84E6;text-decoration:none}
+    a:hover{color:#F06BA8}
+    @keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+  </style>
+</helmet>
+
+<div style="max-width:1180px;margin:0 auto;padding:0 28px 80px">
+
+  <!-- ===== COVER ===== -->
+  <section style="position:relative;margin-top:28px;border-radius:34px;overflow:hidden;background:#FCE3EE;padding:72px 64px 76px">
+    <div style="position:absolute;top:-10px;right:36px;width:120px;height:180px;animation:sway 8s ease-in-out infinite"><dc-import name="Botanical" cfg="{{ cover1 }}" hint-size="120px,180px"></dc-import></div>
+    <div style="position:absolute;bottom:-14px;right:150px;width:96px;height:150px;animation:sway 9s ease-in-out infinite"><dc-import name="Botanical" cfg="{{ cover2 }}" hint-size="96px,150px"></dc-import></div>
+    <div style="position:absolute;top:56px;right:170px;width:74px;height:120px;animation:sway 7s ease-in-out infinite"><dc-import name="Botanical" cfg="{{ cover3 }}" hint-size="74px,120px"></dc-import></div>
+    <div style="font-family:'Shantell Sans',cursive;font-weight:700;font-size:22px;color:#F06BA8">Panduan Identitas Merek</div>
+    <div style="display:flex;align-items:center;gap:26px;margin-top:22px">
+      <div style="width:132px;height:132px;flex:none;animation:sway 7s ease-in-out infinite"><dc-import name="Flower" cfg="{{ logoFlower }}" hint-size="132px,132px"></dc-import></div>
+      <div>
+        <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:104px;line-height:.82;color:#F06BA8;letter-spacing:-2px">rekah</div>
+        <div style="font-family:'Shantell Sans',cursive;font-size:28px;color:#6E3B57;opacity:.75;margin-top:8px">tumbuh & mekar bersama</div>
+      </div>
+    </div>
+    <div style="font-family:'Nunito',sans-serif;font-size:18px;line-height:1.55;color:#6E3B57;max-width:560px;margin-top:30px;opacity:.85">Platform digital pendamping orang tua untuk membesarkan anak sesuai tahap perkembangan — berbasis jurnal ilmiah dan nilai yang ditentukan keluarga.</div>
+    <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;color:#F06BA8;margin-top:34px">VERSI 1.0 · LANGIT PEONY</div>
+  </section>
+
+  <!-- ===== ESENSI ===== -->
+  <section style="margin-top:64px;display:grid;grid-template-columns:340px 1fr;gap:48px;align-items:start">
+    <div>
+      <div style="font-family:'Shantell Sans',cursive;font-weight:700;font-size:20px;color:#F06BA8">01 — Esensi</div>
+      <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:38px;line-height:1.05;margin-top:8px">Arti "Rekah"</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:22px;padding-top:6px">
+      <div style="font-family:'Nunito',sans-serif;font-size:20px;line-height:1.55;font-weight:600">Rekah berarti <b style="color:#F06BA8">mekar</b> — kuncup yang perlahan membuka. Logo kami adalah bunga yang belum mekar penuh: <b>tiga dari lima kelopak</b> sudah terbuka, dua lagi masih menunggu waktunya.</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:16px;line-height:1.7;opacity:.8;max-width:640px">Ini melambangkan cara kami memandang tumbuh kembang: tiap anak mekar dengan iramanya sendiri, dan tugas kita menemani — bukan memaksa. Nadanya hangat, menenangkan, dan meyakinkan; ceria tanpa kekanak-kanakan, ilmiah tanpa terasa kaku.</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px">
+        <sc-for list="{{ traits }}" as="t" hint-placeholder-count="4">
+          <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:14px;color:#6E3B57;background:#FFF3E6;border:2px solid #F8B9D4;padding:8px 16px;border-radius:24px">{{ t }}</div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LOGO ===== -->
+  <section style="margin-top:72px">
+    <div style="font-family:'Shantell Sans',cursive;font-weight:700;font-size:20px;color:#F06BA8">02 — Logo</div>
+    <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:38px;line-height:1.05;margin-top:8px">Mark, lockup & penggunaan</div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:28px">
+      <div style="background:#fff;border-radius:22px;padding:34px;display:flex;flex-direction:column;align-items:center;gap:18px">
+        <div style="width:120px;height:120px;animation:sway 7s ease-in-out infinite"><dc-import name="Flower" cfg="{{ logoFlower }}" hint-size="120px,120px"></dc-import></div>
+        <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;color:#6E3B57;opacity:.6">MARK · BUNGA REKAH</div>
+      </div>
+      <div style="background:#fff;border-radius:22px;padding:34px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px">
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="width:78px;height:78px"><dc-import name="Flower" cfg="{{ logoFlower }}" hint-size="78px,78px"></dc-import></div>
+          <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:56px;color:#F06BA8;letter-spacing:-1px">rekah</div>
+        </div>
+        <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;color:#6E3B57;opacity:.6">LOCKUP HORIZONTAL</div>
+      </div>
+      <div style="background:#8FB8F7;border-radius:22px;padding:34px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px">
+        <div style="width:150px;height:150px;border-radius:50%;background:#FCE3EE;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px">
+          <div style="width:66px;height:66px"><dc-import name="Flower" cfg="{{ logoFlower }}" hint-size="66px,66px"></dc-import></div>
+          <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:26px;color:#F06BA8;line-height:1">rekah</div>
+        </div>
+        <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;color:#fff">BADGE / LOGOMARK</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px">
+      <div style="background:#fff;border-radius:22px;padding:30px">
+        <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:18px;margin-bottom:16px">Ruang aman & ukuran minimum</div>
+        <div style="display:flex;align-items:center;gap:26px">
+          <div style="border:2px dashed #C9B8F0;border-radius:16px;padding:22px;display:flex;align-items:center;gap:12px">
+            <div style="width:60px;height:60px"><dc-import name="Flower" cfg="{{ logoFlower }}" hint-size="60px,60px"></dc-import></div>
+            <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:34px;color:#F06BA8">rekah</div>
+          </div>
+          <div style="font-family:'Nunito',sans-serif;font-size:14px;line-height:1.6;opacity:.8">Sisakan ruang kosong minimal setinggi kelopak di setiap sisi. Ukuran mark minimum <b>24&nbsp;px</b> di layar.</div>
+        </div>
+      </div>
+      <div style="background:#fff;border-radius:22px;padding:30px">
+        <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:18px;margin-bottom:16px">Yang perlu dihindari</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <sc-for list="{{ donts }}" as="d" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:10px;background:#FFF3E6;border-radius:14px;padding:10px 12px">
+              <div style="width:22px;height:22px;border-radius:50%;background:#F06BA8;color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none">✕</div>
+              <div style="font-family:'Nunito',sans-serif;font-size:13px;line-height:1.35">{{ d }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== WARNA ===== -->
+  <section style="margin-top:72px">
+    <div style="font-family:'Shantell Sans',cursive;font-weight:700;font-size:20px;color:#F06BA8">03 — Warna</div>
+    <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:38px;line-height:1.05;margin-top:8px">Palet Langit Peony</div>
+    <div style="font-family:'Nunito',sans-serif;font-size:16px;line-height:1.6;opacity:.8;max-width:640px;margin-top:10px">Pink memimpin sebagai warna aksi, biru langit sebagai pendamping yang menenangkan, di atas dasar cream hangat. Plum untuk teks agar keterbacaan terjaga.</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:26px">
+      <sc-for list="{{ palette }}" as="c" hint-placeholder-count="8">
+        <div style="background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px -22px rgba(90,50,70,.5)">
+          <div style="height:96px;background:{{ c.hex }}"></div>
+          <div style="padding:14px 16px 16px">
+            <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:17px">{{ c.name }}</div>
+            <div style="font-family:'Nunito',sans-serif;font-size:12px;opacity:.55;margin-top:1px">{{ c.hex }}</div>
+            <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;color:#F06BA8;margin-top:8px">{{ c.role }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;height:22px;border-radius:12px;overflow:hidden;margin-top:20px">
+      <div style="flex:6;background:#F06BA8"></div>
+      <div style="flex:3;background:#8FB8F7"></div>
+      <div style="flex:2;background:#F8B9D4"></div>
+      <div style="flex:2;background:#C9B8F0"></div>
+      <div style="flex:2;background:#FFE29A"></div>
+      <div style="flex:1;background:#6E3B57"></div>
+    </div>
+    <div style="font-family:'Nunito',sans-serif;font-size:12px;opacity:.55;margin-top:8px">Proporsi penggunaan yang disarankan — pink dominan sebagai aksen, sisanya pendukung.</div>
+  </section>
+
+  <!-- ===== TIPOGRAFI ===== -->
+  <section style="margin-top:72px">
+    <div style="font-family:'Shantell Sans',cursive;font-weight:700;font-size:20px;color:#F06BA8">04 — Tipografi</div>
+    <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:38px;line-height:1.05;margin-top:8px">Tiga peran, satu suara</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-top:26px">
+      <div style="background:#fff;border-radius:22px;padding:28px">
+        <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:64px;line-height:1;color:#6E3B57">Aa</div>
+        <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:22px;margin-top:12px">Fredoka</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:13px;opacity:.6;margin-top:2px">Judul & heading · 500–700</div>
+        <div style="font-family:'Fredoka',sans-serif;font-size:14px;margin-top:12px;opacity:.8">ABCDEFGHIJKLM<br>abcdefghijklm 0123456789</div>
+      </div>
+      <div style="background:#fff;border-radius:22px;padding:28px">
+        <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:64px;line-height:1;color:#6E3B57">Aa</div>
+        <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:22px;margin-top:12px">Nunito</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:13px;opacity:.6;margin-top:2px">Teks isi & antarmuka · 400–800</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:14px;margin-top:12px;opacity:.8">ABCDEFGHIJKLM<br>abcdefghijklm 0123456789</div>
+      </div>
+      <div style="background:#fff;border-radius:22px;padding:28px">
+        <div style="font-family:'Shantell Sans',cursive;font-weight:700;font-size:60px;line-height:1;color:#F06BA8">Aa</div>
+        <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:22px;margin-top:12px">Shantell Sans</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:13px;opacity:.6;margin-top:2px">Aksen tulisan tangan · seperlunya</div>
+        <div style="font-family:'Shantell Sans',cursive;font-size:16px;margin-top:12px;color:#F06BA8">setiap anak mekar seindahnya</div>
+      </div>
+    </div>
+    <div style="background:#fff;border-radius:22px;padding:32px 34px;margin-top:20px">
+      <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:52px;line-height:1.02;color:#6E3B57">Setiap anak mekar dengan waktunya</div>
+      <div style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:28px;line-height:1.1;color:#F06BA8;margin-top:14px">Subjudul yang hangat & menuntun</div>
+      <div style="font-family:'Nunito',sans-serif;font-size:17px;line-height:1.65;opacity:.82;margin-top:14px;max-width:720px">Teks isi memakai Nunito pada 16–18&nbsp;px dengan tinggi baris 1.6. Nyaman dibaca orang tua yang sibuk, tetap ramah di layar kecil maupun besar. Shantell Sans hanya untuk sentuhan aksen — tidak untuk paragraf.</div>
+    </div>
+  </section>
+
+  <!-- ===== ILUSTRASI ===== -->
+  <section style="margin-top:72px">
+    <div style="font-family:'Shantell Sans',cursive;font-weight:700;font-size:20px;color:#F06BA8">05 — Ilustrasi & Ornamen</div>
+    <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:38px;line-height:1.05;margin-top:8px">Kebun botanical flat</div>
+    <div style="font-family:'Nunito',sans-serif;font-size:16px;line-height:1.6;opacity:.8;max-width:660px;margin-top:10px">Ilustrasi bergaya potongan datar (flat sticker): bunga bertangkai, dedaunan, dan bentuk abstrak. Bentuk sengaja sedikit tak beraturan agar terasa hangat & tangan. Pakai warna palet Langit Peony, hijau tetap alami untuk tangkai & daun.</div>
+    <div style="background:#fff;border-radius:22px;padding:30px 24px 22px;margin-top:24px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;gap:10px">
+      <sc-for list="{{ garden }}" as="fl" hint-placeholder-count="12">
+        <div style="width:{{ fl.w }};height:{{ fl.h }};animation:sway 8s ease-in-out infinite"><dc-import name="Botanical" cfg="{{ fl }}" hint-size="66px,120px"></dc-import></div>
+      </sc-for>
+    </div>
+
+    <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:18px;margin-top:34px;margin-bottom:14px">Pola & tekstur</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+      <div style="position:relative;height:220px;border-radius:20px;overflow:hidden;background:#FCE3EE">
+        <sc-for list="{{ pattern1 }}" as="s" hint-placeholder-count="6">
+          <div style="position:absolute;left:{{ s.left }};top:{{ s.top }};width:{{ s.w }};height:{{ s.h }};transform:rotate({{ s.rot }})"><dc-import name="Botanical" cfg="{{ s }}" hint-size="48px,72px"></dc-import></div>
+        </sc-for>
+      </div>
+      <div style="position:relative;height:220px;border-radius:20px;overflow:hidden;background:#DDE8FB">
+        <sc-for list="{{ pattern2 }}" as="s" hint-placeholder-count="6">
+          <div style="position:absolute;left:{{ s.left }};top:{{ s.top }};width:{{ s.w }};height:{{ s.h }};transform:rotate({{ s.rot }})"><dc-import name="Botanical" cfg="{{ s }}" hint-size="48px,72px"></dc-import></div>
+        </sc-for>
+      </div>
+      <div style="height:220px;border-radius:20px;overflow:hidden;background:repeating-linear-gradient(90deg,#F8B9D4 0 22px,#FCE3EE 22px 44px)"></div>
+    </div>
+  </section>
+
+  <!-- ===== KOMPONEN UI ===== -->
+  <section style="margin-top:72px">
+    <div style="font-family:'Shantell Sans',cursive;font-weight:700;font-size:20px;color:#F06BA8">06 — Komponen UI</div>
+    <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:38px;line-height:1.05;margin-top:8px">Dari palet ke antarmuka</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:26px">
+      <div style="background:#fff;border-radius:22px;padding:30px">
+        <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:16px;opacity:.6;margin-bottom:18px">TOMBOL</div>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+          <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;color:#fff;background:#F06BA8;padding:13px 26px;border-radius:26px;box-shadow:0 10px 20px -10px rgba(240,107,168,.8)">Coba gratis</div>
+          <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;color:#F06BA8;background:transparent;border:2px solid #F06BA8;padding:11px 24px;border-radius:26px">Pelajari</div>
+          <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;color:#5F84E6;padding:12px 18px;border-radius:26px">Masuk →</div>
+        </div>
+        <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:16px;opacity:.6;margin:24px 0 14px">CHIP TAHAP</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <sc-for list="{{ stages }}" as="s" hint-placeholder-count="5">
+            <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;color:#6E3B57;background:{{ s.soft }};padding:8px 14px;border-radius:20px;display:flex;align-items:center;gap:7px"><span style="width:10px;height:10px;border-radius:50%;background:{{ s.color }}"></span>{{ s.age }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="background:#FFF3E6;border-radius:22px;padding:24px">
+        <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:16px;opacity:.6;margin-bottom:16px">KARTU AKTIVITAS</div>
+        <div style="background:#fff;border-radius:18px;padding:20px;display:flex;gap:16px;align-items:center">
+          <div style="width:64px;height:90px;flex:none"><dc-import name="Botanical" cfg="{{ cardIcon }}" hint-size="64px,90px"></dc-import></div>
+          <div>
+            <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;color:#5F84E6">1–3 TAHUN · BAHASA</div>
+            <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:20px;line-height:1.15;margin-top:4px">Bermain tebak suara hewan</div>
+            <div style="font-family:'Nunito',sans-serif;font-size:13px;line-height:1.5;opacity:.7;margin-top:6px">10 menit · memperkaya kosakata & pendengaran.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PENERAPAN WEBSITE ===== -->
+  <section style="margin-top:72px">
+    <div style="font-family:'Shantell Sans',cursive;font-weight:700;font-size:20px;color:#F06BA8">07 — Penerapan</div>
+    <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:38px;line-height:1.05;margin-top:8px">Website Rekah</div>
+
+    <div style="border-radius:24px;overflow:hidden;box-shadow:0 40px 90px -50px rgba(90,50,70,.7);margin-top:26px;background:#fff">
+      <!-- browser bar -->
+      <div style="background:#EFE6D8;padding:12px 16px;display:flex;align-items:center;gap:7px">
+        <div style="width:11px;height:11px;border-radius:50%;background:#F06BA8"></div>
+        <div style="width:11px;height:11px;border-radius:50%;background:#FFE29A"></div>
+        <div style="width:11px;height:11px;border-radius:50%;background:#8FB8F7"></div>
+        <div style="margin-left:10px;background:#fff;border-radius:20px;font-family:'Nunito',sans-serif;font-size:12px;padding:5px 16px;opacity:.6">rekah.id</div>
+      </div>
+
+      <div style="background:#FFF6EC">
+        <!-- nav -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 40px">
+          <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:28px;color:#F06BA8;display:flex;align-items:center;gap:9px">
+            <div style="width:34px;height:34px"><dc-import name="Flower" cfg="{{ logoFlower }}" hint-size="34px,34px"></dc-import></div>rekah
+          </div>
+          <div style="display:flex;gap:26px;align-items:center">
+            <sc-for list="{{ web.nav }}" as="n" hint-placeholder-count="4">
+              <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:15px;opacity:.75">{{ n }}</div>
+            </sc-for>
+            <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;color:#fff;background:#F06BA8;padding:11px 22px;border-radius:24px">Coba gratis</div>
+          </div>
+        </div>
+
+        <!-- hero -->
+        <div style="display:flex;align-items:center;gap:20px;padding:26px 40px 44px">
+          <div style="flex:1.2;display:flex;flex-direction:column;gap:20px">
+            <div style="font-family:'Shantell Sans',cursive;font-weight:700;font-size:22px;color:#F06BA8">temani, jangan buru-buru</div>
+            <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:60px;line-height:1.02;color:#6E3B57">Tumbuh bersama, mekar bersama.</div>
+            <div style="font-family:'Nunito',sans-serif;font-size:19px;line-height:1.55;opacity:.8;max-width:520px">Panduan tumbuh kembang untuk tiap tahap usia anak — berbasis jurnal ilmiah, disesuaikan dengan nilai keluargamu.</div>
+            <div style="display:flex;gap:14px;margin-top:4px">
+              <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;color:#fff;background:#F06BA8;padding:15px 30px;border-radius:28px;box-shadow:0 14px 26px -12px rgba(240,107,168,.8)">Mulai gratis</div>
+              <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;color:#F06BA8;border:2px solid #F06BA8;padding:13px 26px;border-radius:28px">Lihat cara kerja</div>
+            </div>
+          </div>
+          <div style="flex:1;position:relative;height:320px">
+            <div style="position:absolute;right:40px;bottom:0;width:170px;height:270px;animation:sway 8s ease-in-out infinite"><dc-import name="Botanical" cfg="{{ web.h1 }}" hint-size="170px,270px"></dc-import></div>
+            <div style="position:absolute;right:180px;bottom:0;width:140px;height:230px;animation:sway 9s ease-in-out infinite"><dc-import name="Botanical" cfg="{{ web.h2 }}" hint-size="140px,230px"></dc-import></div>
+            <div style="position:absolute;right:6px;bottom:0;width:120px;height:190px;animation:sway 7s ease-in-out infinite"><dc-import name="Botanical" cfg="{{ web.h3 }}" hint-size="120px,190px"></dc-import></div>
+          </div>
+        </div>
+
+        <!-- trust bar -->
+        <div style="background:#FCE3EE;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+          <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;color:#6E3B57;opacity:.75">Dipercaya 12.000+ orang tua</div>
+          <div style="display:flex;gap:34px">
+            <sc-for list="{{ web.stats }}" as="st" hint-placeholder-count="3">
+              <div><div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:26px;color:#F06BA8;line-height:1">{{ st.n }}</div><div style="font-family:'Nunito',sans-serif;font-size:12px;opacity:.65">{{ st.l }}</div></div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- stages -->
+        <div style="padding:48px 40px 20px">
+          <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:34px;color:#6E3B57">Panduan untuk tiap tahap</div>
+          <div style="font-family:'Nunito',sans-serif;font-size:16px;opacity:.75;margin-top:6px">Dari bayi hingga pra-remaja, Rekah menemani fase demi fase.</div>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:24px">
+            <sc-for list="{{ stages }}" as="s" hint-placeholder-count="5">
+              <div style="background:{{ s.soft }};border-radius:18px;padding:20px 16px;display:flex;flex-direction:column;gap:10px">
+                <div style="width:32px;height:32px;border-radius:11px;background:{{ s.color }}"></div>
+                <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:18px;color:#6E3B57;line-height:1">{{ s.age }}</div>
+                <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;opacity:.8">{{ s.t }}</div>
+                <div style="font-family:'Nunito',sans-serif;font-size:12px;line-height:1.4;opacity:.62">{{ s.b }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- features -->
+        <div style="padding:44px 40px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
+          <sc-for list="{{ web.helps }}" as="h" hint-placeholder-count="3">
+            <div style="background:#fff;border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:12px">
+              <div style="width:66px;height:96px;animation:sway 8s ease-in-out infinite"><dc-import name="Botanical" cfg="{{ h.icon }}" hint-size="66px,96px"></dc-import></div>
+              <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:22px;line-height:1.1;color:#6E3B57">{{ h.t }}</div>
+              <div style="font-family:'Nunito',sans-serif;font-size:14px;line-height:1.6;opacity:.75">{{ h.b }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- testimonial -->
+        <div style="padding:36px 40px">
+          <div style="background:#8FB8F7;border-radius:24px;padding:40px 44px;display:flex;align-items:center;gap:28px">
+            <div style="width:100px;height:150px;flex:none;animation:sway 8s ease-in-out infinite"><dc-import name="Botanical" cfg="{{ web.quoteFlower }}" hint-size="100px,150px"></dc-import></div>
+            <div>
+              <div style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:26px;line-height:1.25;color:#fff">"Rekah bikin aku lebih tenang. Aku tahu apa yang penting di usia anakku — tanpa membandingkan dengan anak lain."</div>
+              <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;color:#fff;opacity:.85;margin-top:14px">Dinda — ibu dari Langit, 2 tahun</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA band -->
+        <div style="padding:20px 40px 52px">
+          <div style="position:relative;overflow:hidden;background:#FCE3EE;border-radius:26px;padding:52px 44px;text-align:center">
+            <div style="position:absolute;left:24px;bottom:-6px;width:90px;height:150px;animation:sway 9s ease-in-out infinite"><dc-import name="Botanical" cfg="{{ web.ctaA }}" hint-size="90px,150px"></dc-import></div>
+            <div style="position:absolute;right:24px;bottom:-6px;width:90px;height:150px;animation:sway 7s ease-in-out infinite"><dc-import name="Botanical" cfg="{{ web.ctaB }}" hint-size="90px,150px"></dc-import></div>
+            <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:40px;line-height:1.05;color:#6E3B57;max-width:560px;margin:0 auto">Mulai temani tumbuh kembang si kecil hari ini.</div>
+            <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;color:#fff;background:#F06BA8;padding:15px 34px;border-radius:28px;display:inline-block;margin-top:22px;box-shadow:0 14px 26px -12px rgba(240,107,168,.8)">Coba gratis 14 hari</div>
+          </div>
+        </div>
+
+        <!-- footer -->
+        <div style="background:#6E3B57;padding:40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px">
+          <div>
+            <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:26px;color:#FCE3EE;display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px"><dc-import name="Flower" cfg="{{ logoFlower }}" hint-size="30px,30px"></dc-import></div>rekah</div>
+            <div style="font-family:'Shantell Sans',cursive;font-size:16px;color:#F8B9D4;margin-top:8px">tumbuh & mekar bersama</div>
+          </div>
+          <div style="display:flex;gap:52px">
+            <sc-for list="{{ web.footer }}" as="col" hint-placeholder-count="3">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:14px;color:#FFE29A">{{ col.h }}</div>
+                <sc-for list="{{ col.items }}" as="it" hint-placeholder-count="3">
+                  <div style="font-family:'Nunito',sans-serif;font-size:13px;color:#FCE3EE;opacity:.75">{{ it }}</div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div style="text-align:center;margin-top:56px;font-family:'Shantell Sans',cursive;font-size:20px;color:#F06BA8">rekah — panduan identitas merek v1.0</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const P = { plum: '#6E3B57', pink: '#F06BA8', peony: '#F8B9D4', sky: '#8FB8F7', corn: '#5F84E6', lilac: '#C9B8F0', butter: '#FFE29A' };
+    const logoFlower = { shape: 'bud', petalCount: 5, budIndices: [2, 3], petalW: 15, petalLen: 34, centerR: 15, jitter: 0.05, spin: 0, budColor: '#8FB8F7', petalColors: ['#F06BA8', '#8FB8F7', '#F8B9D4', '#5F84E6', '#FFE29A'], centerColors: ['#6E3B57', '#F06BA8', '#8FB8F7'] };
+
+    const palette = [
+      { name: 'Pink', hex: '#F06BA8', role: 'Primer · aksi & aksen' },
+      { name: 'Sky', hex: '#8FB8F7', role: 'Sekunder · dukungan' },
+      { name: 'Cornflower', hex: '#5F84E6', role: 'Sekunder tua · tautan' },
+      { name: 'Peony', hex: '#F8B9D4', role: 'Lembut · latar' },
+      { name: 'Lilac', hex: '#C9B8F0', role: 'Lembut · latar' },
+      { name: 'Butter', hex: '#FFE29A', role: 'Sorotan hangat' },
+      { name: 'Cream', hex: '#FFF3E6', role: 'Latar utama' },
+      { name: 'Plum', hex: '#6E3B57', role: 'Teks & ink' }
+    ];
+
+    const traits = ['Hangat', 'Menenangkan', 'Ceria', 'Ilmiah tapi ramah'];
+    const donts = ['Jangan ubah warna mark sembarangan', 'Jangan regangkan / distorsi', 'Jangan putar mark', 'Jangan taruh di latar berkontras rendah'];
+
+    const stages = [
+      { age: '0–1 thn', t: 'Ikatan & Sensorik', b: 'Sentuhan, suara, kontak mata.', color: P.pink, soft: '#FCE3EE' },
+      { age: '1–3 thn', t: 'Bahasa & Motorik', b: 'Kata pertama, jalan, main.', color: P.sky, soft: '#E4EFFD' },
+      { age: '3–5 thn', t: 'Sosial & Emosi', b: 'Berbagi, aturan, empati.', color: P.lilac, soft: '#F1ECFB' },
+      { age: '5–7 thn', t: 'Kemandirian', b: 'Rutinitas & percaya diri.', color: '#FFC94D', soft: '#FFF3D9' },
+      { age: '7–12 thn', t: 'Nalar & Nilai', b: 'Berpikir kritis & prinsip.', color: P.corn, soft: '#E4EFFD' }
+    ];
+
+    const garden = [
+      { type: 'tulip', bloom: P.pink, bloom2: P.peony, center: P.plum, w: '62px', h: '120px' },
+      { type: 'daisy', bloom: P.corn, bloom2: P.sky, center: P.butter, w: '66px', h: '120px' },
+      { type: 'bell', bloom: P.sky, bloom2: P.corn, w: '62px', h: '116px' },
+      { type: 'fivepetal', bloom: P.peony, center: P.pink, w: '62px', h: '116px' },
+      { type: 'sprig', bloom: P.corn, bloom2: P.butter, w: '62px', h: '120px' },
+      { type: 'daisy', bloom: P.pink, bloom2: P.peony, center: P.butter, w: '66px', h: '120px' },
+      { type: 'tulip', bloom: P.sky, bloom2: P.corn, center: P.plum, w: '62px', h: '116px' },
+      { type: 'fivepetal', bloom: P.lilac, center: P.corn, w: '60px', h: '112px' },
+      { type: 'foliage', w: '52px', h: '120px' },
+      { type: 'leaf', w: '42px', h: '116px' },
+      { type: 'star', bloom: P.butter, w: '80px', h: '92px' },
+      { type: 'squiggle', bloom: P.lilac, w: '50px', h: '92px' }
+    ];
+
+    const mkScatter = (bloomList) => {
+      const pos = [
+        { left: '8%', top: '10%', rot: '-12deg' }, { left: '58%', top: '4%', rot: '10deg' },
+        { left: '34%', top: '38%', rot: '-4deg' }, { left: '4%', top: '58%', rot: '14deg' },
+        { left: '70%', top: '52%', rot: '-10deg' }, { left: '44%', top: '72%', rot: '8deg' }
+      ];
+      const types = ['fivepetal', 'daisy', 'leaf', 'sprig', 'tulip', 'foliage'];
+      return pos.map((p, i) => ({ ...p, w: '46px', h: '70px', type: types[i], bloom: bloomList[i % bloomList.length], bloom2: P.butter, center: P.plum }));
+    };
+    const pattern1 = mkScatter([P.pink, P.corn, P.pink, P.sky]);
+    const pattern2 = mkScatter([P.pink, P.sky, P.peony, P.corn]);
+
+    const cardIcon = { type: 'daisy', bloom: P.sky, bloom2: P.corn, center: P.butter };
+
+    const cover1 = { type: 'tulip', bloom: P.pink, bloom2: P.peony, center: P.plum };
+    const cover2 = { type: 'daisy', bloom: P.corn, bloom2: P.sky, center: P.butter };
+    const cover3 = { type: 'sprig', bloom: P.corn, bloom2: P.butter };
+
+    const web = {
+      nav: ['Tahap', 'Aktivitas', 'Nilai', 'Cerita'],
+      stats: [{ n: '4.9★', l: 'rating orang tua' }, { n: '1.500+', l: 'aktivitas terpandu' }, { n: '12 fase', l: 'tumbuh kembang' }],
+      h1: { type: 'daisy', bloom: P.pink, bloom2: P.peony, center: P.butter },
+      h2: { type: 'tulip', bloom: P.peony, bloom2: P.pink, center: P.plum },
+      h3: { type: 'sprig', bloom: P.corn, bloom2: P.butter },
+      helps: [
+        { t: 'Berbasis jurnal ilmiah', b: 'Rekomendasi aktivitas mengacu pada guideline & penelitian tumbuh kembang terkini.', icon: { type: 'fivepetal', bloom: P.pink, center: P.butter } },
+        { t: 'Selaras nilai keluarga', b: 'Kamu menentukan nilai yang dianut; Rekah menyesuaikan cara pendampingannya.', icon: { type: 'bell', bloom: P.sky, bloom2: P.corn } },
+        { t: 'Pendampingan bertahap', b: 'Panduan mingguan yang tumbuh mengikuti fase usia si kecil.', icon: { type: 'daisy', bloom: P.corn, bloom2: P.sky, center: P.butter } }
+      ],
+      quoteFlower: { type: 'tulip', bloom: '#fff', bloom2: P.peony, center: P.pink },
+      ctaA: { type: 'sprig', bloom: P.pink, bloom2: P.butter },
+      ctaB: { type: 'daisy', bloom: P.corn, bloom2: P.sky, center: P.butter },
+      footer: [
+        { h: 'Produk', items: ['Tahap perkembangan', 'Aktivitas harian', 'Jurnal anak'] },
+        { h: 'Rekah', items: ['Tentang kami', 'Basis ilmiah', 'Karier'] },
+        { h: 'Bantuan', items: ['Pusat bantuan', 'Privasi', 'Kontak'] }
+      ]
+    };
+
+    return { logoFlower, palette, traits, donts, stages, garden, pattern1, pattern2, cardIcon, cover1, cover2, cover3, web };
+  }
+}
+</script>
+</body>
+</html>

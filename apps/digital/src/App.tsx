@@ -5,6 +5,7 @@ import { DashboardTier2Provider } from './context/DashboardTier2Context';
 import { LearningStrategiesProvider } from './context/LearningStrategiesContext';
 import { ToastProvider } from './components/ToastProvider';
 import { FullscreenNotificationProvider } from './components/FullscreenNotificationProvider';
+import { AnakProvider } from './context/AnakContext';
 import { RekahProfileProvider } from './context/RekahProfileContext';
 import { RekahPlanProvider } from './context/RekahPlanContext';
 import { RekahRefleksiProvider } from './context/RekahRefleksiContext';
@@ -41,7 +42,6 @@ import AdminFitriDashboardPage from './pages/AdminFitriDashboardPage';
 
 // Dashboard Tier 2
 import DashboardShellTier2 from './pages/DashboardPages/Tier2/DashboardShellTier2';
-import BerandaRekah from './pages/DashboardPages/Tier2/BerandaRekah';
 import ProfilAnakTier2 from './pages/DashboardPages/Tier2/ProfilAnakTier2';
 import SubscriptionTier2 from './pages/DashboardPages/Tier2/SubscriptionTier2';
 import { AudioPlayerProvider } from './context/AudioPlayerContext';
@@ -62,6 +62,8 @@ import BerandaPage from './features/beranda/BerandaPage';
 import LearningStrategiesTier2 from './pages/DashboardPages/Tier2/LearningStrategiesTier2';
 import StrategyDetailTier2 from './pages/DashboardPages/Tier2/StrategyDetailTier2';
 import BekalPage from './pages/DashboardPages/Tier2/BekalPage';
+import RuangTeduhPage from './pages/DashboardPages/Tier2/RuangTeduhPage';
+import TahunPertama from './features/beranda-usia/bands/tahun-pertama/TahunPertama';
 
 // Admin shell
 import AdminShell from './pages/AdminPages/AdminShell';
@@ -116,6 +118,9 @@ export default function App() {
         <LearningStrategiesProvider>
         <FullscreenNotificationProvider>
         <DashboardTier2Provider>
+        {/* AnakProvider harus di atas RekahProfileProvider: profil musim
+            memproyeksikan data anak dari sini. */}
+        <AnakProvider>
         <RekahProfileProvider>
         <RekahPlanProvider>
         <RekahRefleksiProvider>
@@ -184,6 +189,8 @@ export default function App() {
               <Route path="strategies" element={<LearningStrategiesTier2 />} />
               <Route path="strategies/:id" element={<StrategyDetailTier2 />} />
               <Route path="bekal" element={<BekalPage />} />
+              <Route path="ruang-teduh" element={<RuangTeduhPage />} />
+              <Route path="panduan" element={<TahunPertama />} />
             </Route>
 
             {/* Admin Digital — CMS, konten, manajemen langganan */}
@@ -230,6 +237,7 @@ export default function App() {
         </RekahRefleksiProvider>
         </RekahPlanProvider>
         </RekahProfileProvider>
+        </AnakProvider>
         </DashboardTier2Provider>
         </FullscreenNotificationProvider>
         </LearningStrategiesProvider>

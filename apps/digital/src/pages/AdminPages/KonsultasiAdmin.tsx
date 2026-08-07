@@ -323,9 +323,16 @@ function ResultNotesForm({ booking, onSave, onCancel }: { booking: ConsultationB
 
 export default function KonsultasiAdmin() {
   const {
-    bookings, updateBookingStatus, updateBooking, confirmBookingSchedule, children,
+    bookings, updateBookingStatus, updateBooking, confirmBookingSchedule,
     psychologist, updatePsychologistProfile,
   } = useDashboardTier2();
+
+  // Nama anak tidak ditampilkan di sini. Profil anak tersimpan di tabel `anak`
+  // yang dilindungi RLS per orang tua, jadi staf admin tidak bisa membacanya
+  // dari klien. Sebelumnya kode ini mencari di daftar anak yang selalu kosong,
+  // sehingga nama anak memang tidak pernah muncul.
+  // TODO: endpoint admin khusus yang mengembalikan nama anak per booking.
+  const namaAnakUntukBooking = (_idAnak?: string): string | undefined => undefined;
 
   const [statusFilter, setStatusFilter] = useState<'semua' | ConsultationBooking['status']>('semua');
   const [schedulingBooking, setSchedulingBooking] = useState<ConsultationBooking | null>(null);
@@ -372,7 +379,7 @@ export default function KonsultasiAdmin() {
               ) : (
                 <div className="flex flex-col gap-2">
                   {selectedDayBookings.map(b => {
-                    const child = children.find(c => c.id === b.childId);
+                    const namaAnak = namaAnakUntukBooking(b.childId);
                     return (
                       <button
                         key={b.id}
@@ -384,7 +391,7 @@ export default function KonsultasiAdmin() {
                         <p className="mt-0.5 text-stv-body">{b.topic}</p>
                         <div className="mt-1 flex flex-wrap items-center gap-2 text-stv-muted">
                           <span className="flex items-center gap-1"><User className="h-3 w-3" />{b.parentName ?? 'Tidak diketahui'}</span>
-                          {child && <span className="flex items-center gap-1"><Baby className="h-3 w-3" />{child.name}</span>}
+                          {namaAnak && <span className="flex items-center gap-1"><Baby className="h-3 w-3" />{namaAnak}</span>}
                           <span className="flex items-center gap-1">
                             {b.type === 'online' ? <Video className="h-3 w-3" /> : <MapPin className="h-3 w-3" />}
                             {TYPE_LABEL[b.type]}
@@ -453,7 +460,7 @@ export default function KonsultasiAdmin() {
         ) : (
           <div className="flex flex-col gap-3">
             {filteredBookings.map(b => {
-              const child = children.find(c => c.id === b.childId);
+              const namaAnak = namaAnakUntukBooking(b.childId);
               return (
                 <div key={b.id} className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-[0_4px_16px_rgba(16,58,107,.06)]">
                   <div className="flex flex-wrap items-center justify-between gap-2">
@@ -468,7 +475,7 @@ export default function KonsultasiAdmin() {
                     <p className="font-baloo text-[15px] font-bold text-stv-navy">{b.topic}</p>
                     <div className="mt-1 flex flex-wrap items-center gap-3 text-[12px] text-stv-muted">
                       <span className="flex items-center gap-1"><User className="h-3 w-3" />{b.parentName ?? 'Tidak diketahui'}</span>
-                      {child && <span className="flex items-center gap-1"><Baby className="h-3 w-3" />{child.name}</span>}
+                      {namaAnak && <span className="flex items-center gap-1"><Baby className="h-3 w-3" />{namaAnak}</span>}
                       {b.date && b.time ? (
                         <span className="flex items-center gap-1">
                           <CalendarDays className="h-3 w-3" />
@@ -535,7 +542,7 @@ export default function KonsultasiAdmin() {
       {detailBooking && (
         <BookingDetailModal
           booking={detailBooking}
-          childName={children.find(c => c.id === detailBooking.childId)?.name}
+          childName={namaAnakUntukBooking(detailBooking.childId)}
           onClose={() => setDetailBooking(null)}
         />
       )}

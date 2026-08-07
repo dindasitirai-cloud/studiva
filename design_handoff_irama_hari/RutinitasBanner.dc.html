@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Shantell+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+<style>@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}</style>
+</helmet>
+
+<div style="position:relative;border-radius:26px;overflow:hidden;padding:26px 30px;background:{{ v.bg }};border:{{ v.border }};box-shadow:0 20px 40px -26px rgba(90,50,70,.55)">
+
+  <!-- soft blobs / decoration -->
+  <div style="position:absolute;top:-40px;left:-30px;width:150px;height:150px;border-radius:50%;background:{{ v.blob }}"></div>
+  <div style="position:absolute;bottom:-56px;left:120px;width:110px;height:110px;border-radius:50%;background:{{ v.blob }}"></div>
+
+  <!-- botanical on the right -->
+  <div style="position:absolute;top:50%;right:26px;transform:translateY(-50%);width:96px;height:150px;animation:sway 8s ease-in-out infinite"><dc-import name="Botanical" cfg="{{ v.flower }}" hint-size="96px,150px"></dc-import></div>
+
+  <div style="position:relative;display:flex;align-items:center;gap:24px">
+
+    <!-- badge / mark -->
+    <div style="width:74px;height:74px;flex:none;border-radius:22px;background:{{ v.badgeBg }};display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px -14px rgba(90,50,70,.6)">
+      <div style="width:52px;height:52px"><dc-import name="Flower" cfg="{{ v.mark }}" hint-size="52px,52px"></dc-import></div>
+    </div>
+
+    <!-- text -->
+    <div style="flex:1 1 auto;min-width:0">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;letter-spacing:1.5px;color:{{ v.label }}">RUTINITAS HARI INI</span>
+        <span style="font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;color:{{ v.pillInk }};background:{{ v.pillBg }};padding:3px 10px;border-radius:12px">Latihan Bunda</span>
+      </div>
+      <div style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:27px;line-height:1.12;color:{{ v.title }};margin-top:8px;max-width:640px">{{ sentence }}</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <sc-for list="{{ v.chips }}" as="c" hint-placeholder-count="3">
+          <span style="font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:700;color:{{ v.chipInk }};background:{{ v.chipBg }};padding:6px 13px;border-radius:20px">{{ c }}</span>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- streak (only sky variant) -->
+    <sc-if value="{{ v.showStreak }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:none;text-align:center;padding:0 8px 0 18px;margin-right:104px;border-left:2px solid rgba(95,132,230,.25)">
+        <div style="display:flex;gap:6px;justify-content:center;margin-bottom:8px">
+          <span style="width:12px;height:12px;border-radius:50%;background:#5F84E6"></span>
+          <span style="width:12px;height:12px;border-radius:50%;background:#8FB8F7"></span>
+          <span style="width:12px;height:12px;border-radius:50%;background:#F06BA8"></span>
+          <span style="width:12px;height:12px;border-radius:50%;background:#E9DCC7"></span>
+        </div>
+        <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:30px;line-height:1;color:#5F84E6">3</div>
+        <div style="font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:#7C93C9;margin-top:2px">hari berturut</div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1360,&quot;height&quot;:150},&quot;variant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;pink&quot;,&quot;plum&quot;,&quot;sky&quot;],&quot;default&quot;:&quot;pink&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const sentence = 'Namai perasaan Aisyah sebelum menenangkannya.';
+    const chips = ['Akar', 'Empati', 'Sepanjang hari \u00b7 tanpa target'];
+    const markPink = { shape:'bud', petalCount:5, budIndices:[2,3], petalW:15, petalLen:34, centerR:15, jitter:0.05, spin:0, budColor:'#8FB8F7', petalColors:['#fff','#FFE29A','#F8B9D4','#fff','#FFE29A'], centerColors:['#6E3B57','#F06BA8','#FFE29A'] };
+    const markSoft = { shape:'bud', petalCount:5, budIndices:[2,3], petalW:15, petalLen:34, centerR:15, jitter:0.05, spin:0, budColor:'#8FB8F7', petalColors:['#F06BA8','#8FB8F7','#F8B9D4','#5F84E6','#FFE29A'], centerColors:['#6E3B57','#F06BA8','#8FB8F7'] };
+
+    const variants = {
+      pink: {
+        bg:'#F06BA8', border:'none', blob:'rgba(255,255,255,.14)',
+        badgeBg:'rgba(255,255,255,.22)', mark:markPink,
+        label:'rgba(255,255,255,.9)', title:'#fff',
+        pillBg:'#FFE29A', pillInk:'#8A5A14',
+        chipBg:'rgba(255,255,255,.2)', chipInk:'#fff', chips,
+        flower:{ type:'tulip', bloom:'#fff', bloom2:'#FFE29A', center:'#C93F79' },
+        showStreak:false,
+      },
+      plum: {
+        bg:'#6E3B57', border:'none', blob:'rgba(248,185,212,.12)',
+        badgeBg:'rgba(255,255,255,.14)', mark:markSoft,
+        label:'#F8B9D4', title:'#FCE3EE',
+        pillBg:'rgba(143,184,247,.9)', pillInk:'#243A6E',
+        chipBg:'rgba(255,255,255,.12)', chipInk:'#FCE3EE', chips,
+        flower:{ type:'daisy', bloom:'#F8B9D4', bloom2:'#8FB8F7', center:'#FFE29A' },
+        showStreak:false,
+      },
+      sky: {
+        bg:'#E4EFFD', border:'2px solid #C4DBFB', blob:'rgba(143,184,247,.2)',
+        badgeBg:'#fff', mark:markSoft,
+        label:'#5F84E6', title:'#3A4E86',
+        pillBg:'#fff', pillInk:'#5F84E6',
+        chipBg:'#fff', chipInk:'#5F84E6', chips,
+        flower:{ type:'bell', bloom:'#8FB8F7', bloom2:'#5F84E6' },
+        showStreak:true,
+      },
+    };
+    const v = variants[this.props.variant] || variants.pink;
+    return { v, sentence };
+  }
+}
+</script>
+</body>
+</html>

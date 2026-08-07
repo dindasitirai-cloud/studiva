@@ -4,16 +4,24 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Rekah brand tokens — Fase 0 concierge landing
-        rekah:        '#E0526B',
-        'rekah-tua':  '#B93A52',
-        mawar:        '#F7C9CE',
-        fajar:        '#FBEDEA',
-        kanvas:       '#FDF8F5',
-        daun:         '#4E9C6E',
-        pucuk:        '#E3F1E4',
-        madu:         '#F6B860',
-        pekat:        '#43272E',
+        // Rekah brand tokens — Langit Peony v1.0
+        rekah:        '#F06BA8',   // Peony Pink primary
+        'rekah-tua':  '#D04595',   // deeper pink
+        'rose-soft':  '#F8B9D4',   // Peony soft (light pink)
+        'rose-deep':  '#E05898',   // mid-deep pink
+        mawar:        '#F8B9D4',   // = rose-soft / peony
+        fajar:        '#FFF0F7',   // very light pink for hover states
+        kanvas:       '#FFF3E6',   // warm cream background
+        langit:       '#8FB8F7',   // sky blue companion
+        ungu:         '#C9B8F0',   // lilac accent
+        kuning:       '#FFE29A',   // butter yellow
+        daun:         '#4E9C6E',   // botanical green (leaves/stems)
+        leaf:         '#7A9E6E',
+        soil:         '#A8846B',
+        'ink-soft':   '#8A7080',   // muted plum for body text
+        pucuk:        '#F0E8F4',   // soft lilac tint for bg
+        madu:         '#F6B860',   // amber (logo center)
+        pekat:        '#6E3B57',   // Plum (main text)
 
         navy: '#003366',
         gold: '#FFD700',
@@ -58,16 +66,19 @@ module.exports = {
         'stv-green-tint': '#E7F7EF',
       },
       fontFamily: {
-        // Rekah typefaces (loaded per-route in RekahLandingPage)
-        bricolage: ["'Bricolage Grotesque'", 'system-ui', 'sans-serif'],
-        jakarta:   ["'Plus Jakarta Sans'", 'system-ui', 'sans-serif'],
-        fraunces:  ["'Fraunces'", 'Georgia', 'serif'],
+        // Rekah typefaces — Langit Peony v1.0
+        bricolage: ["'Fredoka'", 'system-ui', 'sans-serif'],  // heading
+        fredoka:   ["'Fredoka'", 'system-ui', 'sans-serif'],  // alias
+        jakarta:   ["'Nunito'", 'system-ui', 'sans-serif'],   // body
+        nunito:    ["'Nunito'", 'system-ui', 'sans-serif'],   // alias
+        fraunces:  ["'Shantell Sans'", 'cursive'],            // accent (was Fraunces)
+        caveat:    ["'Shantell Sans'", 'cursive'],            // accent (was Caveat)
+        shantell:  ["'Shantell Sans'", 'cursive'],            // alias
 
         sans: ["'Plus Jakarta Sans'", 'system-ui', 'sans-serif'],
         display: ['Poppins', 'Nunito', 'Segoe UI', 'sans-serif'],
         baloo: ["'Baloo 2'", 'cursive'],
         'nunito-sans': ["'Nunito Sans'", 'sans-serif'],
-        caveat: ["'Caveat'", 'cursive'],
         hand: ["'Patrick Hand'", 'cursive'],
       },
       fontSize: {
@@ -99,9 +110,19 @@ module.exports = {
           '0%':   { opacity: '0', transform: 'scale(0.92)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
         },
+        sway: {
+          '0%, 100%': { transform: 'rotate(-3deg)' },
+          '50%':      { transform: 'rotate(3deg)' },
+        },
+        sway2: {
+          '0%, 100%': { transform: 'rotate(3deg)' },
+          '50%':      { transform: 'rotate(-3deg)' },
+        },
       },
       animation: {
         'rekah-bloom': 'rekahBloomIn 220ms ease-out both',
+        sway:  'sway 8s ease-in-out infinite',
+        sway2: 'sway2 9s ease-in-out infinite',
         floaty: 'floaty 6s ease-in-out infinite',
         'fade-in-up': 'fadeInUp 0.6s ease-out both',
         'stv-float': 'stvFloat 9s ease-in-out infinite',
@@ -109,6 +130,6 @@ module.exports = {
       },
     },
   },
-  safelist: ['animate-rekah-bloom'],
+  safelist: ['animate-rekah-bloom', 'animate-sway', 'animate-sway2'],
   plugins: [],
 };

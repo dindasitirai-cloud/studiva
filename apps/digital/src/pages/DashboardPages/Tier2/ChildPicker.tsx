@@ -1,9 +1,9 @@
 import React from 'react';
 import { Check, X } from 'lucide-react';
-import { ChildProfile } from '../../../context/DashboardTier2Context';
+import type { ProfilAnak } from '../../../types/anak';
 
 interface ChildPickerProps {
-  children: ChildProfile[];
+  children: ProfilAnak[];
   taggedIds: string[];
   onToggle: (childId: string, isCurrentlyTagged: boolean) => void;
   label?: string;
@@ -44,10 +44,10 @@ export default function ChildPicker({ children, taggedIds, onToggle, label = 'Ta
                 </>
               ) : (
                 <span className="flex h-4 w-4 items-center justify-center rounded-full bg-mawar text-[9px] font-bold text-rekah-tua">
-                  {child.name.charAt(0).toUpperCase()}
+                  {child.namaAnak.charAt(0).toUpperCase()}
                 </span>
               )}
-              {child.name}
+              {child.namaAnak}
             </button>
           );
         })}

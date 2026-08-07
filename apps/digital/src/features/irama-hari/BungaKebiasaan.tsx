@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { NilaiAkar } from '../akar-keluarga/content';
-import { REGISTRY_BUNGA } from '../akar-keluarga/registryBunga';
+import { BUNGA_DARI_NAMA } from '../akar-keluarga/registryBunga';
+import type { DataBunga } from '../akar-keluarga/registryBunga';
 import { tingkatMekar, TINGKAT_MAKS, tambahHari } from '@studiva/shared';
 import {
   JUDUL_PITA,
@@ -8,50 +9,70 @@ import {
   KEBIASAAN_ISTIRAHAT,
   KEBIASAAN_LIHAT_SEMUA,
   KEBIASAAN_KOSONG,
+  KEBIASAAN_MEKAR_PENUH_LABEL,
+  KEBIASAAN_LEGENDA,
 } from './contentMingguan';
 
-const RADIUS_KELOPAK = '70% 70% 70% 4px';
 const MAKS_BARIS_TAMPIL = 3;
 const GRACE_WINDOW_HARI = 2;
 const NAMA_HARI_PENDEK = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
 
-const CHIP_ISTIRAHAT = { ink: '#A98DA0', bg: '#F3E8EF', label: 'Istirahat' };
-const CHIP_AKTIF     = { ink: '#B98900', bg: '#FFF3D0', label: 'Sedang mekar' };
+const CHIP_ISTIRAHAT  = { ink: '#A98DA0', bg: '#F3E8EF',  label: 'Istirahat'    };
+const CHIP_AKTIF      = { ink: '#B98900', bg: '#FFF3D0',  label: 'Sedang mekar' };
+const CHIP_PENUH      = { ink: '#B98900', bg: '#FFF3D0',  label: KEBIASAAN_MEKAR_PENUH_LABEL };
 
-interface BungaIkonProps {
-  warna: string;
-  mekar: number;
-  gerak: boolean;
-}
+// ─── Reusable Flower SVG ──────────────────────────────────────────────────────
+// Props: bunga (from REGISTRY_BUNGA), lit (how many petals are lit 0..n), size (px)
+// Lit petals: opacity 1. Unlit: opacity 0.5. Same fill color for both.
+// Center dims (0.62) only when fully at rest (lit === 0).
 
-function BungaIkon({ warna, mekar, gerak }: BungaIkonProps) {
-  const fraksi = mekar / TINGKAT_MAKS;
-  const ukuran = Math.round(10 + fraksi * 20); // 10px saat 0, 30px saat 7
-  const opacity = mekar === 0 ? 0.12 : 0.3 + fraksi * 0.7;
+export function BungaSVG({
+  bunga,
+  lit,
+  size,
+}: {
+  bunga: DataBunga;
+  lit: number;
+  size: number;
+}) {
+  const n = bunga.kelopak;
+  const anyLit = lit > 0;
 
   return (
-    <div
-      style={{
-        width: 30,
-        height: 30,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+    <svg
+      viewBox="-74 -74 148 148"
+      width={size}
+      height={size}
+      role="img"
+      aria-hidden="true"
+      style={{ display: 'block', overflow: 'visible' }}
     >
-      <div
-        style={{
-          width: ukuran,
-          height: ukuran,
-          borderRadius: RADIUS_KELOPAK,
-          backgroundColor: warna,
-          opacity,
-          transition: gerak ? 'width 400ms ease, height 400ms ease, opacity 400ms ease' : 'none',
-        }}
-      />
-    </div>
+      {Array.from({ length: n }, (_, i) => (
+        <path
+          key={i}
+          d={bunga.d}
+          fill={bunga.warnaPetal}
+          opacity={i < lit ? 1 : 0.5}
+          transform={`rotate(${((i * 360) / n).toFixed(2)})`}
+        />
+      ))}
+      <circle cx={0} cy={0} r={bunga.r1} fill={bunga.c1} opacity={anyLit ? 1 : 0.62} />
+      <circle cx={0} cy={0} r={bunga.r2} fill={bunga.c2} opacity={anyLit ? 1 : 0.62} />
+    </svg>
   );
 }
+
+// Fallback flower for unknown NilaiAkar
+const BUNGA_FALLBACK: DataBunga = {
+  id: 'fallback',
+  nama: 'Kasih Sayang',
+  kelopak: 5,
+  warnaPetal: '#C9B8F0',
+  d: 'M0 0 C -19.512 -11.7 -20.29248 -39.6 -10.14624 -45 C -6.24384 -48 -1.17072 -32.58 0 -32.58 C 1.17072 -32.58 6.24384 -48 10.14624 -45 C 20.29248 -39.6 19.512 -11.7 0 0 Z',
+  r1: 15.0, r2: 7.5, c1: '#FFE29A', c2: '#FFF3E6',
+};
+
+// ─── One row per tracked value ────────────────────────────────────────────────
 
 interface PropsBarisNilai {
   nilai: NilaiAkar;
@@ -70,36 +91,49 @@ function BarisNilai({
   onToggleSiram,
   gerak,
 }: PropsBarisNilai) {
-  const bunga = REGISTRY_BUNGA.find(b => b.nama === nilai);
-  const warna = bunga?.warnaPetal ?? '#C9B8F0';
+  const bunga = BUNGA_DARI_NAMA.get(nilai) ?? BUNGA_FALLBACK;
+  const n = bunga.kelopak;
 
-  // Susun riwayat boolean 7 hari untuk tingkatMekar.
+  // 7-day boolean riwayat and cumulative bloom levels
   const tanggalMinggu = Array.from({ length: 7 }, (_, i) => tambahHari(mulaiSenin, i));
   const riwayat = tanggalMinggu.map(tgl => (riwayatSiram[tgl] ?? []).includes(nilai));
   const levels = tingkatMekar(riwayat);
 
-  const jumlahDisiram = riwayat.filter(Boolean).length;
-  const chip = jumlahDisiram === 0 ? CHIP_ISTIRAHAT : CHIP_AKTIF;
+  // Index of today within this week (0–6); clamps to range for past/future weeks
+  const todayMs = new Date(tanggalHariIni + 'T00:00:00Z').getTime();
+  const seninMs = new Date(mulaiSenin + 'T00:00:00Z').getTime();
+  const todayIndex = Math.max(0, Math.min(6, Math.floor((todayMs - seninMs) / 86400000)));
 
+  // Bloom level for today → drives chip state
+  const levelHariIni = levels[todayIndex] ?? 0;
+
+  const chip =
+    levelHariIni === 0           ? CHIP_ISTIRAHAT :
+    levelHariIni >= TINGKAT_MAKS ? CHIP_PENUH     :
+                                   CHIP_AKTIF;
+
+  const jumlahDisiram = riwayat.filter(Boolean).length;
   const kalimat = jumlahDisiram > 0
     ? KEBIASAAN_DISIRAM(nilai, jumlahDisiram)
     : KEBIASAAN_ISTIRAHAT(nilai);
 
   return (
-    <div style={{ paddingTop: 14, paddingBottom: 2, borderTop: '1px solid rgba(110,59,87,.09)' }}>
-      {/* Baris atas: lingkaran bunga + nama + chip state */}
+    <div style={{ paddingTop: 14, paddingBottom: 10, borderTop: '1px solid rgba(110,59,87,.09)' }}>
+      {/* Header: 34px badge (soft circle + 26px full-bloom flower) + name + chip */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 11 }}>
         <div
           style={{
             width: 34, height: 34,
             borderRadius: '50%',
-            backgroundColor: warna + '28',
+            backgroundColor: bunga.warnaPetal + '28',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexShrink: 0,
           }}
         >
-          <div style={{ width: 18, height: 18, borderRadius: RADIUS_KELOPAK, backgroundColor: warna }} />
+          {/* Always full-bloom in the badge */}
+          <BungaSVG bunga={bunga} lit={n} size={26} />
         </div>
+
         <span
           style={{
             fontFamily: 'Fredoka, system-ui, sans-serif',
@@ -107,10 +141,12 @@ function BarisNilai({
             fontWeight: 600,
             color: '#6E3B57',
             flex: 1,
+            minWidth: 0,
           }}
         >
           {nilai}
         </span>
+
         <span
           style={{
             fontFamily: 'Nunito, system-ui, sans-serif',
@@ -121,17 +157,18 @@ function BarisNilai({
             borderRadius: 999,
             padding: '4px 11px',
             flexShrink: 0,
+            whiteSpace: 'nowrap',
           }}
         >
           {chip.label}
         </span>
       </div>
 
-      {/* 7 slot toggle — area sentuh 44×44px, ikon bunga 30×30 di tengah */}
+      {/* 7-slot ribbon — each slot is a 30px flower blooming left→right */}
       <div
         style={{
           display: 'flex',
-          alignItems: 'flex-end',
+          justifyContent: 'space-between',
           marginLeft: 44,
         }}
       >
@@ -143,6 +180,20 @@ function BarisNilai({
           );
           const bisaToggle = selisihHari >= 0 && selisihHari <= GRACE_WINDOW_HARI;
           const namaHari = NAMA_HARI_PENDEK[i] ?? '';
+
+          // Bloom stage opacity:
+          // - future (i > todayIndex): full-bloom at 0.4 — "not yet reached"
+          // - level=0 (istirahat): lit=0, BungaSVG dims per-petal, outer 1.0
+          // - level X.5 (half-step): full-bloom at 0.7 — meredup / setengah tahapan
+          // - integer level > 0 (settled): full-bloom at 1.0
+          const isFuture = i > todayIndex;
+          const level = isFuture ? null : (levels[i] ?? 0);
+          const litKelopak = level === 0 ? 0 : n;
+          const outerOpacity =
+            level === null  ? 0.4 :
+            level === 0     ? 1.0 :
+            level % 1 !== 0 ? 0.7 :
+            1.0;
 
           return (
             <button
@@ -157,28 +208,46 @@ function BarisNilai({
                 flex: 1,
                 height: 44,
                 display: 'flex',
-                alignItems: 'flex-end',
+                alignItems: 'center',
                 justifyContent: 'center',
-                paddingBottom: 4,
                 background: 'none',
                 border: 'none',
                 cursor: bisaToggle ? 'pointer' : 'default',
+                padding: 0,
+                opacity: outerOpacity,
+                transition: gerak ? 'opacity 300ms ease' : 'none',
               }}
             >
-              <BungaIkon warna={warna} mekar={levels[i] ?? 0} gerak={gerak} />
+              <BungaSVG bunga={bunga} lit={litKelopak} size={30} />
             </button>
           );
         })}
       </div>
 
-      {/* Kalimat info */}
+      {/* Legend: Istirahat · Mulai mekar · Mekar penuh */}
+      <p
+        style={{
+          fontFamily: 'Nunito, system-ui, sans-serif',
+          fontSize: 11,
+          fontWeight: 700,
+          color: '#C0A6B7',
+          marginLeft: 44,
+          marginTop: 4,
+          marginBottom: 0,
+        }}
+      >
+        {KEBIASAAN_LEGENDA}
+      </p>
+
+      {/* Descriptive sentence */}
       <p
         style={{
           fontFamily: 'Nunito, system-ui, sans-serif',
           fontSize: 12,
           color: '#A98DA0',
           marginLeft: 44,
-          marginTop: 8,
+          marginTop: 6,
+          marginBottom: 0,
         }}
       >
         {kalimat}
@@ -186,6 +255,8 @@ function BarisNilai({
     </div>
   );
 }
+
+// ─── Card wrapper ─────────────────────────────────────────────────────────────
 
 interface PropsBungaKebiasaan {
   nilaiFokus: readonly NilaiAkar[];
@@ -258,6 +329,8 @@ export default function BungaKebiasaan({
       >
         {JUDUL_PITA}
       </h3>
+
+      {/* Principle line — "sedang mekar" italicized */}
       <p
         style={{
           fontFamily: 'Nunito, system-ui, sans-serif',
@@ -268,7 +341,9 @@ export default function BungaKebiasaan({
         }}
       >
         Pertumbuhan terbaca sebagai{' '}
-        <em>sedang mekar</em>, bukan skor — kelopak mencerah satu per satu.
+        <em>sedang mekar</em>
+        , bukan skor — kelopak mencerah satu per satu. Istirahat bukan layu: tetap
+        utuh, menunggu waktunya.
       </p>
 
       {tampilNilai.map(nilai => (

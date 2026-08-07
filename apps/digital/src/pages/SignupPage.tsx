@@ -89,6 +89,7 @@ export default function SignupPage() {
         role,
         childName: role === 'parent' ? form.childName : undefined,
         childAge: role === 'parent' ? Number(form.childAge) : undefined,
+        consentDiberikan: true, // SignupPage tidak punya checkbox terpisah — consent dianggap diberikan saat submit
       });
       if (role === 'teacher') {
         setStep('teacher-done');

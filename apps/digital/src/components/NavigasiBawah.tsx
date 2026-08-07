@@ -1,15 +1,8 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Home, Sun, Package, BookHeart, Sprout } from 'lucide-react';
+import { MENU_UTAMA } from '../config/fiturRekah';
 
-// TODO: review Fitri — semua label di bawah ini
-const TABS = [
-  { to: '/dashboard/tier2',                     label: 'Beranda',           icon: Home,      end: true  },
-  { to: '/dashboard/tier2/irama-hari',           label: 'Irama Hari',        icon: Sun,       end: false },
-  { to: '/dashboard/tier2/bekal',                label: 'Bekal',             icon: Package,   end: false },
-  { to: '/dashboard/tier2/jurnal-perkembangan',  label: 'Jurnal dan Galeri', icon: BookHeart, end: false },
-  { to: '/dashboard/tier2/jejak-mekar',          label: 'Panen',             icon: Sprout,    end: false },
-] as const;
+const TABS = MENU_UTAMA;
 
 export default function NavigasiBawah() {
   const { pathname } = useLocation();

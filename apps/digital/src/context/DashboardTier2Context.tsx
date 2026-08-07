@@ -14,14 +14,11 @@ export type LearningStyle = 'Visual' | 'Auditori' | 'Kinestetik' | 'Membaca/Menu
 
 export type JournalMood = 'great' | 'good' | 'ok' | 'challenging';
 
-export interface ChildProfile {
-  id: string;
-  name: string;
-  birthdate: string; // ISO date string: "YYYY-MM-DD"
-  photo?: string; // data URL or remote URL
-  learningStyles: LearningStyle[];
-  summary?: string;
-}
+// CATATAN: ChildProfile dan daftar `children` sudah DIHAPUS dari context ini.
+// Data anak sekarang hanya ada di satu tempat: tabel `anak` di Supabase, yang
+// diakses lewat context/AnakContext.tsx. Dulu context ini menyimpan daftar anak
+// di useState kosong yang tidak pernah terisi wizard, sehingga halaman Profil
+// Anak selalu tampak kosong. Pakai useAnak() atau useAnakAktif().
 
 export interface JournalEntry {
   id: string;
@@ -233,11 +230,7 @@ interface DashboardTier2ContextValue {
   isStrategyBookmarked: (id: string) => boolean;
   isStrategyFavorited: (id: string) => boolean;
 
-  // Child profiles (filled manually by parent)
-  children: ChildProfile[];
-  addChild: (profile: Omit<ChildProfile, 'id'>) => void;
-  updateChild: (id: string, updates: Partial<Omit<ChildProfile, 'id'>>) => void;
-  removeChild: (id: string) => void;
+  // Profil anak TIDAK ada di sini. Lihat context/AnakContext.tsx.
 
   // Progress journal (parent writes notes about child's development)
   journalEntries: JournalEntry[];
@@ -307,6 +300,11 @@ interface DashboardTier2ContextValue {
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
   notifyWebinarRegistered: (courseTitle: string) => void;
+
+  // Akar Keluarga — preferensi nilai keislaman untuk Panduan Tumbuh Kembang.
+  // null = tidak dipilih (konten universal saja).
+  akarKeluarga: 'islam' | null;
+  setAkarKeluarga: (v: 'islam' | null) => void;
 }
 
 const DashboardTier2Context = createContext<DashboardTier2ContextValue | null>(null);
@@ -329,7 +327,6 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
   const [articleActivity, setArticleActivity] = useState<ActivityRecord[]>([]);
   const [courseActivity, setCourseActivity] = useState<ActivityRecord[]>([]);
   const [strategyActivity, setStrategyActivity] = useState<ActivityRecord[]>([]);
-  const [children, setChildren] = useState<ChildProfile[]>([]);
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
   const [bookings, setBookings] = useState<ConsultationBooking[]>([]);
   const [threads, setThreads] = useState<ForumThread[]>(SEED_THREADS);
@@ -346,6 +343,7 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
   const [favoritedArticles, setFavoritedArticles]   = useState<Set<string>>(new Set());
   const [bookmarkedStrategies, setBookmarkedStrategies] = useState<Set<string>>(new Set());
   const [favoritedStrategies, setFavoritedStrategies]   = useState<Set<string>>(new Set());
+  const [akarKeluarga, setAkarKeluarga] = useState<'islam' | null>(null);
 
   // addReply is called from a setTimeout scheduled inside addThread (to
   // simulate someone else replying). By the time it fires, a plain closure
@@ -396,15 +394,6 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
   const totalArticlesRead = new Set(articleActivity.map(a => a.itemId)).size;
   const totalCoursesEnrolled = new Set(courseActivity.map(a => a.itemId)).size;
   const totalStrategiesSaved = new Set(strategyActivity.map(a => a.itemId)).size;
-
-  const addChild = useCallback((profile: Omit<ChildProfile, 'id'>) =>
-    setChildren(prev => [...prev, { ...profile, id: uid() }]), []);
-
-  const updateChild = useCallback((id: string, updates: Partial<Omit<ChildProfile, 'id'>>) =>
-    setChildren(prev => prev.map(c => c.id === id ? { ...c, ...updates } : c)), []);
-
-  const removeChild = useCallback((id: string) =>
-    setChildren(prev => prev.filter(c => c.id !== id)), []);
 
   const addJournalEntry = useCallback((entry: Omit<JournalEntry, 'id'>) =>
     setJournalEntries(prev => [{ ...entry, id: uid() }, ...prev]), []);
@@ -610,7 +599,6 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
       isArticleReadByAnyChild, isCourseEnrolledByAnyChild, isStrategySavedByAnyChild,
       getArticlesReadByChild, getCoursesEnrolledByChild, getStrategiesSavedByChild,
       totalArticlesRead, totalCoursesEnrolled, totalStrategiesSaved,
-      children, addChild, updateChild, removeChild,
       journalEntries, addJournalEntry, removeJournalEntry,
       bookings, addBooking, updateBookingStatus, updateBooking, confirmBookingSchedule,
       psychologist, updatePsychologistProfile,
@@ -623,6 +611,7 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
       bookmarkedArticles, favoritedArticles, bookmarkedStrategies, favoritedStrategies,
       toggleArticleBookmark, toggleArticleFavorite, toggleStrategyBookmark, toggleStrategyFavorite,
       isArticleBookmarked, isArticleFavorited, isStrategyBookmarked, isStrategyFavorited,
+      akarKeluarga, setAkarKeluarga,
     }}>
       {providerChildren}
     </DashboardTier2Context.Provider>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="width:100%;border-radius:28px;overflow:hidden;background:{{ d.cardBg }};box-shadow:0 24px 60px -30px rgba(90,50,70,.35);color:{{ d.ink }}">
+
+  <!-- header -->
+  <div style="padding:26px 30px 20px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid rgba(120,70,95,.12)">
+    <div style="font-family:{{ d.scriptFont }};font-size:15px;color:{{ d.accent }};line-height:1">arah</div>
+    <div style="font-family:{{ d.headingFont }};font-weight:700;font-size:30px;line-height:1.05">{{ d.label }}</div>
+    <div style="font-family:{{ d.bodyFont }};font-size:14px;opacity:.72;line-height:1.4">{{ d.tag }}</div>
+  </div>
+
+  <!-- logo lockup -->
+  <div style="padding:30px;display:flex;flex-direction:column;gap:16px">
+    <div style="background:{{ d.logoBg }};border-radius:22px;padding:30px;display:flex;align-items:center;gap:22px">
+      <div style="width:110px;height:110px;flex:none;animation:sway 7s ease-in-out infinite">
+        <dc-import name="Flower" cfg="{{ d.logoFlower }}" hint-size="110px,110px"></dc-import>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <div style="font-family:{{ d.headingFont }};font-weight:700;font-size:52px;line-height:.9;color:{{ d.accent }};letter-spacing:-1px">rekah</div>
+        <div style="font-family:{{ d.scriptFont }};font-size:20px;color:{{ d.ink }};opacity:.7">{{ d.tagline }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- palette -->
+  <div style="padding:0 30px 30px">
+    <div style="font-family:{{ d.bodyFont }};font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.55;margin-bottom:14px">Palet Warna</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+      <sc-for list="{{ d.palette }}" as="sw" hint-placeholder-count="8">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="height:56px;border-radius:14px;background:{{ sw.hex }};box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)"></div>
+          <div style="font-family:{{ d.bodyFont }};font-weight:700;font-size:12px;line-height:1">{{ sw.name }}</div>
+          <div style="font-family:{{ d.bodyFont }};font-size:10px;opacity:.55;line-height:1">{{ sw.hex }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- typography -->
+  <div style="padding:0 30px 30px">
+    <div style="font-family:{{ d.bodyFont }};font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.55;margin-bottom:14px">Tipografi</div>
+    <div style="background:#fff;border-radius:18px;padding:22px 24px;display:flex;flex-direction:column;gap:14px">
+      <div>
+        <div style="font-family:{{ d.headingFont }};font-weight:700;font-size:36px;line-height:1;color:{{ d.ink }}">{{ d.typeHeading }}</div>
+        <div style="font-family:{{ d.bodyFont }};font-size:11px;opacity:.5;margin-top:4px">HEADING — {{ d.headingName }}</div>
+      </div>
+      <div style="border-top:1px solid rgba(120,70,95,.1)"></div>
+      <div>
+        <div style="font-family:{{ d.bodyFont }};font-size:15px;line-height:1.55;color:{{ d.ink }}">{{ d.typeBody }}</div>
+        <div style="font-family:{{ d.bodyFont }};font-size:11px;opacity:.5;margin-top:6px">BODY — {{ d.bodyName }}</div>
+      </div>
+      <div style="border-top:1px solid rgba(120,70,95,.1)"></div>
+      <div>
+        <div style="font-family:{{ d.scriptFont }};font-size:30px;line-height:1;color:{{ d.accent }}">{{ d.typeScript }}</div>
+        <div style="font-family:{{ d.bodyFont }};font-size:11px;opacity:.5;margin-top:4px">AKSEN — {{ d.scriptName }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- illustrations -->
+  <div style="padding:0 30px 30px">
+    <div style="font-family:{{ d.bodyFont }};font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.55;margin-bottom:14px">Ilustrasi & Ornamen</div>
+    <div style="background:{{ d.paper }};border-radius:18px;padding:22px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;min-height:150px">
+      <sc-for list="{{ d.illos }}" as="fl" hint-placeholder-count="4">
+        <div style="width:{{ fl.box }};height:{{ fl.box }};animation:sway 8s ease-in-out infinite">
+          <dc-import name="Flower" cfg="{{ fl }}" hint-size="80px,80px"></dc-import>
+        </div>
+      </sc-for>
+      <svg viewBox="0 0 100 100" style="width:44px;height:64px;transform:rotate(-18deg)"><path d="M50 4 C82 26 82 74 50 96 C18 74 18 26 50 4 Z" fill="{{ d.green }}"></path><path d="M50 12 L50 88" stroke="{{ d.leafVein }}" stroke-width="3" fill="none"></path></svg>
+      <svg viewBox="0 0 100 100" style="width:44px;height:64px;transform:rotate(22deg)"><path d="M50 4 C82 26 82 74 50 96 C18 74 18 26 50 4 Z" fill="{{ d.green2 }}"></path><path d="M50 12 L50 88" stroke="{{ d.leafVein }}" stroke-width="3" fill="none"></path></svg>
+    </div>
+  </div>
+
+  <!-- website application -->
+  <div style="padding:0 30px 34px">
+    <div style="font-family:{{ d.bodyFont }};font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.55;margin-bottom:14px">Penerapan di Website</div>
+    <div style="border-radius:18px;overflow:hidden;box-shadow:0 16px 40px -24px rgba(90,50,70,.5);background:#fff">
+      <div style="background:#F0E9DC;padding:9px 12px;display:flex;align-items:center;gap:6px">
+        <div style="width:9px;height:9px;border-radius:50%;background:#F06BA8"></div>
+        <div style="width:9px;height:9px;border-radius:50%;background:#FFDE6B"></div>
+        <div style="width:9px;height:9px;border-radius:50%;background:#C7D65C"></div>
+        <div style="margin-left:8px;background:#fff;border-radius:20px;font-family:{{ d.bodyFont }};font-size:10px;padding:3px 12px;opacity:.6">rekah.id</div>
+      </div>
+      <div style="background:{{ d.paper }};padding:0">
+        <!-- nav -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px">
+          <div style="font-family:{{ d.headingFont }};font-weight:700;font-size:22px;color:{{ d.accent }};display:flex;align-items:center;gap:7px">
+            <div style="width:24px;height:24px"><dc-import name="Flower" cfg="{{ d.logoFlower }}" hint-size="24px,24px"></dc-import></div>rekah
+          </div>
+          <div style="display:flex;gap:14px;align-items:center">
+            <sc-for list="{{ d.web.nav }}" as="n" hint-placeholder-count="3">
+              <div style="font-family:{{ d.bodyFont }};font-size:12px;opacity:.7">{{ n }}</div>
+            </sc-for>
+            <div style="font-family:{{ d.bodyFont }};font-weight:700;font-size:12px;color:#fff;background:{{ d.accent }};padding:7px 14px;border-radius:20px">{{ d.web.cta }}</div>
+          </div>
+        </div>
+        <!-- hero -->
+        <div style="display:flex;align-items:center;gap:14px;padding:8px 20px 24px">
+          <div style="flex:1.3;display:flex;flex-direction:column;gap:12px">
+            <div style="font-family:{{ d.headingFont }};font-weight:700;font-size:28px;line-height:1.06;color:{{ d.ink }}">{{ d.web.title }}</div>
+            <div style="font-family:{{ d.bodyFont }};font-size:13px;line-height:1.5;opacity:.72">{{ d.web.sub }}</div>
+            <div style="display:flex;gap:10px;margin-top:2px">
+              <div style="font-family:{{ d.bodyFont }};font-weight:700;font-size:13px;color:#fff;background:{{ d.accent }};padding:10px 18px;border-radius:24px">{{ d.web.cta }}</div>
+              <div style="font-family:{{ d.bodyFont }};font-weight:700;font-size:13px;color:{{ d.accent }};background:transparent;border:2px solid {{ d.accent }};padding:8px 16px;border-radius:24px">Pelajari</div>
+            </div>
+          </div>
+          <div style="flex:1;position:relative;height:160px">
+            <div style="position:absolute;right:6px;top:0;width:120px;height:120px;animation:sway 7s ease-in-out infinite"><dc-import name="Flower" cfg="{{ d.web.f1 }}" hint-size="120px,120px"></dc-import></div>
+            <div style="position:absolute;left:0;bottom:0;width:72px;height:72px;animation:sway 9s ease-in-out infinite"><dc-import name="Flower" cfg="{{ d.web.f2 }}" hint-size="72px,72px"></dc-import></div>
+            <div style="position:absolute;right:96px;bottom:14px;width:52px;height:52px;animation:sway 6s ease-in-out infinite"><dc-import name="Flower" cfg="{{ d.web.f3 }}" hint-size="52px,52px"></dc-import></div>
+          </div>
+        </div>
+        <!-- stage cards -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 20px 22px">
+          <sc-for list="{{ d.web.cards }}" as="c" hint-placeholder-count="3">
+            <div style="background:#fff;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:5px">
+              <div style="width:26px;height:26px;border-radius:9px;background:{{ c.color }}"></div>
+              <div style="font-family:{{ d.headingFont }};font-weight:700;font-size:14px;color:{{ d.ink }}">{{ c.title }}</div>
+              <div style="font-family:{{ d.bodyFont }};font-size:11px;line-height:1.35;opacity:.65">{{ c.body }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:560,&quot;height&quot;:1500},&quot;d&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;object&quot;}}"></script>
+</body>
+</html>

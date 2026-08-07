@@ -40,6 +40,26 @@
   }
 }
 
+@keyframes floatBob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-11px); }
+}
+
+@keyframes cardIn {
+  0%   { opacity: 0; transform: translateY(30px) scale(.94); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50%       { transform: rotate(3deg); }
+}
+
+@keyframes sway2 {
+  0%, 100% { transform: rotate(3deg); }
+  50%       { transform: rotate(-3deg); }
+}
+
 @layer components {
   .btn-primary {
     @apply inline-flex min-h-[48px] items-center justify-center rounded-full bg-gold px-7 py-3 font-bold text-navy shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg hover:bg-[#FFC700];

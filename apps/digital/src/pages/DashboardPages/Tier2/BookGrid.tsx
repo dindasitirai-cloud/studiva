@@ -188,7 +188,7 @@ export default function BookGrid({
           <p className="font-nunito text-[15px] text-[#A98DA0] mt-2">Coba ubah filter atau kata pencarian.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
           {cards.map((card, i) => (
             <Book3D
               key={card.id}

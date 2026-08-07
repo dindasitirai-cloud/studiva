@@ -46,6 +46,8 @@ const COLUMN_MIGRATIONS = [
   'ALTER TABLE community_profiles ADD COLUMN is_expert INTEGER NOT NULL DEFAULT 0',
   'ALTER TABLE community_profiles ADD COLUMN expert_badge TEXT',
   'ALTER TABLE consultations ADD COLUMN outcome_notes TEXT',
+  // Structured scientific sections — added after initial schema (old rows get '[]')
+  "ALTER TABLE knowledge_cards ADD COLUMN sci_sections TEXT NOT NULL DEFAULT '[]'",
 ];
 
 export async function initDatabase(): Promise<void> {

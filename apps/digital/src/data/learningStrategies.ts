@@ -1,7 +1,7 @@
 // Learning Strategies data — all state via Context, no localStorage
 // TODO: replace mock data with API calls when backend endpoints are ready
 
-export type DomainKey = 'mk' | 'mh' | 'bhs' | 'kog' | 'sos' | 'sen';
+export type DomainKey = 'mk' | 'mh' | 'bhs' | 'kog' | 'sos' | 'sen' | 'fe';
 
 export const DOMAIN_META: Record<DomainKey, { label: string; color: string; bg: string; emoji: string }> = {
   mk:  { label: 'Motorik Kasar',     color: '#DC2626', bg: '#FEF2F2', emoji: '🏃' },
@@ -10,6 +10,8 @@ export const DOMAIN_META: Record<DomainKey, { label: string; color: string; bg: 
   kog: { label: 'Kognitif',          color: '#7C3AED', bg: '#F5F3FF', emoji: '🧠' },
   sos: { label: 'Sosial-Emosional',  color: '#DB2777', bg: '#FDF2F8', emoji: '❤️' },
   sen: { label: 'Sensorik',          color: '#059669', bg: '#ECFDF5', emoji: '✨' },
+  // MENUNGGU REVIEW PSIKOLOG FITRI — domain ke-7, belum ada kegiatan yang ditag
+  fe:  { label: 'Fungsi Eksekutif',  color: '#0891B2', bg: '#ECFEFF', emoji: '🎯' },
 };
 
 export interface ActivityBahan {
@@ -70,6 +72,7 @@ export interface Activity {
   variasiMudah: string;
   variasiMenantang: string;
   adaptasiABK: string;
+  tanpaTemaNilai?: boolean;
   catatanReviewer?: string;
   status?: ContentStatus; // undefined = published (backward compat)
 }
@@ -100,6 +103,7 @@ export interface EduTool {
   id: number;
   icon: string;
   nama: string;
+  domain: DomainKey;
   hargaEstimasi: string;
   pilihanPsikolog: boolean;
   minBulan: number;
@@ -112,6 +116,7 @@ export interface EduTool {
   affiliateUrl: string;
   statusLink?: 'KOSONG' | 'TERPASANG' | 'PERLU_CEK' | 'MATI';
   tanggalCekLink?: string; // ISO date string
+  tanpaTemaNilai?: boolean;
   catatanReviewer?: string;
   status?: ContentStatus;
 }
@@ -122,6 +127,12 @@ export interface Downloadable {
   id: number;
   icon: string;
   nama: string;
+  domain: DomainKey;
+  /** Siapa yang memakai item ini. Unduhan untuk orang tua tidak masuk ke plafon harian anak. */
+  pemilik?: 'anak' | 'orangtua';
+  /** Alasan singkat mengapa item ini perlu ditinjau manusia sebelum ditampilkan. */
+  perluTinjauan?: string;
+  tanpaTemaNilai?: boolean;
   kategori: DownloadKategori;
   minBulan: number;
   maxBulan: number;
@@ -1732,9 +1743,11 @@ export const WEEKLY_PLANS: WeeklyPlan[] = [
   },
 ];
 
+// USULAN DOMAIN — menunggu review Psikolog Fitri.
+// Domain dalam blok ini adalah usulan tim; tolong konfirmasi sebelum rilis.
 export const EDU_TOOLS: EduTool[] = [
   {
-    id: 1, icon: '🧩', nama: 'Puzzle Knob Kayu Berhuruf', hargaEstimasi: 'Rp 85.000-150.000',
+    id: 1, icon: '🧩', nama: 'Puzzle Knob Kayu Berhuruf', domain: 'mh', hargaEstimasi: 'Rp 85.000-150.000',
     pilihanPsikolog: true, minBulan: 18, maxBulan: 48, ageLabel: '18 bln - 4 thn',
     deskripsi: 'Puzzle kayu dengan knob yang mudah digenggam, menampilkan huruf dan gambar benda.',
     sci: 'Bermain puzzle secara aktif melatih pengenalan bentuk, persepsi spasial, dan ketekunan dalam memecahkan masalah.',
@@ -1743,7 +1756,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 2, icon: '🎨', nama: 'Set Cat Jari Aman Bayi', hargaEstimasi: 'Rp 60.000-120.000',
+    id: 2, icon: '🎨', nama: 'Set Cat Jari Aman Bayi', domain: 'mh', hargaEstimasi: 'Rp 60.000-120.000',
     pilihanPsikolog: false, minBulan: 9, maxBulan: 36, ageLabel: '9 bln - 3 thn',
     deskripsi: 'Cat jari berbahan dasar air, tidak beracun, dan mudah dibersihkan untuk eksplorasi seni sejak dini.',
     sci: 'Eksplorasi media seni melatih integrasi sensorik multimoda dan mendorong ekspresi diri serta kreativitas awal.',
@@ -1752,7 +1765,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 3, icon: '📚', nama: 'Buku Kain Sensorik Bayi', hargaEstimasi: 'Rp 75.000-180.000',
+    id: 3, icon: '📚', nama: 'Buku Kain Sensorik Bayi', domain: 'kog', hargaEstimasi: 'Rp 75.000-180.000',
     pilihanPsikolog: true, minBulan: 0, maxBulan: 18, ageLabel: '0-18 bulan',
     deskripsi: 'Buku kain dengan halaman bertekstur berbeda, cermin kecil, dan elemen berbunyi untuk stimulasi multisensori.',
     sci: 'Membaca bersama sejak dini berhubungan dengan pertumbuhan bahasa dan kesiapan membaca; buku sensorik menambahkan dimensi taktil yang memperkaya pengalaman.',
@@ -1761,7 +1774,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 4, icon: '🎵', nama: 'Marakas dan Instrumen Bayi', hargaEstimasi: 'Rp 50.000-100.000',
+    id: 4, icon: '🎵', nama: 'Marakas dan Instrumen Bayi', domain: 'kog', hargaEstimasi: 'Rp 50.000-100.000',
     pilihanPsikolog: false, minBulan: 6, maxBulan: 36, ageLabel: '6 bln - 3 thn',
     deskripsi: 'Set instrumen perkusi aman untuk bayi dan batita: marakas, drum kecil, kastanyet.',
     sci: 'Pengalaman musik aktif meningkatkan kemampuan bayi memproses irama, yang berkorelasi dengan perkembangan bahasa dan matematis.',
@@ -1770,7 +1783,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 5, icon: '🏗️', nama: 'Set Balok Kayu 50 Pcs', hargaEstimasi: 'Rp 150.000-300.000',
+    id: 5, icon: '🏗️', nama: 'Set Balok Kayu 50 Pcs', domain: 'kog', hargaEstimasi: 'Rp 150.000-300.000',
     pilihanPsikolog: true, minBulan: 12, maxBulan: 72, ageLabel: '1-6 tahun',
     deskripsi: 'Set balok kayu solid tanpa cat dalam berbagai bentuk geometris untuk konstruksi bebas.',
     sci: 'Bermain balok secara konsisten dikaitkan dengan perkembangan penalaran spasial, matematika awal, dan kreativitas yang lebih tinggi.',
@@ -1779,7 +1792,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 6, icon: '🪞', nama: 'Cermin Bayi Anti Pecah', hargaEstimasi: 'Rp 40.000-80.000',
+    id: 6, icon: '🪞', nama: 'Cermin Bayi Anti Pecah', domain: 'sos', hargaEstimasi: 'Rp 40.000-80.000',
     pilihanPsikolog: false, minBulan: 0, maxBulan: 12, ageLabel: '0-12 bulan',
     deskripsi: 'Cermin akrilik aman untuk bayi, bisa dipasang di dinding atau play gym.',
     sci: 'Bayi secara bawaan tertarik pada wajah dan refleksinya; bermain cermin mendukung perkembangan kesadaran diri dan interaksi sosial.',
@@ -1788,7 +1801,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 7, icon: '🎭', nama: 'Puppet Tangan Karakter Binatang', hargaEstimasi: 'Rp 80.000-150.000',
+    id: 7, icon: '🎭', nama: 'Puppet Tangan Karakter Binatang', domain: 'bhs', hargaEstimasi: 'Rp 80.000-150.000',
     pilihanPsikolog: true, minBulan: 12, maxBulan: 60, ageLabel: '1-5 tahun',
     deskripsi: 'Puppet tangan berbentuk binatang untuk mendukung bercerita, bermain peran, dan pengenalan emosi.',
     sci: 'Bercerita dan bermain peran dengan puppet mengembangkan kemampuan naratif yang berkorelasi kuat dengan literasi dan pemahaman sosial.',
@@ -1797,7 +1810,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 8, icon: '🖍️', nama: 'Crayon Jumbo Segitiga Anak', hargaEstimasi: 'Rp 35.000-70.000',
+    id: 8, icon: '🖍️', nama: 'Crayon Jumbo Segitiga Anak', domain: 'mh', hargaEstimasi: 'Rp 35.000-70.000',
     pilihanPsikolog: false, minBulan: 18, maxBulan: 60, ageLabel: '18 bln - 5 thn',
     deskripsi: 'Crayon berpenampang segitiga yang secara ergonomis mendorong cara memegang yang benar.',
     sci: 'Crayon segitiga mendorong grip tripod yang merupakan persiapan optimal untuk memegang pensil saat menulis.',
@@ -1806,7 +1819,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 9, icon: '🔠', nama: 'Kartu Flash Kata Bergambar', hargaEstimasi: 'Rp 45.000-90.000',
+    id: 9, icon: '🔠', nama: 'Kartu Flash Kata Bergambar', domain: 'bhs', hargaEstimasi: 'Rp 45.000-90.000',
     pilihanPsikolog: false, minBulan: 12, maxBulan: 48, ageLabel: '1-4 tahun',
     deskripsi: 'Kartu flash dengan gambar benda sehari-hari dan nama dalam Bahasa Indonesia.',
     sci: 'Flashcard yang digunakan dalam sesi interaktif dan bermakna lebih efektif untuk pengembangan kosakata daripada penggunaan pasif.',
@@ -1815,7 +1828,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 10, icon: '⚖️', nama: 'Timbangan Mainan Montessori', hargaEstimasi: 'Rp 120.000-200.000',
+    id: 10, icon: '⚖️', nama: 'Timbangan Mainan Montessori', domain: 'kog', hargaEstimasi: 'Rp 120.000-200.000',
     pilihanPsikolog: true, minBulan: 36, maxBulan: 72, ageLabel: '3-6 tahun',
     deskripsi: 'Timbangan mainan untuk eksplorasi konsep berat, keseimbangan, dan perbandingan.',
     sci: 'Eksplorasi konkret konsep berat dan keseimbangan membangun pemahaman fisika intuitif dan matematika awal yang kuat.',
@@ -1824,7 +1837,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 11, icon: '🧪', nama: 'Kit Sains Anak Prasekolah', hargaEstimasi: 'Rp 130.000-250.000',
+    id: 11, icon: '🧪', nama: 'Kit Sains Anak Prasekolah', domain: 'kog', hargaEstimasi: 'Rp 130.000-250.000',
     pilihanPsikolog: true, minBulan: 48, maxBulan: 72, ageLabel: '4-6 tahun',
     deskripsi: 'Kit berisi alat-alat sains sederhana: kaca pembesar, magnet, pipet, bahan eksperimen aman.',
     sci: 'Eksplorasi sains hands-on sejak prasekolah membangun pemikiran ilmiah: mengamati, memprediksi, menguji, dan menyimpulkan.',
@@ -1833,7 +1846,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 12, icon: '🎮', nama: 'Play Gym Bayi Multifungsi', hargaEstimasi: 'Rp 200.000-450.000',
+    id: 12, icon: '🎮', nama: 'Play Gym Bayi Multifungsi', domain: 'mk', hargaEstimasi: 'Rp 200.000-450.000',
     pilihanPsikolog: false, minBulan: 0, maxBulan: 12, ageLabel: '0-12 bulan',
     deskripsi: 'Play gym dengan mainan gantung, cermin, dan alas aktivitas berbagai tekstur.',
     sci: 'Play gym yang kaya stimulasi mendukung tummy time, meraih, dan eksplorasi sensorik yang menjadi fondasi perkembangan motorik.',
@@ -1842,7 +1855,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 13, icon: '🎲', nama: 'Kartu Permainan Emosi', hargaEstimasi: 'Rp 65.000-120.000',
+    id: 13, icon: '🎲', nama: 'Kartu Permainan Emosi', domain: 'sos', hargaEstimasi: 'Rp 65.000-120.000',
     pilihanPsikolog: true, minBulan: 36, maxBulan: 72, ageLabel: '3-6 tahun',
     deskripsi: 'Kartu bergambar ekspresi emosi untuk membantu anak mengenali dan menamai perasaan.',
     sci: 'Literasi emosional yang dikembangkan sejak usia 3 tahun berkorelasi dengan kesehatan mental dan kemampuan sosial yang lebih baik di kemudian hari.',
@@ -1851,7 +1864,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 14, icon: '🔢', nama: 'Abakus Kayu Warna-Warni', hargaEstimasi: 'Rp 80.000-140.000',
+    id: 14, icon: '🔢', nama: 'Abakus Kayu Warna-Warni', domain: 'kog', hargaEstimasi: 'Rp 80.000-140.000',
     pilihanPsikolog: false, minBulan: 24, maxBulan: 72, ageLabel: '2-6 tahun',
     deskripsi: 'Abakus kayu dengan manik-manik warna berbeda untuk berhitung konkret dan pengenalan warna.',
     sci: 'Manipulasi fisik manik-manik abakus memberikan representasi konkret angka yang mendukung pemahaman matematika yang lebih dalam.',
@@ -1861,18 +1874,13 @@ export const EDU_TOOLS: EduTool[] = [
   },
 ];
 
+// USULAN DOMAIN — menunggu review Psikolog Fitri.
+// Domain dalam blok ini adalah usulan tim; tolong konfirmasi sebelum rilis.
+// Item bertanda pemilik: 'orangtua' tidak masuk ke plafon harian anak.
 export const DOWNLOADABLES: Downloadable[] = [
   {
-    id: 1, icon: '📋', nama: 'Checklist Tumbuh Kembang 0-12 Bulan',
-    kategori: 'Checklist', minBulan: 0, maxBulan: 12,
-    deskripsi: 'Daftar tonggak perkembangan bulanan dari lahir hingga 12 bulan berdasarkan pedoman WHO dan Kemenkes.',
-    sci: 'Pemantauan perkembangan secara teratur memungkinkan deteksi dini keterlambatan sehingga intervensi bisa dilakukan pada periode kritis.',
-    sumber: 'WHO (2006), WHO Motor Development Study; Kemenkes RI (2020)',
-    caraPakai: 'Isi checklist setiap bulan. Jika ada yang belum dicapai, konsultasikan dengan dokter sebelum bulan berikutnya.',
-    halaman: '6 halaman', jumlahUnduhan: 1247, fileUrl: '#todo',
-  },
-  {
     id: 2, icon: '🗓️', nama: 'Jadwal Stimulasi Harian Bayi 0-3 Bulan',
+    domain: 'kog', pemilik: 'orangtua',
     kategori: 'Panduan', minBulan: 0, maxBulan: 3,
     deskripsi: 'Panduan jadwal stimulasi terstruktur berdasarkan jendela terjaga bayi untuk 12 minggu pertama.',
     sci: 'Rutinitas terstruktur yang konsisten memberikan rasa prediktabilitas yang mendukung regulasi diri dan perkembangan sistem saraf bayi.',
@@ -1882,6 +1890,7 @@ export const DOWNLOADABLES: Downloadable[] = [
   },
   {
     id: 3, icon: '📖', nama: 'Buku Cerita: Si Kancil Belajar Berbagi',
+    domain: 'sos',
     kategori: 'Buku Cerita', minBulan: 24, maxBulan: 60,
     deskripsi: 'Buku cerita digital bergambar tentang berbagi dan pertemanan untuk batita dan prasekolah.',
     sci: 'Buku cerita yang menampilkan karakter berempati membantu anak internalisasi nilai sosial melalui identifikasi dengan tokoh.',
@@ -1891,6 +1900,7 @@ export const DOWNLOADABLES: Downloadable[] = [
   },
   {
     id: 4, icon: '🔤', nama: 'Flashcard Kosakata Tematik: Buah-Buahan',
+    domain: 'bhs',
     kategori: 'Flashcard', minBulan: 12, maxBulan: 48,
     deskripsi: '20 kartu kosakata buah-buahan lokal Indonesia dengan gambar nyata dan tulisan besar.',
     sci: 'Flashcard yang digunakan dalam konteks bermakna dan interaktif efektif membangun kosakata tematik yang terintegrasi.',
@@ -1900,6 +1910,7 @@ export const DOWNLOADABLES: Downloadable[] = [
   },
   {
     id: 5, icon: '✏️', nama: 'Worksheet Pre-Writing: Garis dan Bentuk',
+    domain: 'mh',
     kategori: 'Worksheet', minBulan: 36, maxBulan: 60,
     deskripsi: 'Lembar kerja latihan pra-menulis dengan garis lurus, lengkung, spiral, dan zigzag bertahap.',
     sci: 'Latihan pre-writing yang terstruktur mempersiapkan kontrol motorik halus yang dibutuhkan untuk menulis dan menggambar.',
@@ -1909,6 +1920,7 @@ export const DOWNLOADABLES: Downloadable[] = [
   },
   {
     id: 6, icon: '🔢', nama: 'Worksheet Matematika Konkret 3-5 Tahun',
+    domain: 'kog',
     kategori: 'Worksheet', minBulan: 36, maxBulan: 60,
     deskripsi: 'Lembar kerja matematika awal dengan konsep banyak-sedikit, menghitung, dan mencocokkan angka-benda.',
     sci: 'Latihan matematika dengan representasi konkret dan visual membangun pemahaman angka yang lebih dalam daripada hafalan.',
@@ -1918,6 +1930,7 @@ export const DOWNLOADABLES: Downloadable[] = [
   },
   {
     id: 7, icon: '🌱', nama: 'Panduan Bermain Bebas untuk Orang Tua',
+    domain: 'kog', pemilik: 'orangtua',
     kategori: 'Panduan', minBulan: 0, maxBulan: 72,
     deskripsi: 'Panduan ilmiah tentang pentingnya bermain bebas dan cara memfasilitasinya di rumah.',
     sci: 'Bermain bebas yang tidak diarahkan adalah cara anak belajar mengatur diri, berkreasi, dan menyelesaikan masalah secara mandiri.',
@@ -1927,6 +1940,7 @@ export const DOWNLOADABLES: Downloadable[] = [
   },
   {
     id: 8, icon: '😊', nama: 'Flashcard Ekspresi Emosi',
+    domain: 'sos',
     kategori: 'Flashcard', minBulan: 24, maxBulan: 72,
     deskripsi: '12 kartu ekspresi emosi dasar dengan gambar wajah dan nama emosi untuk literasi emosional.',
     sci: 'Kemampuan menamai emosi (emotion labeling) berkorelasi dengan regulasi emosi yang lebih baik dan kesehatan mental anak.',
@@ -1936,6 +1950,7 @@ export const DOWNLOADABLES: Downloadable[] = [
   },
   {
     id: 9, icon: '💤', nama: 'Panduan Rutinitas Tidur Sehat Bayi',
+    domain: 'sos', pemilik: 'orangtua',
     kategori: 'Panduan', minBulan: 0, maxBulan: 36,
     deskripsi: 'Panduan berbasis bukti untuk membangun rutinitas tidur yang konsisten dan aman bagi bayi dan batita.',
     sci: 'Tidur berkualitas dan cukup adalah prasyarat utama konsolidasi memori dan perkembangan otak yang optimal.',
@@ -1945,6 +1960,7 @@ export const DOWNLOADABLES: Downloadable[] = [
   },
   {
     id: 10, icon: '🥦', nama: 'Panduan MPASI Responsif 6-12 Bulan',
+    domain: 'sos', pemilik: 'orangtua',
     kategori: 'Panduan', minBulan: 6, maxBulan: 12,
     deskripsi: 'Panduan pemberian MPASI yang responsif terhadap sinyal lapar dan kenyang bayi, dengan textur progression.',
     sci: 'Pemberian makan responsif mendukung regulasi nafsu makan yang sehat dan hubungan positif anak dengan makanan jangka panjang.',
@@ -1954,6 +1970,7 @@ export const DOWNLOADABLES: Downloadable[] = [
   },
   {
     id: 11, icon: '📖', nama: 'Buku Cerita: Aku Bisa Sendiri!',
+    domain: 'sos',
     kategori: 'Buku Cerita', minBulan: 24, maxBulan: 48,
     deskripsi: 'Buku cerita tentang kemandirian batita: berpakaian sendiri, makan sendiri, dan beres-beres mainan.',
     sci: 'Narasi yang merayakan usaha dan proses (bukan hasil) membangun growth mindset dan motivasi instrinsik sejak dini.',
@@ -1963,6 +1980,7 @@ export const DOWNLOADABLES: Downloadable[] = [
   },
   {
     id: 12, icon: '🧘', nama: 'Panduan Mindfulness untuk Anak 3-6 Tahun',
+    domain: 'sos',
     kategori: 'Panduan', minBulan: 36, maxBulan: 72,
     deskripsi: 'Panduan latihan perhatian penuh (mindfulness) sederhana yang bisa dilakukan bersama anak.',
     sci: 'Latihan mindfulness yang diadaptasi untuk anak terbukti meningkatkan perhatian, regulasi emosi, dan kesejahteraan psikologis.',

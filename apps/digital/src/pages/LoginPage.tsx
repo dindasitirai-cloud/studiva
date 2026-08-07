@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getLangganan, statusGerbang, TEKS_GERBANG } from '../lib/supabase/langganan';
+import { supabase } from '../lib/supabase/client';
 import LogoRekah from '../components/LogoRekah';
 import Kelopak from '../components/Kelopak';
 
@@ -32,31 +34,75 @@ export default function LoginPage() {
     if (err) { setError(err); return; }
     setError(null);
     setSubmitting(true);
-    let user;
     try {
-      // TODO: panggil endpoint POST /api/auth/login dengan { email, password }
-      // Jangan simpan password di sisi klien; autentikasi sepenuhnya di backend.
-      user = await login(email, password);
+      await login(email, password);
     } catch (e: unknown) {
-      const msg = (e as { response?: { data?: { error?: string } } })?.response?.data?.error;
-      setError(msg || 'Email atau password salah. Silakan coba lagi.');
+      const msg =
+        (e instanceof Error ? e.message : null) ||
+        (e as { response?: { data?: { error?: string } } })?.response?.data?.error ||
+        'Login gagal. Coba lagi.';
+      setError(msg);
       setSubmitting(false);
       return;
     }
 
-    // TODO: penentuan redirect berdasarkan role & tier dari data auth backend.
-    // Backend mengembalikan { user: { role, ... }, token } setelah login sukses.
-    if (user.role === 'admin') {
+    // ── Sesi Supabase lebih dulu — staf Rekah masuk sebelum cek Express ──────
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (session?.user) {
+      const peranStaf = session.user.app_metadata?.role as string | undefined;
+
+      // Staf Rekah (admin atau peninjau klinis) → rekah-admin, tidak melewati cek Express
+      if (peranStaf === 'admin' || peranStaf === 'peninjau_klinis') {
+        navigate('/rekah-admin');
+        setSubmitting(false);
+        return;
+      }
+    }
+
+    // ── Cek Express (untuk admin Studiva dan guru) ────────────────────────────
+    // Tidak blokir login bila backend mati
+    let expressUser;
+    try {
+      const { api } = await import('../api/client');
+      const { data } = await api.get('/auth/me');
+      expressUser = data.user as { role: string } | null;
+    } catch {
+      expressUser = { role: 'parent' };
+    }
+
+    if (expressUser?.role === 'admin') {
       navigate('/admin');
+      setSubmitting(false);
       return;
     }
-    if (user.role === 'teacher') {
+    if (expressUser?.role === 'teacher') {
       navigate('/guru');
       setSubmitting(false);
       return;
     }
 
-    // Parent: cek subscription tier untuk memilih dashboard yang tepat
+    // ── Rekah parent: cek langganan Supabase ─────────────────────────────────
+    // KEPUTUSAN MANUSIA: gerbang dulu — belum berlangganan → pricing sebelum wizard profil.
+    if (session?.user) {
+      try {
+        const langganan = await getLangganan();
+        const gate = statusGerbang(langganan, new Date().toISOString());
+
+        if (gate === 'aktif') {
+          navigate('/dashboard/tier2');
+        } else {
+          navigate('/pricing', { state: { message: TEKS_GERBANG[gate] } });
+        }
+      } catch {
+        navigate('/dashboard/tier2');
+      }
+      setSubmitting(false);
+      return;
+    }
+
+    // ── Jalur Express lama (Tier 1 / admin dengan Express JWT) ───────────────
+    // TODO: integrasi Stripe — ketika Tier 1 penuh migrasi ke Supabase, jalur ini disederhanakan
     try {
       const { api } = await import('../api/client');
       const { data } = await api.get('/subscriptions/check');

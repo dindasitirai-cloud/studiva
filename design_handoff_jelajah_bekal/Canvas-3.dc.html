@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Nunito:wght@400;600;700;800&amp;family=Shantell+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#ECE3D4;font-family:'Nunito',sans-serif;color:#6E3B57;-webkit-font-smoothing:antialiased}
+  a{color:#5F84E6;text-decoration:none;font-weight:700}
+  a:hover{color:#F06BA8}
+  @keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+  @keyframes sway2{0%,100%{transform:rotate(3deg)}50%{transform:rotate(-3deg)}}
+  @keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
+  @keyframes cardIn{0%{opacity:0;transform:translateY(30px) scale(.94)}100%{opacity:1;transform:translateY(0) scale(1)}}
+</style>
+</helmet>
+
+<div style="width:1440px;background:#FBEFDF;border-radius:34px;padding:0 0 54px;box-shadow:0 30px 60px -44px rgba(90,50,70,.6);overflow:hidden">
+
+  <!-- TOP BAR -->
+  <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;padding:18px 40px;border-bottom:1px solid #F3E7D6">
+    <div style="display:flex;align-items:center;gap:44px">
+      <div style="display:flex;align-items:center;gap:11px">
+        <div style="width:38px;height:38px;animation:{{ sway }}"><dc-import name="Flower" cfg="{{ logoFlower }}" hint-size="38px,38px"></dc-import></div>
+        <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:27px;color:#F06BA8;letter-spacing:-.5px">rekah</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+          <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:16px;color:{{ n.color }};background:{{ n.bg }};padding:9px 18px;border-radius:999px">{{ n.label }}</div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="width:46px;height:46px;border-radius:50%;background:#F06BA8;display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-weight:700;font-size:19px;color:#fff">B</div>
+  </div>
+
+  <div style="padding:30px 56px 0">
+    <!-- HERO (centered + decorated) -->
+    <div style="position:relative;text-align:center;padding:10px 40px 6px">
+      <div style="position:absolute;left:44px;top:22px;width:78px;height:126px;animation:{{ sway }}"><dc-import name="Botanical" cfg="{{ deco1 }}" hint-size="78px,126px"></dc-import></div>
+      <div style="position:absolute;left:150px;top:104px;width:52px;height:88px;animation:{{ sway2 }}"><dc-import name="Botanical" cfg="{{ deco3 }}" hint-size="52px,88px"></dc-import></div>
+      <div style="position:absolute;right:44px;top:14px;width:84px;height:134px;animation:{{ sway2 }}"><dc-import name="Botanical" cfg="{{ deco2 }}" hint-size="84px,134px"></dc-import></div>
+      <div style="position:absolute;right:158px;top:106px;width:50px;height:84px;animation:{{ sway }}"><dc-import name="Botanical" cfg="{{ deco4 }}" hint-size="50px,84px"></dc-import></div>
+
+      <!-- DRAF banner -->
+      <div style="display:inline-flex;align-items:center;background:#FCEFC2;border-radius:999px;padding:9px 20px;font-family:'Nunito',sans-serif;font-weight:700;font-size:15px;color:#A9791C">
+        DRAF · menunggu review Psikolog Fitri Effendy sebelum rilis
+      </div>
+
+      <h1 style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:56px;color:#6E3B57;margin:22px 0 0;letter-spacing:-1px">Jelajah Bekal</h1>
+      <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:19px;color:#B79FAF;margin-top:8px">untuk Rakha · Bekal 0–1 tahun</div>
+      <p style="max-width:860px;font-family:'Nunito',sans-serif;font-weight:600;font-size:19px;line-height:1.62;color:#8A6F86;margin:22px auto 0">Bekal mengajak Ayah Bunda memilih dari tiga hal: kebiasaan sehari-hari yang merawat nilai keluarga, kegiatan bersama anak, dan bacaan pendamping sebagai wawasan tumbuh. Tidak ada yang harus diselesaikan semuanya — pilih yang terasa pas, dan yang sedikit tapi rutin lebih berarti daripada banyak sekaligus.</p>
+    </div>
+
+    <!-- TABS -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:38px;margin-top:34px;border-bottom:2px solid #F0E3D2">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+        <div onClick="{{ t.onClick }}" style="cursor:pointer;font-family:'Fredoka',sans-serif;font-weight:600;font-size:20px;color:{{ t.color }};padding-bottom:14px;border-bottom:3px solid {{ t.bd }};margin-bottom:-2px">{{ t.label }}</div>
+      </sc-for>
+    </div>
+
+    <!-- SECTION HEAD -->
+    <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;letter-spacing:1.5px;color:#F06BA8;margin-top:40px">BEKAL</div>
+    <h2 style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:60px;color:#6E3B57;margin:8px 0 0;letter-spacing:-1.2px">{{ secTitle }}</h2>
+    <div style="max-width:1100px;font-family:'Shantell Sans',cursive;font-weight:600;font-size:23px;line-height:1.5;color:#F06BA8;margin-top:14px">{{ secSub }}</div>
+
+    <!-- SCATTERED CARD BOARD -->
+    <div style="position:relative;margin-top:30px;height:{{ boardH }}px;background:{{ boardBg }};background-size:26px 26px;border-radius:30px;border:2px dashed rgba(110,59,87,.09)">
+      <sc-for list="{{ cards }}" as="c" hint-placeholder-count="7">
+        <div style="position:absolute;left:{{ c.left }}px;top:{{ c.top }}px;z-index:{{ c.z }};width:252px;animation:{{ c.inAnim }}" style-hover="z-index:60">
+          <div style="animation:{{ c.floatAnim }};filter:{{ c.layerFilter }}">
+            <div style="background:#fff;width:252px;padding:24px 22px 22px;border-radius:{{ c.radius }}px;box-shadow:{{ c.shadow }};-webkit-mask:{{ c.mask }};-webkit-mask-composite:source-in;mask:{{ c.mask }};mask-composite:intersect;transform:{{ c.rest }};transition:transform .42s cubic-bezier(.2,.8,.25,1),box-shadow .42s ease;cursor:pointer" style-hover="transform:translateY(-16px) scale(1.035) rotate(0deg);box-shadow:0 34px 46px -26px rgba(90,50,70,.5)">
+              <div style="width:72px;height:72px;border-radius:50%;background:{{ c.disc }};display:flex;align-items:center;justify-content:center;transition:transform .5s cubic-bezier(.2,.8,.25,1)" style-hover="transform:rotate(28deg) scale(1.06)">
+                <dc-import name="Bunga" nilai="{{ c.nilai }}" ukuran="50" hint-size="50px,50px"></dc-import>
+              </div>
+              <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:22px;color:#6E3B57;margin-top:18px;letter-spacing:-.3px">{{ c.name }}</div>
+              <div style="font-family:'Nunito',sans-serif;font-weight:600;font-size:14.5px;line-height:1.45;color:#93798C;margin-top:7px;min-height:42px">{{ c.desc }}</div>
+              <div style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-family:'Nunito',sans-serif;font-weight:800;font-size:12.5px;color:{{ c.pillInk }};background:{{ c.pillSoft }};padding:7px 14px;border-radius:999px">{{ c.pillText }}</div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- footer note -->
+    <div style="text-align:center;margin-top:46px;font-family:'Shantell Sans',cursive;font-weight:600;font-size:18px;color:#C7A9BE">arahkan kursor ke bunga — pilih yang terasa dekat, lalu tanam di taman keluarga</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1320},&quot;motion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Tampilan&quot;}}">
+class Component extends DCLogic {
+  state = { tab: 'kebiasaan' };
+
+  renderVals() {
+    const motion = this.props.motion ?? true;
+    const gridBoard = this.props.gridBoard ?? true;
+    const scallop = this.props.scallop ?? true;
+
+    const logoFlower = { shape:'bud', petalCount:5, budIndices:[2,3], petalW:15, petalLen:34, centerR:15, jitter:0.05, spin:0, budColor:'#8FB8F7', petalColors:['#F06BA8','#8FB8F7','#F8B9D4','#5F84E6','#FFE29A'], centerColors:['#6E3B57','#F06BA8','#8FB8F7'] };
+    const sway = motion ? 'sway 8s ease-in-out infinite' : 'none';
+    const sway2 = motion ? 'sway2 9s ease-in-out infinite' : 'none';
+    const P = { pink:'#F06BA8', peony:'#F8B9D4', sky:'#8FB8F7', corn:'#5F84E6', lilac:'#C9B8F0', butter:'#FFE29A', plum:'#6E3B57' };
+
+    const nav = [
+      { label:'Irama Hari', active:false },
+      { label:'Akar Keluarga', active:false },
+      { label:'Bekal', active:true },
+      { label:'Jurnal dan Galeri', active:false },
+      { label:'Panen', active:false },
+    ].map(n=>({ label:n.label, color: n.active?'#F06BA8':'#6E3B57', bg: n.active?'#FCE3EE':'transparent' }));
+
+    // ---- readable ink/soft per value flower ----
+    const PAL = {
+      'kejujuran':      { soft:'#E6ECFC', ink:'#4A6BD6' },
+      'syukur':         { soft:'#FFF3D0', ink:'#B98900' },
+      'kasih-sayang':   { soft:'#F1ECFB', ink:'#8A6DC7' },
+      'empati':         { soft:'#FCE7F0', ink:'#D9639A' },
+      'kemandirian':    { soft:'#FFF3D0', ink:'#B98900' },
+      'tanggung-jawab': { soft:'#F1ECFB', ink:'#8A6DC7' },
+      'kesederhanaan':  { soft:'#FCE3EE', ink:'#E0428A' },
+      'cinta-ilmu':     { soft:'#E4EFFD', ink:'#4A72D6' },
+      'sabar':          { soft:'#E4EFFD', ink:'#4A72D6' },
+      'berbagi':        { soft:'#E6ECFC', ink:'#4A6BD6' },
+      'keberanian':     { soft:'#FCE3EE', ink:'#E0428A' },
+      'hormat-sesama':  { soft:'#FFF3D0', ink:'#B98900' },
+    };
+    const GREEN = { soft:'#E4F3E8', ink:'#2E8B57' };
+
+    // ---- content per tab ----
+    const SETS = {
+      kebiasaan: {
+        title:'Kebiasaan Baik',
+        sub:'Ini bukan daftar yang harus dituntaskan. Pilih satu-dua nilai yang paling dekat dengan jiwa keluarga, lalu latih kebiasaannya pelan-pelan.',
+        items:[
+          { nilai:'kejujuran',      name:'Kejujuran',         desc:'Bicara apa adanya, tanpa takut',              n:2, planted:true, faded:true },
+          { nilai:'syukur',         name:'Syukur',            desc:'Melihat yang baik, menghargai yang ada',      n:2, planted:true },
+          { nilai:'kasih-sayang',   name:'Kasih Sayang',      desc:'Hadir dengan hangat dan tulus',               n:4 },
+          { nilai:'empati',         name:'Empati',            desc:'Merasakan apa yang dirasakan orang lain',     n:2 },
+          { nilai:'kemandirian',    name:'Kemandirian',       desc:'Mencoba sendiri, bangkit, mencoba lagi',      n:3 },
+          { nilai:'tanggung-jawab', name:'Tanggung Jawab',    desc:'Milikku, aku yang jaga',                      n:1 },
+          { nilai:'kesederhanaan',  name:'Kesederhanaan',     desc:'Cukup adalah hadiah',                         n:2 },
+          { nilai:'cinta-ilmu',     name:'Cinta Ilmu',        desc:'Bertanya adalah petualangan',                 n:6 },
+          { nilai:'sabar',          name:'Sabar',             desc:'Menunggu adalah bagian dari tumbuh',          n:3 },
+          { nilai:'berbagi',        name:'Berbagi',           desc:'Ada lebih banyak kebahagiaan saat dibagi',    n:4 },
+          { nilai:'keberanian',     name:'Keberanian',        desc:'Takut boleh, tapi tetap maju',                n:3 },
+          { nilai:'hormat-sesama',  name:'Hormat pada Sesama',desc:'Setiap orang layak diperlakukan baik',        n:4 },
+        ].map(x=>({ nilai:x.nilai, name:x.name, desc:x.desc,
+          pill: x.planted
+            ? { text:'Di taman keluarga', ink:GREEN.ink, soft:GREEN.soft }
+            : { text:x.n + ' kebiasaan', ink:PAL[x.nilai].ink, soft:PAL[x.nilai].soft } })),
+      },
+      main: {
+        title:'Ajak Main',
+        sub:'Kegiatan kecil yang bisa dilakukan bersama—ringan, menyenangkan, dan diam-diam menumbuhkan.',
+        items:[
+          { nilai:'kasih-sayang', name:'Peluk Pagi',        desc:'Mulai hari dengan pelukan dan tatapan hangat', pillText:'5 menit' },
+          { nilai:'empati',       name:'Tebak Rasa',        desc:'Tebak perasaan tokoh dalam buku cerita',       pillText:'sambil membaca' },
+          { nilai:'kemandirian',  name:'Pakai Baju Sendiri',desc:'Beri waktu, tahan diri untuk tak membantu',    pillText:'harian' },
+          { nilai:'syukur',       name:'Satu Syukur Malam', desc:'Sebut satu hal baik sebelum tidur',            pillText:'malam' },
+          { nilai:'cinta-ilmu',   name:'Satu Pertanyaan',   desc:'Sambut rasa ingin tahunya dengan antusias',    pillText:'harian' },
+        ].map(x=>({ nilai:x.nilai, name:x.name, desc:x.desc, pill:{ text:x.pillText, ink:PAL[x.nilai].ink, soft:PAL[x.nilai].soft } })),
+      },
+      wawasan: {
+        title:'Wawasan Tumbuh',
+        sub:'Bacaan pendamping singkat untuk memahami apa yang sedang tumbuh di tahun pertama.',
+        items:[
+          { nilai:'cinta-ilmu',   name:'Otak yang Dibangun', desc:'Kenapa tahun pertama begitu menentukan',      pillText:'5 mnt baca' },
+          { nilai:'kasih-sayang', name:'Ikatan Aman',        desc:'Dasar rasa percaya anak pada dunia',          pillText:'4 mnt baca' },
+          { nilai:'sabar',        name:'Ritme, Bukan Jadwal',desc:'Membaca isyarat bayi dengan tenang',          pillText:'6 mnt baca' },
+          { nilai:'empati',       name:'Bahasa Perasaan',    desc:'Menamai emosi anak sejak dini',               pillText:'5 mnt baca' },
+          { nilai:'keberanian',   name:'Ruang Mencoba',      desc:'Membiarkan anak jatuh kecil dengan aman',     pillText:'4 mnt baca' },
+        ].map(x=>({ nilai:x.nilai, name:x.name, desc:x.desc, pill:{ text:x.pillText, ink:PAL[x.nilai].ink, soft:PAL[x.nilai].soft } })),
+      },
+    };
+
+    const tab = this.state.tab;
+    const cur = SETS[tab];
+    const items = cur.items;
+
+    // ---- scattered collage layout (2 rows of 6) ----
+    const COLS = 6, cardW = 230, innerW = 1332;
+    const step = 196;
+    const offsetX = (innerW - ((COLS - 1) * step + cardW)) / 2;
+    const rowBase = [0, 340];
+    const topsP = [22, 68, 6, 74, 28, 58];
+    const rotsP = [-4, 3, -3, 4, -2, 3];
+    const durP  = [6.4, 5.6, 7.2, 6, 6.8, 5.9];
+
+    // postage-stamp scallop mask (all four edges)
+    const r = 7;
+    const stampMask = `radial-gradient(${r}px at 50% 0,#0000 98%,#000) 0 0/${4*r}px 100%,radial-gradient(${r}px at 50% 100%,#0000 98%,#000) 0 0/${4*r}px 100%,radial-gradient(${r}px at 0 50%,#0000 98%,#000) 0 0/100% ${4*r}px,radial-gradient(${r}px at 100% 50%,#0000 98%,#000) 0 0/100% ${4*r}px`;
+
+    const cards = items.map((it, i) => {
+      const row = Math.floor(i / COLS), col = i % COLS;
+      const isStamp = i % 2 === 1;
+      return {
+        nilai: it.nilai, name: it.name, desc: it.desc,
+        pillText: it.pill.text, pillInk: it.pill.ink, pillSoft: it.pill.soft,
+        disc: PAL[it.nilai].soft,
+        left: Math.round(offsetX + col * step),
+        top: rowBase[row] + topsP[col],
+        z: i + 2,
+        rest: `rotate(${rotsP[col]}deg)`,
+        radius: isStamp ? 10 : 22,
+        mask: isStamp ? stampMask : 'none',
+        shadow: isStamp ? 'none' : '0 20px 34px -22px rgba(90,50,70,.42)',
+        layerFilter: isStamp ? 'drop-shadow(0 18px 20px rgba(90,50,70,.20))' : 'none',
+        floatAnim: motion ? `floatBob ${durP[col]}s ease-in-out ${(i*0.22).toFixed(2)}s infinite` : 'none',
+        inAnim: motion ? `cardIn .55s cubic-bezier(.2,.8,.25,1) ${(i*0.05).toFixed(2)}s both` : 'none',
+      };
+    });
+    const rowsUsed = Math.ceil(items.length / COLS);
+    const boardH = rowBase[rowsUsed - 1] + Math.max(...topsP) + 262;
+    const boardBg = 'linear-gradient(rgba(110,59,87,.055) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,rgba(110,59,87,.055) 1px,transparent 1px) 0 0/48px 48px,#FFFBF4';
+
+    const tabs = [
+      { key:'kebiasaan', label:'Kebiasaan Baik' },
+      { key:'main', label:'Ajak Main' },
+      { key:'wawasan', label:'Wawasan Tumbuh' },
+    ].map(t=>({
+      label:t.label,
+      color: tab===t.key ? '#F06BA8' : '#B79FAF',
+      bd: tab===t.key ? '#F06BA8' : 'transparent',
+      onClick: ()=> this.setState({ tab:t.key }),
+    }));
+
+    return {
+      sway, sway2, logoFlower, nav, tabs,
+      secTitle: cur.title, secSub: cur.sub,
+      cards, boardH, boardBg,
+      deco1: { type:'tulip', bloom:P.pink, bloom2:P.peony, center:P.plum },
+      deco2: { type:'daisy', bloom:P.corn, bloom2:P.sky, center:P.butter },
+      deco3: { type:'fivepetal', bloom:P.peony, center:P.pink },
+      deco4: { type:'bell', bloom:P.sky, bloom2:P.corn },
+    };
+  }
+}
+</script>
+</body>
+</html>

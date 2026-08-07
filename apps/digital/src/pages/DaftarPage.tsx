@@ -199,7 +199,8 @@ export default function DaftarPage() {
     setSubmitting(true); setApiError(null);
     try {
       // TODO: POST /api/auth/signup, backend buat Stripe customer & kembalikan checkoutSessionUrl
-      await signup({ email: form.email, password: form.password, name: form.namaLengkap, role: 'parent', childName: form.namaAnak, childAge: Number(form.usiaAnak) });
+      // TODO: teks kebijakan privasi final oleh manusia + tinjauan hukum sebelum live
+      await signup({ email: form.email, password: form.password, name: form.namaLengkap, role: 'parent', childName: form.namaAnak, childAge: Number(form.usiaAnak), consentDiberikan: form.setuju });
       if (selectedPlan) setSelection({ tier: 'tier2', plan: selectedPlan });
     } catch (e: unknown) {
       const msg = (e as { response?: { data?: { error?: string } } })?.response?.data?.error;

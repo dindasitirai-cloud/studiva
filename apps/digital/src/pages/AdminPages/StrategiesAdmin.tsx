@@ -11,6 +11,9 @@ import {
   DOWNLOADABLES as STATIC_DOWNLOADS,
 } from '../../data/learningStrategies';
 import { api } from '../../api/client';
+import { useAuth } from '../../context/AuthContext';
+import { buatDanAjukan } from '../../lib/supabase/pipeline';
+import { pindaiKata } from '../../lib/pemindaiKata';
 import {
   AGE_RANGES, DOMAIN_META,
   Activity, WeeklyPlan, EduTool, Downloadable, DomainKey, DownloadKategori, ContentStatus,
@@ -165,10 +168,13 @@ function fromAForm(f: AForm, id?: number): Activity {
   };
 }
 
-function ActivityModal({ initial, id, onClose }: { initial: AForm; id?: number; onClose: () => void }) {
+function ActivityModal({ initial, id, onClose, pipelineOnly = false }: { initial: AForm; id?: number; onClose: () => void; pipelineOnly?: boolean }) {
   const { adminAddActivity, adminUpdateActivity } = useLearningStrategies();
+  const { supabaseUser, peranStaf } = useAuth();
   const [form, setForm] = useState<AForm>(initial);
   const [err, setErr] = useState('');
+  const [ajukanPesan, setAjukanPesan] = useState('');
+  const [mengajukan, setMengajukan] = useState(false);
 
   function save(status: ContentStatus) {
     if (!form.judul.trim() || !form.deskripsi.trim()) { setErr('Judul dan deskripsi wajib diisi.'); return; }
@@ -176,6 +182,31 @@ function ActivityModal({ initial, id, onClose }: { initial: AForm; id?: number; 
     if (id !== undefined) adminUpdateActivity(id, a);
     else adminAddActivity(a);
     onClose();
+  }
+
+  async function ajukanKePipeline() {
+    if (!form.judul.trim() || !form.deskripsi.trim()) { setErr('Judul dan deskripsi wajib diisi.'); return; }
+    const temuanJudul = pindaiKata(form.judul);
+    const temuanDesk  = pindaiKata(form.deskripsi);
+    if (temuanJudul.length > 0 || temuanDesk.length > 0) {
+      setErr('Konten mengandung kata yang perlu ditinjau. Perbaiki sebelum mengajukan.');
+      return;
+    }
+    const a = fromAForm(form, id);
+    setMengajukan(true);
+    try {
+      await buatDanAjukan({
+        jenis: 'kegiatan_ajak_main',
+        judul: form.judul.trim(),
+        isi: a as unknown as Record<string, unknown>,
+        id_konten_sumber: id !== undefined ? String(id) : undefined,
+      });
+      setAjukanPesan('Diajukan ke antrean tinjauan Fitri. Belum tayang sampai disetujui.');
+    } catch (e) {
+      setErr((e as Error).message ?? 'Gagal mengajukan.');
+    } finally {
+      setMengajukan(false);
+    }
   }
 
   function submit(e: React.FormEvent) { e.preventDefault(); save(form.status ?? 'draft'); }
@@ -352,7 +383,41 @@ function ActivityModal({ initial, id, onClose }: { initial: AForm; id?: number; 
         </Field>
 
         {err && <p className="text-[12px] text-red-500">{err}</p>}
-        <ModalFooter onClose={onClose} onSaveDraft={() => save('draft')} currentStatus={form.status} />
+        {ajukanPesan && (
+          <p className="rounded-lg bg-green-50 px-3 py-2 text-[12px] font-semibold text-green-700">
+            {ajukanPesan}
+          </p>
+        )}
+        <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-3">
+          <button type="button" onClick={onClose}
+            className="rounded-full border border-stv-border px-4 py-2 text-[13px] font-semibold text-stv-body hover:bg-slate-50">
+            Batal
+          </button>
+          <div className="flex flex-wrap gap-2">
+            {!pipelineOnly && (
+              <button type="button" onClick={() => save('draft')}
+                className="flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-4 py-2 text-[13px] font-semibold text-stv-body hover:bg-slate-50">
+                <Save className="h-3.5 w-3.5" /> Simpan Draft
+              </button>
+            )}
+            {pipelineOnly || (supabaseUser && peranStaf === 'admin') ? (
+              <button
+                type="button"
+                disabled={mengajukan}
+                onClick={ajukanKePipeline}
+                className="flex items-center gap-1.5 rounded-full bg-rekah px-4 py-2 text-[13px] font-bold text-white hover:bg-rekah-tua disabled:opacity-50"
+              >
+                <Send className="h-3.5 w-3.5" />
+                {mengajukan ? 'Mengajukan...' : 'Ajukan Tinjauan'}
+              </button>
+            ) : (
+              <button type="submit"
+                className="flex items-center gap-1.5 rounded-full bg-madu px-4 py-2 text-[13px] font-bold text-white hover:bg-rekah">
+                <Send className="h-3.5 w-3.5" /> Simpan
+              </button>
+            )}
+          </div>
+        </div>
       </form>
     </Modal>
   );
@@ -476,7 +541,7 @@ function PlanModal({ initial, id, onClose }: { initial: PForm; id?: number; onCl
 type TForm = Omit<EduTool, 'id' | 'keunggulan'> & { keunggulanItems: string[] };
 
 const EMPTY_TFORM: TForm = {
-  icon: '🧸', nama: '', hargaEstimasi: '', pilihanPsikolog: false,
+  icon: '🧸', nama: '', domain: 'kog', hargaEstimasi: '', pilihanPsikolog: false,
   minBulan: 0, maxBulan: 12, ageLabel: '',
   deskripsi: '', sci: '', sumber: '', keunggulanItems: [''], affiliateUrl: '',
   statusLink: 'KOSONG', tanggalCekLink: '', catatanReviewer: '', status: 'draft',
@@ -597,7 +662,7 @@ function ToolModal({ initial, id, onClose }: { initial: TForm; id?: number; onCl
 type DForm = Omit<Downloadable, 'id'>;
 
 const EMPTY_DFORM: DForm = {
-  icon: '📄', nama: '', kategori: 'Panduan', minBulan: 0, maxBulan: 72,
+  icon: '📄', nama: '', domain: 'kog', kategori: 'Panduan', minBulan: 0, maxBulan: 72,
   deskripsi: '', sci: '', sumber: '', caraPakai: '',
   halaman: '', jumlahUnduhan: 0, fileUrl: '',
   catatanReviewer: '', status: 'draft',
@@ -917,7 +982,7 @@ function Empty({ label }: { label: string }) {
 
 type TabKey = 'aktivitas' | 'program' | 'alat' | 'unduhan';
 
-export default function StrategiesAdmin() {
+export default function StrategiesAdmin({ pipelineOnly = false }: { pipelineOnly?: boolean }) {
   const {
     managedActivities, managedPlans, managedTools, managedDownloads,
     adminDeleteActivity, adminDeletePlan, adminDeleteTool, adminDeleteDownload,
@@ -1201,7 +1266,7 @@ export default function StrategiesAdmin() {
               <Row key={d.id}
                 icon={d.icon} title={d.nama} status={d.status}
                 meta={[d.kategori, ageStr(d.minBulan, d.maxBulan), d.halaman]}
-                onEdit={() => setDownloadModal({ form: { icon: d.icon, nama: d.nama, kategori: d.kategori, minBulan: d.minBulan, maxBulan: d.maxBulan, deskripsi: d.deskripsi, sci: d.sci, sumber: d.sumber, caraPakai: d.caraPakai, halaman: d.halaman, jumlahUnduhan: d.jumlahUnduhan, fileUrl: d.fileUrl, catatanReviewer: d.catatanReviewer, status: d.status }, id: d.id })}
+                onEdit={() => setDownloadModal({ form: { icon: d.icon, nama: d.nama, domain: d.domain, kategori: d.kategori, minBulan: d.minBulan, maxBulan: d.maxBulan, deskripsi: d.deskripsi, sci: d.sci, sumber: d.sumber, caraPakai: d.caraPakai, halaman: d.halaman, jumlahUnduhan: d.jumlahUnduhan, fileUrl: d.fileUrl, catatanReviewer: d.catatanReviewer, status: d.status }, id: d.id })}
                 onDelete={() => confirmDelete(d.nama, () => adminDeleteDownload(d.id))}
                 onDuplicate={() => adminDuplicateDownload(d.id)}
                 onStatusChange={s => adminSetStatus('download', d.id, s)}
@@ -1213,7 +1278,7 @@ export default function StrategiesAdmin() {
 
       {/* Modals */}
       {activityModal && (
-        <ActivityModal initial={activityModal.form} id={activityModal.id} onClose={() => setActivityModal(null)} />
+        <ActivityModal initial={activityModal.form} id={activityModal.id} onClose={() => setActivityModal(null)} pipelineOnly={pipelineOnly} />
       )}
       {planModal && (
         <PlanModal initial={planModal.form} id={planModal.id} onClose={() => setPlanModal(null)} />

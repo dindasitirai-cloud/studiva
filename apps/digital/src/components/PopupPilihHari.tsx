@@ -83,7 +83,8 @@ export default function PopupPilihHari({ item, tanggalHariIni, onPilih, onTutup 
     <div
       style={{
         position: 'fixed', inset: 0, zIndex: 60,
-        display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '0 16px',
         background: 'rgba(110,59,87,0.30)',
         backdropFilter: 'blur(4px)',
       }}
@@ -98,9 +99,9 @@ export default function PopupPilihHari({ item, tanggalHariIni, onPilih, onTutup 
         style={{
           width: '100%', maxWidth: 480,
           background: '#fff',
-          borderRadius: '24px 24px 0 0',
+          borderRadius: 24,
           padding: '20px 20px 32px',
-          boxShadow: '0 -8px 40px rgba(110,59,87,0.18)',
+          boxShadow: '0 8px 40px rgba(110,59,87,0.18)',
           outline: 'none',
         }}
       >

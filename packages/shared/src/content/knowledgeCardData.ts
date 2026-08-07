@@ -64,10 +64,13 @@ export interface ScientificData {
   reviewedBy?: { name: string; date: string };
   stats?: (ScientificStat | ScientificStatRef)[];
   figure?: ScientificFigure;
+  /** Multiple figures (used by admin pipeline). Reader prefers this over figure. */
+  figures?: ScientificFigure[];
   sections?: (ScientificSection | ScientificSectionRef)[];
   references?: ScientificReference[];
   /** Legacy fallback, still rendered if sections is absent/empty */
   paragraphs?: string[];
+  takeaways?: string[];
 }
 
 export interface KnowledgeCard {

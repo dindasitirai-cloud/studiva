@@ -22,6 +22,8 @@ import learningStrategiesRouter from './routes/learningStrategies';
 import kcManagedRouter from './routes/kcManaged';
 import contentRouter from './routes/content';
 import adminContentRouter from './routes/adminContent';
+import rekahRouter from './routes/rekah';
+import rekahAdminRouter from './routes/rekahAdmin';
 
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 
@@ -32,7 +34,7 @@ const PORT = process.env.PORT || 5000;
 // Vercel preview deployment for this project (random-subdomain URLs like
 // studiva-<hash>-raisha.vercel.app), rather than a wildcard "*" origin.
 const VERCEL_PREVIEW_PATTERN = /^https:\/\/studiva-[a-z0-9-]+\.vercel\.app$/;
-const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:3000'].filter(Boolean) as string[];
+const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:3000', 'http://localhost:3001'].filter(Boolean) as string[];
 
 app.use(
   cors({
@@ -74,6 +76,8 @@ app.use('/api/learning-strategies', learningStrategiesRouter);
 app.use('/api/kc-managed', kcManagedRouter);
 app.use('/api/content', contentRouter);
 app.use('/api/admin/content', adminContentRouter);
+app.use('/api/rekah', rekahRouter);
+app.use('/api/rekah-admin', rekahAdminRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

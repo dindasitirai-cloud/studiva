@@ -2,17 +2,82 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft, ArrowRight, Clock, BookOpen, FlaskConical,
-  AlertTriangle, Stethoscope, CheckCircle2, Bookmark,
+  AlertTriangle, Stethoscope, CheckCircle2, Bookmark, Atom, Star,
 } from 'lucide-react';
 import { useDashboardBasePath } from '../useDashboardBasePath';
 import { useAudioPlayer } from '../../../context/AudioPlayerContext';
 import { useKnowledgeLibrary } from '../../../context/KnowledgeLibraryContext';
+import { useDashboardTier2 } from '../../../context/DashboardTier2Context';
 import {
   CARDS, AGE_RANGES, DOMAIN_MAP, SUMMARY_LABEL_STYLES,
 } from './knowledgeCardData';
 import { DOMAIN_CONFIG_MAP } from './domains';
+import { ISLAMIC_PANELS, type IslamicPanel } from '@studiva/shared';
 import { KonsultasiCTA } from './KonsultasiCTA';
 import AudioPlayerWidget from './AudioPlayerWidget';
+
+// ── Akar Keluarga: Nilai Keislaman panel ────────────────────────────────────
+
+function IslamicPanelCard({ panel }: { panel: IslamicPanel }) {
+  return (
+    <div className="mt-5 overflow-hidden rounded-2xl border border-emerald-200 bg-white shadow-[0_4px_16px_rgba(5,150,105,0.07)]">
+      {/* Header */}
+      <div className="flex items-center gap-2 border-b border-emerald-100 bg-emerald-50 px-4 py-3">
+        <Star className="h-4 w-4 shrink-0 text-emerald-600" strokeWidth={2} />
+        <span className="text-[12px] font-bold uppercase tracking-wider text-emerald-700">
+          Akar Keluarga · Nilai Keislaman
+        </span>
+      </div>
+
+      {/* Nilai inti */}
+      <div className="px-4 pt-3 pb-1">
+        <p className="text-[12px] font-semibold italic text-stv-muted">{panel.nilaiInti}</p>
+      </div>
+
+      {/* Apa Kata Sains */}
+      <div className="px-4 pt-3">
+        <div className="mb-1.5 flex items-center gap-1.5">
+          <Atom className="h-3.5 w-3.5 text-[#0F6E56]" strokeWidth={2} />
+          <span className="text-[12px] font-bold text-[#0F6E56]">Apa Kata Sains</span>
+        </div>
+        <p className="text-[14px] leading-relaxed text-stv-body">{panel.sains}</p>
+      </div>
+
+      <hr className="mx-4 my-3 border-emerald-100" />
+
+      {/* Apa Kata Islam */}
+      <div className="px-4">
+        <div className="mb-1.5 flex items-center gap-1.5">
+          <Star className="h-3.5 w-3.5 text-emerald-700" strokeWidth={2} fill="currentColor" />
+          <span className="text-[12px] font-bold text-emerald-700">Apa Kata Islam</span>
+        </div>
+        <p className="text-[14px] leading-relaxed text-stv-body">{panel.islam}</p>
+      </div>
+
+      {/* Praktik */}
+      {panel.praktik.length > 0 && (
+        <>
+          <hr className="mx-4 my-3 border-emerald-100" />
+          <div className="px-4 pb-4">
+            <p className="mb-2 text-[12px] font-bold uppercase tracking-wider text-emerald-700">
+              Praktik
+            </p>
+            <ul className="space-y-2">
+              {panel.praktik.map((item: string, i: number) => (
+                <li key={i} className="flex items-start gap-2 text-[14px] text-stv-body">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-[11px] font-bold text-emerald-700">
+                    {i + 1}
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 export default function KnowledgeCardSummary() {
   const { cardId } = useParams<{ cardId: string }>();
@@ -20,6 +85,7 @@ export default function KnowledgeCardSummary() {
   const basePath = useDashboardBasePath();
   const { segments, setCurrentIndex, registerNavigate } = useAudioPlayer();
   const { isRead, isBookmarked, toggleRead, toggleBookmark } = useKnowledgeLibrary();
+  const { akarKeluarga } = useDashboardTier2();
 
   const card = CARDS.find(c => c.id === cardId);
   const [imgError, setImgError] = useState(false);
@@ -207,6 +273,11 @@ export default function KnowledgeCardSummary() {
 
         {/* CTA Konsultasi — hanya kartu domain DK */}
         {card.domain === 'DK' && <KonsultasiCTA />}
+
+        {/* Akar Keluarga: Nilai Keislaman — ditampilkan bila orang tua memilih akar islam */}
+        {akarKeluarga === 'islam' && ISLAMIC_PANELS[card.ageKey] && (
+          <IslamicPanelCard panel={ISLAMIC_PANELS[card.ageKey]} />
+        )}
 
         {/* Sudah Dibaca, after content, before next card */}
         <button

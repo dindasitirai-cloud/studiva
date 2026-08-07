@@ -1,12 +1,11 @@
 // REVIEW: menunggu approval Psikolog Fitri Effendy sebelum rilis
 import React, { useMemo, useState } from 'react';
-import { X, BookOpen, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { X, BookOpen, CheckCircle2, Plus } from 'lucide-react';
 import FilterSubUsia, { resolveSubUsia, SUB_USIA_TO_AGE_KEY } from '../../components/FilterSubUsia';
 import type { IdSubUsia } from '../../components/FilterSubUsia';
 import { CARDS, AGE_RANGES } from '../../pages/DashboardPages/Tier2/knowledgeCardData';
 import type { KnowledgeCard } from '../../pages/DashboardPages/Tier2/knowledgeCardData';
 import { getBookColors, DOMAIN_CODE_LABEL } from '../../pages/DashboardPages/Tier2/bekalDomainTokens';
-import { benihDariTeks, kocok } from '../beranda-usia/adapter/acakDeterministik';
 import { usePilihanHarian } from './PilihanHarianContext';
 import BotanicalStem from '../../components/BotanicalStem';
 
@@ -21,7 +20,7 @@ function BukuMini({ kartu }: { kartu: KnowledgeCard }) {
   const W = 160, H = 208, SPINE = 24;
 
   return (
-    <div style={{ perspective: 900, width: W, height: H + 28, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', flexShrink: 0 }}>
+    <div style={{ perspective: 900, width: W, height: H + 28, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
       <div style={{
         position: 'relative', width: W, height: H,
         transformStyle: 'preserve-3d',
@@ -50,7 +49,7 @@ function BukuMini({ kartu }: { kartu: KnowledgeCard }) {
           {/* Blob */}
           <div style={{ position: 'absolute', right: -40, bottom: -40, width: 140, height: 140, borderRadius: '50%', background: blob, opacity: .45 }} />
           {/* Content */}
-          <div style={{ position: 'relative', zIndex: 1, padding: '14px 14px 14px 18px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div style={{ position: 'relative', zIndex: 1, padding: '14px 14px 14px 18px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 8 }}>
             <div>
               <div style={{ fontFamily: 'Nunito, system-ui', fontWeight: 800, fontSize: 11, letterSpacing: 1, color: ink, textTransform: 'uppercase' }}>{domainLabel}</div>
               <div style={{ fontFamily: 'Nunito, system-ui', fontWeight: 600, fontSize: 10, color: '#A98DA0', marginTop: 3 }}>{ageLabel}</div>
@@ -88,7 +87,7 @@ interface PropsWawasanTumbuh {
 }
 
 export default function WawasanTumbuh({ usiaBulan, idAnak }: PropsWawasanTumbuh) {
-  const { hasilRotasi, wawasanId, pilihWawasan } = usePilihanHarian();
+  const { wawasanIds, pilihWawasan } = usePilihanHarian();
   const [showBrowse, setShowBrowse] = useState(false);
 
   const kartuSesuaiUsia = useMemo(() => {
@@ -96,20 +95,12 @@ export default function WawasanTumbuh({ usiaBulan, idAnak }: PropsWawasanTumbuh)
     return CARDS.filter(c => allowed.has(c.ageKey) && c.summary);
   }, [usiaBulan]);
 
-  const kartuHariIni = useMemo<KnowledgeCard | null>(() => {
-    if (kartuSesuaiUsia.length === 0) return null;
-    const benih = benihDariTeks(idAnak + ':wawasan:' + hasilRotasi.indeksHari);
-    const dikocok = kocok(kartuSesuaiUsia, benih);
-    return dikocok[0] ?? null;
-  }, [kartuSesuaiUsia, idAnak, hasilRotasi.indeksHari]);
-
   const kartuTerpilih = useMemo(
-    () => (wawasanId ? CARDS.find(c => c.id === wawasanId) ?? null : null),
-    [wawasanId],
+    () => wawasanIds.flatMap(id => { const c = CARDS.find(k => k.id === id); return c ? [c] : []; }),
+    [wawasanIds],
   );
 
-  const tampilKartu = kartuTerpilih ?? kartuHariIni;
-  const sudahDipilih = wawasanId !== null;
+  const sudahDipilih = wawasanIds.length > 0;
 
   return (
     <section
@@ -125,62 +116,71 @@ export default function WawasanTumbuh({ usiaBulan, idAnak }: PropsWawasanTumbuh)
         <BotanicalStem cfg={SPRIG_CFG} />
       </div>
 
-      {/* Header */}
+      {/* Header: label + judul + tombol tambah */}
       <div className="mb-3 flex items-center gap-2">
         <p className="font-nunito text-[11px] font-[800] uppercase tracking-widest text-pekat/50">
           Untuk Bunda/Ayah/Caregiver
         </p>
       </div>
-      <h2
-        id="wawasan-tumbuh-judul"
-        className="mb-3 font-bricolage text-[15px] font-bold text-pekat"
-      >
-        Pelajari Wawasan Tumbuh hari ini
-      </h2>
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h2
+          id="wawasan-tumbuh-judul"
+          className="font-bricolage text-[15px] font-bold text-pekat"
+        >
+          Pelajari Wawasan Tumbuh hari ini
+        </h2>
+        <button
+          type="button"
+          onClick={() => setShowBrowse(true)}
+          className="flex flex-shrink-0 items-center gap-1 rounded-full bg-[#E0A21F] px-3 py-1.5 font-nunito text-[12px] font-bold text-white transition hover:bg-[#C79020]"
+        >
+          <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
+          Tambah
+        </button>
+      </div>
 
-      {tampilKartu === null ? (
+      {kartuSesuaiUsia.length === 0 ? (
         <p className="font-nunito text-[14px] text-pekat/60">
           Belum ada konten tersedia untuk usia ini.
         </p>
+      ) : !sudahDipilih ? (
+        /* Belum ada buku dijadwalkan */
+        <p className="font-nunito text-[14px] leading-relaxed text-pekat/55">
+          Belum ada buku yang ingin dipelajari hari ini. Tap{' '}
+          <span className="font-bold text-[#C79020]">+ Tambah</span>{' '}
+          untuk menjadwalkan.
+        </p>
       ) : (
-        <div className="flex flex-col items-center gap-5">
-          {/* 3D book visual - tengah */}
-          <BukuMini kartu={tampilKartu} />
-
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            {sudahDipilih ? (
-              <span className="flex items-center gap-1.5 rounded-full bg-daun/15 px-3 py-1.5 font-nunito text-[12px] font-semibold text-daun">
-                <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={2.5} />
-                Masuk susunan hari
-              </span>
-            ) : (
-              <button
-                type="button"
-                onClick={() => pilihWawasan(kartuHariIni?.id ?? null)}
-                className="rounded-full bg-[#E0A21F] px-4 py-1.5 font-nunito text-[13px] font-bold text-white transition hover:bg-[#C79020]"
-              >
-                Pelajari hari ini
-              </button>
-            )}
-
-            <button
-              type="button"
-              onClick={() => setShowBrowse(true)}
-              className="flex items-center gap-1 font-nunito text-[12px] font-semibold text-pekat/50 hover:text-rekah"
-            >
-              <RefreshCw className="h-3 w-3" />
-              Pilih lain
-            </button>
-          </div>
+        /* Buku sudah dipilih — tampilkan semua */
+        <div className="flex flex-col gap-4">
+          {kartuTerpilih.map(kartu => (
+            <div key={kartu.id} className="flex flex-col items-center gap-3">
+              <BukuMini kartu={kartu} />
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <span className="flex items-center gap-1.5 rounded-full bg-daun/15 px-3 py-1.5 font-nunito text-[12px] font-semibold text-daun">
+                  <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={2.5} />
+                  Masuk susunan hari
+                </span>
+                <button
+                  type="button"
+                  onClick={() => pilihWawasan(kartu.id)}
+                  className="flex items-center gap-1 font-nunito text-[12px] font-semibold text-pekat/40 hover:text-rekah"
+                >
+                  <X className="h-3 w-3" />
+                  Hapus
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
       {showBrowse && (
         <BrowsePopup
           kartu={kartuSesuaiUsia}
-          terpilih={wawasanId}
+          terpilihIds={wawasanIds}
           usiaBulan={usiaBulan}
-          onPilih={id => { pilihWawasan(id); setShowBrowse(false); }}
+          onPilih={id => { pilihWawasan(id); }}
           onTutup={() => setShowBrowse(false)}
         />
       )}
@@ -190,13 +190,13 @@ export default function WawasanTumbuh({ usiaBulan, idAnak }: PropsWawasanTumbuh)
 
 interface PropsBrowsePopup {
   kartu: KnowledgeCard[];
-  terpilih: string | null;
+  terpilihIds: string[];
   usiaBulan: number;
   onPilih: (id: string) => void;
   onTutup: () => void;
 }
 
-function BrowsePopup({ kartu, terpilih, usiaBulan, onPilih, onTutup }: PropsBrowsePopup) {
+function BrowsePopup({ kartu, terpilihIds, usiaBulan, onPilih, onTutup }: PropsBrowsePopup) {
   const isYearOne = usiaBulan < 12;
   const [subUsia, setSubUsia] = useState<IdSubUsia>(
     () => resolveSubUsia(usiaBulan),
@@ -253,7 +253,7 @@ function BrowsePopup({ kartu, terpilih, usiaBulan, onPilih, onTutup }: PropsBrow
           ) : (
             <div className="flex flex-col gap-2">
               {kartuFiltered.map(c => {
-                const dipilih = c.id === terpilih;
+                const dipilih = terpilihIds.includes(c.id);
                 return (
                   <button
                     key={c.id}
@@ -266,7 +266,7 @@ function BrowsePopup({ kartu, terpilih, usiaBulan, onPilih, onTutup }: PropsBrow
                         : 'border-bordergray bg-white hover:border-madu/50 hover:bg-madu/10',
                     ].join(' ')}
                   >
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[10px] bg-madu/20">
+                    <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[10px] ${dipilih ? 'bg-madu/40' : 'bg-madu/20'}`}>
                       <BookOpen className="h-4 w-4 text-[#E0A21F]" strokeWidth={1.5} />
                     </div>
                     <div className="min-w-0 flex-1">

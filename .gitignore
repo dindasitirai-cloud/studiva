@@ -5,3 +5,22 @@
 .vercel
 .env*
 node_modules
+laporan/
+
+# ── Aset desain di dalam src/ ────────────────────────────────────────────────
+# Mockup dan handoff bukan kode. Karena tidak di-import, CRA tidak mem-bundle-nya,
+# tapi ia menggemukkan repo dan setiap upload build ke Vercel selamanya.
+# Materi rujukan di root (design-reference/, design_handoff_*/, Brand identity/)
+# SENGAJA tidak diabaikan — itu keputusan versioning tersendiri.
+apps/*/src/**/*.png
+apps/*/src/**/*.jpg
+apps/*/src/**/*.jpeg
+apps/*/src/**/*.html
+apps/*/src/**/design_handoff_*/
+
+# Pengecualian: berkas yang memang dipakai kode.
+# Tambahkan di sini kalau nanti ada gambar yang benar-benar di-import dari src/.
+# Aset publik ada di apps/*/public/ dan tidak terpengaruh aturan di atas.
+
+# Berkas kerja sementara
+.tmp/

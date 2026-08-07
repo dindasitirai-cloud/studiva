@@ -74,9 +74,11 @@ export interface ComposeCard {
     readMinutes?: number;
     reviewedBy?: { name: string; date: string };
     figure?: ComposeFigure;
+    figures?: ComposeFigure[];
     sections?: (SectionRef | LegacySection)[];
     stats?: (StatRef | LegacyStat)[];
     paragraphs?: string[];
+    takeaways?: string[];
   };
 }
 
@@ -107,9 +109,11 @@ export interface ScientificResolved {
   reviewedBy?: { name: string; date: string };
   stats?: ResolvedStat[];
   figure?: ComposeFigure;
+  figures?: ComposeFigure[];
   sections?: ResolvedSection[];
   references?: ResolvedReference[];
   paragraphs?: string[];
+  takeaways?: string[];
 }
 
 // ---------------------------------------------------------------------------
@@ -165,7 +169,8 @@ export function composeScientific(
   // Legacy / TODO cards: any ref-type markers → already in final shape.
   const isNew = sections.some(hasType) || stats.some(hasType);
   if (!isNew) {
-    return { ...(sci as unknown as ScientificResolved) };
+    const legacy = sci as unknown as ScientificResolved;
+    return { ...legacy, takeaways: (sci as { takeaways?: string[] }).takeaways };
   }
 
   // 1. Resolve stats to intermediate { value, label, sourceId? }
@@ -250,8 +255,10 @@ export function composeScientific(
     readMinutes: sci.readMinutes,
     reviewedBy: sci.reviewedBy,
     figure: sci.figure,
+    figures: sci.figures,
     stats: outStats.length ? outStats : undefined,
     sections: outSections,
     references: references.length ? references : undefined,
+    takeaways: (sci as { takeaways?: string[] }).takeaways,
   };
 }

@@ -14,6 +14,32 @@ import { getPilihanHarianRentang } from '../../lib/supabase/rekah';
 import type { PilihanHarian } from './PilihanHarianContext';
 import { JUDUL_LAYAR, ARIA_MINGGU_SEBELUMNYA, ARIA_MINGGU_BERIKUTNYA } from './contentMingguan';
 
+/**
+ * Baris `pilihan_harian.diff` → PilihanHarian yang utuh.
+ *
+ * WAJIB dipakai sebelum menyerahkan baris database ke pilihanKeHari. Kolom
+ * `diff` NOT NULL, jadi jalur yang hanya menulis kolom lain — misalnya
+ * simpanCentangKebiasaan ketika hari itu belum punya baris — menyimpan `{}`.
+ * Meng-cast `{}` menjadi PilihanHarian membuat `pilihan.ditambah.forEach`
+ * melempar, dan seluruh layar Irama Hari mati tanpa pesan apa pun.
+ *
+ * Gejalanya khas dan menyesatkan: satu anak layarnya kosong, anak lain baik-baik
+ * saja — bedanya bukan usia, tapi ada atau tidaknya baris centang.
+ */
+function normalkanPilihan(diff: unknown, tanggal: string, idAnak: string): PilihanHarian {
+  const d = (diff ?? {}) as Partial<PilihanHarian>;
+  return {
+    ...d,
+    tanggal: d.tanggal ?? tanggal,
+    idAnak: d.idAnak ?? idAnak,
+    dihapus: Array.isArray(d.dihapus) ? d.dihapus : [],
+    ditambah: Array.isArray(d.ditambah) ? d.ditambah : [],
+    penempatan: d.penempatan ?? {},
+    selesai: Array.isArray(d.selesai) ? d.selesai : [],
+    catatan: d.catatan ?? '',
+  } as PilihanHarian;
+}
+
 export interface JadwalManualItem {
   id: string;
   judul: string;
@@ -112,7 +138,7 @@ export default function IramaMingguan({
         if (batal) return;
         const peta: Partial<Record<string, PilihanHarian>> = {};
         for (const [tgl, row] of Object.entries(baris)) {
-          peta[tgl] = row.diff as unknown as PilihanHarian;
+          peta[tgl] = normalkanPilihan(row.diff, tgl, idAnak);
         }
         setDataPerHari(peta);
       })

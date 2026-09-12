@@ -15,6 +15,8 @@ export interface ItemSikap {
   /** Fase di mana sikap ini masih berlaku (1–5, inklusif). */
   faseSelesai: number;
   sumberId: string;
+  /** ID Kebiasaan Baik kanonik (MATERI kb-XXX) — jembatan agar Temani & Bekal menunjuk butir yang sama. */
+  kebiasaanId?: string;
 }
 
 export interface HasilSikap {
@@ -134,6 +136,7 @@ export function adaptSikap(): HasilSikap {
 
       katalog.push({
         id,
+        kebiasaanId: src.id,
         judul: src.judul,
         nilai: nilaiValid,
         faseMulai: fase,

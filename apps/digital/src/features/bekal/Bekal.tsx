@@ -20,6 +20,9 @@ import type { IdSubUsia } from '../../components/FilterSubUsia';
 import PopupPilihHari from '../../components/PopupPilihHari';
 import type { JadwalItem } from '../../components/PopupPilihHari';
 import { tanggalDariTimestampWIB } from '@studiva/shared';
+import { useAnakAktif } from '../../context/AnakContext';
+import { tambahKustomKeTanggal } from '../../lib/supabase/rekah';
+import { journeyUntukKebiasaan } from '../temani/temaniSeed';
 import {
   ActivityCard, ActivityModal,
   ToolCard, ToolModal,
@@ -232,6 +235,8 @@ function PopupDetailNilai({
   onTanam,
   onCabut,
   onTutup,
+  onTambahRutinitas,
+  onTemani,
 }: {
   nilai: NilaiAkar;
   sikapList: ItemSikap[];
@@ -239,7 +244,10 @@ function PopupDetailNilai({
   onTanam: () => void;
   onCabut?: () => void;
   onTutup: () => void;
+  onTambahRutinitas?: (s: ItemSikap) => Promise<void>;
+  onTemani?: (s: ItemSikap) => void;
 }) {
+  const [statusRutin, setStatusRutin] = useState<Record<string, 'ok' | 'err'>>({});
   const info = PENJELASAN_NILAI[nilai];
   const bunga = BUNGA_DARI_NAMA.get(nilai);
   const elRef = useRef<HTMLDivElement>(null);
@@ -310,12 +318,40 @@ function PopupDetailNilai({
               {KEBIASAAN_BAIK.jumlahKebiasaan(sikapList.length)}
             </p>
             <ul className="space-y-2">
-              {sikapList.map(s => (
-                <li key={s.id} className="flex items-start gap-2 text-[12px] leading-snug text-pekat/70">
-                  <span className="mt-0.5 flex-shrink-0 text-[8px] text-rekah/50">●</span>
-                  {s.judul}
+              {sikapList.map(s => {
+                const kbId = s.kebiasaanId ?? s.id;
+                const adaJourney = !!journeyUntukKebiasaan(kbId);
+                return (
+                <li key={s.id} className="text-[12px] leading-snug text-pekat/70">
+                  <div className="flex items-start gap-2">
+                    <span className="mt-0.5 flex-shrink-0 text-[8px] text-rekah/50">●</span>
+                    <span>{s.judul}</span>
+                  </div>
+                  {(onTambahRutinitas || (onTemani && adaJourney)) && (
+                    <div className="mt-1.5 ml-4 flex flex-wrap gap-2">
+                      {onTambahRutinitas && (
+                        <button
+                          type="button"
+                          onClick={() => { void onTambahRutinitas(s).then(() => setStatusRutin(p => ({ ...p, [kbId]: 'ok' }))).catch(() => setStatusRutin(p => ({ ...p, [kbId]: 'err' }))); }}
+                          className="rounded-full bg-rekah/10 px-2.5 py-1 font-nunito text-[11px] font-bold text-rekah transition hover:bg-rekah/20"
+                        >
+                          {statusRutin[kbId] === 'ok' ? '✓ Di rutinitas' : statusRutin[kbId] === 'err' ? 'Coba lagi' : '+ Rutinitas'}
+                        </button>
+                      )}
+                      {onTemani && adaJourney && (
+                        <button
+                          type="button"
+                          onClick={() => onTemani(s)}
+                          className="rounded-full border border-rekah/30 px-2.5 py-1 font-nunito text-[11px] font-bold text-rekah transition hover:bg-rekah/10"
+                        >
+                          Mau ditemani?
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </li>
-              ))}
+                );
+              })}
             </ul>
           </div>
         )}
@@ -895,6 +931,20 @@ function IsiBekal({
   const [nilaiDibuka, setNilaiDibuka] = useState<NilaiAkar | null>(null);
   const [jadwalkanBuku, setJadwalkanBuku] = useState<KnowledgeCard | null>(null);
   const tanggalHariIni = useMemo(() => tanggalDariTimestampWIB(new Date().toISOString()), []);
+  const { anak } = useAnakAktif();
+  const handleTambahRutinitas = useCallback(async (s: ItemSikap) => {
+    const kbId = s.kebiasaanId ?? s.id;
+    await tambahKustomKeTanggal(anak.id, tanggalHariIni, {
+      id: `kebiasaan-${kbId}`, judul: s.judul, tipe: 'aktivitas', domain: 'sos',
+      nilai: s.nilai, pemilik: 'anak', sumberId: `kebiasaan-${kbId}`, kustom: true,
+      kategoriKustom: 'rencana', kebiasaanId: kbId, keteranganKapan: 'Dari Kebiasaan Baik',
+    });
+  }, [anak.id, tanggalHariIni]);
+  const handleTemaniKb = useCallback((s: ItemSikap) => {
+    const kbId = s.kebiasaanId ?? s.id;
+    const j = journeyUntukKebiasaan(kbId);
+    navigate(j ? `/dashboard/tier2/temani?journey=${j.slug}` : '/dashboard/tier2/temani');
+  }, [navigate]);
 
   const handleKonfirmasiJadwalBuku = useCallback((tanggal: string) => {
     if (!jadwalkanBuku) return;
@@ -1116,6 +1166,8 @@ function IsiBekal({
           sudahDitanam={nilaiFokusSet.has(nilaiDibuka)}
           onTanam={() => { onTanamNilai?.(nilaiDibuka); }}
           onCabut={onCabutNilai ? () => { onCabutNilai(nilaiDibuka); setNilaiDibuka(null); } : undefined}
+          onTambahRutinitas={handleTambahRutinitas}
+          onTemani={handleTemaniKb}
           onTutup={() => setNilaiDibuka(null)}
         />
       )}

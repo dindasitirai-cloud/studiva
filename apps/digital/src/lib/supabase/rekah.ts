@@ -7,6 +7,10 @@ import type { Database, Json, PendampingJson } from './database.types';
 
 type AnakRow = Database['public']['Tables']['anak']['Row'];
 type NilaiDitanamRow = Database['public']['Tables']['nilai_ditanam']['Row'];
+type PengamatanKompasRow = Database['public']['Tables']['pengamatan_kompas']['Row'];
+type RefleksiKegiatanRow = Database['public']['Tables']['refleksi_kegiatan']['Row'];
+type JejakPengamatanRow = Database['public']['Tables']['jejak_pengamatan_kompas']['Row'];
+type CatatanPengamatanRow = Database['public']['Tables']['catatan_pengamatan_kompas']['Row'];
 type PilihanHarianRow = Database['public']['Tables']['pilihan_harian']['Row'];
 type KebunRiwayatRow = Database['public']['Tables']['kebun_riwayat']['Row'];
 type PermohonanKoreksiRow = Database['public']['Tables']['permohonan_koreksi_tgl_lahir']['Row'];
@@ -234,6 +238,129 @@ export async function cabutNilai(idAnak: string, idNilai: string): Promise<void>
     .delete()
     .eq('id_anak', idAnak)
     .eq('id_nilai', idNilai);
+
+  if (error) throw error;
+}
+
+// ── Catatan Pengamatan (observasi teks bebas) ────────────────────────────────
+
+export async function catatObservasiTeks(idAnak: string, teks: string): Promise<void> {
+  const { error } = await supabase
+    .from('catatan_pengamatan_kompas')
+    .insert({ id_anak: idAnak, teks });
+
+  if (error) throw error;
+}
+
+export async function getObservasiTeks(idAnak: string): Promise<CatatanPengamatanRow[]> {
+  const { data, error } = await supabase
+    .from('catatan_pengamatan_kompas')
+    .select('*')
+    .eq('id_anak', idAnak)
+    .order('pada', { ascending: false });
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+// ── Jejak Pengamatan Kompas (Kontinuitas) ────────────────────────────────────
+// Log append-only tandai/lepas untuk membangun lini masa perkembangan.
+
+export async function catatJejakPengamatan(idAnak: string, idPrompt: string, aksi: 'tandai' | 'lepas'): Promise<void> {
+  const { error } = await supabase
+    .from('jejak_pengamatan_kompas')
+    .insert({ id_anak: idAnak, id_prompt: idPrompt, aksi });
+
+  if (error) throw error;
+}
+
+export async function getJejakPengamatan(idAnak: string): Promise<JejakPengamatanRow[]> {
+  const { data, error } = await supabase
+    .from('jejak_pengamatan_kompas')
+    .select('*')
+    .eq('id_anak', idAnak)
+    .order('pada');
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+// ── Refleksi Kegiatan (Reflect) ──────────────────────────────────────────────
+// Refleksi satu-ketuk per anak per tanggal per kegiatan. hasil = string enum app.
+
+export async function getRefleksiKegiatan(idAnak: string, tanggal: string): Promise<RefleksiKegiatanRow[]> {
+  const { data, error } = await supabase
+    .from('refleksi_kegiatan')
+    .select('*')
+    .eq('id_anak', idAnak)
+    .eq('tanggal', tanggal);
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function simpanRefleksi(idAnak: string, tanggal: string, idKegiatan: string, hasil: string): Promise<void> {
+  const { error } = await supabase
+    .from('refleksi_kegiatan')
+    .upsert(
+      { id_anak: idAnak, tanggal, id_kegiatan: idKegiatan, hasil },
+      { onConflict: 'id_anak,tanggal,id_kegiatan' },
+    );
+
+  if (error) throw error;
+}
+
+export async function hapusRefleksi(idAnak: string, tanggal: string, idKegiatan: string): Promise<void> {
+  const { error } = await supabase
+    .from('refleksi_kegiatan')
+    .delete()
+    .eq('id_anak', idAnak)
+    .eq('tanggal', tanggal)
+    .eq('id_kegiatan', idKegiatan);
+
+  if (error) throw error;
+}
+
+export async function getRefleksiRentang(idAnak: string, tglAwal: string, tglAkhir: string): Promise<RefleksiKegiatanRow[]> {
+  const { data, error } = await supabase
+    .from('refleksi_kegiatan')
+    .select('*')
+    .eq('id_anak', idAnak)
+    .gte('tanggal', tglAwal)
+    .lte('tanggal', tglAkhir);
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+// ── Pengamatan Kompas (Development Compass) ──────────────────────────────────
+// Prompt observasi tahap perkembangan yang ditandai caregiver. id_prompt = ObservationPrompt.id.
+
+export async function getPengamatanKompas(idAnak: string): Promise<PengamatanKompasRow[]> {
+  const { data, error } = await supabase
+    .from('pengamatan_kompas')
+    .select('*')
+    .eq('id_anak', idAnak)
+    .order('diamati_pada');
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function tandaiPengamatan(idAnak: string, idPrompt: string): Promise<void> {
+  const { error } = await supabase
+    .from('pengamatan_kompas')
+    .upsert({ id_anak: idAnak, id_prompt: idPrompt }, { onConflict: 'id_anak,id_prompt', ignoreDuplicates: true });
+
+  if (error) throw error;
+}
+
+export async function hapusPengamatan(idAnak: string, idPrompt: string): Promise<void> {
+  const { error } = await supabase
+    .from('pengamatan_kompas')
+    .delete()
+    .eq('id_anak', idAnak)
+    .eq('id_prompt', idPrompt);
 
   if (error) throw error;
 }
@@ -481,3 +608,88 @@ export async function getPermohonanKoreksi(idAnak: string): Promise<PermohonanKo
   if (error) throw error;
   return data ?? [];
 }
+
+// ── Tambah item KUSTOM ke rencana (Phase 14: dipakai Temani & Bantu) ──────────
+// Read-modify-write pada diff.kustom + diff.ditambah (pola sama seperti
+// jadwalkanKeTanggal). Membuat langkah Temani / strategi Bantu muncul di Kelola
+// (SusunanHari) tanpa perlu ada di kolam anak. Additive; tidak mengubah fungsi lain.
+export async function tambahKustomKeTanggal(
+  idAnak: string,
+  tanggal: string,
+  item: Record<string, unknown> & { id: string },
+): Promise<void> {
+  const baris = await getPilihanHarian(idAnak, tanggal);
+  const diffLama = (baris?.diff ?? {}) as Record<string, unknown>;
+
+  const kustom = Array.isArray(diffLama.kustom) ? [...(diffLama.kustom as unknown[])] : [];
+  const ditambah = Array.isArray(diffLama.ditambah) ? [...(diffLama.ditambah as string[])] : [];
+
+  if (kustom.some(k => (k as { id?: string }).id === item.id)) return; // sudah ada
+  kustom.push(item);
+  if (!ditambah.includes(item.id)) ditambah.push(item.id);
+
+  const bawaan: Record<string, unknown> = {
+    dihapus: [], penempatan: {}, selesai: [], catatan: '', wawasanIds: [], wawasanBloks: {},
+  };
+  const diffBaru: Record<string, unknown> = {
+    ...bawaan, ...diffLama, tanggal, idAnak, kustom, ditambah,
+  };
+
+  await simpanPilihanHarian(idAnak, tanggal, diffBaru);
+}
+
+// ── Jurnal perjalanan (Phase 14Q) ─────────────────────────────────────────────
+// Foto di bucket PRIVAT "jurnal-foto" (lihat 020_jurnal.sql). Tulisan + daftar
+// path foto di tabel "jurnal_hari". Tabel belum ada di database.types.ts (dibuat
+// migration 020), jadi pemanggilannya dicasting — additive, tak menyentuh lain.
+const BUCKET_JURNAL = 'jurnal-foto';
+const MAKS_UKURAN_FOTO_JURNAL = 5 * 1024 * 1024;
+
+export async function unggahFotoJurnal(idAnak: string, tanggal: string, file: File): Promise<string> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Tidak ada sesi aktif');
+  if (!file.type.startsWith('image/')) throw new Error('Berkas harus berupa gambar.');
+  if (file.size > MAKS_UKURAN_FOTO_JURNAL) throw new Error('Ukuran foto maksimal 5 MB.');
+  const ext = (file.name.split('.').pop() ?? 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+  const acak = Math.random().toString(36).slice(2, 10);
+  const path = `${user.id}/${idAnak}/${tanggal}/${acak}.${ext}`;
+  const { error } = await supabase.storage.from(BUCKET_JURNAL).upload(path, file, { upsert: false, contentType: file.type });
+  if (error) throw error;
+  return path;
+}
+
+export async function urlFotoJurnal(path: string, detikBerlaku = 3600): Promise<string | null> {
+  if (!path) return null;
+  const { data, error } = await supabase.storage.from(BUCKET_JURNAL).createSignedUrl(path, detikBerlaku);
+  if (error) return null;
+  return data?.signedUrl ?? null;
+}
+
+export async function hapusFotoJurnal(path: string | null): Promise<void> {
+  if (!path) return;
+  await supabase.storage.from(BUCKET_JURNAL).remove([path]);
+}
+
+export interface JurnalHari { cerita: string; foto: string[] }
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export async function getJurnalHariRentang(idAnak: string, daftarTanggal: readonly string[]): Promise<Record<string, JurnalHari>> {
+  if (daftarTanggal.length === 0) return {};
+  const { data, error } = await (supabase as any)
+    .from('jurnal_hari').select('tanggal, cerita, foto')
+    .eq('id_anak', idAnak).in('tanggal', daftarTanggal as string[]);
+  if (error) throw error;
+  const hasil: Record<string, JurnalHari> = {};
+  for (const b of (data ?? []) as any[]) {
+    hasil[b.tanggal] = { cerita: b.cerita ?? '', foto: Array.isArray(b.foto) ? b.foto : [] };
+  }
+  return hasil;
+}
+
+export async function simpanJurnalHari(idAnak: string, tanggal: string, isi: JurnalHari): Promise<void> {
+  const { error } = await (supabase as any)
+    .from('jurnal_hari')
+    .upsert({ id_anak: idAnak, tanggal, cerita: isi.cerita, foto: isi.foto, diperbarui_pada: new Date().toISOString() }, { onConflict: 'id_anak,tanggal' });
+  if (error) throw error;
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */

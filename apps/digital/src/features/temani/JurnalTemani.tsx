@@ -53,6 +53,8 @@ function Penanda({ sumber }: { sumber: SumberJurnal }) {
   if (sumber === 'kebiasaan') return <span className="mt-0.5 flex-none text-[16px]" aria-hidden>🌿</span>;
   const base = 'mt-0.5 grid h-5 w-5 flex-none place-items-center rounded-full text-white text-[11px]';
   if (sumber === 'kelola') return <span className={`${base} bg-daun`} aria-hidden>✓</span>;
+  if (sumber === 'kegiatan') return <span className={base} style={{ background: '#F6B860' }} aria-hidden>🎲</span>;
+  if (sumber === 'wawasan') return <span className={base} style={{ background: '#C9B8F0' }} aria-hidden>💡</span>;
   if (sumber === 'temani') return <span className={base} style={{ background: '#F06BA8' }} aria-hidden>♥</span>;
   if (sumber === 'bantu') return <span className={base} style={{ background: '#8E5FA6' }} aria-hidden>🆘</span>;
   return <span className={base} style={{ background: '#8FB8F7' }} aria-hidden>💬</span>;
@@ -75,11 +77,16 @@ export default function JurnalTemani({ idAnak, nama, onKembali }: Props) {
     (async () => {
       try {
         setLoading(true);
-        const [rows, refleksi, jmap] = await Promise.all([
-          getPilihanHarianRentang(idAnak, dates),
-          getRefleksiRentang(idAnak, dates[dates.length - 1], dates[0]),
-          getJurnalHariRentang(idAnak, dates),
-        ]);
+        // Inti (log otomatis) = pilihan_harian. Refleksi & jurnal_hari dibuat
+        // TIDAK fatal: bila belum ada (mis. migration 020 belum jalan), buku
+        // tetap terbuka dengan log otomatis, hanya cerita/foto yang belum aktif.
+        const rows = await getPilihanHarianRentang(idAnak, dates);
+        let refleksi: { tanggal: string; hasil: string }[] = [];
+        try { refleksi = await getRefleksiRentang(idAnak, dates[dates.length - 1], dates[0]); }
+        catch (er) { console.warn('[Jurnal] refleksi gagal (diabaikan):', er); }
+        let jmap: Record<string, JurnalHari> = {};
+        try { jmap = await getJurnalHariRentang(idAnak, dates); }
+        catch (ej) { console.warn('[Jurnal] jurnal_hari gagal — pastikan migration 020 dijalankan & bucket "jurnal-foto" dibuat:', ej); }
         const refByDate = new Map<string, { hasil: string }[]>();
         for (const r of refleksi) {
           const a = refByDate.get(r.tanggal) ?? [];
@@ -141,7 +148,7 @@ export default function JurnalTemani({ idAnak, nama, onKembali }: Props) {
     try {
       const path = await unggahFotoJurnal(idAnak, isoCur, f);
       await simpan({ cerita: draft, foto: [...jurnalCur.foto, path] });
-    } catch (e) { console.error('[Jurnal] unggah gagal:', e); dispatchRekahError('Foto belum bisa diunggah (maks 5 MB). Coba lagi ya.'); }
+    } catch (e) { console.error('[Jurnal] unggah gagal:', e); const m = (e as { message?: string })?.message; dispatchRekahError(`Foto belum bisa diunggah${m ? `: ${m}` : ''}. Pastikan bucket "jurnal-foto" ada & policy storage (migration 020) terpasang.`); }
   };
   const onHapusFoto = async (path: string) => {
     await simpan({ cerita: draft, foto: jurnalCur.foto.filter(p => p !== path) });

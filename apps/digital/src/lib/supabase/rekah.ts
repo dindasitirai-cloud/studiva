@@ -638,6 +638,31 @@ export async function tambahKustomKeTanggal(
   await simpanPilihanHarian(idAnak, tanggal, diffBaru);
 }
 
+// ── Tandai/lepas item KUSTOM sebagai selesai (Phase 14: dipakai Temani) ────────
+// Baca-ubah-tulis pada diff.selesai (pola sama tambahKustomKeTanggal). Sumber
+// tunggal status "selesai" ada di Kelola, jadi Temani menulis ke sini agar dua
+// arah. Additive; kolom centang & isi diff lain dipertahankan lewat ...diffLama.
+export async function setSelesaiKustom(
+  idAnak: string,
+  tanggal: string,
+  id: string,
+  selesai: boolean,
+): Promise<void> {
+  const baris = await getPilihanHarian(idAnak, tanggal);
+  const diffLama = (baris?.diff ?? {}) as Record<string, unknown>;
+  const daftar = Array.isArray(diffLama.selesai) ? [...(diffLama.selesai as string[])] : [];
+  const ada = daftar.includes(id);
+  if (selesai && !ada) daftar.push(id);
+  else if (!selesai && ada) daftar.splice(daftar.indexOf(id), 1);
+  else return; // tak ada perubahan
+
+  const bawaan: Record<string, unknown> = {
+    dihapus: [], penempatan: {}, selesai: [], catatan: '', wawasanIds: [], wawasanBloks: {},
+  };
+  const diffBaru: Record<string, unknown> = { ...bawaan, ...diffLama, tanggal, idAnak, selesai: daftar };
+  await simpanPilihanHarian(idAnak, tanggal, diffBaru);
+}
+
 // ── Jurnal perjalanan (Phase 14Q) ─────────────────────────────────────────────
 // Foto di bucket PRIVAT "jurnal-foto" (lihat 020_jurnal.sql). Tulisan + daftar
 // path foto di tabel "jurnal_hari". Tabel belum ada di database.types.ts (dibuat
@@ -648,9 +673,11 @@ const MAKS_UKURAN_FOTO_JURNAL = 5 * 1024 * 1024;
 export async function unggahFotoJurnal(idAnak: string, tanggal: string, file: File): Promise<string> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Tidak ada sesi aktif');
-  if (!file.type.startsWith('image/')) throw new Error('Berkas harus berupa gambar.');
-  if (file.size > MAKS_UKURAN_FOTO_JURNAL) throw new Error('Ukuran foto maksimal 5 MB.');
   const ext = (file.name.split('.').pop() ?? 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+  const EKST_GAMBAR = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif', 'bmp', 'avif'];
+  const berupaGambar = file.type.startsWith('image/') || EKST_GAMBAR.includes(ext);
+  if (!berupaGambar) throw new Error('Berkas harus berupa gambar (jpg, png, webp, heic).');
+  if (file.size > MAKS_UKURAN_FOTO_JURNAL) throw new Error('Ukuran foto maksimal 5 MB.');
   const acak = Math.random().toString(36).slice(2, 10);
   const path = `${user.id}/${idAnak}/${tanggal}/${acak}.${ext}`;
   const { error } = await supabase.storage.from(BUCKET_JURNAL).upload(path, file, { upsert: false, contentType: file.type });

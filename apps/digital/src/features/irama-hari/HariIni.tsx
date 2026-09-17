@@ -60,6 +60,16 @@ const SITUASIONAL: { id: string; t: string; n: NilaiAkar; kapan: string }[] = [
   { id: 'sit-3', t: 'Minta maaf saat berbuat salah', n: 'Kejujuran', kapan: 'saat ada masalah' },
   { id: 'sit-4', t: 'Berani coba hal baru', n: 'Keberanian', kapan: 'saat ragu' },
 ];
+// Katalog seed (id -> judul + kategori) dipakai Jurnal Temani untuk mencatat
+// otomatis apa yang ditandai di Kelola Hari Ini (kebiasaan/situasional/main/buku).
+export type KategoriKelola = Tipe | 'situasional';
+export function katalogKelolaSeed(): Map<string, { judul: string; kategori: KategoriKelola }> {
+  const m = new Map<string, { judul: string; kategori: KategoriKelola }>();
+  for (const w of WAKTU) for (const k of w.keg) for (const it of k.items) m.set(it.id, { judul: it.t, kategori: it.tipe });
+  for (const sit of SITUASIONAL) m.set(sit.id, { judul: sit.t, kategori: 'situasional' });
+  return m;
+}
+
 const ORDER: Tipe[] = ['kebiasaan', 'main', 'buku', 'lainnya'];
 
 interface Store { extra: Record<string, Item[]>; hidden: string[]; doneExtra: string[]; addedKeg: Record<string, { id: string; nm: string }[]> }

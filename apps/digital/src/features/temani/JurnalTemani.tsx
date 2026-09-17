@@ -8,8 +8,10 @@ import {
   simpanJurnalHari, unggahFotoJurnal, urlFotoJurnal, hapusFotoJurnal,
 } from '../../lib/supabase/rekah';
 import type { JurnalHari } from '../../lib/supabase/rekah';
-import { bangunEntriHari } from './jurnalAgregator';
-import type { SumberJurnal } from './jurnalAgregator';
+import { bangunEntriHari, gabungEntri, normalisasiKategori } from './jurnalAgregator';
+import type { EntriOtomatis, KategoriJurnal } from './jurnalAgregator';
+import { katalogKelolaSeed } from '../irama-hari/HariIni';
+import { bacaInboxSelesai } from '../irama-hari/inboxData';
 import { dispatchRekahError } from '../../utils/rekahApiError';
 import { tanggalDariTimestampWIB } from '@studiva/shared';
 
@@ -47,23 +49,54 @@ function fmt(iso: string, opt: Intl.DateTimeFormatOptions): string {
 }
 function dowOf(iso: string): number { return new Date(`${iso}T00:00:00Z`).getUTCDay(); }
 
-interface PageData { iso: string; entri: { sumber: SumberJurnal; teks: string; tag: string }[] }
+interface PageData { iso: string; entri: EntriOtomatis[] }
 
-function Penanda({ sumber }: { sumber: SumberJurnal }) {
-  if (sumber === 'kebiasaan') return <span className="mt-0.5 flex-none text-[16px]" aria-hidden>🌿</span>;
-  const base = 'mt-0.5 grid h-5 w-5 flex-none place-items-center rounded-full text-white text-[11px]';
-  if (sumber === 'kelola') return <span className={`${base} bg-daun`} aria-hidden>✓</span>;
-  if (sumber === 'kegiatan') return <span className={base} style={{ background: '#F6B860' }} aria-hidden>🎲</span>;
-  if (sumber === 'wawasan') return <span className={base} style={{ background: '#C9B8F0' }} aria-hidden>💡</span>;
-  if (sumber === 'temani') return <span className={base} style={{ background: '#F06BA8' }} aria-hidden>♥</span>;
-  if (sumber === 'bantu') return <span className={base} style={{ background: '#8E5FA6' }} aria-hidden>🆘</span>;
-  return <span className={base} style={{ background: '#8FB8F7' }} aria-hidden>💬</span>;
+const KAT_INFO: Record<KategoriJurnal, { label: string; warna: string; bentuk: string }> = {
+  kebiasaan:   { label: 'Kebiasaan baik',        warna: '#5E8C3C', bentuk: 'kotak' },
+  situasional: { label: 'Kebiasaan situasional', warna: '#C98A1E', bentuk: 'wajik' },
+  main:        { label: 'Ajak main',             warna: '#C0567F', bentuk: 'lingkaran' },
+  wawasan:     { label: 'Wawasan tumbuh',        warna: '#7A5CA6', bentuk: 'lingkaran' },
+  dikelola:    { label: 'Untuk dikelola',        warna: '#2F8F83', bentuk: 'kotak' },
+  temani:      { label: 'Langkah Temani',        warna: '#E0468C', bentuk: 'lingkaran' },
+  bantu:       { label: 'Dukungan situasional',  warna: '#8E5FA6', bentuk: 'segitiga' },
+  refleksi:    { label: 'Refleksi',              warna: '#4C74D6', bentuk: 'cincin' },
+  lainnya:     { label: 'Lainnya',               warna: '#8A7385', bentuk: 'kotak' },
+};
+const KATEGORI_URUT: KategoriJurnal[] = ['kebiasaan', 'situasional', 'main', 'wawasan', 'dikelola', 'temani', 'bantu', 'refleksi', 'lainnya'];
+
+// Penanda kategori: HANYA bentuk + warna (tanpa emoji).
+function Bentuk({ bentuk, warna }: { bentuk: string; warna: string }) {
+  if (bentuk === 'lingkaran') return <span aria-hidden style={{ width: 12, height: 12, borderRadius: '50%', background: warna, display: 'block', flex: 'none' }} />;
+  if (bentuk === 'wajik') return <span aria-hidden style={{ width: 10, height: 10, background: warna, display: 'block', flex: 'none', transform: 'rotate(45deg)' }} />;
+  if (bentuk === 'cincin') return <span aria-hidden style={{ width: 12, height: 12, borderRadius: '50%', border: `2.5px solid ${warna}`, background: 'transparent', display: 'block', flex: 'none', boxSizing: 'border-box' }} />;
+  if (bentuk === 'segitiga') return <span aria-hidden style={{ width: 0, height: 0, borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderBottom: `11px solid ${warna}`, display: 'block', flex: 'none' }} />;
+  return <span aria-hidden style={{ width: 12, height: 12, borderRadius: 3, background: warna, display: 'block', flex: 'none' }} />;
+}
+
+// Baca tanda "selesai" untuk Ajak main / buku / lainnya dari store lokal Kelola
+// Hari Ini (di-simpan HariIni.tsx per tanggal). Kebiasaan & situasional tidak di
+// sini — keduanya lewat kolom centang (Supabase), sudah ditangani agregator.
+function bacaKelolaLokal(idAnak: string, iso: string, seed: Map<string, { judul: string; kategori: string }>): EntriOtomatis[] {
+  try {
+    const raw = window.localStorage.getItem(`rekah_hariini_v3_${idAnak}_${iso}`);
+    if (!raw) return [];
+    const store = JSON.parse(raw) as { extra?: Record<string, { id: string; t: string; tipe: string }[]>; doneExtra?: string[] };
+    const done = store.doneExtra ?? [];
+    if (done.length === 0) return [];
+    const map = new Map<string, { judul: string; kategori: string }>();
+    for (const [id, m] of seed) map.set(id, m);
+    for (const key of Object.keys(store.extra ?? {})) for (const it of store.extra![key]) map.set(it.id, { judul: it.t, kategori: it.tipe });
+    const out: EntriOtomatis[] = [];
+    for (const id of done) { const m = map.get(id); if (m) out.push({ kategori: normalisasiKategori(m.kategori), teks: m.judul }); }
+    return out;
+  } catch { return []; }
 }
 
 interface Props { idAnak: string; nama: string; onKembali: () => void }
 
 export default function JurnalTemani({ idAnak, nama, onKembali }: Props) {
   const dates = useMemo(() => isoMundur(60), []);
+  const katalogSeed = useMemo(() => katalogKelolaSeed(), []);
   const [loading, setLoading] = useState(true);
   const [pages, setPages] = useState<PageData[]>([]);
   const [cur, setCur] = useState(0);
@@ -93,11 +126,21 @@ export default function JurnalTemani({ idAnak, nama, onKembali }: Props) {
           a.push({ hasil: r.hasil });
           refByDate.set(r.tanggal, a);
         }
+        // "Untuk Dikelola" (store Inbox lokal) yang sudah ditandai selesai, per tanggal.
+        const inboxByDate = new Map<string, string[]>();
+        for (const it of bacaInboxSelesai(idAnak)) {
+          const a = inboxByDate.get(it.tanggal) ?? [];
+          a.push(it.judul);
+          inboxByDate.set(it.tanggal, a);
+        }
         const built: PageData[] = [];
         for (const iso of dates) {
           const row = rows[iso];
           const centang = (row?.centang ?? undefined) as Record<string, string[]> | undefined;
-          const entri = bangunEntriHari(row?.diff, centang, refByDate.get(iso) ?? []);
+          const entriSupabase = bangunEntriHari(row?.diff, centang, refByDate.get(iso) ?? [], katalogSeed);
+          const entriLokal = bacaKelolaLokal(idAnak, iso, katalogSeed);
+          const entriInbox = (inboxByDate.get(iso) ?? []).map(t => ({ kategori: 'dikelola' as const, teks: t }));
+          const entri = gabungEntri(entriSupabase, entriLokal, entriInbox);
           const j = jmap[iso];
           const adaIsi = entri.length > 0 || (j && (j.cerita.trim() !== '' || j.foto.length > 0));
           if (adaIsi || iso === dates[0]) built.push({ iso, entri });
@@ -114,7 +157,7 @@ export default function JurnalTemani({ idAnak, nama, onKembali }: Props) {
       }
     })();
     return () => { batal = true; };
-  }, [idAnak, dates]);
+  }, [idAnak, dates, katalogSeed]);
 
   const isoCur = pages[cur]?.iso;
   const jurnalCur: JurnalHari = (isoCur && jurnalMap[isoCur]) || { cerita: '', foto: [] };
@@ -171,7 +214,7 @@ export default function JurnalTemani({ idAnak, nama, onKembali }: Props) {
       <button onClick={onKembali} className="mb-3 inline-flex items-center gap-1 font-nunito text-[13px] text-pekat/70"><ArrowLeft className="h-4 w-4" /> Kembali</button>
 
       <p className="font-shantell text-lg text-rekah">temani · jurnal</p>
-      <h1 className="mt-1 font-fredoka text-[26px] font-semibold leading-tight text-pekat">Buku perjalanan {nama} 📖</h1>
+      <h1 className="mt-1 font-fredoka text-[26px] font-semibold leading-tight text-pekat">Buku perjalanan {nama}</h1>
       <p className="mt-2 font-nunito text-[15px] text-pekat/70">Tercatat otomatis tiap hari — kamu tinggal menambah cerita atau foto kalau mau.</p>
 
       {loading ? (
@@ -199,16 +242,32 @@ export default function JurnalTemani({ idAnak, nama, onKembali }: Props) {
                     <h2 className="mt-3 font-fredoka text-[19px] font-semibold text-pekat">{fmt(page.iso, { weekday: 'long', day: 'numeric', month: 'short' })} {page.iso.slice(0, 4)}</h2>
                     <p className="mt-4 font-nunito text-[11px] font-extrabold uppercase tracking-wide text-pekat/45">Tercatat otomatis</p>
                     {page.entri.length === 0 ? (
-                      <p className="mt-2 font-nunito text-[13px] leading-snug text-pekat/50">Belum ada yang tercatat hari ini. Saat kamu menyelesaikan kegiatan di Kelola atau menjalani langkah Temani, catatannya muncul di sini.</p>
+                      <p className="mt-2 font-nunito text-[13px] leading-snug text-pekat/50">Belum ada yang tercatat hari ini. Saat kamu menandai kegiatan di Kelola (kebiasaan baik, ajak main, kebiasaan situasional) atau menjalani langkah Temani, catatannya muncul di sini.</p>
                     ) : (
-                      <ul className="mt-2 space-y-2.5 font-nunito text-[13.5px] text-pekat">
-                        {page.entri.map((e, k) => (
-                          <li key={k} className="flex items-start gap-2.5">
-                            <Penanda sumber={e.sumber} />
-                            <span>{e.teks} <span className="ml-1 rounded-full bg-fajar px-2 py-0.5 text-[10px] font-bold text-rekah">{e.tag}</span></span>
-                          </li>
-                        ))}
-                      </ul>
+                      <div className="mt-2 space-y-3">
+                        {KATEGORI_URUT.map(kat => {
+                          const items = page.entri.filter(e => e.kategori === kat);
+                          if (items.length === 0) return null;
+                          const info = KAT_INFO[kat];
+                          return (
+                            <div key={kat}>
+                              <div className="flex items-center gap-2">
+                                <Bentuk bentuk={info.bentuk} warna={info.warna} />
+                                <span className="font-nunito text-[10px] font-extrabold uppercase tracking-wide" style={{ color: info.warna }}>{info.label}</span>
+                                <span className="font-nunito text-[10px] font-bold text-pekat/35">{items.length}</span>
+                              </div>
+                              <ul className="mt-1.5 space-y-1.5 pl-1 font-nunito text-[13px] text-pekat">
+                                {items.map((e, k) => (
+                                  <li key={k} className="flex items-start gap-2 leading-snug">
+                                    <span className="mt-[6px] h-1.5 w-1.5 flex-none rounded-full" style={{ background: info.warna }} />
+                                    <span>{e.teks}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          );
+                        })}
+                      </div>
                     )}
                     <span className="absolute bottom-3 left-5 font-nunito text-[11px] font-bold text-pekat/40">{fmt(page.iso, { day: 'numeric', month: 'short' })}</span>
                   </div>

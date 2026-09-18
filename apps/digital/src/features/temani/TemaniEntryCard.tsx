@@ -1,6 +1,6 @@
 // Temani — kartu entry kontekstual (Model C). Dipakai di Beranda & Kelola.
-// Menampilkan "Lanjutkan perjalananmu — Hari X" bila ada perjalanan aktif,
-// selain itu ajakan lembut memulai. Additive; membaca progres dari localStorage.
+// Menampilkan "Lanjutkan perjalananmu" + progres dots (seperti halaman Temani)
+// bila ada perjalanan aktif. Additive; membaca progres dari localStorage.
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
@@ -20,6 +20,9 @@ export default function TemaniEntryCard({ className = '' }: { className?: string
   const p = bacaProgres(anak.id);
   const j = p ? TEMANI_JOURNEYS.find(x => x.slug === p.slug) : null;
   const aktif = !!(p && j && p.status === 'aktif');
+  const total = j?.durasiHari ?? 0;
+  const hari = p?.hari ?? 0;
+
   return (
     <Link
       to="/dashboard/tier2/temani"
@@ -30,9 +33,19 @@ export default function TemaniEntryCard({ className = '' }: { className?: string
         <span className="mt-0.5 block font-fredoka text-[16px] font-semibold text-pekat">
           {aktif ? 'Lanjutkan perjalananmu' : 'Mau ditemani menjalani sesuatu?'}
         </span>
-        <span className="mt-0.5 block truncate font-nunito text-[13px] text-pekat/70">
-          {aktif && j && p ? `${j.judul} · Hari ${p.hari} dari ${j.durasiHari}` : 'Perjalanan lembut, langkah demi langkah'}
-        </span>
+        {aktif && j ? (
+          <>
+            <span className="mt-0.5 block truncate font-nunito text-[13px] text-pekat/70">{j.judul}</span>
+            <span className="mt-2 flex items-center gap-1.5" aria-label={`Hari ${hari} dari ${total}`}>
+              {Array.from({ length: total }).map((_, i) => (
+                <span key={i} aria-hidden className={`h-2 w-2 rounded-full ${i < hari ? 'bg-rekah' : 'bg-rose-soft'}`} />
+              ))}
+              <span className="ml-1.5 font-nunito text-[12px] font-bold text-pekat/60">Hari {hari} dari {total}</span>
+            </span>
+          </>
+        ) : (
+          <span className="mt-0.5 block truncate font-nunito text-[13px] text-pekat/70">Perjalanan lembut, langkah demi langkah</span>
+        )}
       </span>
       <span className="ml-3 flex h-9 w-9 flex-none items-center justify-center rounded-full bg-rekah text-white">
         <ArrowRight className="h-5 w-5" aria-hidden />

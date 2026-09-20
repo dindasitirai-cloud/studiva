@@ -8,6 +8,7 @@
 // observasi lembut; "sudah tenang" (bukan "selesai"); AI diberi label.
 // SEMUA copy user-facing = DRAFT → tinjauan Psikolog Fitri Effendy.
 // =============================================================
+import { useMemo, useState } from 'react';
 
 export type BidangKehidupan = 'anak' | 'caregiver' | 'rumah' | 'peristiwa';
 export type StatusKonteks = 'aktif' | 'membaik' | 'tenang';
@@ -133,8 +134,6 @@ const SEED: KonteksKehidupan[] = [
 ];
 
 // ─── Store localStorage per anak ──────────────────────────────────────────────
-
-import { useMemo, useState } from 'react';
 
 function baca(kunci: string): KonteksKehidupan[] {
   try {

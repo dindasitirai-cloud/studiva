@@ -7,10 +7,12 @@
 import {
   CANONICAL_FAMILY_VALUES, REKAH_VERSIONS,
   FamilyId, ChildId, DevelopmentThreadId, FamilyJourneyId, ReflectionId, ActionInstanceId,
+  ObservationId,
 } from '@studiva/shared/journey';
 import type {
   FamilyValue, Reflection, FocusTargets, EffectiveObservation,
   DevelopmentThread, Family, FamilyJourney, ActiveThreadInput, ReflectionChildResponse,
+  ReflectionDifficulty, ReflectionRelevance, SignalAxis, SalienceLevel,
 } from '@studiva/shared/journey';
 
 // ── Raw shapes from the EXISTING Rekah repositories (mirrors of the real rows; no new schema) ──
@@ -157,7 +159,6 @@ export const REAL_OBSERVATIONS: readonly EffectiveObservation[] = [];
 // ── Phase 10D (continuation): reflection from the in-UI chips (parent inputs), not a stored row.
 // Produces the frozen Reflection domain object (Step 11). Reflection is navigation input, not a score.
 // Unmapped fields are null (never fabricated). difficulty/relevance already use the frozen enum values.
-import type { ReflectionDifficulty, ReflectionRelevance } from '@studiva/shared/journey';
 const DIFFS = ['EASY', 'OK', 'TOO_HARD'];
 const RELS = ['RELEVANT', 'NEUTRAL', 'NOT_RELEVANT'];
 export function reflectionFromInputs(
@@ -190,8 +191,6 @@ export function reflectionFromInputs(
 // source = PARENT_OBSERVATION (exact frozen enum). signal tags are canonical (from the prompt library,
 // which copies frozen content's own domain/capability). salience is qualitative (never numeric). A fresh
 // observation is ACTIVE; expired/retracted are handled by the frozen lifecycle, never revived here.
-import type { SignalAxis, SalienceLevel } from '@studiva/shared/journey';
-import { ObservationId } from '@studiva/shared/journey';
 export interface ObservationInput {
   readonly promptId: string;
   readonly domainOrArea: string;

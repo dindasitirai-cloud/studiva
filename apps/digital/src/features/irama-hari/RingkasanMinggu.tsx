@@ -2,7 +2,6 @@ import React from 'react';
 import type { MingguIrama } from '@studiva/shared';
 import { BLOK_URUTAN } from '@studiva/shared';
 import type { DomainKeyIrama } from './mingguanAdapter';
-import { LATAR_DOMAIN } from './domainWarnaIrama';
 import {
   JUDUL_RINGKASAN,
   RINGKASAN_DOMINAN,
@@ -18,10 +17,7 @@ import {
   TILE_WAKTU_LABEL,
   LABEL_BLOK,
   NAMA_DOMAIN_RAMAH,
-  LABEL_DOMAIN,
 } from './contentMingguan';
-
-const DOMAIN_URUTAN: DomainKeyIrama[] = ['mk', 'mh', 'bhs', 'kog', 'sos', 'sen', 'fe'];
 
 interface PropsRingkasanMinggu {
   minggu: MingguIrama;
@@ -181,44 +177,6 @@ export default function RingkasanMinggu({ minggu, onBekalPress }: PropsRingkasan
             />
           </div>
 
-          {/* Chip domain yang tersentuh */}
-          {r.domainTersentuh.size > 0 && (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {DOMAIN_URUTAN.filter(dk => r.domainTersentuh.has(dk)).map(dk => (
-                <div
-                  key={dk}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 5,
-                    backgroundColor: 'rgba(255,255,255,.6)',
-                    borderRadius: 99,
-                    padding: '3px 10px',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: '50%',
-                      backgroundColor: LATAR_DOMAIN[dk],
-                      flexShrink: 0,
-                    }}
-                  />
-                  <span
-                    style={{
-                      fontFamily: 'Nunito, system-ui, sans-serif',
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: '#6E3B57',
-                    }}
-                  >
-                    {LABEL_DOMAIN[dk]}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
         </>
       )}
     </section>

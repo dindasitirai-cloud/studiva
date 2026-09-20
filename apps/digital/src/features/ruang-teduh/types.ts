@@ -1,5 +1,46 @@
 export type PeranCaregiver = 'ibu' | 'ayah' | 'lainnya';
 
+// ─── Tipe baru untuk fitur Ruang Teduh multi-pita ────────────────────────────
+
+/** Peran orang tua — ibu atau ayah */
+export type Peran = 'ibu' | 'ayah';
+
+/**
+ * Pita usia (tahun ke-berapa):
+ * 0 = 0–1 th, 1 = 1–2 th, 2 = 2–3 th, 3 = 3–4 th, 4 = 4–5 th, 5 = 5–6 th
+ */
+export type PitaUsia = 0 | 1 | 2 | 3 | 4 | 5;
+
+/** Tag kekuatan sumber: pedoman badan profesional atau kearifan praktik */
+export type SumberTag = 'pedoman' | 'praktik';
+
+/** Satu butir kartu Sedia */
+export interface ButirSedia {
+  id: string;
+  judul: string;
+  penjelasan: string;
+  /** mis. 'Kemenkes — Jadwal Imunisasi Bayi dan Baduta' */
+  sumber: string;
+  kelompok: 'kesehatan' | 'rumah';
+}
+
+/** Satu butir kartu Setelah Badai */
+export interface ButirBadai {
+  teks: string;
+  sumber: string;
+  tag: SumberTag;
+  /** true = tampil di layar pertama (maks 3 inti per seksi pencegahan) */
+  inti?: boolean;
+}
+
+/** Konfigurasi satu modul dalam layout Ruang Teduh */
+export interface KonfigModul {
+  id: string;
+  kolom: 'kiri' | 'kanan';
+  urutanMobile: number;
+  tampil: (peran: Peran, usia: PitaUsia) => boolean;
+}
+
 export interface CaregiverProfile {
   id: string;
   peran: PeranCaregiver;

@@ -42,6 +42,7 @@ import AdminFitriDashboardPage from './pages/AdminFitriDashboardPage';
 
 // Dashboard Tier 2
 import DashboardShellTier2 from './pages/DashboardPages/Tier2/DashboardShellTier2';
+import JourneyRoutes from './features/rekah-journey/JourneyRoutes'; // Family Journey (additive, Phase 10C-5)
 import ProfilAnakTier2 from './pages/DashboardPages/Tier2/ProfilAnakTier2';
 import SubscriptionTier2 from './pages/DashboardPages/Tier2/SubscriptionTier2';
 import { AudioPlayerProvider } from './context/AudioPlayerContext';
@@ -57,6 +58,10 @@ import KnowledgeGallery from './pages/DashboardPages/Tier2/KnowledgeGallery';
 import KnowledgeCardSummary from './pages/DashboardPages/Tier2/KnowledgeCardSummary';
 import KnowledgeCardScientific from './pages/DashboardPages/Tier2/KnowledgeCardScientific';
 import IramaHariPage from './pages/DashboardPages/Tier2/IramaHariPage';
+import KelolaPage from './pages/DashboardPages/Tier2/KelolaPage';
+import TemaniPage from './features/temani/TemaniPage'; // Phase 14 — Temani (additive)
+import BantuPage from './features/bantu/BantuPage'; // Phase 14 — Bantu (additive)
+import KompasKeluargaPage from './pages/DashboardPages/Tier2/KompasKeluargaPage';
 import CetakMingguPage from './pages/DashboardPages/Tier2/CetakMingguPage';
 import BerandaPage from './features/beranda/BerandaPage';
 import LearningStrategiesTier2 from './pages/DashboardPages/Tier2/LearningStrategiesTier2';
@@ -170,6 +175,8 @@ export default function App() {
               }
             >
               <Route index element={<BerandaPage />} />
+              <Route path="journey/*" element={<JourneyRoutes />} /> {/* Family Journey — additive, inherits DashboardShellTier2 */}
+              <Route path="kompas-keluarga" element={<KompasKeluargaPage />} /> {/* GROUND: Kompas Keluarga — additive */}
               <Route path="profil-anak" element={<ProfilAnakTier2 />} />
               <Route path="subscription" element={<SubscriptionTier2 />} />
               <Route path="partner-orang-tua" element={<PartnerOrangTuaPage tierContext="tier2" />} />
@@ -183,6 +190,9 @@ export default function App() {
               <Route path="jurnal-perkembangan" element={<JurnalPerkembanganPage />} />
               <Route path="pengaturan" element={<PengaturanPage />} />
               <Route path="irama-hari" element={<IramaHariPage />} />
+              <Route path="kelola" element={<KelolaPage />} />
+              <Route path="temani" element={<TemaniPage />} /> {/* Phase 14 — Temani (additive) */}
+              <Route path="bantu" element={<BantuPage />} /> {/* Phase 14 — Bantu (additive) */}
               <Route path="irama-hari/minggu/:tanggalSenin/cetak" element={<CetakMingguPage />} />
               <Route path="akar-keluarga" element={<Navigate to="../irama-hari" replace />} />
               <Route path="cermin-tumbuh" element={<Navigate to="../irama-hari" replace />} />

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Nunito:wght@400;600;700;800&amp;family=Shantell+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#FCEBD7;font-family:'Nunito',sans-serif;color:#6E3B57;-webkit-font-smoothing:antialiased}
+  a{color:#5F84E6;text-decoration:none;font-weight:800}
+  a:hover{color:#F06BA8}
+  @keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .card{transition:transform .22s cubic-bezier(.2,.7,.2,1),box-shadow .22s ease}
+  .lift:hover{transform:translateY(-3px);box-shadow:0 22px 44px -34px rgba(90,50,70,.55)}
+  .rise{opacity:0;animation:fadeUp .5s cubic-bezier(.2,.7,.2,1) both}
+  .tap{transition:transform .16s cubic-bezier(.2,.7,.2,1),background .16s ease}
+  .tap:active{transform:scale(.96)}
+  @media (prefers-reduced-motion: reduce){.rise{animation:none;opacity:1}}
+</style>
+</helmet>
+
+<div style="display:flex;align-items:stretch;width:1400px;min-height:1180px">
+
+  <sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside style="width:250px;flex:none;background:#fff;padding:24px 18px;display:flex;flex-direction:column;gap:4px;box-shadow:22px 0 60px -50px rgba(90,50,70,.6)">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 8px 20px">
+      <div style="display:flex;align-items:center;gap:9px">
+        <div style="width:32px;height:32px;animation:sway 6s ease-in-out infinite;transform-origin:bottom center"><dc-import name="Flower" cfg="{{ logoBloom }}" hint-size="32px,32px"></dc-import></div>
+        <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:25px;color:#F06BA8;letter-spacing:-.5px">rekah</div>
+      </div>
+      <div style="width:28px;height:28px;border-radius:50%;background:#FCE3EE;display:flex;align-items:center;justify-content:center;color:#F06BA8;font-size:15px;font-weight:800;cursor:pointer">‹</div>
+    </div>
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="7">
+      <div class="tap" style="display:flex;align-items:center;gap:13px;padding:11px 13px;border-radius:16px;cursor:pointer;background:{{ n.bg }}">
+        <span style="width:8px;height:8px;flex:none;border-radius:50%;background:{{ n.stroke }};opacity:{{ n.op }};display:block"></span>
+        <span style="font-family:'Nunito',sans-serif;font-weight:700;font-size:16px;color:{{ n.stroke }};opacity:{{ n.op }}">{{ n.label }}</span>
+      </div>
+    </sc-for>
+    <div style="flex:1;min-height:26px"></div>
+    <div style="height:1px;background:rgba(110,59,87,.1);margin:6px 10px 10px"></div>
+    <div class="tap" style="display:flex;align-items:center;gap:13px;padding:11px 13px;border-radius:16px;cursor:pointer">
+      <span style="width:8px;height:8px;flex:none;border-radius:50%;background:#6E3B57;opacity:.35;display:block"></span>
+      <span style="font-family:'Nunito',sans-serif;font-weight:700;font-size:16px;color:#6E3B57;opacity:.6">Keluar</span>
+    </div>
+  </aside>
+  </sc-if>
+
+  <main style="flex:1;min-width:0;padding:30px 38px 44px">
+
+    <!-- ===== HERO: judul + fokus + tab jadi satu kesatuan ===== -->
+    <div class="rise" style="position:relative;overflow:hidden;border-radius:32px;background:linear-gradient(120deg,#FBD9E9 0%,#F6DCF3 34%,#E6DDFB 62%,#DCEAFD 100%);box-shadow:0 26px 54px -40px rgba(90,50,70,.55);margin-bottom:24px">
+
+      <div style="display:flex;height:7px">
+        <span style="flex:2;background:#F06BA8;display:block"></span>
+        <span style="flex:1;background:#F8B9D4;display:block"></span>
+        <span style="flex:1.4;background:#FFE29A;display:block"></span>
+        <span style="flex:1;background:#C9B8F0;display:block"></span>
+        <span style="flex:1.6;background:#8FB8F7;display:block"></span>
+      </div>
+
+      <!-- kebun botanical flat: baris tanaman di tepi kanan hero -->
+      <div style="position:absolute;right:22px;bottom:0;display:flex;align-items:flex-end;gap:6px;pointer-events:none;opacity:.75">
+        <sc-for list="{{ kebunHero }}" as="k" hint-placeholder-count="6">
+          <div style="width:{{ k.w }};height:{{ k.h }};animation:sway {{ k.dur }} ease-in-out infinite;transform-origin:bottom center"><dc-import name="Botanical" cfg="{{ k.cfg }}" hint-size="54px,80px"></dc-import></div>
+        </sc-for>
+      </div>
+
+      <div style="position:relative;padding:26px 34px 0">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:28px;flex-wrap:wrap">
+          <div style="min-width:0">
+            <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.75);border-radius:999px;padding:6px 14px">
+              <span style="width:8px;height:8px;border-radius:50%;background:#F06BA8;display:block"></span>
+              <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:11.5px;letter-spacing:1px;text-transform:uppercase;color:#B4477F">Pusat Kendali Keluarga</span>
+            </div>
+            <h1 style="font-family:'Shantell Sans',cursive;font-weight:700;font-size:52px;color:#6E3B57;margin:12px 0 0;letter-spacing:-1px;line-height:.98">Kelola</h1>
+            <div style="font-family:'Nunito',sans-serif;font-weight:600;font-size:17px;color:#7A4A64;margin-top:8px">Wujudkan langkah kecil, untuk perubahan besar.</div>
+          </div>
+
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 0;padding:0 0 22px">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+            <div class="tap" onClick="{{ t.onPick }}" style="display:flex;align-items:center;gap:9px;padding:11px 20px;border-radius:999px;cursor:pointer;background:{{ t.bg }};box-shadow:{{ t.shadow }}">
+              <span style="font-family:'Nunito',sans-serif;font-weight:{{ t.weight }};font-size:15px;color:{{ t.ink }}">{{ t.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== BOARD ===== -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 320px;gap:18px;align-items:start">
+
+      <sc-for list="{{ columns }}" as="col" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:column;gap:14px;background:{{ col.soft }};border-radius:28px;padding:16px 14px 18px">
+          <div style="display:flex;align-items:center;gap:10px;padding:2px 4px 0">
+            <span style="width:12px;height:12px;border-radius:50%;background:{{ col.dot }};display:block"></span>
+            <h2 style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:21px;color:#6E3B57;margin:0">{{ col.label }}</h2>
+          </div>
+
+          <sc-for list="{{ col.cards }}" as="c" hint-placeholder-count="3">
+            <div class="card lift rise" style="background:#fff;border-radius:22px;padding:16px 16px 14px;box-shadow:0 18px 40px -34px rgba(90,50,70,.55)">
+              <div style="display:flex;align-items:center;gap:12px">
+                <span style="width:5px;height:34px;flex:none;border-radius:999px;background:{{ c.iconInk }};display:block"></span>
+                <div style="min-width:0">
+                  <div style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:17px;color:#6E3B57;line-height:1.2">{{ c.title }}</div>
+                  <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;color:#8A5A74;margin-top:2px">{{ c.time }}</div>
+                </div>
+              </div>
+
+              <sc-if value="{{ c.hasList }}" hint-placeholder-val="{{ true }}">
+                <div style="border-top:1.5px dashed #F0DCE7;margin:13px 0 11px"></div>
+                <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:{{ c.listInk }};margin-bottom:9px">{{ c.listLabel }}</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <sc-for list="{{ c.items }}" as="it" hint-placeholder-count="2">
+                    <div style="display:flex;align-items:flex-start;gap:10px">
+                      <span class="tap" onClick="{{ it.onToggle }}" style="width:22px;height:22px;flex:none;margin-top:1px;border-radius:7px;cursor:pointer;background:{{ it.boxBg }};border:{{ it.boxBorder }};display:flex;align-items:center;justify-content:center">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" style="opacity:{{ it.tickOp }}"><path d="M5 12.5 10 17.5 19 7"></path></svg>
+                      </span>
+                      <sc-if value="{{ it.hasBloom }}" hint-placeholder-val="{{ true }}">
+                        <span style="width:21px;height:21px;flex:none;margin-top:1px;display:block"><dc-import name="BungaNilai" value="{{ it.value }}" state="mekar" hint-size="21px,21px"></dc-import></span>
+                      </sc-if>
+                      <div style="flex:1;min-width:0">
+                        <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:14px;line-height:1.35;color:{{ it.ink }};text-decoration:{{ it.deco }}">{{ it.name }}</div>
+                        <div style="display:flex;align-items:center;gap:6px;margin-top:5px">
+                          <span style="display:inline-block;font-family:'Nunito',sans-serif;font-weight:800;font-size:11.5px;line-height:1.3;color:{{ it.subInk }};background:{{ it.subBg }};border-radius:999px;padding:3px 10px">{{ it.sub }}</span>
+                        </div>
+                      </div>
+                      <sc-if value="{{ showTrash }}" hint-placeholder-val="{{ true }}">
+                        <span class="tap" style="flex:none;cursor:pointer;opacity:.5;margin-top:2px">
+                          <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;color:#8A5A74;line-height:1">×</span>
+                        </span>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+
+              <div class="tap" style="margin-top:12px;border:1.5px dashed #EBD6E2;border-radius:14px;padding:10px;text-align:center;font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;color:#8A5A74;cursor:pointer" style-hover="border-color:#F4B4D2;color:#D2559A;background:#FFF7FB">+ tambah to-do list</div>
+            </div>
+          </sc-for>
+
+          <div class="tap" style="border:1.8px dashed #F4B4D2;border-radius:20px;padding:14px;text-align:center;font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;color:#D2559A;cursor:pointer;background:rgba(255,255,255,.45)" style-hover="background:#fff">+ tambah kegiatan</div>
+        </div>
+      </sc-for>
+
+      <!-- ===== RIGHT RAIL ===== -->
+      <sc-if value="{{ showRail }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <div class="card lift rise" style="background:#fff;border-radius:22px;padding:18px 20px;box-shadow:0 18px 40px -34px rgba(90,50,70,.55)">
+          <h3 style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:18px;color:#6E3B57;margin:0">Kebiasaan situasional</h3>
+          <p style="font-family:'Nunito',sans-serif;font-weight:600;font-size:13.5px;line-height:1.5;color:#8A5A74;margin:8px 0 0">Muncul saat momennya datang — centang kalau sempat.</p>
+          <div style="margin-top:12px;background:#FBF3F8;border-radius:14px;padding:11px 13px;font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;color:#8A5A74">Belum ada yang cocok dengan nilai fokus.</div>
+        </div>
+
+        <div class="card lift rise" style="background:linear-gradient(160deg,#FFF6FA 0%,#fff 60%);border-radius:22px;padding:18px 20px 20px;box-shadow:0 18px 40px -34px rgba(90,50,70,.55)">
+          <h3 style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:18px;color:#D2559A;margin:0">Pita Kebiasaan</h3>
+          <p style="font-family:'Nunito',sans-serif;font-weight:600;font-size:13.5px;line-height:1.5;color:#8A5A74;margin:8px 0 0">Kebiasaan yang dicentang menumbuhkan bunganya.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
+            <sc-for list="{{ pita }}" as="p" hint-placeholder-count="2">
+              <div style="background:{{ p.soft }};border-radius:18px;padding:14px 10px;text-align:center">
+                <div style="width:52px;height:52px;margin:0 auto;animation:sway 7s ease-in-out infinite;transform-origin:bottom center"><dc-import name="BungaNilai" value="{{ p.value }}" state="{{ p.state }}" hint-size="52px,52px"></dc-import></div>
+                <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;color:#6E3B57;margin-top:8px;line-height:1.25">{{ p.name }}</div>
+                <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:11.5px;color:#8A5A74;margin-top:2px">{{ p.stage }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div class="card lift rise" style="background:#fff;border-radius:22px;padding:18px 20px;box-shadow:0 18px 40px -34px rgba(90,50,70,.55)">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <h3 style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:18px;color:#6E3B57;margin:0">Konteks Keluarga</h3>
+            <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;color:#F06BA8;cursor:pointer">Kelola</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px;margin-top:14px">
+            <sc-for list="{{ konteks }}" as="k" hint-placeholder-count="3">
+              <div style="display:flex;align-items:flex-start;gap:12px">
+                <span style="width:10px;height:10px;flex:none;margin-top:6px;border-radius:50%;background:{{ k.ink }};display:block"></span>
+                <div style="min-width:0">
+                  <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:14.5px;color:#6E3B57">{{ k.title }}</div>
+                  <div style="font-family:'Nunito',sans-serif;font-weight:600;font-size:12.5px;color:#8A5A74;margin-top:2px;line-height:1.4">{{ k.sub }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- Untuk Dikelola — papan catatan: bahan mentah yang menunggu diputuskan -->
+        <div class="card lift rise" style="background:#fff;border:2.5px dotted #F06BA8;border-radius:22px;padding:16px 18px 18px;box-shadow:0 16px 36px -34px rgba(90,50,70,.5)">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+            <h3 style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:18px;color:#6E3B57;margin:0">Untuk Dikelola</h3>
+            <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;color:#F06BA8;cursor:pointer">Lihat semua</span>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
+            <span style="flex:1;height:7px;border-radius:999px;background:#DCEAFD;display:block;overflow:hidden">
+              <span style="display:block;height:100%;border-radius:999px;background:#5F84E6;width:{{ tugasPct }}"></span>
+            </span>
+            <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;color:#3F6FD8;flex:none">{{ tugasCount }}</span>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
+            <sc-for list="{{ tugas }}" as="t" hint-placeholder-count="3">
+              <div class="tap" onClick="{{ t.onToggle }}" style="display:flex;align-items:flex-start;gap:11px;padding:11px 13px;cursor:pointer;border-radius:14px;background:{{ t.slipBg }};box-shadow:{{ t.slipShadow }};opacity:{{ t.slipOp }}" style-hover="transform:translateX(2px)">
+                <span style="width:20px;height:20px;flex:none;margin-top:1px;border-radius:50%;background:{{ t.boxBg }};border:{{ t.boxBorder }};display:flex;align-items:center;justify-content:center">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:{{ t.tickOp }}"><path d="M5 12.5 10 17.5 19 7"></path></svg>
+                </span>
+                <span style="flex:1;min-width:0">
+                  <span style="display:block;font-family:'Nunito',sans-serif;font-weight:700;font-size:14px;line-height:1.35;color:{{ t.ink }};text-decoration:{{ t.deco }}">{{ t.label }}</span>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+
+          <div class="tap" style="margin-top:10px;border:1.5px dotted #F4B4D2;border-radius:14px;padding:10px;text-align:center;font-family:'Nunito',sans-serif;font-weight:700;font-size:13px;color:#8A5A74;cursor:pointer" style-hover="background:#FBF3F8">+ tambah catatan</div>
+
+          <p style="font-family:'Nunito',sans-serif;font-weight:600;font-size:12px;line-height:1.5;color:#A98BA0;margin:12px 0 0">Contoh — akan terisi dari Inbox &amp; Kehidupan Keluarga.</p>
+        </div>
+
+      </div>
+      </sc-if>
+
+    </div>
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showSidebar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Tata letak&quot;},&quot;showRail&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Tata letak&quot;},&quot;showTrash&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Tata letak&quot;}}">
+class Component extends DCLogic {
+  state = { tab: 'Hari Ini', done: {}, tugas: {} };
+
+  toggle(key, id) {
+    this.setState(s => ({ [key]: { ...s[key], [id]: !s[key][id] } }));
+  }
+
+  renderVals() {
+    const C = { pink:'#F06BA8', peony:'#D2559A', plum:'#6E3B57', lilac:'#A98FE0', butter:'#FFE08A', corn:'#FFC94D', sky:'#8FBBF2' };
+    const bloom = (shape, petals, centers, seed) => ({ shape, petalColors:petals, centerColors:centers, seed, jitter:.2 });
+    const logoBloom = bloom('gerbera', [C.pink,'#F890BE'], [C.butter, C.plum], 3);
+    const headerBloom = bloom('cosmos', ['#FBD0E3','#F9C2DA'], ['#FFE6B8','#F6B7D4'], 11);
+
+    const nav = [
+      { label:'Beranda', p1:'M3 11.5 12 4l9 7.5', p2:'M5.5 10.5V20h13v-9.5', active:false },
+      { label:'Kelola', p1:'M4 6h16M4 12h16M4 18h10', p2:'M18 15.5v5M15.5 18h5', active:true },
+      { label:'Irama Hari', p1:'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z', p2:'M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4', active:false },
+      { label:'Bekal', p1:'M21 8 12 3 3 8v8l9 5 9-5V8Z', p2:'M3 8l9 5 9-5M12 13v8', active:false },
+      { label:'Ruang Teduh', p1:'M4 20c0-8 6-14 16-14 0 10-6 16-16 14Z', p2:'M4 20c4-6 8-9 13-10', active:false },
+      { label:'Jurnal dan Galeri', p1:'M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2V4Z', p2:'M5 17h13', active:false },
+      { label:'Panen', p1:'M12 20v-8M12 12C12 8 9 6 5 6c0 4 3 6 7 6Z', p2:'M12 13c0-3 3-5 6-5 0 3-3 5-6 5Z', active:false },
+    ].map(n => ({ ...n, bg: n.active ? '#FCE3EE' : 'transparent', stroke: n.active ? '#F06BA8' : '#6E3B57', op: n.active ? 1 : .8 }));
+
+    const tabDefs = [
+      { label:'Hari Ini', p1:'M4 7h16v13H4z', p2:'M8 4v4M16 4v4M4 11h16' },
+      { label:'Rencana Minggu', p1:'M4 7h16v13H4z', p2:'M8 4v4M16 4v4M8 14h3M8 17h8' },
+      { label:'Kehidupan Keluarga', p1:'M4 20c0-3 2.5-5 5-5s5 2 5 5', p2:'M9 5a3 3 0 1 0 0 6 3 3 0 0 0 0-6M16 20c0-2.5-1-4-2-4.6M16.5 6.2a2.6 2.6 0 0 1 0 4.6' },
+      { label:'Inbox', p1:'M3 13h5l1.5 3h5L16 13h5', p2:'M5 6h14l2 7v5H3v-5l2-7Z' },
+      { label:'Perjalanan', p1:'M9 5 3 7v13l6-2 6 2 6-2V5l-6 2-6-2Z', p2:'M9 5v13M15 7v13' },
+    ];
+    const tabs = tabDefs.map(t => {
+      const on = this.state.tab === t.label;
+      return { ...t, onPick: () => this.setState({ tab: t.label }),
+        bg: on ? '#C6407F' : '#fff', ink: on ? '#fff' : '#8A5A74', weight: on ? 800 : 700,
+        shadow: on ? '0 14px 28px -18px rgba(198,64,127,.9)' : '0 12px 26px -24px rgba(90,50,70,.7)' };
+    });
+
+    const fokus = [
+      { name:'Kasih Sayang', value:'kasih-sayang', soft:'#EFE9FD', ink:'#6B4FBF' },
+      { name:'Kemandirian', value:'kemandirian', soft:'#FFF2CE', ink:'#A9701A' },
+    ];
+
+    const D = this.state.done;
+    const mk = (id, name, opts) => {
+      const o = opts || {};
+      const on = !!D[id];
+      return {
+        name, sub:o.sub || '',
+        subBg: o.value === 'kemandirian' ? '#FFF2CE' : (o.value === 'kasih-sayang' ? '#EFE9FD' : '#F3EEF1'),
+        subInk: o.value === 'kemandirian' ? '#8A5A10' : (o.value === 'kasih-sayang' ? '#5B3FAF' : '#8A5A74'),
+        hasBloom: !!o.value, value:o.value || 'kasih-sayang',
+        hasGlyph: !!o.g1, glyphBg:o.glyphBg || '#FCE3EE', glyphInk:o.glyphInk || '#F06BA8', g1:o.g1 || '', g2:o.g2 || '',
+        onToggle: () => this.toggle('done', id),
+        boxBg: on ? '#F06BA8' : '#fff', boxBorder: on ? '2px solid #F06BA8' : '2px solid #E7CFDD',
+        tickOp: on ? 1 : 0, ink: on ? '#8A5A74' : '#6E3B57', deco: on ? 'line-through' : 'none',
+      };
+    };
+    const card = (o) => ({
+      title:o.title, time:o.time, iconBg:o.iconBg, iconInk:o.iconInk, p1:o.p1, p2:o.p2 || '',
+      hasList: !!o.items, listLabel:o.listLabel || 'Kebiasaan baik yang bisa dilakukan',
+      listInk:o.listInk || '#5F84E6', items:o.items || [],
+    });
+
+    const columns = [
+      { label:'Pagi', dot:'#F06BA8', soft:'#FDEAF3', p1:'M12 9a4 4 0 0 0-4 4h8a4 4 0 0 0-4-4Z', p2:'M3 17h18M12 3v2M5.2 6.2l1.4 1.4M18.8 6.2l-1.4 1.4', cards:[
+        card({ title:'Bangun tidur', time:'06:30', iconBg:'#FFF2CE', iconInk:'#E0A63A', p1:'M12 9a4 4 0 0 0-4 4h8a4 4 0 0 0-4-4Z', p2:'M12 3v2M4 13H2M22 13h-2M5.2 6.2l1.4 1.4M18.8 6.2l-1.4 1.4M3 17h18',
+          listLabel:'Kebiasaan baik yang bisa dilakukan',
+          items:[ mk('a1','Sapa hangat & kontak mata', { sub:'Kasih Sayang', dot:C.pink, value:'kasih-sayang' }) ] }),
+        card({ title:'Sarapan', time:'07:30', iconBg:'#FFF2CE', iconInk:'#E0A63A', p1:'M12 5a7 7 0 1 0 0 14 7 7 0 0 0 0-14Z', p2:'M12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z',
+          items:[ mk('a2','Cuci tangan sebelum makan', { sub:'Kemandirian', dot:C.corn, value:'kemandirian' }) ] }),
+        card({ title:'Mandi pagi', time:'08:30', iconBg:'#E4EFFD', iconInk:'#5F84E6', p1:'M12 3s5 6 5 9.5A5 5 0 0 1 7 12.5C7 9 12 3 12 3Z', p2:'',
+          items:[ mk('a3','Coba pakai baju sendiri', { sub:'Kemandirian', dot:C.corn, value:'kemandirian' }) ] }),
+      ]},
+      { label:'Siang', dot:'#E9A93B', soft:'#FDF2DC', p1:'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z', p2:'M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4', cards:[
+        card({ title:'Main bersama', time:'10:00', iconBg:'#F1ECFB', iconInk:'#8B6FD6', p1:'M4 14h6v6H4zM14 14h6v6h-6z', p2:'M9 4h6v6H9z',
+          listLabel:'Ajak main', listInk:'#D2559A',
+          items:[ mk('b1','Tumpuk balok warna', { sub:'dari Bekal Ajak Main', g1:'M4 13h7v7H4z', g2:'M13 4h7v7h-7zM13 13h7v7h-7z', glyphBg:'#FCE3EE', glyphInk:'#F06BA8' }) ] }),
+        card({ title:'Makan siang', time:'12:00', iconBg:'#FFF2CE', iconInk:'#E0A63A', p1:'M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z', p2:'M8.5 13.5a4 4 0 0 0 7 0M9 9.5h.01M15 9.5h.01',
+          items:[ mk('b2','Makan sendiri', { sub:'Kemandirian', dot:C.corn, value:'kemandirian' }) ] }),
+        card({ title:'Tidur siang', time:'13:00', iconBg:'#F1ECFB', iconInk:'#8B6FD6', p1:'M19 14.5A8 8 0 0 1 9.5 5a8 8 0 1 0 9.5 9.5Z', p2:'' }),
+      ]},
+      { label:'Malam', dot:'#8B6FD6', soft:'#F0EBFB', p1:'M19 14.5A8 8 0 0 1 9.5 5a8 8 0 1 0 9.5 9.5Z', p2:'', cards:[
+        card({ title:'Makan malam', time:'18:00', iconBg:'#FFF2CE', iconInk:'#E0A63A', p1:'M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z', p2:'M8.5 13.5a4 4 0 0 0 7 0M9 9.5h.01M15 9.5h.01' }),
+        card({ title:'Beres-beres', time:'18:45', iconBg:'#FCE3EE', iconInk:'#D2559A', p1:'M4 8h16l-1.5 12h-13L4 8Z', p2:'M4 8V6h16v2' }),
+        card({ title:'Rutinitas sebelum tidur', time:'19:30', iconBg:'#F1ECFB', iconInk:'#8B6FD6', p1:'M19 14.5A8 8 0 0 1 9.5 5a8 8 0 1 0 9.5 9.5Z', p2:'',
+          items:[
+            mk('c1','Sikat gigi sendiri', { sub:'Kemandirian', dot:C.corn, value:'kemandirian' }),
+            mk('c2','Cerita & doa', { sub:'Kasih Sayang', dot:C.pink, value:'kasih-sayang' }),
+            mk('c3','Baca buku bersama', { sub:'dari Bekal Wawasan Tumbuh', g1:'M5 5h6a2 2 0 0 1 2 2v12H7a2 2 0 0 1-2-2V5Z', g2:'M19 5h-6v14h6V5Z', glyphBg:'#F1ECFB', glyphInk:'#8B6FD6' }),
+          ] }),
+      ]},
+    ];
+
+    const pita = [
+      { name:'Kasih Sayang', stage:'Tumbuh', soft:'#F5F0FF', value:'kasih-sayang', state:'mekar' },
+      { name:'Kemandirian', stage:'Kuncup', soft:'#FFF7DF', value:'kemandirian', state:'istirahat' },
+    ];
+
+    const konteks = [
+      { title:'Rara · 1 bln', sub:'Tumbuh & kembang', soft:'#FCE3EE', ink:'#D2559A', p1:'M12 7a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z', p2:'M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5' },
+      { title:'Fokus', sub:'Kasih Sayang · Kemandirian', soft:'#EAF6E4', ink:'#6E9C4A', p1:'M12 20v-7M12 13C12 9 9 7 5 7c0 4 3 6 7 6Z', p2:'M12 13c0-3 3-5 6-5 0 3-3 5-6 5Z' },
+      { title:'Caregiver & Rumah', sub:'Lengkapi di Kehidupan Keluarga →', soft:'#E4EFFD', ink:'#5F84E6', p1:'M4 10 12 4l8 6v10H4V10Z', p2:'M9.5 20v-6h5v6' },
+    ];
+
+    // ornamen kebun botanical flat — palet Rekah
+    const plant = (type, o) => ({ type, bloom:o.b, bloom2:o.b2 || '#fff', center:o.c || '#6E3B57',
+      stem:'#8FB84A', stemDark:'#6F9E3F', leaf:'#A7C63E', leaf2:'#8FB84A' });
+    const kebunHero = [
+      { w:'34px', h:'50px', dur:'8s', cfg: plant('sprig', { b:'#C9B8F0', b2:'#EFE9FD' }) },
+      { w:'42px', h:'64px', dur:'11s', cfg: plant('tulip', { b:'#F06BA8', b2:'#F8B9D4' }) },
+      { w:'30px', h:'44px', dur:'9s', cfg: plant('leaf', {}) },
+      { w:'46px', h:'70px', dur:'12s', cfg: plant('daisy', { b:'#FFE29A', b2:'#FFF3E6', c:'#F06BA8' }) },
+      { w:'32px', h:'52px', dur:'10s', cfg: plant('foliage', {}) },
+      { w:'38px', h:'58px', dur:'9.5s', cfg: plant('bell', { b:'#8FB8F7', b2:'#DCEAFD' }) },
+    ];
+
+    const T = this.state.tugas;
+    const tugasSrc = [
+      { label:'Beli buku baru' },
+      { label:'Diskusikan bedtime dengan Ayah' },
+      { label:'Jadwalkan kontrol kesehatan' },
+    ];
+    const tugas = tugasSrc.map((t, i) => {
+      const on = !!T[i];
+      return { label:t.label, done:on, onToggle: () => this.toggle('tugas', i),
+        boxBg: on ? '#5F84E6' : '#fff', boxBorder: on ? '2px solid #5F84E6' : '2px solid #C9D8F5',
+        tickOp: on ? 1 : 0, ink: on ? '#A98BA0' : '#6E3B57', deco: on ? 'line-through' : 'none',
+        slipBg: on ? '#FBF3F8' : '#FDF7FB',
+        slipShadow: on ? 'none' : '0 10px 22px -20px rgba(90,50,70,.8)',
+        slipOp: on ? .72 : 1 };
+    }).sort((a, b) => (a.done === b.done ? 0 : a.done ? 1 : -1));
+    const beres = tugas.filter(t => t.done).length;
+    const tugasCount = beres + '/' + tugas.length;
+    const tugasPct = Math.round(beres / tugas.length * 100) + '%';
+
+    return {
+      logoBloom, headerBloom, nav, tabs, fokus, columns, pita, konteks, tugas, tugasCount, tugasPct, kebunHero,
+      showSidebar: this.props.showSidebar ?? true,
+      showRail: this.props.showRail ?? true,
+      showTrash: this.props.showTrash ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>

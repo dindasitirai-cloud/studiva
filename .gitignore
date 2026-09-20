@@ -24,3 +24,11 @@ apps/*/src/**/design_handoff_*/
 
 # Berkas kerja sementara
 .tmp/
+
+# build outputs & temp (ditambahkan agar tidak ikut ter-commit)
+packages/shared/dist/
+packages/shared/journey.js
+packages/shared/journey.d.ts
+**/.fuse_hidden*
+supabase/.temp/
+supabase/.branches/

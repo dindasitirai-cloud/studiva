@@ -4,6 +4,7 @@ import { useFullscreenNotif } from '../components/FullscreenNotificationProvider
 import { ARTICLES, Article, CATEGORIES } from '../pages/DashboardPages/Tier2/articleData';
 import { COURSES, Course } from '../pages/DashboardPages/Tier2/courseData';
 import { STRATEGIES, Strategy, AGE_GROUPS } from '../pages/DashboardPages/Tier2/strategyData';
+import { muatThreads as sbMuatThreads, buatThread as sbBuatThread, buatBalasan as sbBuatBalasan, laporThread as sbLaporThread, hapusThread as sbHapusThread, hapusBalasan as sbHapusBalasan, ubahStatus as sbUbahStatus, ubahPin as sbUbahPin, buatPengumuman as sbBuatPengumuman, balasSupport as sbBalasSupport } from '../lib/supabase/forum';
 
 export type { Article, Course, Strategy };
 
@@ -76,6 +77,7 @@ export interface ForumThread {
   createdAt: string;
   isSupportRequest?: boolean; // started via the "Dukungan Studiva" path
   isAnnouncement?: boolean; // official Tim Studiva announcement, posted by admin
+  privasi?: 'publik' | 'privat'; // 'privat' = Tanya ke Psikolog (hanya penanya + admin)
   status: ForumThreadStatus;
   pinned?: boolean;
   replies: ForumReply[];
@@ -99,7 +101,7 @@ export interface AppNotification {
 // Used only to simulate someone else replying to a thread the parent just
 // started, so the notification flow is demonstrable without a real backend
 // or other logged-in users. TODO: remove once real multi-user data exists.
-const MOCK_REPLIERS = ['Ibu Siti', 'Bapak Andi', 'Ibu Dewi', 'Ibu Maya'];
+// MOCK_REPLIERS dihapus — forum kini memakai data nyata Supabase (lib/supabase/forum.ts).
 
 const SEED_PSYCHOLOGIST: PsychologistProfile = {
   name: 'Psikolog Fitri Effendy',
@@ -285,7 +287,7 @@ interface DashboardTier2ContextValue {
 
   // Community forum
   threads: ForumThread[];
-  addThread: (title: string, content: string, author: string, isSupportRequest?: boolean, isAnnouncement?: boolean) => string;
+  addThread: (title: string, content: string, author: string, isSupportRequest?: boolean, isAnnouncement?: boolean, privasi?: 'publik' | 'privat') => string;
   addReply: (threadId: string, content: string, author: string, isSupport?: boolean) => void;
   reportThread: (id: string) => void;
   updateThreadStatus: (id: string, status: ForumThreadStatus) => void;
@@ -351,6 +353,14 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
   // notification lookup below always missed. A ref sidesteps that staleness.
   const threadsRef = useRef(threads);
   useEffect(() => { threadsRef.current = threads; }, [threads]);
+
+  // Muat forum dari Supabase (cross-user). Bila belum login / tabel belum ada,
+  // pertahankan SEED sebagai fallback pengembangan.
+  useEffect(() => {
+    let batal = false;
+    sbMuatThreads().then(data => { if (!batal && data) setThreads(data); }).catch(() => { /* fallback SEED */ });
+    return () => { batal = true; };
+  }, []);
 
   const markArticleRead = useCallback((childId: string, articleId: string) =>
     setArticleActivity(prev => addActivity(prev, childId, articleId)), []);
@@ -495,53 +505,49 @@ export function DashboardTier2Provider({ children: providerChildren }: { childre
       ]);
       showToast({ kind: 'forum-reply', title, message });
     }
+    void (isSupport ? sbBalasSupport(threadId, content, author) : sbBuatBalasan(threadId, content, author)).catch(() => { /* fallback lokal */ });
   }, [showToast]);
 
-  const addThread = useCallback((title: string, content: string, author: string, isSupportRequest?: boolean, isAnnouncement?: boolean) => {
+  const addThread = useCallback((title: string, content: string, author: string, isSupportRequest?: boolean, isAnnouncement?: boolean, privasi?: 'publik' | 'privat') => {
     const id = uid();
     setThreads(prev => [
-      { id, title, content, author, createdAt: new Date().toISOString(), isSupportRequest, isAnnouncement, status: 'aktif', replies: [] },
+      { id, title, content, author, createdAt: new Date().toISOString(), isSupportRequest, isAnnouncement, privasi, status: 'aktif', replies: [] },
       ...prev,
     ]);
-
-    // TODO: remove once a real backend with other users exists - this
-    // simulates someone replying so the notification flow is demonstrable.
-    // Official announcements don't get a simulated reply - they're a
-    // broadcast from Tim Studiva, not a question awaiting an answer.
-    if (isAnnouncement) return id;
-
-    const delay = 6000 + Math.random() * 4000;
-    setTimeout(() => {
-      if (isSupportRequest) {
-        addReply(
-          id,
-          'Terima kasih sudah menghubungi kami. Tim Studiva sudah menerima pertanyaan ini dan akan membalas dengan jawaban lebih lengkap di sini.',
-          'Tim Studiva',
-          true
-        );
-      } else {
-        const replier = MOCK_REPLIERS[Math.floor(Math.random() * MOCK_REPLIERS.length)];
-        addReply(id, 'Terima kasih sudah berbagi! Saya juga pernah mengalami hal serupa, semoga diskusi ini membantu orang tua lain juga.', replier);
-      }
-    }, delay);
-
+    // Persist ke Supabase (cross-user). Pengumuman & balasan "Tim Studiva" hanya
+    // via admin service_role, jadi tak dipersist dari klien. Ganti id sementara → id server.
+    const persist = isAnnouncement ? sbBuatPengumuman(title, content, author) : sbBuatThread(title, content, author, { isSupportRequest, privasi });
+    void persist
+      .then(row => { if (row) setThreads(prev => prev.map(t => (t.id === id ? row : t))); })
+      .catch(() => { /* fallback lokal */ });
     return id;
-  }, [addReply]);
+  }, []);
 
-  const reportThread = useCallback((id: string) =>
-    setThreads(prev => prev.map(t => t.id === id ? { ...t, status: 'dilaporkan' } : t)), []);
+  const reportThread = useCallback((id: string) => {
+    setThreads(prev => prev.map(t => t.id === id ? { ...t, status: 'dilaporkan' } : t));
+    void sbLaporThread(id).catch(() => { /* fallback lokal */ });
+  }, []);
 
-  const updateThreadStatus = useCallback((id: string, status: ForumThreadStatus) =>
-    setThreads(prev => prev.map(t => t.id === id ? { ...t, status } : t)), []);
+  const updateThreadStatus = useCallback((id: string, status: ForumThreadStatus) => {
+    setThreads(prev => prev.map(t => t.id === id ? { ...t, status } : t));
+    void sbUbahStatus(id, status).catch(() => { /* fallback lokal */ });
+  }, []);
 
-  const togglePinThread = useCallback((id: string) =>
-    setThreads(prev => prev.map(t => t.id === id ? { ...t, pinned: !t.pinned } : t)), []);
+  const togglePinThread = useCallback((id: string) => {
+    const next = !threadsRef.current.find(t => t.id === id)?.pinned;
+    setThreads(prev => prev.map(t => t.id === id ? { ...t, pinned: next } : t));
+    void sbUbahPin(id, next).catch(() => { /* fallback lokal */ });
+  }, []);
 
-  const deleteThread = useCallback((id: string) =>
-    setThreads(prev => prev.filter(t => t.id !== id)), []);
+  const deleteThread = useCallback((id: string) => {
+    setThreads(prev => prev.filter(t => t.id !== id));
+    void sbHapusThread(id).catch(() => { /* fallback lokal */ });
+  }, []);
 
-  const deleteReply = useCallback((threadId: string, replyId: string) =>
-    setThreads(prev => prev.map(t => t.id === threadId ? { ...t, replies: t.replies.filter(r => r.id !== replyId) } : t)), []);
+  const deleteReply = useCallback((threadId: string, replyId: string) => {
+    setThreads(prev => prev.map(t => t.id === threadId ? { ...t, replies: t.replies.filter(r => r.id !== replyId) } : t));
+    void sbHapusBalasan(replyId).catch(() => { /* fallback lokal */ });
+  }, []);
 
   const notifyWebinarRegistered = useCallback((courseTitle: string) => {
     const registeredTitle = 'Pendaftaran webinar berhasil';

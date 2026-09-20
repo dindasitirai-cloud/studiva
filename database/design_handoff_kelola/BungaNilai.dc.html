@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<svg viewBox="-74 -74 148 148" style="width:100%;height:100%;display:block;overflow:visible">
+  <g>
+    <sc-for list="{{ petals }}" as="p" hint-placeholder-count="5">
+      <path d="{{ p.d }}" fill="{{ p.fill }}" opacity="{{ p.op }}" transform="{{ p.t }}"></path>
+    </sc-for>
+    <sc-for list="{{ centers }}" as="c" hint-placeholder-count="2">
+      <circle cx="0" cy="0" r="{{ c.r }}" fill="{{ c.fill }}" opacity="{{ c.op }}"></circle>
+    </sc-for>
+  </g>
+</svg>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:120,&quot;height&quot;:120},&quot;value&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;kasih-sayang&quot;,&quot;kemandirian&quot;],&quot;default&quot;:&quot;kasih-sayang&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;state&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;mekar&quot;,&quot;istirahat&quot;],&quot;default&quot;:&quot;mekar&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    // Rekah — Keluarga 12 Bunga Nilai (arah 1a, terkunci). ViewBox -74 -74 148 148.
+    const HATI5 = 'M0 0 C -19.512 -11.7 -20.29248 -39.6 -10.14624 -45 C -6.24384 -48 -1.17072 -32.58 0 -32.58 C 1.17072 -32.58 6.24384 -48 10.14624 -45 C 20.29248 -39.6 19.512 -11.7 0 0 Z';
+    const LANCIP = 'M0 0 C -9.72 -18.7 -6.6096 -51.7 0 -55 C 6.6096 -51.7 9.72 -18.7 0 0 Z';
+    const table = {
+      'kasih-sayang': { d: HATI5, count: 5, fill: '#C9B8F0', centers: [{ r: 15, fill: '#FFE29A' }, { r: 7.5, fill: '#FFF3E6' }] },
+      'kemandirian':  { d: LANCIP, count: 6, fill: '#FFE29A', centers: [{ r: 11, fill: '#F06BA8' }, { r: 5.3, fill: '#FFF3E6' }] },
+    };
+    const key = this.props.value || 'kasih-sayang';
+    const v = table[key] || table['kasih-sayang'];
+    const rest = (this.props.state || 'mekar') === 'istirahat';
+    const op = rest ? 0.5 : 1;
+    const cop = rest ? 0.62 : 1;
+    const petals = Array.from({ length: v.count }, (_, i) => ({
+      d: v.d, fill: v.fill, op, t: 'rotate(' + (360 / v.count * i).toFixed(2) + ')',
+    }));
+    return { petals, centers: v.centers.map(c => ({ ...c, op: cop })) };
+  }
+}
+</script>
+</body>
+</html>

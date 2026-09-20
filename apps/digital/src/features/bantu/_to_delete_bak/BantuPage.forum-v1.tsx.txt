@@ -1,0 +1,494 @@
+// Bantu — situational support (Phase 14/14N/14R, Model C). Halaman tersendiri (setara Kelola):
+// HUB dua kolom (kiri "Apa yang sedang terjadi?" 70% · kanan "Panduan tersimpan" 30%),
+// lalu Forum tanya-jawab antar orang tua + CTA Konseling online (WhatsApp) dengan Psikolog
+// Fitri Effendy. Forum & profil psikolog memakai ulang DashboardTier2Context (bukan store baru).
+// Pemindai keselamatan (B5) berjalan pada teks bebas, chip sensitif, DAN postingan/komentar forum.
+// STATUS: DRAFT — menunggu review Psikolog Fitri Effendy. Nomor WA konseling: KONFIRMASI dulu.
+import React, { useMemo, useState } from 'react';
+import {
+  ArrowLeft, Check, Eye, Heart, ChevronRight, Bookmark, Share2, Trash2, Clock,
+  Frown, Moon, Utensils, Hand, Users, MessageCircle, Zap, MoreHorizontal, Lightbulb, Send,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { useAnakAktif } from '../../context/AnakContext';
+import { useDashboardTier2 } from '../../context/DashboardTier2Context';
+import { useAkarStateSync } from '../akar-keluarga/state';
+import type { NilaiAkar } from '../akar-keluarga/content';
+import { useChildProfile } from '../beranda-usia/useChildProfile';
+import { tanggalDariTimestampWIB } from '@studiva/shared';
+import { tambahKustomKeTanggal } from '../../lib/supabase/rekah';
+import { dispatchRekahError } from '../../utils/rekahApiError';
+import {
+  BANTU_SITUASI, adaSinyalBahaya, OPSI_MEMICU_B5, RUJUKAN_KESELAMATAN,
+} from './bantuSeed';
+import type { BantuSituasi } from './bantuSeed';
+
+type Layar = 'hub' | 'clarify' | 'guide' | 'safety';
+const PLUM = '#8E5FA6';
+
+// TODO(KONFIRMASI): nomor WhatsApp resmi konseling Psikolog Fitri Effendy sebelum tayang.
+const NOMOR_WA_KONSELING = '6281234567890';
+const PESAN_WA_KONSELING = 'Halo, saya ingin konseling online dengan Psikolog Fitri Effendy tentang situasi anak saya.';
+
+const IKON_SITUASI: Record<string, LucideIcon> = {
+  tantrum: Frown, sulit_tidur: Moon, tidak_mau_makan: Utensils, memukul: Hand,
+  konflik_saudara: Users, konflik_caregiver: MessageCircle, saya_mudah_marah: Zap,
+};
+
+// ── Panduan tersimpan (localStorage per anak). ──
+interface Tersimpan { slug: string; label: string; langkah: string[]; disimpanPada: string; }
+const kunciSimpan = (idAnak: string) => `rekah_bantu_tersimpan_${idAnak}`;
+function bacaTersimpan(idAnak: string): Tersimpan[] {
+  try { const raw = window.localStorage.getItem(kunciSimpan(idAnak)); return raw ? (JSON.parse(raw) as Tersimpan[]) : []; } catch { return []; }
+}
+function tulisTersimpan(idAnak: string, list: Tersimpan[]) {
+  try { window.localStorage.setItem(kunciSimpan(idAnak), JSON.stringify(list)); } catch { /* abaikan */ }
+}
+function tanggalPendek(iso: string): string {
+  try { return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }); } catch { return ''; }
+}
+
+export default function BantuPage() {
+  const { anak } = useAnakAktif();
+  const idAnak = anak.id;
+  const [akarState] = useAkarStateSync(idAnak);
+  const { profile, sapaan, usiaBulan } = useChildProfile();
+  const { threads, addThread, addReply, reportThread, psychologist } = useDashboardTier2();
+  const nama = profile.namaAnak || sapaan.cap || 'si kecil';
+  const nilaiKeluarga = (akarState.nilai as NilaiAkar[]) ?? [];
+  const tanggalHariIni = useMemo(() => tanggalDariTimestampWIB(new Date().toISOString()), []);
+
+  const [layar, setLayar] = useState<Layar>('hub');
+  const [pilih, setPilih] = useState<BantuSituasi | null>(null);
+  const [teks, setTeks] = useState('');
+  const [ceritaOpen, setCeritaOpen] = useState(false);
+  const [whyOpen, setWhyOpen] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+  const [savedTick, setSavedTick] = useState(0);
+
+  // Forum
+  const [forumJudul, setForumJudul] = useState('');
+  const [forumIsi, setForumIsi] = useState('');
+  const [forumNama, setForumNama] = useState('');
+  const [forumOpen, setForumOpen] = useState<string | null>(null);
+  const [balasDraft, setBalasDraft] = useState('');
+  const [forumMsg, setForumMsg] = useState<string | null>(null);
+
+  const tersimpan = useMemo(() => bacaTersimpan(idAnak), [idAnak, savedTick]);
+  const authorForum = forumNama.trim() || 'Orang tua';
+  const threadsTampil = useMemo(
+    () => threads.filter(t => t.status !== 'disembunyikan').slice().sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned) || (b.createdAt < a.createdAt ? -1 : 1)),
+    [threads],
+  );
+
+  const usiaTeks = useMemo(() => {
+    if (usiaBulan === null) return null;
+    const th = Math.floor(usiaBulan / 12); const bl = usiaBulan % 12;
+    if (th <= 0) return `${bl} bln`;
+    return bl === 0 ? `${th} thn` : `${th} thn ${bl} bln`;
+  }, [usiaBulan]);
+
+  const keHub = () => { setLayar('hub'); setWhyOpen(false); setToast(null); setSavedTick(t => t + 1); };
+
+  const keGuideAtauClarify = (s: BantuSituasi) => {
+    setPilih(s); setWhyOpen(false); setToast(null); setTeks(''); setCeritaOpen(false);
+    setLayar(s.clarify.length > 0 ? 'clarify' : 'guide');
+  };
+
+  const submitEntry = () => {
+    if (!teks.trim()) return;
+    if (adaSinyalBahaya(teks)) { setLayar('safety'); return; }
+    const meta = BANTU_SITUASI.find(s => s.slug === 'bingung_merespons');
+    if (meta) { setPilih(meta); setWhyOpen(false); setToast(null); setLayar('guide'); }
+  };
+
+  const pilihOpsiClarify = (opsi: string) => {
+    if (OPSI_MEMICU_B5.includes(opsi)) { setLayar('safety'); return; }
+    setLayar('guide');
+  };
+
+  const bukaTersimpan = (slug: string) => {
+    const s = BANTU_SITUASI.find(x => x.slug === slug);
+    if (!s) return;
+    setPilih(s); setWhyOpen(false); setToast(null); setLayar('guide');
+  };
+  const hapusTersimpan = (slug: string) => {
+    tulisTersimpan(idAnak, bacaTersimpan(idAnak).filter(x => x.slug !== slug));
+    setSavedTick(t => t + 1);
+  };
+
+  // Forum — pemindai keselamatan berjalan pada judul+isi & komentar.
+  const ajukanPertanyaan = () => {
+    const judul = forumJudul.trim(); const isi = forumIsi.trim();
+    if (!judul || !isi) return;
+    if (adaSinyalBahaya(`${judul} ${isi}`)) { setLayar('safety'); return; }
+    addThread(judul, isi, authorForum);
+    setForumJudul(''); setForumIsi('');
+    setForumMsg('Pertanyaanmu terkirim. Orang tua lain bisa membalas — ditinjau tim untuk menjaga ruang tetap aman.');
+  };
+  const kirimBalasan = (threadId: string) => {
+    const isi = balasDraft.trim();
+    if (!isi) return;
+    if (adaSinyalBahaya(isi)) { setLayar('safety'); return; }
+    addReply(threadId, isi, authorForum);
+    setBalasDraft('');
+  };
+  const laporkan = (id: string) => { reportThread(id); setForumMsg('Terima kasih. Laporanmu membantu kami menjaga ruang ini tetap aman.'); };
+
+  const tambahKeKelola = async () => {
+    if (!pilih) return;
+    const item = {
+      id: `bantu-${pilih.slug}-${Date.now().toString(36)}`,
+      judul: `Strategi: ${pilih.label}`,
+      tipe: 'aktivitas' as const,
+      domain: 'sos',
+      nilai: [] as NilaiAkar[],
+      pemilik: 'anak' as const,
+      sumberId: `bantu-${pilih.slug}`,
+      kustom: true,
+      kategoriKustom: 'rencana' as const,
+      keteranganKapan: 'Dari Bantu',
+      deskripsiKustom: pilih.respons.langkah.join(' · '),
+    };
+    try {
+      await tambahKustomKeTanggal(idAnak, tanggalHariIni, item);
+      setToast('Tersimpan sebagai rencana di Kelola.');
+    } catch (e) {
+      console.error('[Bantu] gagal menambah ke Kelola:', e);
+      dispatchRekahError('Koneksi terputus — strategi tadi belum masuk Kelola. Coba lagi ya.');
+    }
+  };
+
+  const simpanStrategi = () => {
+    if (!pilih) return;
+    const entry: Tersimpan = { slug: pilih.slug, label: pilih.label, langkah: pilih.respons.langkah, disimpanPada: new Date().toISOString() };
+    const next = [entry, ...bacaTersimpan(idAnak).filter(x => x.slug !== pilih.slug)].slice(0, 50);
+    tulisTersimpan(idAnak, next);
+    setSavedTick(t => t + 1);
+    setToast('Panduan disimpan. Ada di "Panduan tersimpan".');
+  };
+
+  const bagikan = async () => {
+    if (!pilih) return;
+    const r = pilih.respons;
+    const teksBagikan = `Bantu — ${pilih.label}\n\n${r.validasi}\n\nCoba:\n${r.langkah.map((l, i) => `${i + 1}. ${l}`).join('\n')}\n\n— dari Rekah`;
+    const nav = navigator as Navigator & { share?: (d: { title?: string; text?: string }) => Promise<void> };
+    try {
+      if (typeof nav.share === 'function') { await nav.share({ title: `Bantu — ${pilih.label}`, text: teksBagikan }); return; }
+      await navigator.clipboard.writeText(teksBagikan);
+      setToast('Panduan disalin. Tinggal tempel untuk dibagikan.');
+    } catch { /* dibatalkan pengguna */ }
+  };
+
+  const plumBtn = 'rounded-2xl px-6 py-3 font-nunito font-extrabold text-white shadow-[0_10px_20px_-10px_rgba(142,95,166,0.8)]';
+  const plumOutlineBtn = 'inline-flex w-full items-center justify-center gap-1.5 rounded-2xl border-2 bg-white px-4 py-2.5 font-nunito text-[13px] font-extrabold';
+  const seksiJudul = 'font-fredoka text-[18px] font-semibold text-pekat';
+  const kartuTopik = 'flex flex-col items-start gap-2 rounded-2xl border bg-white p-4 text-left transition hover:-translate-y-0.5 hover:border-[#D9BEE6] hover:shadow-[0_16px_30px_-22px_rgba(142,95,166,0.9)]';
+  const inputCls = 'w-full rounded-2xl border bg-white px-3.5 py-2.5 font-nunito text-[13.5px] text-pekat placeholder:text-pekat/50 focus:outline-none focus:ring-2 focus:ring-langit';
+
+  const situasiTampil = BANTU_SITUASI.filter(s => s.kategori !== 'meta');
+  const waHref = `https://wa.me/${NOMOR_WA_KONSELING}?text=${encodeURIComponent(PESAN_WA_KONSELING)}`;
+
+  // ── HUB (landing) ─────────────────────────────────────────────────────────
+  const Hub = () => (
+    <>
+      <header>
+        <p className="font-shantell text-lg" style={{ color: PLUM }}>bantu</p>
+        <h1 className="mt-1 font-fredoka text-[30px] font-semibold leading-tight text-pekat">Bantu</h1>
+        <p className="mt-1 font-nunito text-[14.5px] text-pekat/70">Dukungan saat kamu membutuhkannya. Kami ada di sini.</p>
+      </header>
+
+      <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-[7fr_3fr]">
+        {/* KIRI — Apa yang sedang terjadi? (pilih topik dulu) */}
+        <section className="rounded-3xl border p-5 shadow-[0_18px_40px_-30px_rgba(142,95,166,0.6)] sm:p-6" style={{ borderColor: '#E0CBE9', background: 'linear-gradient(180deg,#FBF3FE,#FFFFFF)' }}>
+          <h2 className="font-fredoka text-[22px] font-semibold text-pekat">Apa yang sedang terjadi?</h2>
+          <p className="mt-1 font-nunito text-[13.5px] text-pekat/70">Pilih topik yang paling sesuai dengan situasimu.</p>
+          <div className="mt-3 flex flex-wrap items-center gap-1.5">
+            <span className="text-[10.5px] font-extrabold uppercase tracking-wide" style={{ color: PLUM }}>Rekah tahu</span>
+            <span className="rounded-full bg-langit/30 px-2.5 py-1 text-[11px] font-bold text-pekat">{nama}{usiaTeks ? ` · ${usiaTeks}` : ''}</span>
+            {nilaiKeluarga.slice(0, 1).map(n => (
+              <span key={n} className="rounded-full bg-pucuk px-2.5 py-1 text-[11px] font-bold text-[#5C8A55]">Fokus: {n}</span>
+            ))}
+          </div>
+
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {situasiTampil.map(s => {
+              const Ikon = IKON_SITUASI[s.slug] ?? Heart;
+              return (
+                <button key={s.slug} onClick={() => keGuideAtauClarify(s)} className={kartuTopik} style={{ borderColor: '#F0DCE6' }}>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: '#F6EEFA' }}><Ikon className="h-5 w-5" style={{ color: PLUM }} aria-hidden /></span>
+                  <span className="block font-nunito text-[14px] font-extrabold text-pekat">{s.label}</span>
+                  {s.ringkas && <span className="block font-nunito text-[11.5px] leading-snug text-pekat/55">{s.ringkas}</span>}
+                </button>
+              );
+            })}
+
+            <button onClick={() => setCeritaOpen(o => !o)} aria-expanded={ceritaOpen}
+              className="flex flex-col items-start gap-2 rounded-2xl border-2 border-dashed bg-white/60 p-4 text-left transition hover:-translate-y-0.5 hover:bg-white"
+              style={{ borderColor: '#D9BEE6' }}>
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ background: '#F6EEFA' }}><MoreHorizontal className="h-5 w-5" style={{ color: PLUM }} aria-hidden /></span>
+              <span className="block font-nunito text-[14px] font-extrabold text-pekat">Lainnya</span>
+              <span className="block font-nunito text-[11.5px] leading-snug text-pekat/55">Tidak ada yang sesuai? Ceritakan sendiri.</span>
+            </button>
+          </div>
+
+          {ceritaOpen && (
+            <div className="mt-4 rounded-2xl border p-4" style={{ borderColor: '#E0CBE9', background: '#FBF3FE' }}>
+              <label className="font-nunito text-[13px] font-bold text-pekat">Ceritakan situasinya</label>
+              <textarea value={teks} onChange={e => setTeks(e.target.value)} rows={3} autoFocus
+                placeholder='Contoh: "Anakku setiap mau mandi menangis…"'
+                className={`mt-2 ${inputCls}`} style={{ borderColor: '#F0DCE6' }} />
+              <button onClick={submitEntry} disabled={!teks.trim()} className={`mt-3 ${plumBtn} disabled:opacity-50`} style={{ background: PLUM }}>Bantu saya</button>
+            </div>
+          )}
+        </section>
+
+        {/* KANAN — Panduan tersimpan */}
+        <section>
+          <h2 className={seksiJudul}>Panduan tersimpan</h2>
+          {tersimpan.length === 0 ? (
+            <div className="mt-3 rounded-2xl border border-dashed bg-white p-5 text-center font-nunito text-[12.5px] leading-relaxed text-pekat/60" style={{ borderColor: '#E0CBE9' }}>
+              Belum ada panduan tersimpan. Saat kamu menemukan panduan yang cocok, tekan <b className="text-pekat/75">Simpan</b> agar mudah dibuka lagi kapan pun.
+            </div>
+          ) : (
+            <div className="mt-3 space-y-2.5">
+              {tersimpan.map(t => (
+                <div key={t.slug} className="flex items-center gap-3 rounded-2xl border bg-white p-3.5" style={{ borderColor: '#F0DCE6' }}>
+                  <button onClick={() => bukaTersimpan(t.slug)} className="flex min-w-0 flex-1 items-center gap-3 text-left">
+                    <span className="flex h-9 w-9 flex-none items-center justify-center rounded-xl" style={{ background: '#F6EEFA' }}><Bookmark className="h-4 w-4" style={{ color: PLUM }} aria-hidden /></span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-nunito text-[13.5px] font-bold text-pekat">{t.label}</span>
+                      <span className="mt-0.5 flex items-center gap-1 font-nunito text-[11.5px] text-pekat/55"><Clock className="h-3 w-3" aria-hidden /> Disimpan {tanggalPendek(t.disimpanPada)}</span>
+                    </span>
+                    <ChevronRight className="h-4 w-4 flex-none text-pekat/35" aria-hidden />
+                  </button>
+                  <button onClick={() => hapusTersimpan(t.slug)} aria-label={`Hapus ${t.label}`} className="flex-none rounded-lg p-1.5 text-pekat/40 hover:bg-fajar hover:text-pekat"><Trash2 className="h-4 w-4" aria-hidden /></button>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
+
+      {/* Forum tanya-jawab + Konseling (landscape) */}
+      <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-[7fr_3fr]">
+        {/* Forum tanya jawab */}
+        <section>
+          <div className="flex items-center gap-2"><MessageCircle className="h-5 w-5" style={{ color: PLUM }} aria-hidden /><h2 className={seksiJudul}>Tanya jawab bersama orang tua lain</h2></div>
+          <p className="mt-1 font-nunito text-[13px] text-pekat/70">Ajukan pertanyaan, atau bantu orang tua lain lewat pengalamanmu. Ruang ini ditinjau tim agar tetap aman & saling menghormati.</p>
+
+          {/* Ajukan pertanyaan */}
+          <div className="mt-3 rounded-2xl border p-4" style={{ borderColor: '#E0CBE9', background: '#FBF3FE' }}>
+            <input value={forumJudul} onChange={e => setForumJudul(e.target.value)} placeholder="Judul pertanyaan — mis. Tips transisi antar aktivitas?" className={inputCls} style={{ borderColor: '#F0DCE6' }} />
+            <textarea value={forumIsi} onChange={e => setForumIsi(e.target.value)} rows={3} placeholder="Ceritakan sedikit konteksnya…" className={`mt-2 ${inputCls}`} style={{ borderColor: '#F0DCE6' }} />
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <input value={forumNama} onChange={e => setForumNama(e.target.value)} placeholder="Nama tampilan (opsional)" className={`${inputCls} sm:max-w-[220px]`} style={{ borderColor: '#F0DCE6' }} />
+              <button onClick={ajukanPertanyaan} disabled={!forumJudul.trim() || !forumIsi.trim()} className={`inline-flex items-center gap-1.5 ${plumBtn} disabled:opacity-50`} style={{ background: PLUM }}><Send className="h-4 w-4" aria-hidden /> Kirim pertanyaan</button>
+            </div>
+            {forumMsg && <p className="mt-2 font-nunito text-[12px] text-[#4d7a47]">{forumMsg}</p>}
+          </div>
+
+          {/* Daftar pertanyaan */}
+          <div className="mt-4 space-y-3">
+            {threadsTampil.map(t => {
+              const terbuka = forumOpen === t.id;
+              return (
+                <div key={t.id} className="rounded-2xl border bg-white p-4" style={{ borderColor: '#F0DCE6' }}>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {t.pinned && <span className="rounded-full bg-kuning px-2 py-0.5 text-[10px] font-extrabold text-pekat">Disematkan</span>}
+                        {t.isAnnouncement && <span className="rounded-full bg-langit/40 px-2 py-0.5 text-[10px] font-extrabold text-pekat">Tim Studiva</span>}
+                        <h3 className="font-nunito text-[14px] font-extrabold text-pekat">{t.title}</h3>
+                      </div>
+                      <p className="mt-0.5 font-nunito text-[11.5px] text-pekat/55">{t.author} · {tanggalPendek(t.createdAt)}</p>
+                    </div>
+                  </div>
+                  <p className="mt-2 font-nunito text-[13px] leading-relaxed text-pekat/85">{t.content}</p>
+
+                  <div className="mt-2 flex items-center gap-4">
+                    <button onClick={() => { setForumOpen(terbuka ? null : t.id); setBalasDraft(''); }} className="inline-flex items-center gap-1 font-nunito text-[12px] font-bold" style={{ color: PLUM }}>
+                      <MessageCircle className="h-3.5 w-3.5" aria-hidden /> {t.replies.length} balasan
+                    </button>
+                    <button onClick={() => laporkan(t.id)} className="font-nunito text-[11.5px] text-pekat/45 hover:text-pekat/70">Laporkan</button>
+                  </div>
+
+                  {terbuka && (
+                    <div className="mt-3 space-y-2 border-t pt-3" style={{ borderColor: '#F0DCE6' }}>
+                      {t.replies.map(r => (
+                        <div key={r.id} className="rounded-xl p-2.5" style={{ background: r.isSupport ? '#EEF5FF' : '#F7F2FA' }}>
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-nunito text-[12px] font-bold text-pekat">{r.author}</span>
+                            {r.isSupport && <span className="rounded-full bg-langit/40 px-1.5 py-0.5 text-[9px] font-extrabold text-pekat">Tim Studiva</span>}
+                            <span className="font-nunito text-[10.5px] text-pekat/45">· {tanggalPendek(r.createdAt)}</span>
+                          </div>
+                          <p className="mt-1 font-nunito text-[12.5px] leading-relaxed text-pekat/85">{r.content}</p>
+                        </div>
+                      ))}
+                      <div className="flex items-start gap-2 pt-1">
+                        <textarea value={balasDraft} onChange={e => setBalasDraft(e.target.value)} rows={2} placeholder="Tulis balasan yang membantu…" className={inputCls} style={{ borderColor: '#F0DCE6' }} />
+                        <button onClick={() => kirimBalasan(t.id)} disabled={!balasDraft.trim()} className="mt-0.5 inline-flex flex-none items-center gap-1 rounded-2xl px-4 py-2.5 font-nunito text-[12.5px] font-extrabold text-white disabled:opacity-50" style={{ background: PLUM }}><Send className="h-3.5 w-3.5" aria-hidden /> Balas</button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            {threadsTampil.length === 0 && (
+              <div className="rounded-2xl border border-dashed bg-white p-5 text-center font-nunito text-[12.5px] text-pekat/60" style={{ borderColor: '#E0CBE9' }}>Belum ada pertanyaan. Jadilah yang pertama bertanya — orang tua lain sering menghadapi hal serupa.</div>
+            )}
+          </div>
+        </section>
+
+        {/* CTA Konseling online (WhatsApp) */}
+        <aside>
+          <h2 className={seksiJudul}>Konseling online</h2>
+          <div className="mt-3 overflow-hidden rounded-3xl border p-5" style={{ borderColor: '#E0CBE9', background: 'linear-gradient(150deg,#F1ECFB 0%,#FCE3EE 100%)' }}>
+            <p className="text-[11px] font-extrabold uppercase tracking-wide" style={{ color: '#9F86C7' }}>Pendampingan personal</p>
+            <div className="mt-3 flex items-center gap-3">
+              <span className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-white font-fredoka text-[15px] font-semibold" style={{ color: '#8E8FE0' }} aria-hidden>FE</span>
+              <div className="min-w-0">
+                <p className="font-fredoka text-[16px] font-semibold text-pekat">{psychologist?.name ?? 'Psikolog Fitri Effendy'}</p>
+                <p className="font-nunito text-[12px] font-bold text-[#8A6E7E]">{psychologist?.specialization ?? 'Psikologi Anak & Tumbuh Kembang'}</p>
+              </div>
+            </div>
+            <p className="mt-3 font-nunito text-[12.5px] leading-relaxed text-pekat/75">Butuh pendampingan lebih personal untuk situasi anakmu? Bicara langsung dengan Psikolog Fitri lewat WhatsApp.</p>
+            <a href={waHref} target="_blank" rel="noopener noreferrer" className="mt-4 flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full font-nunito text-[14px] font-bold text-white shadow-[0_12px_22px_-12px_rgba(63,178,126,.9)]" style={{ background: '#3FB27E' }}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="#fff" aria-hidden><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 .9-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.1.1.3 0 .5l-.4.5c-.2.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.6-.1l.7-.8c.2-.2.3-.2.6-.1l1.8.9c.3.1.4.2.5.3.1.2.1.7-.1 1.3Z" /></svg>
+              Konseling via WhatsApp
+            </a>
+            <p className="mt-2.5 font-nunito text-[11px] leading-relaxed text-pekat/45">Nomor WhatsApp sedang dikonfirmasi. Konseling adalah layanan berbayar terpisah; Bantu bukan layanan krisis.</p>
+          </div>
+        </aside>
+      </div>
+
+      <p className="mt-8 text-center font-shantell text-[15px]" style={{ color: PLUM }}>Kamu tidak sendiri. Setiap tantangan adalah kesempatan untuk tumbuh.</p>
+    </>
+  );
+
+  // ── B2: Clarify ─────────────────────────────────────────────────────────────
+  const Clarify = () => {
+    if (!pilih) return null;
+    return (
+      <div className="mx-auto w-full max-w-xl">
+        <button onClick={keHub} className="mb-3 inline-flex items-center gap-1 font-nunito text-[13px] text-pekat/70"><ArrowLeft className="h-4 w-4" /> Kembali</button>
+        <h1 className="font-fredoka text-[24px] font-semibold leading-tight text-pekat">Boleh cerita sedikit?</h1>
+        <p className="mt-1 font-nunito text-[14px] text-pekat/70">Supaya saran lebih pas. Usia {nama} sudah kami tahu, jadi tenang saja.</p>
+        {pilih.clarify.map((c, i) => (
+          <div key={i} className="mt-4 rounded-2xl border p-3" style={{ borderColor: '#E0CBE9', background: '#F6EEFA' }}>
+            <div className="font-nunito text-[13px] font-bold text-pekat">{c.pertanyaan}</div>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {c.opsi.map(o => (
+                <button key={o} onClick={() => pilihOpsiClarify(o)} className="rounded-xl border bg-white px-3 py-2 font-nunito text-[12.5px] font-bold text-pekat" style={{ borderColor: '#F0DCE6' }}>{o}</button>
+              ))}
+            </div>
+          </div>
+        ))}
+        <button onClick={() => setLayar('guide')} className={`mt-4 w-full ${plumBtn}`} style={{ background: PLUM }}>Lanjut</button>
+        <button onClick={() => setLayar('guide')} className="mx-auto mt-3 block font-nunito text-[12px] text-pekat/60 underline">Lewati — langsung saran saja</button>
+      </div>
+    );
+  };
+
+  // ── B3/B4: Guide + Action (landscape) ─────────────────────────────────────────
+  const Guide = () => {
+    if (!pilih) return null;
+    const r = pilih.respons;
+    return (
+      <div className="mx-auto w-full max-w-5xl">
+        <button onClick={keHub} className="mb-3 inline-flex items-center gap-1 font-nunito text-[13px] text-pekat/70"><ArrowLeft className="h-4 w-4" /> Kembali</button>
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <p className="font-shantell text-base" style={{ color: PLUM }}>{pilih.label}</p>
+            <div className="mt-2 rounded-2xl border p-4" style={{ borderColor: '#E0CBE9', background: '#F6EEFA' }}>
+              <p className="font-nunito text-[13.5px] leading-relaxed text-pekat">{r.validasi}</p>
+            </div>
+
+            <p className="mt-4 font-nunito text-[13px] font-extrabold text-pekat">Coba sekarang</p>
+            <ol className="mt-1 space-y-2">
+              {r.langkah.map((l, i) => (
+                <li key={i} className="flex items-start gap-2.5">
+                  <span className="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full text-[12px] font-extrabold text-white" style={{ background: PLUM }}>{i + 1}</span>
+                  <span className="font-nunito text-[13.5px] leading-snug text-pekat">{l}</span>
+                </li>
+              ))}
+            </ol>
+
+            {r.yangDiamati && (
+              <div className="mt-3 flex items-start gap-2 rounded-2xl border border-[#cfe2f2] bg-langit/20 px-3 py-2.5 text-[12.5px] text-pekat">
+                <Eye className="mt-0.5 h-4 w-4 flex-none" aria-hidden /> <span>Yang diamati: {r.yangDiamati}</span>
+              </div>
+            )}
+
+            {r.kenapaSederhana && (
+              <div className="mt-3 border-l-[3px] pl-3" style={{ borderColor: PLUM }}>
+                <button onClick={() => setWhyOpen(o => !o)} aria-expanded={whyOpen} className="flex items-center gap-1.5 font-nunito text-[12.5px] font-extrabold" style={{ color: PLUM }}>
+                  <ChevronRight className={`h-4 w-4 transition ${whyOpen ? 'rotate-90' : ''}`} aria-hidden /> Kenapa ini membantu?
+                </button>
+                {whyOpen && (
+                  <div className="mt-2 font-nunito text-[12.5px] leading-relaxed text-pekat/75">
+                    {r.kenapaSederhana}
+                    {r.kenapaSumber ? <div className="mt-2"><span className="rounded-md bg-langit/30 px-1.5 py-0.5 text-[9px] font-extrabold uppercase">sumber</span> {r.kenapaSumber}</div> : null}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <aside className="space-y-3">
+            {toast && (
+              <div className="flex items-center gap-2 rounded-2xl border border-[#c3ddba] bg-[#EAF6E4] px-3 py-2.5 text-[13px] font-bold text-[#4d7a47]"><Check className="h-4 w-4" /> {toast}</div>
+            )}
+            <button onClick={() => { void tambahKeKelola(); }} className={`w-full ${plumBtn}`} style={{ background: PLUM }}>Tambahkan ke Kelola</button>
+            <div className="grid grid-cols-2 gap-2">
+              <button onClick={simpanStrategi} className={plumOutlineBtn} style={{ borderColor: PLUM, color: PLUM }}><Bookmark className="h-4 w-4" aria-hidden /> Simpan</button>
+              <button onClick={() => { void bagikan(); }} className={plumOutlineBtn} style={{ borderColor: PLUM, color: PLUM }}><Share2 className="h-4 w-4" aria-hidden /> Bagikan</button>
+            </div>
+            <div className="rounded-2xl border p-3" style={{ borderColor: '#E0CBE9', background: '#F6EEFA' }}>
+              <div className="flex items-center gap-2"><Lightbulb className="h-4 w-4" style={{ color: PLUM }} aria-hidden /><span className="font-nunito text-[12.5px] font-extrabold text-pekat">Tips cepat</span></div>
+              <p className="mt-1.5 font-nunito text-[12px] leading-relaxed text-pekat/75">Tenangkan dirimu dulu sebelum merespons — satu tarikan napas sering cukup untuk mengubah reaksi menjadi respons.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    );
+  };
+
+  // ── B5: Safety ──────────────────────────────────────────────────────────────
+  const Safety = () => (
+    <div className="mx-auto w-full max-w-xl">
+      <button onClick={keHub} className="mb-3 inline-flex items-center gap-1 font-nunito text-[13px] text-pekat/70"><ArrowLeft className="h-4 w-4" /> Kembali</button>
+      <div className="flex items-center gap-2">
+        <Heart className="h-5 w-5" style={{ color: PLUM }} aria-hidden />
+        <h1 className="font-fredoka text-[23px] font-semibold text-pekat">Kamu tidak sendiri</h1>
+      </div>
+      <div className="mt-3 rounded-2xl border p-4 font-nunito text-[14px] leading-relaxed text-pekat" style={{ borderColor: '#E0CBE9', background: '#F6EEFA' }}>
+        Apa yang kamu rasakan berat, dan kamu berani mengatakannya. Untuk hal seperti ini, berbicara dengan orang yang tepat akan lebih menolong daripada melewatinya sendiri.
+      </div>
+      <p className="mt-4 font-nunito text-[13px] font-extrabold" style={{ color: PLUM }}>Bantuan yang bisa dihubungi</p>
+      <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {RUJUKAN_KESELAMATAN.map(r => (
+          <div key={r.nama} className="rounded-2xl border bg-white p-3" style={{ borderColor: '#F0DCE6' }}>
+            <div className="font-nunito text-[13.5px] font-bold text-pekat">{r.nama}</div>
+            <div className="font-nunito text-[12px] text-pekat/70">{r.untuk}</div>
+            <div className="mt-1 font-nunito text-[13px] font-extrabold text-pekat">{r.kontak}</div>
+          </div>
+        ))}
+      </div>
+      <p className="mt-4 font-nunito text-[11.5px] italic leading-relaxed text-pekat/60">
+        Bantu bukan layanan krisis. Daftar ini sedang diverifikasi; pastikan nomor terbaru saat menghubungi.
+      </p>
+    </div>
+  );
+
+  return (
+    <div style={{ background: '#FCEBD7' }} className="-mx-5 min-h-screen px-5 pb-16 pt-[30px] sm:-mx-8 sm:px-[46px]">
+      <section className="mx-auto w-full max-w-6xl" aria-live="polite">
+        {layar === 'hub' && Hub()}
+        {layar === 'clarify' && Clarify()}
+        {layar === 'guide' && Guide()}
+        {layar === 'safety' && Safety()}
+      </section>
+    </div>
+  );
+}

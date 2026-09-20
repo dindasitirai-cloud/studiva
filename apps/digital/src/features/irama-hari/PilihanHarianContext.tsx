@@ -41,6 +41,8 @@ export interface PilihanHarian {
   wawasanIds: string[];
   /** Blok waktu per kartu Wawasan Tumbuh (key = id kartu, default jelangTidur). */
   wawasanBloks: Record<string, BlokWaktu>;
+  /** Item kustom (momen / kegiatan ditulis sendiri) agar bisa muncul di susunan hari. */
+  kustom: ItemBekal[];
 }
 
 // ─── State & Reducer ───────────────────────────────────────────────────────
@@ -55,7 +57,8 @@ type Aksi =
   | { type: 'HIDRAT'; state: PilihanHarian }
   | { type: 'RESET_HARI'; tanggal: string; idAnak: string }
   | { type: 'PILIH_WAWASAN'; id: string }
-  | { type: 'PINDAH_WAWASAN_BLOK'; id: string; blok: BlokWaktu };
+  | { type: 'PINDAH_WAWASAN_BLOK'; id: string; blok: BlokWaktu }
+  | { type: 'TAMBAH_KUSTOM'; item: ItemBekal };
 
 function reducer(state: PilihanHarian, aksi: Aksi): PilihanHarian {
   switch (aksi.type) {
@@ -69,9 +72,10 @@ function reducer(state: PilihanHarian, aksi: Aksi): PilihanHarian {
           ...loaded,
           wawasanIds: oldId ? [oldId] : [],
           wawasanBloks: oldId ? { [oldId]: oldBlok } : {},
+          kustom: (loaded as unknown as { kustom?: ItemBekal[] }).kustom ?? [],
         };
       }
-      return loaded;
+      return { ...loaded, kustom: loaded.kustom ?? [] };
     }
     case 'RESET_HARI':
       return buatStateAwal(aksi.tanggal, aksi.idAnak);
@@ -100,7 +104,7 @@ function reducer(state: PilihanHarian, aksi: Aksi): PilihanHarian {
         : state.ditambah.filter(id => id !== aksi.id);
       const penempatan = { ...state.penempatan };
       delete penempatan[aksi.id];
-      return { ...state, dihapus, ditambah, penempatan };
+      return { ...state, dihapus, ditambah, penempatan, kustom: state.kustom.filter(i => i.id !== aksi.id) };
     }
     case 'TAMBAH': {
       if (state.ditambah.includes(aksi.id)) return state;
@@ -108,6 +112,14 @@ function reducer(state: PilihanHarian, aksi: Aksi): PilihanHarian {
         ...state,
         ditambah: [...state.ditambah, aksi.id],
         // penempatan tidak disentuh — blok ditetapkan otomatis berurutan oleh penempatanEfektif
+      };
+    }
+    case 'TAMBAH_KUSTOM': {
+      if (state.ditambah.includes(aksi.item.id)) return state;
+      return {
+        ...state,
+        kustom: [...state.kustom, aksi.item],
+        ditambah: [...state.ditambah, aksi.item.id],
       };
     }
     case 'PILIH_WAWASAN': {
@@ -144,7 +156,7 @@ function reducer(state: PilihanHarian, aksi: Aksi): PilihanHarian {
 }
 
 function buatStateAwal(tanggal: string, idAnak: string): PilihanHarian {
-  return { tanggal, idAnak, dihapus: [], ditambah: [], penempatan: {}, selesai: [], catatan: '', wawasanIds: [], wawasanBloks: {} };
+  return { tanggal, idAnak, dihapus: [], ditambah: [], penempatan: {}, selesai: [], catatan: '', wawasanIds: [], wawasanBloks: {}, kustom: [] };
 }
 
 function tanggalLokalString(tanggal: Date): string {
@@ -174,6 +186,7 @@ interface NilaiKonteks {
   pilihanHarianRaw: PilihanHarian;
   hapus: (id: string) => void;
   tambah: (item: ItemBekal) => void;
+  tambahKustom: (item: ItemBekal) => void;
   pindahBlok: (id: string, blok: BlokWaktu | null) => void;
   tandaiSelesai: (id: string) => void;
   tulisCatatan: (teks: string) => void;
@@ -217,6 +230,13 @@ export function PilihanHarianProvider({
     undefined,
     () => buatStateAwal(tanggalHariIni, idAnak),
   );
+
+  // Cek pergantian hari setiap menit — memastikan reset terjadi meski app dibiarkan terbuka semalam
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t + 1), 60_000);
+    return () => clearInterval(id);
+  }, []);
 
   // Penanda: hidrat sudah dimuat dari Supabase agar efek save tidak menulis sebelum load.
   const sudahHidrat = useRef(false);
@@ -265,6 +285,7 @@ export function PilihanHarianProvider({
               catatan: (diff.catatan as string) ?? '',
               wawasanIds,
               wawasanBloks,
+              kustom: (diff.kustom as ItemBekal[]) ?? [],
             },
           });
         }
@@ -292,6 +313,7 @@ export function PilihanHarianProvider({
         catatan: pilihanHarian.catatan,
         wawasanIds: pilihanHarian.wawasanIds,
         wawasanBloks: pilihanHarian.wawasanBloks,
+        kustom: pilihanHarian.kustom,
       }).catch(() => {});
     }, 1000);
 
@@ -312,6 +334,7 @@ export function PilihanHarianProvider({
           catatan: pilihanHarian.catatan,
           wawasanIds: pilihanHarian.wawasanIds,
           wawasanBloks: pilihanHarian.wawasanBloks,
+          kustom: pilihanHarian.kustom,
         }).catch(() => {});
       }
       sudahHidrat.current = false;
@@ -333,8 +356,8 @@ export function PilihanHarianProvider({
   );
 
   const kolamMap = useMemo(
-    () => new Map(kolam.map(i => [i.id, i])),
-    [kolam],
+    () => new Map([...kolam, ...pilihanHarian.kustom].map(i => [i.id, i])),
+    [kolam, pilihanHarian.kustom],
   );
 
   // Hanya item yang dipilih manual pengguna — tidak ada rotasi otomatis
@@ -394,6 +417,10 @@ export function PilihanHarianProvider({
     dispatch({ type: 'TAMBAH', id: item.id });
   }, []);
 
+  const tambahKustom = useCallback((item: ItemBekal) => {
+    dispatch({ type: 'TAMBAH_KUSTOM', item });
+  }, []);
+
   const pindahBlok = useCallback((id: string, blok: BlokWaktu | null) => {
     dispatch({ type: 'PINDAH_BLOK', id, blok });
   }, []);
@@ -431,6 +458,7 @@ export function PilihanHarianProvider({
       pilihanHarianRaw: pilihanHarian,
       hapus,
       tambah,
+      tambahKustom,
       pindahBlok,
       tandaiSelesai,
       tulisCatatan,
@@ -441,7 +469,7 @@ export function PilihanHarianProvider({
       hasilRotasi, pilihanEfektif, penempatanEfektif, selesaiSet,
       sikapHariIni, panduanOrangTua, pilihanHarian,
       kolamAnak, kolamAnakJumlah, maksItem,
-      hapus, tambah, pindahBlok, tandaiSelesai, tulisCatatan, pilihWawasan, pindahWawasanBlok,
+      hapus, tambah, tambahKustom, pindahBlok, tandaiSelesai, tulisCatatan, pilihWawasan, pindahWawasanBlok,
     ],
   );
 

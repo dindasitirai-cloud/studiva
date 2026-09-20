@@ -1,8 +1,8 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { MENU_UTAMA } from '../config/fiturRekah';
+import { NAV_BAWAH } from '../config/fiturRekah';
 
-const TABS = MENU_UTAMA;
+const TABS = NAV_BAWAH;
 
 export default function NavigasiBawah() {
   const { pathname } = useLocation();

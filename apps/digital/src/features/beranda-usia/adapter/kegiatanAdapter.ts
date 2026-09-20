@@ -88,6 +88,7 @@ export function adaptKegiatan(): HasilKegiatan {
       judul: act.judul,
       tipe: 'aktivitas',
       domain,
+      domainSemua: act.domain,
       nilai,
       tanpaTemaNilai: tanpaTemaNilai || undefined,
       perkiraanDurasiMenit: act.durasiMenit,

@@ -105,12 +105,9 @@ const BUNGA_SPEC: Record<string, _BungaSpec> = {
 };
 const BUNGA_SPEC_DEFAULT = BUNGA_SPEC['Kasih Sayang'];
 
-function BungaSVG({ nilai, mekar, ukuran }: { nilai: string; mekar: number; ukuran: number }) {
+export function BungaSVG({ nilai, mekar: _mekar, ukuran }: { nilai: string; mekar: number; ukuran: number }) {
   const spec = BUNGA_SPEC[nilai] ?? BUNGA_SPEC_DEFAULT;
   const n = spec.n;
-  // mekar < 0 = penuh; else clamp 0..n
-  const lit = mekar < 0 ? n : Math.max(0, Math.min(n, Math.round(mekar)));
-  const anyLit = lit > 0;
 
   const [baseW, baseL] = _BASE[spec.ch];
   const wS = baseW * (6 / (n + 3));
@@ -138,27 +135,28 @@ function BungaSVG({ nilai, mekar, ukuran }: { nilai: string; mekar: number; ukur
           key={i}
           d={petalD}
           fill={spec.color}
-          opacity={i < lit ? 1 : 0.5}
+          opacity={1}
           transform={`rotate(${((i * 360) / n).toFixed(2)})`}
         />
       ))}
-      <circle cx={0} cy={0} r={rOuter} fill={spec.center} opacity={anyLit ? 1 : 0.62} />
-      <circle cx={0} cy={0} r={rInner} fill={spec.hi} opacity={anyLit ? 1 : 0.62} />
+      <circle cx={0} cy={0} r={rOuter} fill={spec.center} opacity={1} />
+      <circle cx={0} cy={0} r={rInner} fill={spec.hi} opacity={1} />
     </svg>
   );
 }
 
 // ─── Bunga dalam lingkaran putih (badge 46px di header grup) ─────────────────
 
-function BungaMini({ nilai, mekarLevel }: { nilai: string; mekarLevel: number }) {
+function BungaMini({ nilai, mekarLevel, compact = false }: { nilai: string; mekarLevel: number; compact?: boolean }) {
   const spec = BUNGA_SPEC[nilai] ?? BUNGA_SPEC_DEFAULT;
   // Petakan tingkat streak (0-7) ke jumlah kelopak menyala secara proporsional
   const lit = mekarLevel === 0 ? 0 : Math.max(1, Math.round((mekarLevel / TINGKAT_MAKS) * spec.n));
+  const sz = compact ? 34 : 46;
   return (
     <div
       style={{
-        width: 46,
-        height: 46,
+        width: sz,
+        height: sz,
         borderRadius: '50%',
         background: '#fff',
         display: 'flex',
@@ -168,7 +166,7 @@ function BungaMini({ nilai, mekarLevel }: { nilai: string; mekarLevel: number })
         boxShadow: '0 7px 16px -11px rgba(90,50,70,.6)',
       }}
     >
-      <BungaSVG nilai={nilai} mekar={lit} ukuran={34} />
+      <BungaSVG nilai={nilai} mekar={lit} ukuran={compact ? 24 : 34} />
     </div>
   );
 }
@@ -263,6 +261,7 @@ interface PropsGrupNilai {
   defaultBuka: boolean;
   sapaan: SapaanSet;
   onToggleButir: (nilaiId: NilaiAkar, butirId: string) => void;
+  compact?: boolean;
 }
 
 function GrupNilai({
@@ -274,6 +273,7 @@ function GrupNilai({
   defaultBuka,
   sapaan,
   onToggleButir,
+  compact = false,
 }: PropsGrupNilai) {
   const [buka, setBuka] = useState(defaultBuka);
 
@@ -285,22 +285,15 @@ function GrupNilai({
 
   const idHeader = `grup-nilai-${nilai.replace(/\s+/g, '-').toLowerCase()}`;
 
-  // Label mekar berdasarkan centang hari ini — murni tampilan // TODO: review Fitri
-  const stateLabel =
-    total === 0           ? COPY.LABEL_SEDANG_DISIAPKAN :
-    jumlahCentang === 0   ? COPY.LABEL_ISTIRAHAT        :
-    jumlahCentang === total ? COPY.LABEL_MEKAR_PENUH    :
-    COPY.LABEL_SEDANG_MEKAR;
-
   return (
     <div
       style={{
         background: token.soft,
-        borderRadius: 22,
-        padding: '16px 16px 15px',
+        borderRadius: compact ? 16 : 22,
+        padding: compact ? '10px 12px 10px' : '16px 16px 15px',
         display: 'flex',
         flexDirection: 'column',
-        gap: 13,
+        gap: compact ? 9 : 13,
       }}
     >
       {/* Header: toggle accordion */}
@@ -313,7 +306,7 @@ function GrupNilai({
           width: '100%',
           display: 'flex',
           alignItems: 'center',
-          gap: 11,
+          gap: compact ? 9 : 11,
           background: 'none',
           border: 'none',
           cursor: 'pointer',
@@ -321,40 +314,29 @@ function GrupNilai({
           padding: 0,
         }}
       >
-        <BungaMini nilai={nilai} mekarLevel={mekarLevel} />
+        <BungaMini nilai={nilai} mekarLevel={mekarLevel} compact={compact} />
         <div style={{ minWidth: 0, flex: '1 1 auto' }}>
           <div
             style={{
               fontFamily: 'Fredoka, system-ui, sans-serif',
               fontWeight: 600,
-              fontSize: 17,
+              fontSize: compact ? 14 : 17,
               color: '#6E3B57',
               lineHeight: 1.1,
             }}
           >
             {nilai}
           </div>
-          <div
-            style={{
-              fontFamily: 'Nunito, system-ui, sans-serif',
-              fontWeight: 700,
-              fontSize: 12,
-              color: token.ink,
-              marginTop: 1,
-            }}
-          >
-            {stateLabel}
-          </div>
         </div>
         {total > 0 && (
           <span
             style={{
               fontFamily: 'Nunito, system-ui, sans-serif',
-              fontSize: 12.5,
+              fontSize: compact ? 11.5 : 12.5,
               fontWeight: 800,
               color: token.ink,
               background: '#fff',
-              padding: '4px 11px',
+              padding: compact ? '3px 9px' : '4px 11px',
               borderRadius: 999,
               flexShrink: 0,
             }}
@@ -441,6 +423,8 @@ export interface PropsKartuKebiasaanBaik {
   sapaan: SapaanSet;
   onCentangToggle: (nilaiId: NilaiAkar, butirId: string) => void;
   onBekal: () => void;
+  /** Versi ringkas untuk Papan Catatan (judul kecil + padding rapat). */
+  compact?: boolean;
 }
 
 export default function KartuKebiasaanBaik({
@@ -452,6 +436,7 @@ export default function KartuKebiasaanBaik({
   sapaan,
   onCentangToggle,
   onBekal,
+  compact = false,
 }: PropsKartuKebiasaanBaik) {
   const riwayatPerNilai = useMemo(() => {
     const derived = derivedRiwayatSiram(centangKebiasaan);
@@ -491,9 +476,9 @@ export default function KartuKebiasaanBaik({
 
   const STYLE_KARTU_LUAR = {
     background: 'white',
-    borderRadius: 30,
-    padding: '26px 30px 28px',
-    boxShadow: '0 18px 40px -30px rgba(90,50,70,.55)',
+    borderRadius: compact ? 18 : 30,
+    padding: compact ? '16px 18px 18px' : '26px 30px 28px',
+    boxShadow: compact ? '0 10px 26px -22px rgba(90,50,70,.5)' : '0 18px 40px -30px rgba(90,50,70,.55)',
   } as const;
 
   // Header kartu: judul kiri + tombol tanam + pill counter kanan
@@ -504,7 +489,7 @@ export default function KartuKebiasaanBaik({
         alignItems: 'flex-start',
         justifyContent: 'space-between',
         gap: 12,
-        marginBottom: 20,
+        marginBottom: compact ? 12 : 20,
       }}
     >
       <div>
@@ -513,7 +498,7 @@ export default function KartuKebiasaanBaik({
           style={{
             fontFamily: 'Fredoka, system-ui, sans-serif',
             fontWeight: 700,
-            fontSize: 26,
+            fontSize: compact ? 18 : 26,
             color: '#6E3B57',
             margin: 0,
             letterSpacing: '-0.3px',
@@ -525,7 +510,7 @@ export default function KartuKebiasaanBaik({
           style={{
             fontFamily: "'Shantell Sans', cursive, system-ui",
             fontWeight: 600,
-            fontSize: 16,
+            fontSize: compact ? 13 : 16,
             color: '#F06BA8',
             marginTop: 3,
           }}
@@ -618,8 +603,8 @@ export default function KartuKebiasaanBaik({
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: 16,
+          gridTemplateColumns: compact ? '1fr' : 'repeat(3, 1fr)',
+          gap: compact ? 10 : 16,
           alignItems: 'start',
         }}
       >
@@ -634,6 +619,7 @@ export default function KartuKebiasaanBaik({
             defaultBuka={defaultBuka}
             sapaan={sapaan}
             onToggleButir={onCentangToggle}
+            compact={compact}
           />
         ))}
       </div>

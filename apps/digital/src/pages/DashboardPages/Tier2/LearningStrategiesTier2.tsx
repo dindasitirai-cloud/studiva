@@ -85,78 +85,95 @@ function AgePill({ ageId }: { ageId: string }) {
   );
 }
 
+// ── Rekah v2 tokens — palet & ikon per domain (dipakai kartu & modal Ajak Main) ─
+// STR_DOM (peta warna + path ikon per domain) didefinisikan di bawah pada berkas
+// yang sama; aman dirujuk di sini karena hanya dipakai saat render.
+
+// Palet untuk Unduhan (tidak bertema domain)
+const DL_PAL = { soft: '#F4E6EF', ink: '#A85683', border: '#E9CADB' };
+
+/** Ikon stroke per domain untuk tile kartu/modal (desain v2, bukan emoji). */
+function DomIcon({ domain, size = 26, color }: { domain: DomainKey; size?: number; color?: string }) {
+  const paths = STR_DOM[domain]?.icon ?? STR_DOM.kog.icon;
+  const clr = color ?? STR_DOM[domain]?.ink ?? '#6E3B57';
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke={clr} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      {paths.map((d, i) => <path key={i} d={d} />)}
+    </svg>
+  );
+}
+
 // ── ActivityCard ──────────────────────────────────────────────────────────────
 
 export function ActivityCard({ activity, onOpen, onJadwalkan }: { activity: Activity; onOpen: () => void; onJadwalkan?: () => void }) {
   const { toggleSaved, isSaved, toggleDone, isDone } = useLearningStrategies();
   const saved = isSaved('activities', activity.id);
   const done = isDone(activity.id);
+  const dom = activity.domain[0];
+  const pal = STR_DOM[dom] ?? STR_DOM.kog;
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-[0_2px_12px_rgba(16,58,107,.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(217,119,6,.12)]">
-      {/* Color header */}
-      <button type="button" onClick={onOpen} className="relative focus:outline-none">
-        <div className="flex h-24 items-center justify-center gap-3 px-4"
-          style={{ background: DOMAIN_META[activity.domain[0]].bg }}>
-          <span className="text-4xl">{activity.icon}</span>
+    <div
+      className="flex flex-col overflow-hidden bg-white transition-all duration-300 hover:-translate-y-1.5"
+      style={{ borderRadius: 24, border: `2px solid ${pal.border}`, boxShadow: '0 20px 34px -30px rgba(90,50,70,.6)' }}
+    >
+      {/* Band atas berwarna */}
+      <button type="button" onClick={onOpen} className="relative w-full text-left focus:outline-none"
+        style={{ background: pal.soft, padding: '22px 22px 26px' }}>
+        <div className="flex items-center justify-between gap-2">
+          <span className="flex items-center justify-center rounded-2xl bg-white" style={{ width: 56, height: 56 }}>
+            <DomIcon domain={dom} size={26} color={pal.ink} />
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-full font-nunito font-[800]"
+            style={{ background: 'rgba(255,255,255,.8)', color: '#6E3B57', fontSize: 12, padding: '4px 10px' }}>
+            <Clock className="h-3.5 w-3.5" />{activity.durasiMenit} mnt
+          </span>
         </div>
         {done && (
-          <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-green-500 px-2 py-0.5 text-[10px] font-bold text-white shadow">
+          <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-daun px-2 py-0.5 text-[10px] font-bold text-white shadow">
             <Check className="h-3 w-3" /> Sudah Dicoba
           </span>
         )}
       </button>
 
       {/* Body */}
-      <button type="button" onClick={onOpen} className="flex flex-1 flex-col gap-2 p-3 text-left focus:outline-none">
-        <div className="flex flex-wrap gap-1">
-          <AgePill ageId={activity.ageId} />
-          {activity.domain.map(d => <DomainBadge key={d} domain={d} />)}
-        </div>
-        <p className="font-baloo text-[15px] font-bold leading-tight text-stv-navy">{activity.judul}</p>
-        <p className="line-clamp-2 text-[12px] leading-relaxed text-stv-muted">{activity.deskripsi}</p>
-
-        <div className="mt-auto flex items-center gap-3 pt-1 text-[11px] text-stv-muted">
-          <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{activity.durasiMenit} mnt</span>
-          {activity.isDIY && <span className="rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-bold text-green-600">DIY</span>}
-        </div>
-
-        {/* Sci box */}
-        <div className="mt-1 rounded-lg border border-blue-100 bg-blue-50 p-2">
-          <div className="flex gap-1.5">
-            <FlaskConical className="mt-0.5 h-3.5 w-3.5 shrink-0 text-blue-400" strokeWidth={1.5} />
-            <p className="line-clamp-2 text-[11px] leading-relaxed text-blue-700">{activity.sci}</p>
+      <div className="flex flex-1 flex-col" style={{ padding: '20px 22px 22px' }}>
+        <button type="button" onClick={onOpen} className="flex flex-col gap-1.5 text-left focus:outline-none">
+          <div className="mb-0.5 flex flex-wrap gap-1">
+            <AgePill ageId={activity.ageId} />
+            {activity.isDIY && <span className="rounded-full bg-daun/10 px-2 py-0.5 text-[10px] font-bold text-daun">DIY</span>}
           </div>
-        </div>
-      </button>
-
-      {/* Action bar */}
-      <div className="flex items-center gap-1 border-t border-slate-100 px-3 py-2">
-        {onJadwalkan ? (
-          <button type="button"
-            onClick={e => { e.stopPropagation(); onJadwalkan(); }}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-rekah/10 py-1.5 text-[11px] font-semibold text-rekah transition hover:bg-rekah/20">
-            <Calendar className="h-3.5 w-3.5" />
-            Jadwalkan kegiatan ini
-          </button>
-        ) : (
-          <button type="button"
-            onClick={e => { e.stopPropagation(); toggleDone(activity.id); }}
-            className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-1.5 text-[11px] font-semibold transition ${
-              done ? 'bg-green-50 text-green-600 hover:bg-green-100' : 'text-stv-muted hover:bg-slate-50 hover:text-green-600'
-            }`}>
-            <CheckCircle2 className="h-3.5 w-3.5" />
-            {done ? 'Sudah Dicoba' : 'Tandai Dicoba'}
-          </button>
-        )}
-        <div className="h-4 w-px bg-slate-100" />
-        <button type="button"
-          onClick={e => { e.stopPropagation(); toggleSaved('activities', activity.id); }}
-          className={`flex h-8 w-8 items-center justify-center rounded-xl transition ${
-            saved ? 'text-amber-500' : 'text-stv-muted hover:text-amber-500'
-          }`}>
-          <Star className="h-4 w-4" fill={saved ? 'currentColor' : 'none'} strokeWidth={2} />
+          <p className="font-fredoka font-bold text-pekat" style={{ fontSize: 22, lineHeight: 1.2 }}>{activity.judul}</p>
+          <p className="font-nunito font-semibold" style={{ fontSize: 14.5, lineHeight: 1.5, color: '#8A6F86', minHeight: 44 }}>{activity.deskripsi}</p>
         </button>
+
+        {/* Baris aksi */}
+        <div className="mt-4 flex items-center gap-2">
+          {onJadwalkan ? (
+            <button type="button"
+              onClick={e => { e.stopPropagation(); onJadwalkan(); }}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-rekah py-2.5 font-nunito text-[13px] font-bold text-white transition hover:bg-rekah-tua">
+              <Calendar className="h-4 w-4" />
+              Jadwalkan kegiatan ini
+            </button>
+          ) : (
+            <button type="button"
+              onClick={e => { e.stopPropagation(); toggleDone(activity.id); }}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-2.5 font-nunito text-[13px] font-bold transition"
+              style={done ? { background: '#E4F3E8', color: '#2E8B57' } : { background: pal.soft, color: pal.ink }}>
+              <CheckCircle2 className="h-4 w-4" />
+              {done ? 'Sudah Dicoba' : 'Tandai Dicoba'}
+            </button>
+          )}
+          <button type="button" aria-label={saved ? 'Batal simpan' : 'Simpan'}
+            onClick={e => { e.stopPropagation(); toggleSaved('activities', activity.id); }}
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition ${
+              saved ? 'border-amber-300 text-amber-500' : 'border-[#F2E4D2] text-pekat/40 hover:text-amber-500'
+            }`}>
+            <Star className="h-4 w-4" fill={saved ? 'currentColor' : 'none'} strokeWidth={2} />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -245,69 +262,67 @@ export function ToolCard({ tool, onOpen, onJadwalkan }: { tool: EduTool; onOpen:
   const saved = isSaved('tools', tool.id);
   const owned = isOwned(tool.id);
 
+  const pal = STR_DOM[tool.domain] ?? STR_DOM.kog;
+
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_2px_12px_rgba(16,58,107,.06)] transition-all duration-300 hover:-translate-y-0.5">
-      <div className="flex items-start gap-3">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-2xl">
-          {tool.icon}
+    <div
+      className="flex flex-col overflow-hidden bg-white transition-all duration-300 hover:-translate-y-1.5"
+      style={{ borderRadius: 24, border: `2px solid ${pal.border}`, boxShadow: '0 20px 34px -30px rgba(90,50,70,.6)' }}
+    >
+      {/* Band atas berwarna */}
+      <button type="button" onClick={onOpen} className="w-full text-left focus:outline-none"
+        style={{ background: pal.soft, padding: '22px 22px 26px' }}>
+        <div className="flex items-center justify-between gap-2">
+          <span className="flex items-center justify-center rounded-2xl bg-white" style={{ width: 56, height: 56 }}>
+            <DomIcon domain={tool.domain} size={26} color={pal.ink} />
+          </span>
+          <span className="inline-flex items-center rounded-full font-nunito font-[800]"
+            style={{ background: 'rgba(255,255,255,.8)', color: '#6E3B57', fontSize: 12, padding: '4px 10px' }}>
+            {tool.hargaEstimasi}
+          </span>
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="font-baloo text-[14px] font-bold leading-tight text-stv-navy">{tool.nama}</p>
-              {tool.pilihanPsikolog && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-purple-50 px-2 py-0.5 text-[10px] font-bold text-purple-600">
-                  ⭐ Pilihan Psikolog
-                </span>
-              )}
-            </div>
-            <button type="button"
-              onClick={e => { e.stopPropagation(); toggleSaved('tools', tool.id); }}
-              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-xl transition ${
-                saved ? 'text-amber-500' : 'text-stv-muted hover:text-amber-500'
-              }`}>
-              <Star className="h-3.5 w-3.5" fill={saved ? 'currentColor' : 'none'} strokeWidth={2} />
-            </button>
+      </button>
+
+      {/* Body */}
+      <div className="flex flex-1 flex-col" style={{ padding: '20px 22px 22px' }}>
+        <button type="button" onClick={onOpen} className="flex flex-col gap-1.5 text-left focus:outline-none">
+          <div className="mb-0.5 flex flex-wrap gap-1">
+            <span className="rounded-full px-2.5 py-0.5 text-[11px] font-bold" style={{ background: '#FFF3D0', color: '#8A5510' }}>{tool.ageLabel}</span>
+            {tool.pilihanPsikolog && (
+              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: '#F1EBFB', color: '#8A6DC7' }}>
+                ⭐ Pilihan Psikolog
+              </span>
+            )}
           </div>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-stv-muted">
-            <span>{tool.ageLabel}</span>
-            <span className="font-semibold text-stv-body">{tool.hargaEstimasi}</span>
-          </div>
-        </div>
-      </div>
-
-      <p className="text-[12px] leading-relaxed text-stv-muted">{tool.deskripsi}</p>
-
-      <div className="rounded-lg border border-blue-100 bg-blue-50 p-2">
-        <div className="flex gap-1.5">
-          <FlaskConical className="mt-0.5 h-3.5 w-3.5 shrink-0 text-blue-400" strokeWidth={1.5} />
-          <p className="line-clamp-2 text-[11px] leading-relaxed text-blue-700">{tool.sci}</p>
-        </div>
-      </div>
-
-      <div className="flex gap-2">
-        <button type="button" onClick={onOpen}
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-amber-200 py-2 text-[12px] font-semibold text-amber-700 transition hover:bg-amber-50">
-          Detail
+          <p className="font-fredoka font-bold text-pekat" style={{ fontSize: 22, lineHeight: 1.2 }}>{tool.nama}</p>
+          <p className="font-nunito font-semibold" style={{ fontSize: 14.5, lineHeight: 1.5, color: '#8A6F86', minHeight: 44 }}>{tool.deskripsi}</p>
         </button>
-        {onJadwalkan ? (
-          <button type="button"
-            onClick={e => { e.stopPropagation(); onJadwalkan(); }}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-rekah/10 py-2 text-[12px] font-semibold text-rekah transition hover:bg-rekah/20">
-            <Calendar className="h-3.5 w-3.5" />
-            Jadwalkan
-          </button>
-        ) : (
-          <button type="button"
-            onClick={e => { e.stopPropagation(); toggleOwned(tool.id); }}
-            className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[12px] font-semibold transition ${
-              owned
-                ? 'bg-green-50 text-green-600 hover:bg-green-100'
-                : 'bg-slate-50 text-stv-body hover:bg-slate-100'
+
+        {/* Baris aksi */}
+        <div className="mt-4 flex items-center gap-2">
+          {onJadwalkan ? (
+            <button type="button"
+              onClick={e => { e.stopPropagation(); onJadwalkan(); }}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-rekah py-2.5 font-nunito text-[13px] font-bold text-white transition hover:bg-rekah-tua">
+              <Calendar className="h-4 w-4" />
+              Simpan alat ini
+            </button>
+          ) : (
+            <button type="button"
+              onClick={e => { e.stopPropagation(); toggleOwned(tool.id); }}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-2.5 font-nunito text-[13px] font-bold transition"
+              style={owned ? { background: '#E4F3E8', color: '#2E8B57' } : { background: pal.soft, color: pal.ink }}>
+              {owned ? <><Check className="h-4 w-4" /> Punya</> : 'Tandai Punya'}
+            </button>
+          )}
+          <button type="button" aria-label={saved ? 'Batal simpan' : 'Simpan'}
+            onClick={e => { e.stopPropagation(); toggleSaved('tools', tool.id); }}
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition ${
+              saved ? 'border-amber-300 text-amber-500' : 'border-[#F2E4D2] text-pekat/40 hover:text-amber-500'
             }`}>
-            {owned ? <><Check className="h-3.5 w-3.5" /> Punya</> : 'Tandai Punya'}
+            <Star className="h-4 w-4" fill={saved ? 'currentColor' : 'none'} strokeWidth={2} />
           </button>
-        )}
+        </div>
       </div>
     </div>
   );
@@ -320,80 +335,67 @@ export function DownloadCard({ item, onOpen, onJadwalkan }: { item: Downloadable
   const saved = isSaved('downloads', item.id);
   const downloaded = isDownloaded(item.id);
 
-  const kategoriColor: Record<string, string> = {
-    'Buku Cerita': 'bg-rose-50 text-rose-600',
-    'Flashcard': 'bg-blue-50 text-blue-600',
-    'Worksheet': 'bg-violet-50 text-violet-600',
-    'Checklist': 'bg-green-50 text-green-600',
-    'Panduan': 'bg-amber-50 text-amber-700',
-  };
+  const pal = DL_PAL;
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_2px_12px_rgba(16,58,107,.06)] transition-all duration-300 hover:-translate-y-0.5">
-      <div className="flex items-start gap-3">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-2xl">
-          {item.icon}
+    <div
+      className="flex flex-col overflow-hidden bg-white transition-all duration-300 hover:-translate-y-1.5"
+      style={{ borderRadius: 24, border: `2px solid ${pal.border}`, boxShadow: '0 20px 34px -30px rgba(90,50,70,.6)' }}
+    >
+      {/* Band atas berwarna */}
+      <button type="button" onClick={onOpen} className="w-full text-left focus:outline-none"
+        style={{ background: pal.soft, padding: '22px 22px 26px' }}>
+        <div className="flex items-center justify-between gap-2">
+          <span className="flex items-center justify-center rounded-2xl bg-white" style={{ width: 56, height: 56 }}>
+            <Download className="h-6 w-6" style={{ color: pal.ink }} strokeWidth={2} />
+          </span>
+          <span className="inline-flex items-center rounded-full font-nunito font-[800]"
+            style={{ background: 'rgba(255,255,255,.8)', color: pal.ink, fontSize: 12, padding: '4px 10px' }}>
+            {item.kategori}
+          </span>
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${kategoriColor[item.kategori] ?? 'bg-slate-100 text-slate-600'}`}>
-                {item.kategori}
-              </span>
-              <p className="mt-1 font-baloo text-[14px] font-bold leading-tight text-stv-navy">{item.nama}</p>
-            </div>
-            <button type="button"
-              onClick={e => { e.stopPropagation(); toggleSaved('downloads', item.id); }}
-              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-xl transition ${
-                saved ? 'text-amber-500' : 'text-stv-muted hover:text-amber-500'
-              }`}>
-              <Star className="h-3.5 w-3.5" fill={saved ? 'currentColor' : 'none'} strokeWidth={2} />
-            </button>
-          </div>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-stv-muted">
+      </button>
+
+      {/* Body */}
+      <div className="flex flex-1 flex-col" style={{ padding: '20px 22px 22px' }}>
+        <button type="button" onClick={onOpen} className="flex flex-col gap-1.5 text-left focus:outline-none">
+          <div className="mb-0.5 flex flex-wrap items-center gap-2 font-nunito text-[11px] font-semibold" style={{ color: '#A98DA0' }}>
             <span>{ageLabel(item.minBulan, item.maxBulan)}</span>
+            <span>·</span>
             <span>{item.halaman}</span>
+            <span>·</span>
             <span>{item.jumlahUnduhan.toLocaleString('id')} unduhan</span>
           </div>
-        </div>
-      </div>
-
-      <p className="text-[12px] leading-relaxed text-stv-muted">{item.deskripsi}</p>
-
-      <div className="rounded-lg border border-blue-100 bg-blue-50 p-2">
-        <div className="flex gap-1.5">
-          <FlaskConical className="mt-0.5 h-3.5 w-3.5 shrink-0 text-blue-400" strokeWidth={1.5} />
-          <p className="line-clamp-2 text-[11px] leading-relaxed text-blue-700">{item.sci}</p>
-        </div>
-      </div>
-
-      <div className="flex gap-2">
-        <button type="button" onClick={onOpen}
-          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-slate-200 py-2 text-[12px] font-semibold text-stv-body transition hover:bg-slate-50">
-          Detail
+          <p className="font-fredoka font-bold text-pekat" style={{ fontSize: 22, lineHeight: 1.2 }}>{item.nama}</p>
+          <p className="font-nunito font-semibold" style={{ fontSize: 14.5, lineHeight: 1.5, color: '#8A6F86', minHeight: 44 }}>{item.deskripsi}</p>
         </button>
-        {onJadwalkan ? (
-          <button type="button"
-            onClick={e => { e.stopPropagation(); onJadwalkan(); }}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-rekah/10 py-2 text-[12px] font-semibold text-rekah transition hover:bg-rekah/20">
-            <Calendar className="h-3.5 w-3.5" />
-            Jadwalkan
-          </button>
-        ) : (
-          <button type="button"
-            onClick={e => {
-              e.stopPropagation();
-              toggleDownloaded(item.id);
-            }}
-            className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-[12px] font-semibold transition ${
-              downloaded
-                ? 'bg-green-500 text-white hover:bg-green-600'
-                : 'bg-amber-500 text-white hover:bg-amber-600'
+
+        {/* Baris aksi */}
+        <div className="mt-4 flex items-center gap-2">
+          {onJadwalkan ? (
+            <button type="button"
+              onClick={e => { e.stopPropagation(); onJadwalkan(); }}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-rekah py-2.5 font-nunito text-[13px] font-bold text-white transition hover:bg-rekah-tua">
+              <Calendar className="h-4 w-4" />
+              Unduh lembar ini
+            </button>
+          ) : (
+            <button type="button"
+              onClick={e => { e.stopPropagation(); toggleDownloaded(item.id); }}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-2.5 font-nunito text-[13px] font-bold text-white transition"
+              style={downloaded ? { background: '#2E8B57' } : { background: '#F06BA8' }}>
+              <Download className="h-4 w-4" />
+              {downloaded ? 'Diunduh' : 'Unduh'}
+            </button>
+          )}
+          <button type="button" aria-label={saved ? 'Batal simpan' : 'Simpan'}
+            onClick={e => { e.stopPropagation(); toggleSaved('downloads', item.id); }}
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition ${
+              saved ? 'border-amber-300 text-amber-500' : 'border-[#F2E4D2] text-pekat/40 hover:text-amber-500'
             }`}>
-            <Download className="h-3.5 w-3.5" />
-            {downloaded ? 'Diunduh' : 'Unduh'}
+            <Star className="h-4 w-4" fill={saved ? 'currentColor' : 'none'} strokeWidth={2} />
           </button>
-        )}
+        </div>
       </div>
     </div>
   );
@@ -412,126 +414,134 @@ export function ActivityModal({ activity, onClose, onJadwalkan }: { activity: Ac
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
 
+  const pal = STR_DOM[activity.domain[0]] ?? STR_DOM.kog;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+    <div className="fixed inset-0 z-[210] flex items-end sm:items-center justify-center p-0 sm:p-4"
+      style={{ background: 'rgba(110,59,87,0.42)', backdropFilter: 'blur(6px)' }}
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl animate-[slideUp_0.3s_ease-out]">
-        {/* Header */}
-        <div className="flex items-start gap-3 p-5 pb-4" style={{ background: DOMAIN_META[activity.domain[0]].bg }}>
-          <span className="text-4xl">{activity.icon}</span>
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-wrap gap-1 mb-1">
-              <AgePill ageId={activity.ageId} />
-              {activity.domain.map(d => <DomainBadge key={d} domain={d} />)}
+      <div className="relative z-10 flex max-h-[92dvh] w-full flex-col overflow-hidden bg-white animate-[slideUp_0.3s_ease-out]"
+        style={{ maxWidth: 620, borderRadius: 30, boxShadow: '0 40px 80px -40px rgba(90,50,70,.75)' }}>
+        {/* Header (tetap) */}
+        <div className="relative flex items-start gap-4" style={{ background: pal.soft, padding: '24px 28px' }}>
+          <span className="flex shrink-0 items-center justify-center rounded-[18px] bg-white" style={{ width: 62, height: 62 }}>
+            <DomIcon domain={activity.domain[0]} size={30} color={pal.ink} />
+          </span>
+          <div className="min-w-0 flex-1 pr-8">
+            <div className="mb-1.5 flex flex-wrap gap-1.5">
+              <span className="rounded-full px-2.5 py-0.5 font-nunito text-[11px] font-[800]" style={{ background: '#FFE29A', color: '#8A5510' }}>{AGE_RANGES.find(r => r.id === activity.ageId)?.label ?? activity.ageId}</span>
+              {activity.domain.map(d => (
+                <span key={d} className="rounded-full bg-white px-2.5 py-0.5 font-nunito text-[11px] font-[800]" style={{ color: STR_DOM[d]?.ink ?? '#6E3B57' }}>{DOMAIN_META[d].label}</span>
+              ))}
+              {activity.isDIY && <span className="rounded-full px-2.5 py-0.5 font-nunito text-[11px] font-[800]" style={{ background: 'rgba(255,255,255,.7)', color: '#9B7E92' }}>DIY</span>}
             </div>
-            <h2 className="font-baloo text-[18px] font-bold leading-tight text-stv-navy">{activity.judul}</h2>
-            <div className="mt-1 flex items-center gap-3 text-[12px] text-stv-muted">
-              <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{activity.durasiMenit} menit</span>
-              {activity.isDIY && <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">DIY - tanpa alat khusus</span>}
+            <h2 className="font-fredoka font-bold text-pekat" style={{ fontSize: 26, lineHeight: 1.15 }}>{activity.judul}</h2>
+            <div className="mt-1 flex items-center gap-1 font-nunito text-[13.5px] font-bold" style={{ color: '#7A5E71' }}>
+              <Clock className="h-3.5 w-3.5" />{activity.durasiMenit} menit
             </div>
           </div>
-          <button type="button" onClick={onClose}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/70 text-stv-body hover:bg-white transition">
+          <button type="button" onClick={onClose} aria-label="Tutup"
+            className="absolute right-5 top-5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-pekat/60 transition hover:text-pekat"
+            style={{ background: 'rgba(255,255,255,.75)' }}>
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-4">
-          {/* Sci callout */}
-          <div className="rounded-xl border border-blue-200 bg-blue-50 p-4">
-            <p className="mb-1 flex items-center gap-1.5 text-[12px] font-bold text-blue-700">
-              <FlaskConical className="h-3.5 w-3.5" /> Kenapa ini bermanfaat?
-            </p>
-            <p className="text-[13px] leading-relaxed text-blue-800">{activity.sci}</p>
-            <p className="mt-2 text-[11px] text-blue-500"><span className="font-semibold">Sumber:</span> {activity.sumber}</p>
-          </div>
+        {/* Isi (scroll) */}
+        <div className="flex-1 overflow-y-auto" style={{ padding: '24px 28px' }}>
+          <div className="flex flex-col gap-5">
+            {/* Kenapa ini bermanfaat */}
+            <div style={{ background: '#EEF4FE', border: '1.5px solid #D5E4FB', borderRadius: 20, padding: '16px 18px' }}>
+              <p className="mb-1 flex items-center gap-1.5 font-fredoka font-semibold" style={{ fontSize: 17, color: '#2F5BB7' }}>
+                <FlaskConical className="h-4 w-4" /> Kenapa ini bermanfaat?
+              </p>
+              <p className="font-nunito font-semibold" style={{ fontSize: 15, lineHeight: 1.6, color: '#5B6E93' }}>{activity.sci}</p>
+              <p className="mt-2 font-nunito font-bold" style={{ fontSize: 12.5, color: '#7C93C4' }}>Sumber: {activity.sumber}</p>
+            </div>
 
-          {/* Tujuan */}
-          <div>
-            <p className="mb-1 text-[12px] font-bold text-stv-navy">Tujuan</p>
-            <p className="text-[13px] leading-relaxed text-stv-body">{activity.tujuan}</p>
-          </div>
-
-          {/* Bahan */}
-          {activity.bahan.length > 0 && (
+            {/* Tujuan */}
             <div>
-              <p className="mb-2 text-[12px] font-bold text-stv-navy">Yang Dibutuhkan</p>
-              <ul className="space-y-1">
-                {activity.bahan.map((b, i) => (
-                  <li key={i} className="flex items-center gap-2 text-[13px] text-stv-body">
-                    <span className="h-1.5 w-1.5 rounded-full bg-amber-400 shrink-0" />
-                    {b.nama}
-                    {b.affiliateUrl && b.affiliateUrl !== '#todo' && (
-                      <a href={b.affiliateUrl} target="_blank" rel="noopener noreferrer"
-                        className="ml-auto text-[11px] font-semibold text-amber-600 hover:underline">
-                        Beli online
-                      </a>
-                    )}
+              <p className="mb-1 font-fredoka font-semibold text-pekat" style={{ fontSize: 17 }}>Tujuan</p>
+              <p className="font-nunito font-semibold" style={{ fontSize: 15, lineHeight: 1.6, color: '#7A5E71' }}>{activity.tujuan}</p>
+            </div>
+
+            {/* Yang dibutuhkan */}
+            {activity.bahan.length > 0 && (
+              <div>
+                <p className="mb-2 font-fredoka font-semibold text-pekat" style={{ fontSize: 17 }}>Yang Dibutuhkan</p>
+                <ul className="space-y-1.5">
+                  {activity.bahan.map((b, i) => (
+                    <li key={i} className="flex items-center gap-2 font-nunito font-semibold" style={{ fontSize: 14.5, color: '#7A5E71' }}>
+                      <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: pal.ink }} />
+                      {b.nama}
+                      {b.affiliateUrl && b.affiliateUrl !== '#todo' && (
+                        <a href={b.affiliateUrl} target="_blank" rel="noopener noreferrer"
+                          className="ml-auto font-bold text-rekah hover:underline" style={{ fontSize: 12.5 }}>
+                          Beli online
+                        </a>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Cara melakukan */}
+            <div>
+              <p className="mb-2 font-fredoka font-semibold text-pekat" style={{ fontSize: 17 }}>Cara Melakukan</p>
+              <ol className="space-y-2.5">
+                {activity.langkah.map((step, i) => (
+                  <li key={i} className="flex gap-3 font-nunito font-semibold" style={{ fontSize: 15, lineHeight: 1.6, color: '#7A5E71' }}>
+                    <span className="flex shrink-0 items-center justify-center rounded-full font-[800]" style={{ width: 26, height: 26, background: '#FFE29A', color: '#8A5510', fontSize: 13 }}>
+                      {i + 1}
+                    </span>
+                    <span className="pt-0.5">{step}</span>
                   </li>
                 ))}
-              </ul>
+              </ol>
             </div>
-          )}
 
-          {/* Langkah */}
-          <div>
-            <p className="mb-2 text-[12px] font-bold text-stv-navy">Cara Melakukan</p>
-            <ol className="space-y-2">
-              {activity.langkah.map((step, i) => (
-                <li key={i} className="flex gap-3 text-[13px] leading-relaxed text-stv-body">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-100 text-[11px] font-bold text-amber-700">
-                    {i + 1}
-                  </span>
-                  {step}
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          {/* Variasi */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-xl bg-green-50 p-3">
-              <p className="mb-1 text-[11px] font-bold text-green-700">Lebih Mudah</p>
-              <p className="text-[12px] leading-relaxed text-green-800">{activity.variasiMudah}</p>
+            {/* Variasi */}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div style={{ background: '#ECF4DE', borderRadius: 18, padding: '14px 16px' }}>
+                <p className="mb-1 font-fredoka font-semibold" style={{ fontSize: 15, color: '#4E7A28' }}>Lebih mudah</p>
+                <p className="font-nunito font-semibold" style={{ fontSize: 14, lineHeight: 1.55, color: '#5E7748' }}>{activity.variasiMudah}</p>
+              </div>
+              <div style={{ background: '#FFF2D0', borderRadius: 18, padding: '14px 16px' }}>
+                <p className="mb-1 font-fredoka font-semibold" style={{ fontSize: 15, color: '#8A5510' }}>Lebih menantang</p>
+                <p className="font-nunito font-semibold" style={{ fontSize: 14, lineHeight: 1.55, color: '#7A5E2A' }}>{activity.variasiMenantang}</p>
+              </div>
             </div>
-            <div className="rounded-xl bg-orange-50 p-3">
-              <p className="mb-1 text-[11px] font-bold text-orange-700">Lebih Menantang</p>
-              <p className="text-[12px] leading-relaxed text-orange-800">{activity.variasiMenantang}</p>
-            </div>
-          </div>
 
-          {/* ABK */}
-          <div className="rounded-xl border border-violet-200 bg-violet-50 p-3">
-            <p className="mb-1 text-[11px] font-bold text-violet-700">Adaptasi untuk Anak dengan Kebutuhan Khusus</p>
-            <p className="text-[12px] leading-relaxed text-violet-800">{activity.adaptasiABK}</p>
+            {/* Adaptasi ABK */}
+            <div style={{ background: '#F1EBFB', borderRadius: 20, padding: '16px 18px' }}>
+              <p className="mb-1 font-fredoka font-semibold" style={{ fontSize: 17, color: '#6244B8' }}>Adaptasi untuk anak dengan kebutuhan khusus</p>
+              <p className="font-nunito font-semibold" style={{ fontSize: 15, lineHeight: 1.6, color: '#6B5A93' }}>{activity.adaptasiABK}</p>
+            </div>
           </div>
         </div>
 
-        {/* Footer CTA */}
-        <div className="border-t border-slate-100 p-4 flex gap-3">
+        {/* Footer (tetap) */}
+        <div className="flex gap-3" style={{ borderTop: '1.5px solid #F3E7D6', padding: '16px 28px 20px' }}>
           <button type="button"
             onClick={() => toggleSaved('activities', activity.id)}
-            className={`flex items-center gap-1.5 rounded-xl border px-4 py-2.5 text-[13px] font-semibold transition ${
-              saved ? 'border-amber-300 bg-amber-50 text-amber-700' : 'border-slate-200 bg-white text-stv-body hover:border-amber-300'
-            }`}>
+            className="flex items-center gap-1.5 rounded-[16px] border-2 px-5 py-2.5 font-nunito text-[14px] font-bold transition"
+            style={saved ? { borderColor: '#F5B9D6', background: '#FCE3EE', color: '#C6407F' } : { borderColor: '#F2E4D2', background: '#fff', color: '#9B7E92' }}>
             <Star className="h-4 w-4" fill={saved ? 'currentColor' : 'none'} />
             {saved ? 'Disimpan' : 'Simpan'}
           </button>
           {onJadwalkan ? (
             <button type="button"
               onClick={onJadwalkan}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-rekah py-2.5 text-[13px] font-semibold text-white transition hover:bg-rekah-tua">
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-[16px] bg-rekah py-2.5 font-nunito text-[14px] font-bold text-white transition hover:bg-rekah-tua">
               <CheckCircle2 className="h-4 w-4" />
               Jadwalkan Kegiatan Ini
             </button>
           ) : (
             <button type="button"
               onClick={() => toggleDone(activity.id)}
-              className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-[13px] font-semibold transition ${
-                done ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-amber-500 text-white hover:bg-amber-600'
-              }`}>
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-[16px] py-2.5 font-nunito text-[14px] font-bold text-white transition"
+              style={done ? { background: '#2E8B57' } : { background: '#F06BA8' }}>
               <CheckCircle2 className="h-4 w-4" />
               {done ? 'Sudah Dicoba!' : 'Tandai Sudah Dicoba'}
             </button>
@@ -689,86 +699,90 @@ export function ToolModal({ tool, onClose }: { tool: EduTool; onClose: () => voi
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
 
+  const pal = STR_DOM[tool.domain] ?? STR_DOM.kog;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+    <div className="fixed inset-0 z-[210] flex items-end sm:items-center justify-center p-0 sm:p-4"
+      style={{ background: 'rgba(110,59,87,0.42)', backdropFilter: 'blur(6px)' }}
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl animate-[slideUp_0.3s_ease-out]">
-        <div className="flex items-start gap-3 bg-slate-50 p-5 pb-4">
-          <span className="text-3xl">{tool.icon}</span>
-          <div className="flex-1">
-            <div className="flex flex-wrap gap-1 mb-1">
+      <div className="relative z-10 flex max-h-[92dvh] w-full flex-col overflow-hidden bg-white animate-[slideUp_0.3s_ease-out]"
+        style={{ maxWidth: 620, borderRadius: 30, boxShadow: '0 40px 80px -40px rgba(90,50,70,.75)' }}>
+        <div className="relative flex items-start gap-4" style={{ background: pal.soft, padding: '24px 28px' }}>
+          <span className="flex shrink-0 items-center justify-center rounded-[18px] bg-white" style={{ width: 62, height: 62 }}>
+            <DomIcon domain={tool.domain} size={30} color={pal.ink} />
+          </span>
+          <div className="min-w-0 flex-1 pr-8">
+            <div className="mb-1.5 flex flex-wrap gap-1.5">
               {tool.pilihanPsikolog && (
-                <span className="rounded-full bg-purple-50 px-2 py-0.5 text-[10px] font-bold text-purple-600">
+                <span className="rounded-full px-2.5 py-0.5 font-nunito text-[11px] font-[800]" style={{ background: '#F1EBFB', color: '#8A6DC7' }}>
                   ⭐ Pilihan Psikolog
                 </span>
               )}
-              <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700">{tool.ageLabel}</span>
+              <span className="rounded-full px-2.5 py-0.5 font-nunito text-[11px] font-[800]" style={{ background: '#FFE29A', color: '#8A5510' }}>{tool.ageLabel}</span>
             </div>
-            <h2 className="font-baloo text-[18px] font-bold leading-tight text-stv-navy">{tool.nama}</h2>
-            <p className="text-[13px] font-semibold text-amber-600">{tool.hargaEstimasi}</p>
+            <h2 className="font-fredoka font-bold text-pekat" style={{ fontSize: 26, lineHeight: 1.15 }}>{tool.nama}</h2>
+            <p className="mt-0.5 font-nunito font-bold" style={{ fontSize: 13.5, color: pal.ink }}>{tool.hargaEstimasi}</p>
           </div>
-          <button type="button" onClick={onClose}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white hover:bg-slate-100 transition">
+          <button type="button" onClick={onClose} aria-label="Tutup"
+            className="absolute right-5 top-5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-pekat/60 transition hover:text-pekat"
+            style={{ background: 'rgba(255,255,255,.75)' }}>
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-5 space-y-4">
-          <p className="text-[13px] leading-relaxed text-stv-body">{tool.deskripsi}</p>
-          <SciBox sci={tool.sci} sumber={tool.sumber} />
+        <div className="flex-1 overflow-y-auto" style={{ padding: '24px 28px' }}>
+          <div className="flex flex-col gap-5">
+            <p className="font-nunito font-semibold" style={{ fontSize: 15, lineHeight: 1.6, color: '#7A5E71' }}>{tool.deskripsi}</p>
 
-          <div>
-            <p className="mb-2 text-[12px] font-bold text-stv-navy">Keunggulan</p>
-            <ul className="space-y-1.5">
-              {tool.keunggulan.map((k, i) => (
-                <li key={i} className="flex items-start gap-2 text-[13px] text-stv-body">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
-                  {k}
-                </li>
-              ))}
-            </ul>
+            <div style={{ background: '#EEF4FE', border: '1.5px solid #D5E4FB', borderRadius: 20, padding: '16px 18px' }}>
+              <p className="mb-1 flex items-center gap-1.5 font-fredoka font-semibold" style={{ fontSize: 17, color: '#2F5BB7' }}>
+                <FlaskConical className="h-4 w-4" /> Kenapa ini bermanfaat?
+              </p>
+              <p className="font-nunito font-semibold" style={{ fontSize: 15, lineHeight: 1.6, color: '#5B6E93' }}>{tool.sci}</p>
+              <p className="mt-2 font-nunito font-bold" style={{ fontSize: 12.5, color: '#7C93C4' }}>Sumber: {tool.sumber}</p>
+            </div>
+
+            <div>
+              <p className="mb-2 font-fredoka font-semibold text-pekat" style={{ fontSize: 17 }}>Keunggulan</p>
+              <ul className="space-y-2">
+                {tool.keunggulan.map((k, i) => (
+                  <li key={i} className="flex items-start gap-2 font-nunito font-semibold" style={{ fontSize: 15, lineHeight: 1.55, color: '#7A5E71' }}>
+                    <Check className="mt-0.5 h-4 w-4 shrink-0" style={{ color: '#2E8B57' }} />
+                    {k}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div className="border-t border-slate-100 p-4 flex gap-3">
-          <button type="button"
+        <div className="flex flex-wrap gap-3" style={{ borderTop: '1.5px solid #F3E7D6', padding: '16px 28px 20px' }}>
+          <button type="button" aria-label={saved ? 'Batal simpan' : 'Simpan'}
             onClick={() => toggleSaved('tools', tool.id)}
-            className={`flex items-center gap-1.5 rounded-xl border px-4 py-2.5 text-[13px] font-semibold transition ${
-              saved ? 'border-amber-300 bg-amber-50 text-amber-700' : 'border-slate-200 bg-white text-stv-body hover:border-amber-300'
-            }`}>
+            className="flex items-center gap-1.5 rounded-[16px] border-2 px-5 py-2.5 font-nunito text-[14px] font-bold transition"
+            style={saved ? { borderColor: '#F5B9D6', background: '#FCE3EE', color: '#C6407F' } : { borderColor: '#F2E4D2', background: '#fff', color: '#9B7E92' }}>
             <Star className="h-4 w-4" fill={saved ? 'currentColor' : 'none'} />
           </button>
           <button type="button"
             onClick={() => toggleOwned(tool.id)}
-            className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-[13px] font-semibold transition ${
-              owned ? 'bg-green-500 text-white' : 'bg-amber-500 text-white hover:bg-amber-600'
-            }`}>
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-[16px] py-2.5 font-nunito text-[14px] font-bold text-white transition"
+            style={owned ? { background: '#2E8B57' } : { background: '#F06BA8' }}>
             <ShoppingBag className="h-4 w-4" />
             {owned ? 'Sudah Punya' : 'Tandai Sudah Punya'}
           </button>
           {/* TODO: catat event klik untuk analytics affiliate */}
-          {tool.affiliateUrl && tool.affiliateUrl !== '#todo' && tool.affiliateUrl !== '' ? (
-            <a
-              href={tool.affiliateUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 rounded-xl border border-orange-200 bg-orange-50 px-3 py-2.5 text-[13px] font-semibold text-orange-700 hover:bg-orange-100 transition"
-            >
-              <ShoppingBag className="h-4 w-4" />
-              Beli via Shopee
-            </a>
-          ) : (
-            <a
-              href={`https://shopee.co.id/search?keyword=${encodeURIComponent(tool.nama)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 rounded-xl border border-orange-200 bg-orange-50 px-3 py-2.5 text-[13px] font-semibold text-orange-700 hover:bg-orange-100 transition"
-            >
-              <ShoppingBag className="h-4 w-4" />
-              Cari di Shopee
-            </a>
-          )}
+          <a
+            href={tool.affiliateUrl && tool.affiliateUrl !== '#todo' && tool.affiliateUrl !== ''
+              ? tool.affiliateUrl
+              : `https://shopee.co.id/search?keyword=${encodeURIComponent(tool.nama)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 rounded-[16px] border-2 px-4 py-2.5 font-nunito text-[14px] font-bold transition"
+            style={{ borderColor: '#F6D0B8', background: '#FDE8DC', color: '#D9743A' }}
+          >
+            <ShoppingBag className="h-4 w-4" />
+            {tool.affiliateUrl && tool.affiliateUrl !== '#todo' && tool.affiliateUrl !== '' ? 'Beli via Shopee' : 'Cari di Shopee'}
+          </a>
         </div>
       </div>
     </div>
@@ -788,43 +802,60 @@ export function DownloadModal({ item, onClose }: { item: Downloadable; onClose: 
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
 
+  const pal = DL_PAL;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+    <div className="fixed inset-0 z-[210] flex items-end sm:items-center justify-center p-0 sm:p-4"
+      style={{ background: 'rgba(110,59,87,0.42)', backdropFilter: 'blur(6px)' }}
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl animate-[slideUp_0.3s_ease-out]">
-        <div className="flex items-start gap-3 bg-slate-50 p-5 pb-4">
-          <span className="text-3xl">{item.icon}</span>
-          <div className="flex-1">
-            <span className="text-[10px] font-bold text-stv-muted uppercase tracking-wider">{item.kategori}</span>
-            <h2 className="font-baloo text-[17px] font-bold leading-tight text-stv-navy">{item.nama}</h2>
-            <div className="mt-1 flex items-center gap-2 text-[11px] text-stv-muted">
+      <div className="relative z-10 flex max-h-[92dvh] w-full flex-col overflow-hidden bg-white animate-[slideUp_0.3s_ease-out]"
+        style={{ maxWidth: 620, borderRadius: 30, boxShadow: '0 40px 80px -40px rgba(90,50,70,.75)' }}>
+        <div className="relative flex items-start gap-4" style={{ background: pal.soft, padding: '24px 28px' }}>
+          <span className="flex shrink-0 items-center justify-center rounded-[18px] bg-white" style={{ width: 62, height: 62 }}>
+            <Download className="h-7 w-7" style={{ color: pal.ink }} strokeWidth={2} />
+          </span>
+          <div className="min-w-0 flex-1 pr-8">
+            <span className="font-nunito text-[11px] font-[800] uppercase tracking-wider" style={{ color: pal.ink }}>{item.kategori}</span>
+            <h2 className="font-fredoka font-bold text-pekat" style={{ fontSize: 24, lineHeight: 1.15 }}>{item.nama}</h2>
+            <div className="mt-1 flex flex-wrap items-center gap-2 font-nunito text-[12px] font-semibold" style={{ color: '#A98DA0' }}>
               <span>{ageLabel(item.minBulan, item.maxBulan)}</span>
+              <span>·</span>
               <span>{item.halaman}</span>
+              <span>·</span>
               <span>{item.jumlahUnduhan.toLocaleString('id')} unduhan</span>
             </div>
           </div>
-          <button type="button" onClick={onClose}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white hover:bg-slate-100 transition">
+          <button type="button" onClick={onClose} aria-label="Tutup"
+            className="absolute right-5 top-5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-pekat/60 transition hover:text-pekat"
+            style={{ background: 'rgba(255,255,255,.75)' }}>
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-5 space-y-4">
-          <p className="text-[13px] leading-relaxed text-stv-body">{item.deskripsi}</p>
-          <SciBox sci={item.sci} sumber={item.sumber} />
-          <div>
-            <p className="mb-1 text-[12px] font-bold text-stv-navy">Cara Menggunakan</p>
-            <p className="text-[13px] leading-relaxed text-stv-body">{item.caraPakai}</p>
+        <div className="flex-1 overflow-y-auto" style={{ padding: '24px 28px' }}>
+          <div className="flex flex-col gap-5">
+            <p className="font-nunito font-semibold" style={{ fontSize: 15, lineHeight: 1.6, color: '#7A5E71' }}>{item.deskripsi}</p>
+
+            <div style={{ background: '#EEF4FE', border: '1.5px solid #D5E4FB', borderRadius: 20, padding: '16px 18px' }}>
+              <p className="mb-1 flex items-center gap-1.5 font-fredoka font-semibold" style={{ fontSize: 17, color: '#2F5BB7' }}>
+                <FlaskConical className="h-4 w-4" /> Kenapa ini bermanfaat?
+              </p>
+              <p className="font-nunito font-semibold" style={{ fontSize: 15, lineHeight: 1.6, color: '#5B6E93' }}>{item.sci}</p>
+              <p className="mt-2 font-nunito font-bold" style={{ fontSize: 12.5, color: '#7C93C4' }}>Sumber: {item.sumber}</p>
+            </div>
+
+            <div>
+              <p className="mb-1 font-fredoka font-semibold text-pekat" style={{ fontSize: 17 }}>Cara Menggunakan</p>
+              <p className="font-nunito font-semibold" style={{ fontSize: 15, lineHeight: 1.6, color: '#7A5E71' }}>{item.caraPakai}</p>
+            </div>
           </div>
         </div>
 
-        <div className="border-t border-slate-100 p-4 flex gap-3">
-          <button type="button"
+        <div className="flex gap-3" style={{ borderTop: '1.5px solid #F3E7D6', padding: '16px 28px 20px' }}>
+          <button type="button" aria-label={saved ? 'Batal simpan' : 'Simpan'}
             onClick={() => toggleSaved('downloads', item.id)}
-            className={`flex items-center gap-1.5 rounded-xl border px-4 py-2.5 text-[13px] font-semibold transition ${
-              saved ? 'border-amber-300 bg-amber-50 text-amber-700' : 'border-slate-200 bg-white text-stv-body hover:border-amber-300'
-            }`}>
+            className="flex items-center gap-1.5 rounded-[16px] border-2 px-5 py-2.5 font-nunito text-[14px] font-bold transition"
+            style={saved ? { borderColor: '#F5B9D6', background: '#FCE3EE', color: '#C6407F' } : { borderColor: '#F2E4D2', background: '#fff', color: '#9B7E92' }}>
             <Star className="h-4 w-4" fill={saved ? 'currentColor' : 'none'} />
           </button>
           <button type="button"
@@ -832,9 +863,8 @@ export function DownloadModal({ item, onClose }: { item: Downloadable; onClose: 
               toggleDownloaded(item.id);
               // TODO: open fileUrl when backend provides real download link
             }}
-            className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2.5 text-[13px] font-semibold transition ${
-              downloaded ? 'bg-green-500 text-white' : 'bg-amber-500 text-white hover:bg-amber-600'
-            }`}>
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-[16px] py-2.5 font-nunito text-[14px] font-bold text-white transition"
+            style={downloaded ? { background: '#2E8B57' } : { background: '#F06BA8' }}>
             <Download className="h-4 w-4" />
             {downloaded ? 'Sudah Diunduh' : 'Unduh Sekarang'}
           </button>

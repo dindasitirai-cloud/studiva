@@ -3,7 +3,7 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
 import LogoRekah from './LogoRekah';
 import { useAuth } from '../context/AuthContext';
-import { MENU_UTAMA, PROFIL_ANAK } from '../config/fiturRekah';
+import { NAV_UTAMA, PROFIL_ANAK, ARAH_ITEM } from '../config/fiturRekah';
 
 // TODO: review Fitri — semua label di bawah ini
 const TEKS = {
@@ -15,7 +15,7 @@ const TEKS = {
   KELUAR: 'Keluar',
 };
 
-const MENU_BAWAH = [PROFIL_ANAK];
+const MENU_BAWAH = [ARAH_ITEM, PROFIL_ANAK];
 
 // Warna brand (tidak dihardcode di luar sini — diambil dari desain token Rekah)
 const CLR = {
@@ -155,7 +155,7 @@ export default function SidebarRekah({ melipat, onToggle }: PropsSidebarRekah) {
             gap: 2,
           }}
         >
-          {MENU_UTAMA.map(({ to, label, icon: Icon, end }) => (
+          {NAV_UTAMA.map(({ to, label, icon: Icon, end }) => (
             <li key={to}>
               <ItemNav
                 to={to}

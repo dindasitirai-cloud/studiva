@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Nunito:wght@400;600;700;800&amp;family=Shantell+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#FCEBD7;font-family:'Nunito',sans-serif;color:#6E3B57;-webkit-font-smoothing:antialiased}
+  a{color:#5F84E6;text-decoration:none;font-weight:800}
+  a:hover{color:#F06BA8}
+  @keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .card{transition:transform .22s cubic-bezier(.2,.7,.2,1),box-shadow .22s ease}
+  .lift:hover{transform:translateY(-3px);box-shadow:0 22px 44px -34px rgba(90,50,70,.55)}
+  .rise{opacity:0;animation:fadeUp .5s cubic-bezier(.2,.7,.2,1) both}
+  .tap{transition:transform .16s cubic-bezier(.2,.7,.2,1),background .16s ease,border-color .16s ease}
+  .tap:active{transform:scale(.97)}
+  input,textarea{font-family:'Nunito',sans-serif}
+  input::placeholder,textarea::placeholder{color:#B79CAF}
+  @media (prefers-reduced-motion: reduce){.rise{animation:none;opacity:1}}
+</style>
+</helmet>
+
+<div style="display:flex;align-items:stretch;width:1400px;min-height:1240px;background:#FCEBD7">
+
+  <sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside style="width:250px;flex:none;background:#fff;padding:24px 18px;display:flex;flex-direction:column;gap:4px;box-shadow:22px 0 60px -50px rgba(90,50,70,.6)">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 8px 20px">
+      <div style="display:flex;align-items:center;gap:9px">
+        <div style="width:32px;height:32px;animation:sway 6s ease-in-out infinite;transform-origin:bottom center"><dc-import name="Flower" cfg="{{ logoBloom }}" hint-size="32px,32px"></dc-import></div>
+        <div style="font-family:'Fredoka',sans-serif;font-weight:700;font-size:25px;color:#F06BA8;letter-spacing:-.5px">rekah</div>
+      </div>
+      <div style="width:28px;height:28px;border-radius:50%;background:#FCE3EE;display:flex;align-items:center;justify-content:center;color:#F06BA8;font-size:15px;font-weight:800;cursor:pointer">‹</div>
+    </div>
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="8">
+      <div class="tap" style="display:flex;align-items:center;gap:13px;padding:11px 13px;border-radius:16px;cursor:pointer;background:{{ n.bg }}">
+        <span style="width:8px;height:8px;flex:none;border-radius:50%;background:{{ n.stroke }};opacity:{{ n.op }};display:block"></span>
+        <span style="font-family:'Nunito',sans-serif;font-weight:700;font-size:16px;color:{{ n.stroke }};opacity:{{ n.op }}">{{ n.label }}</span>
+      </div>
+    </sc-for>
+    <div style="flex:1;min-height:26px"></div>
+    <div style="height:1px;background:rgba(110,59,87,.1);margin:6px 10px 10px"></div>
+    <div class="tap" style="display:flex;align-items:center;gap:13px;padding:11px 13px;border-radius:16px;cursor:pointer">
+      <span style="width:8px;height:8px;flex:none;border-radius:50%;background:#6E3B57;opacity:.35;display:block"></span>
+      <span style="font-family:'Nunito',sans-serif;font-weight:700;font-size:16px;color:#6E3B57;opacity:.6">Keluar</span>
+    </div>
+  </aside>
+  </sc-if>
+
+  <main style="flex:1;min-width:0;padding:30px 38px 44px">
+
+    <div class="rise" style="position:relative;overflow:hidden;border-radius:32px;background:linear-gradient(120deg,#FBD9E9 0%,#F6DCF3 34%,#E6DDFB 62%,#DCEAFD 100%);box-shadow:0 26px 54px -40px rgba(90,50,70,.55);margin-bottom:24px">
+      <div style="display:flex;height:7px">
+        <span style="flex:2;background:#F06BA8;display:block"></span>
+        <span style="flex:1;background:#F8B9D4;display:block"></span>
+        <span style="flex:1.4;background:#FFE29A;display:block"></span>
+        <span style="flex:1;background:#C9B8F0;display:block"></span>
+        <span style="flex:1.6;background:#8FB8F7;display:block"></span>
+      </div>
+
+      <div style="position:absolute;right:24px;bottom:0;display:flex;align-items:flex-end;gap:6px;pointer-events:none;opacity:.75">
+        <sc-for list="{{ kebunHero }}" as="k" hint-placeholder-count="6">
+          <div style="width:{{ k.w }};height:{{ k.h }};animation:sway {{ k.dur }} ease-in-out infinite;transform-origin:bottom center"><dc-import name="Botanical" cfg="{{ k.cfg }}" hint-size="54px,80px"></dc-import></div>
+        </sc-for>
+      </div>
+
+      <div style="position:relative;padding:26px 34px 30px">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.75);border-radius:999px;padding:6px 14px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#F06BA8;display:block"></span>
+          <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:11.5px;letter-spacing:1px;text-transform:uppercase;color:#B4477F">Ruang Dukungan</span>
+        </div>
+        <h1 style="font-family:'Shantell Sans',cursive;font-weight:700;font-size:52px;color:#6E3B57;margin:12px 0 0;letter-spacing:-1px;line-height:.98">Bantu</h1>
+        <div style="font-family:'Nunito',sans-serif;font-weight:600;font-size:17px;color:#7A4A64;margin-top:8px">Dukungan saat kamu membutuhkannya. Kami ada di sini.</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:22px;align-items:start">
+
+      <div style="display:flex;flex-direction:column;gap:22px;min-width:0">
+
+        <div class="rise" style="position:relative;overflow:hidden;background:linear-gradient(150deg,#F7E9FA 0%,#FBEFF7 55%,#FDF3F8 100%);border-radius:28px;padding:24px 26px 26px;box-shadow:0 22px 48px -40px rgba(90,50,70,.55)">
+          <div style="position:absolute;right:-6px;top:10px;width:78px;height:118px;opacity:.35;pointer-events:none;animation:sway 13s ease-in-out infinite;transform-origin:bottom center"><dc-import name="Botanical" cfg="{{ ornamenTopik }}" hint-size="78px,118px"></dc-import></div>
+
+          <h2 style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:25px;color:#C6407F;margin:0">Apa yang sedang terjadi?</h2>
+          <p style="font-family:'Nunito',sans-serif;font-weight:600;font-size:14px;color:#8A5A74;margin:8px 0 0">Pilih topik yang paling sesuai dengan situasimu.</p>
+
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:16px">
+            <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#B4477F">Rekah tahu</span>
+            <sc-for list="{{ chips }}" as="c" hint-placeholder-count="2">
+              <span style="display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:5px 13px;background:{{ c.bg }}">
+                <span style="width:7px;height:7px;border-radius:50%;background:{{ c.dot }};display:block"></span>
+                <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;color:{{ c.ink }}">{{ c.label }}</span>
+              </span>
+            </sc-for>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:20px">
+            <sc-for list="{{ topik }}" as="t" hint-placeholder-count="8">
+              <div class="card lift tap" onClick="{{ t.onPick }}" style="cursor:pointer;background:{{ t.bg }};border:{{ t.border }};border-radius:20px;padding:16px 16px 15px;box-shadow:{{ t.shadow }}">
+                <div style="display:flex;align-items:center;gap:11px">
+                  <span style="width:5px;height:28px;flex:none;border-radius:999px;background:{{ t.ink }};display:block"></span>
+                  <div style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:16.5px;color:#6E3B57;line-height:1.2">{{ t.title }}</div>
+                </div>
+                <div style="font-family:'Nunito',sans-serif;font-weight:600;font-size:12.5px;line-height:1.45;color:#8A5A74;margin-top:10px">{{ t.sub }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+      </div>
+
+      <sc-if value="{{ showRail }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:18px">
+
+        <div class="rise">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px">
+            <span style="width:10px;height:10px;border-radius:50%;background:#F06BA8;display:block"></span>
+            <h3 style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:18px;color:#6E3B57;margin:0">Panduan tersimpan</h3>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ panduan }}" as="p" hint-placeholder-count="2">
+              <div class="card lift" style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:18px;padding:14px 16px;box-shadow:0 16px 36px -34px rgba(90,50,70,.55)">
+                <span style="width:5px;height:32px;flex:none;border-radius:999px;background:{{ p.accent }};display:block"></span>
+                <div style="flex:1;min-width:0">
+                  <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:14.5px;color:#6E3B57">{{ p.title }}</div>
+                  <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;color:#8A5A74;margin-top:3px">{{ p.saved }}</div>
+                </div>
+                <span class="tap" style="font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;color:#F06BA8;cursor:pointer;line-height:1">›</span>
+                <span class="tap" style="font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;color:#C6A6BA;cursor:pointer;line-height:1">×</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div class="rise">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px">
+            <span style="width:10px;height:10px;border-radius:50%;background:#3E9E6B;display:block"></span>
+            <h3 style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:18px;color:#6E3B57;margin:0">Konseling online</h3>
+          </div>
+
+          <div class="card lift" style="position:relative;overflow:hidden;background:linear-gradient(160deg,#F3EBFC 0%,#FBF1F7 100%);border-radius:24px;padding:18px 20px 20px;box-shadow:0 20px 44px -38px rgba(90,50,70,.6)">
+            <div style="position:absolute;right:-8px;bottom:-6px;width:62px;height:94px;opacity:.3;pointer-events:none;animation:sway 14s ease-in-out infinite;transform-origin:bottom center"><dc-import name="Botanical" cfg="{{ ornamenKonseling }}" hint-size="62px,94px"></dc-import></div>
+
+            <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#7B58C9">Pendampingan personal</div>
+            <div style="display:flex;align-items:flex-start;gap:12px;margin-top:12px">
+              <span style="width:42px;height:42px;flex:none;border-radius:50%;background:#DDD0F6;display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-weight:600;font-size:15px;color:#5B3FAF">FE</span>
+              <div style="min-width:0">
+                <div style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:17px;color:#6E3B57;line-height:1.25">Psikolog Fitri Effendy</div>
+                <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:12.5px;line-height:1.45;color:#8A5A74;margin-top:3px">Psikologi Anak &amp; Tumbuh Kembang, Spesialisasi ASD/ADHD</div>
+              </div>
+            </div>
+            <p style="font-family:'Nunito',sans-serif;font-weight:600;font-size:13.5px;line-height:1.6;color:#7A4A64;margin:14px 0 0">Butuh pendampingan lebih personal untuk situasi anakmu? Bicara langsung dengan Psikolog Fitri lewat WhatsApp.</p>
+            <div class="tap" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:16px;border-radius:999px;padding:14px 20px;cursor:pointer;background:#2FA86A;box-shadow:0 16px 30px -20px rgba(47,168,106,.95)">
+              <span style="width:9px;height:9px;border-radius:50%;background:#D9F3E4;display:block"></span>
+              <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:14.5px;color:#fff">Konseling via WhatsApp</span>
+            </div>
+            <p style="font-family:'Nunito',sans-serif;font-weight:600;font-size:11.5px;line-height:1.55;color:#8A5A74;margin:12px 0 0">Nomor WhatsApp sedang dikonfirmasi. Konseling adalah layanan berbayar terpisah; Bantu bukan layanan krisis.</p>
+          </div>
+        </div>
+
+      </div>
+      </sc-if>
+
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:22px;margin-top:22px">
+        <div class="rise" style="position:relative;overflow:hidden;border-radius:30px;background:linear-gradient(140deg,#EFE7FD 0%,#F7ECFA 48%,#FDEFF6 100%);box-shadow:0 24px 50px -40px rgba(90,50,70,.55);padding:0 0 24px">
+          <div style="display:flex;height:6px">
+            <span style="flex:1.6;background:#8B6FD6;display:block"></span>
+            <span style="flex:1;background:#C9B8F0;display:block"></span>
+            <span style="flex:1.2;background:#F8B9D4;display:block"></span>
+            <span style="flex:.9;background:#FFE29A;display:block"></span>
+            <span style="flex:1.3;background:#8FB8F7;display:block"></span>
+          </div>
+
+          <div style="position:absolute;left:-10px;bottom:-8px;width:96px;height:140px;opacity:.28;pointer-events:none;animation:sway 15s ease-in-out infinite;transform-origin:bottom center"><dc-import name="Botanical" cfg="{{ ornamenForum }}" hint-size="96px,140px"></dc-import></div>
+
+          <div style="position:relative;padding:22px 26px 0">
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:24px;align-items:start">
+                <div style="min-width:0">
+                  <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.8);border-radius:999px;padding:5px 13px">
+                    <span style="width:7px;height:7px;border-radius:50%;background:#8B6FD6;display:block"></span>
+                    <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#5B3FAF">Ruang bersama</span>
+                  </div>
+                  <h2 style="font-family:'Shantell Sans',cursive;font-weight:700;font-size:30px;color:#5B3FAF;margin:11px 0 0;line-height:1.1;letter-spacing:-.5px">Tanya jawab bersama orang tua lain</h2>
+                  <p style="font-family:'Nunito',sans-serif;font-weight:600;font-size:14px;line-height:1.6;color:#7A4A64;margin:10px 0 0;max-width:52ch">Ajukan pertanyaan, atau bantu orang tua lain lewat pengalamanmu. Ruang ini ditinjau tim agar tetap aman &amp; saling menghormati.</p>
+
+                </div>
+
+                <div style="border-radius:22px;padding:18px 18px 20px;background:#FFF1F7;border:2.5px dashed #F6A9CB;min-width:0">
+                  <div style="display:flex;gap:5px;margin-bottom:12px">
+                    <span style="width:26px;height:6px;border-radius:999px;background:#F06BA8;display:block"></span>
+                    <span style="width:14px;height:6px;border-radius:999px;background:#FFE29A;display:block"></span>
+                  </div>
+                  <div style="font-family:'Shantell Sans',cursive;font-weight:700;font-size:20px;color:#B4477F;line-height:1.15">Ada yang ingin ditanyakan atau dibagikan?</div>
+                  <div style="font-family:'Nunito',sans-serif;font-weight:600;font-size:13px;line-height:1.5;color:#8A5A74;margin-top:7px">Tulis pertanyaan atau ceritamu — orang tua lain bisa menanggapi.</div>
+                  <div class="tap" style="display:flex;align-items:center;justify-content:center;gap:9px;margin-top:15px;border-radius:999px;padding:13px 20px;cursor:pointer;background:#C6407F;box-shadow:0 16px 30px -20px rgba(198,64,127,.95)">
+                    <span style="width:8px;height:8px;border-radius:50%;background:#FFE29A;display:block"></span>
+                    <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;color:#fff">Tulis di forum</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex;align-items:stretch;gap:16px;flex-wrap:wrap">
+                <div class="card lift" style="width:264px;flex:none;background:#fff;border-radius:24px;padding:16px 18px 18px;box-shadow:0 20px 42px -32px rgba(91,63,175,.6);border:2px solid #E4D8FA">
+                  <div style="display:flex;gap:5px;margin-bottom:11px">
+                    <span style="width:26px;height:6px;border-radius:999px;background:#8B6FD6;display:block"></span>
+                    <span style="width:14px;height:6px;border-radius:999px;background:#F8B9D4;display:block"></span>
+                    <span style="width:9px;height:6px;border-radius:999px;background:#FFE29A;display:block"></span>
+                  </div>
+                  <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:#5B3FAF">Sneak-peek isi forum</div>
+                  <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
+                    <sc-for list="{{ peek }}" as="p" hint-placeholder-count="2">
+                      <div style="display:flex;align-items:flex-start;gap:10px">
+                        <span style="width:5px;height:34px;flex:none;border-radius:999px;background:{{ p.accent }};display:block"></span>
+                        <div style="min-width:0">
+                          <div style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:14.5px;color:#6E3B57;line-height:1.25">{{ p.title }}</div>
+                          <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:11.5px;color:#8A5A74;margin-top:3px">{{ p.meta }} · {{ p.balasan }}</div>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+                <div class="tap" onClick="{{ toggleForum }}" style="display:flex;align-items:center;justify-content:center;gap:9px;flex:none;border-radius:24px;padding:14px 22px;cursor:pointer;background:#fff;border:2.5px solid #8B6FD6;box-shadow:0 14px 28px -22px rgba(123,88,201,.8)">
+                  <span style="width:8px;height:8px;flex:none;border-radius:50%;background:#8B6FD6;display:block"></span>
+                  <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:13.5px;color:#5B3FAF;text-align:center;line-height:1.3">{{ forumLabel }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <sc-if value="{{ forumOpen }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="width:10px;height:10px;border-radius:50%;background:#8B6FD6;display:block"></span>
+            <h3 style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:19px;color:#6E3B57;margin:0">Isi forum</h3>
+            <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;color:#5B3FAF;background:#EFE9FD;border-radius:999px;padding:4px 11px">{{ utasCount }}</span>
+          </div>
+          <sc-for list="{{ utas }}" as="u" hint-placeholder-count="4">
+            <div class="card lift rise" style="background:#fff;border-radius:24px;padding:16px 18px 18px;box-shadow:0 20px 42px -32px rgba(91,63,175,.6);border:2px solid #E4D8FA">
+              <div style="display:flex;gap:5px;margin-bottom:11px">
+                <span style="width:26px;height:6px;border-radius:999px;background:#8B6FD6;display:block"></span>
+                <span style="width:14px;height:6px;border-radius:999px;background:#F8B9D4;display:block"></span>
+                <span style="width:9px;height:6px;border-radius:999px;background:#FFE29A;display:block"></span>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:10px">
+                <span style="width:5px;height:34px;flex:none;border-radius:999px;background:{{ u.accent }};display:block"></span>
+                <div style="min-width:0">
+                  <div style="font-family:'Fredoka',sans-serif;font-weight:600;font-size:17px;color:#6E3B57;line-height:1.25">{{ u.title }}</div>
+                  <div style="font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;color:#8A5A74;margin-top:3px">{{ u.meta }}</div>
+                </div>
+              </div>
+              <p style="font-family:'Nunito',sans-serif;font-weight:600;font-size:14px;line-height:1.6;color:#7A4A64;margin:12px 0 0">{{ u.body }}</p>
+              <div style="display:flex;align-items:center;gap:16px;margin-top:14px;padding-top:12px;border-top:1.5px dashed #F0DCE7">
+                <span class="tap" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer">
+                  <span style="width:7px;height:7px;border-radius:50%;background:{{ u.accent }};display:block"></span>
+                  <span style="font-family:'Nunito',sans-serif;font-weight:800;font-size:12.5px;color:{{ u.accent }}">{{ u.balasan }}</span>
+                </span>
+                <span class="tap" style="font-family:'Nunito',sans-serif;font-weight:700;font-size:12.5px;color:#8A5A74;cursor:pointer">Laporkan</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+
+        <div style="display:flex;align-items:center;justify-content:center;gap:12px;padding:10px 0 0">
+          <div style="width:26px;height:40px;opacity:.7;animation:sway 10s ease-in-out infinite;transform-origin:bottom center"><dc-import name="Botanical" cfg="{{ ornamenKaki }}" hint-size="26px,40px"></dc-import></div>
+          <div style="font-family:'Shantell Sans',cursive;font-weight:600;font-size:16px;color:#B4477F;text-align:center">Kamu tidak sendiri. Setiap tantangan adalah kesempatan untuk tumbuh.</div>
+          <div style="width:26px;height:40px;opacity:.7;animation:sway 12s ease-in-out infinite;transform-origin:bottom center"><dc-import name="Botanical" cfg="{{ ornamenKaki2 }}" hint-size="26px,40px"></dc-import></div>
+        </div>
+    </div>
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showSidebar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Tata letak&quot;},&quot;showRail&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Tata letak&quot;}}">
+class Component extends DCLogic {
+  state = { topik: null, forumOpen: false };
+
+  renderVals() {
+    const bloom = (shape, petals, centers, seed) => ({ shape, petalColors: petals, centerColors: centers, seed, jitter: .2 });
+    const logoBloom = bloom('gerbera', ['#F06BA8', '#F890BE'], ['#FFE08A', '#6E3B57'], 3);
+
+    const nav = [
+      { label: 'Beranda' }, { label: 'Kelola' }, { label: 'Irama Hari' }, { label: 'Bekal' },
+      { label: 'Ruang Teduh' }, { label: 'Jurnal dan Galeri' }, { label: 'Panen' }, { label: 'Bantu', active: true },
+    ].map(n => ({ ...n, bg: n.active ? '#FCE3EE' : 'transparent', stroke: n.active ? '#F06BA8' : '#6E3B57', op: n.active ? 1 : .8 }));
+
+    const chips = [
+      { label: 'Rara · 1 bln', bg: '#FCE3EE', dot: '#F06BA8', ink: '#B4477F' },
+      { label: 'Fokus: Kasih Sayang', bg: '#EFE9FD', dot: '#8B6FD6', ink: '#5B3FAF' },
+    ];
+
+    const topikSrc = [
+      { title: 'Anak tantrum', sub: 'Ledakan emosi, sulit menenangkan', ink: '#F06BA8' },
+      { title: 'Sulit tidur', sub: 'Sulit mulai tidur atau sering terbangun', ink: '#8B6FD6' },
+      { title: 'Tidak mau makan', sub: 'Menolak makan atau pilih-pilih', ink: '#E0A63A' },
+      { title: 'Memukul', sub: 'Memukul, menggigit, atau melukai', ink: '#D2559A' },
+      { title: 'Konflik saudara', sub: 'Rebutan, cemburu, atau bertengkar', ink: '#5F84E6' },
+      { title: 'Konflik caregiver', sub: 'Beda cara mengasuh antar pengasuh', ink: '#6E9C4A' },
+      { title: 'Saya kehilangan sabar', sub: 'Saat kamu merasa kehabisan sabar', ink: '#E07A4A' },
+      { title: 'Lainnya', sub: 'Tidak ada yang sesuai? Ceritakan sendiri.', ink: '#A98BA0', dashed: true },
+    ];
+    const topik = topikSrc.map((t, i) => {
+      const on = this.state.topik === i;
+      return {
+        ...t,
+        onPick: () => this.setState({ topik: on ? null : i }),
+        bg: on ? '#FFF6FB' : (t.dashed ? 'rgba(255,255,255,.55)' : '#fff'),
+        border: on ? '2px solid ' + t.ink : (t.dashed ? '2px dashed #E0C9DA' : '2px solid transparent'),
+        shadow: on ? '0 18px 38px -28px rgba(90,50,70,.6)' : (t.dashed ? 'none' : '0 16px 36px -34px rgba(90,50,70,.55)'),
+      };
+    });
+
+    const utas = [
+      { title: 'Tips bikin anak cepat tidur', meta: 'Orang tua · 12 Sep', balasan: '1 balasan', accent: '#8B6FD6',
+        body: 'Bagaimana caranya biar anak bisa cepat tidur ya?' },
+    ];
+
+    const panduan = [
+      { title: 'Sulit tidur', saved: 'Disimpan 11 Sep', accent: '#8B6FD6' },
+    ];
+
+    const plant = (type, o) => ({ type, bloom: o.b, bloom2: o.b2 || '#fff', center: o.c || '#6E3B57',
+      stem: '#8FB84A', stemDark: '#6F9E3F', leaf: '#A7C63E', leaf2: '#8FB84A' });
+    const kebunHero = [
+      { w: '34px', h: '50px', dur: '8s', cfg: plant('sprig', { b: '#C9B8F0', b2: '#EFE9FD' }) },
+      { w: '42px', h: '64px', dur: '11s', cfg: plant('tulip', { b: '#F06BA8', b2: '#F8B9D4' }) },
+      { w: '30px', h: '44px', dur: '9s', cfg: plant('leaf', {}) },
+      { w: '46px', h: '70px', dur: '12s', cfg: plant('daisy', { b: '#FFE29A', b2: '#FFF3E6', c: '#F06BA8' }) },
+      { w: '32px', h: '52px', dur: '10s', cfg: plant('foliage', {}) },
+      { w: '38px', h: '58px', dur: '9.5s', cfg: plant('bell', { b: '#8FB8F7', b2: '#DCEAFD' }) },
+    ];
+
+    return {
+      logoBloom, nav, chips, topik, utas, panduan, kebunHero,
+      forumOpen: this.state.forumOpen,
+      forumLabel: this.state.forumOpen ? 'Tutup isi forum' : 'Lihat isi forum selengkapnya',
+      peek: utas.map(u => ({ title: u.title, meta: u.meta, balasan: u.balasan, accent: u.accent })),
+      utasCount: utas.length + ' utas',
+      toggleForum: () => this.setState(s => ({ forumOpen: !s.forumOpen })),
+      ornamenTopik: plant('fivepetal', { b: '#C9B8F0', b2: '#EFE9FD', c: '#FFE29A' }),
+      ornamenForum: plant('daisy', { b: '#C9B8F0', b2: '#F3EDFD', c: '#FFE29A' }),
+      ornamenKonseling: plant('sprig', { b: '#A7C63E', b2: '#E4F2C4' }),
+      ornamenKaki: plant('daisy', { b: '#F8B9D4', b2: '#FFF3E6', c: '#FFE29A' }),
+      ornamenKaki2: plant('tulip', { b: '#C9B8F0', b2: '#EFE9FD' }),
+      showSidebar: this.props.showSidebar ?? true,
+      showRail: this.props.showRail ?? true,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

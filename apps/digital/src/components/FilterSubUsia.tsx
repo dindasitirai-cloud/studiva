@@ -50,14 +50,14 @@ export default function FilterSubUsia({ nilai, onPilih }: Props) {
             onClick={() => onPilih(opsi.id as IdSubUsia)}
             aria-pressed={aktif}
             style={{
-              padding: '5px 14px',
+              padding: '8px 17px',
               borderRadius: 999,
-              border: aktif ? '1.5px solid #E0526B' : '1.5px solid rgba(224,82,107,.25)',
-              background: aktif ? '#FFF3F6' : 'transparent',
-              color: aktif ? '#E0526B' : '#8A7A80',
+              border: aktif ? '1.5px solid #F5B9D6' : '1.5px solid #F2E4D2',
+              background: aktif ? '#FCE3EE' : '#fff',
+              color: aktif ? '#C6407F' : '#8A6F86',
               fontFamily: 'Nunito, system-ui, sans-serif',
-              fontSize: 12,
-              fontWeight: aktif ? 700 : 600,
+              fontSize: 13,
+              fontWeight: 800,
               cursor: 'pointer',
               transition: 'background 140ms ease, color 140ms ease, border-color 140ms ease',
               whiteSpace: 'nowrap',

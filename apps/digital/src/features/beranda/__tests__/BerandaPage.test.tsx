@@ -13,22 +13,22 @@ function renderWith(ui: React.ReactElement) {
 // ── AlurEkosistem: 5 langkah sesuai fiturRekah.ts ───────────────────────────
 
 describe('AlurEkosistem', () => {
-  it('merender tepat 5 langkah (beranda dilewati)', () => {
+  it('merender tepat 7 langkah (beranda dilewati)', () => {
     renderWith(<AlurEkosistem namaAnak="Hana" />);
-    // 5 fitur selain beranda
+    // 7 fitur selain beranda
     const langkah = MENU_UTAMA.filter(f => f.id !== 'beranda');
-    expect(langkah).toHaveLength(5);
+    expect(langkah).toHaveLength(6);
     // Setiap label harus muncul di layar
     langkah.forEach(f => {
       expect(screen.getByText(f.label)).toBeInTheDocument();
     });
   });
 
-  it('urutan langkah sesuai MENU_UTAMA (irama → bekal → teduh → jurnal → panen)', () => {
+  it('urutan langkah sesuai MENU_UTAMA (kompas → irama → kelola → bekal → bantu → teduh → panen)', () => {
     renderWith(<AlurEkosistem namaAnak="Hana" />);
     const langkah = MENU_UTAMA.filter(f => f.id !== 'beranda');
     const labels = langkah.map(f => f.label);
-    expect(labels).toEqual(['Irama Hari', 'Bekal', 'Ruang Teduh', 'Jurnal dan Galeri', 'Panen']);
+    expect(labels).toEqual(['Kompas Keluarga', 'Irama Hari', 'Kelola', 'Bekal', 'Bantu', 'Ruang Teduh', 'Panen']);
   });
 });
 

@@ -34,6 +34,8 @@ export interface ItemBekal {
    * Dua sistem domain yang berbeda — jangan dikonversi satu sama lain.
    */
   domain: DomainKey | DomainCode;
+  /** Semua domain kegiatan (Learning Strategies bisa multi-domain). Diisi hanya untuk tipe 'aktivitas'; dipakai pencocokan pengamatan Kompas Perkembangan. */
+  domainSemua?: DomainKey[];
   nilai: NilaiAkar[];
   /** true = item sudah ditinjau dan memang tidak mengangkat tema nilai tertentu. */
   tanpaTemaNilai?: boolean;
@@ -47,6 +49,14 @@ export interface ItemBekal {
   sumberId: string;
   /** Id sub tahap asal item ini ('b03' | 'b36' | 'b69' | 'b912' | …). Diisi saat kolam diperluas lintas sub tahap. */
   subTahapId?: string;
+  /** true = item ditulis sendiri oleh caregiver (bukan dari kolam Bekal). */
+  kustom?: boolean;
+  /** Kategori item kustom untuk label di susunan hari. */
+  kategoriKustom?: 'momen' | 'kegiatan' | 'rencana';
+  /** Keterangan kapan (mis. 'Pagi', 'Saat makan') untuk item kustom. */
+  keteranganKapan?: string;
+  /** Deskripsi tambahan item kustom (opsional). */
+  deskripsiKustom?: string;
 }
 
 export interface SubTahap {

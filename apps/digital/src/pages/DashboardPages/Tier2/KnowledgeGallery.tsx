@@ -98,9 +98,12 @@ const DOMAIN_KEYS = Object.keys(BEKAL_DOMAIN_TOKENS) as DomainCode[];
 interface PropsKnowledgeGallery {
   defaultAgeMonths?: number;
   onJadwalkanBuku?: (card: KnowledgeCard) => void;
+  /** Tampilkan hero band (judul "Wawasan Tumbuh" + sub). Default true.
+   *  Di-set false saat dipakai di dalam tab Bekal agar tidak dobel judul. */
+  tampilkanHero?: boolean;
 }
 
-export default function KnowledgeGallery({ defaultAgeMonths, onJadwalkanBuku }: PropsKnowledgeGallery = {}) {
+export default function KnowledgeGallery({ defaultAgeMonths, onJadwalkanBuku, tampilkanHero = true }: PropsKnowledgeGallery = {}) {
   const { setSegments } = useAudioPlayer();
   const { isBookmarked, toggleBookmark, publishedCards } = useKnowledgeLibrary();
   // Anak aktif dari AnakContext, sumber tunggal data anak. Komponen ini juga
@@ -281,41 +284,66 @@ export default function KnowledgeGallery({ defaultAgeMonths, onJadwalkanBuku }: 
 
   return (
     <div className="flex flex-col gap-0">
-      {/* Hero band */}
-      <div style={{
-        position:'relative', background:'#FCE3EE', borderRadius:30, marginTop:20,
-        padding:'36px 44px', overflow:'hidden', display:'flex', justifyContent:'space-between', alignItems:'center',
-      }}>
-        {/* Botanical deco top-right */}
-        <div className="animate-sway" style={{ position:'absolute', top:-14, right:360, width:84, height:134, pointerEvents:'none' }}>
-          <BotanicalStem cfg={{ type:'tulip', bloom:'#F06BA8', bloom2:'#F8B9D4', center:'#6E3B57' }} />
-        </div>
-        {/* Botanical deco bottom-right */}
-        <div className="animate-sway2" style={{ position:'absolute', bottom:-20, right:452, width:66, height:108, pointerEvents:'none' }}>
-          <BotanicalStem cfg={{ type:'daisy', bloom:'#5F84E6', bloom2:'#8FB8F7', center:'#FFE29A' }} />
-        </div>
-
-        {/* Left text */}
-        <div style={{ position:'relative', zIndex:1 }}>
-          <div className="font-nunito font-[800] text-[13px] tracking-[1px] text-rekah" style={{ textTransform:'uppercase' }}>
-            BEKAL
+      {/* Hero band — hanya untuk halaman mandiri; di dalam tab Bekal disembunyikan */}
+      {tampilkanHero ? (
+        <div style={{
+          position:'relative', background:'#FCE3EE', borderRadius:30, marginTop:20,
+          padding:'36px 44px', overflow:'hidden', display:'flex', justifyContent:'space-between', alignItems:'center',
+        }}>
+          {/* Botanical deco top-right */}
+          <div className="animate-sway" style={{ position:'absolute', top:-14, right:360, width:84, height:134, pointerEvents:'none' }}>
+            <BotanicalStem cfg={{ type:'tulip', bloom:'#F06BA8', bloom2:'#F8B9D4', center:'#6E3B57' }} />
           </div>
-          <h1 className="font-fredoka font-bold text-pekat" style={{ fontSize:56, lineHeight:.95, letterSpacing:-1, marginTop:10 }}>
-            Wawasan Tumbuh
-          </h1>
-          <div className="font-shantell text-[22px] text-rekah" style={{ marginTop:8 }}>
-            Perpustakaan tumbuh kembang untuk memahami anak sesuai tahap perkembangannya.
+          {/* Botanical deco bottom-right */}
+          <div className="animate-sway2" style={{ position:'absolute', bottom:-20, right:452, width:66, height:108, pointerEvents:'none' }}>
+            <BotanicalStem cfg={{ type:'daisy', bloom:'#5F84E6', bloom2:'#8FB8F7', center:'#FFE29A' }} />
+          </div>
+
+          {/* Left text */}
+          <div style={{ position:'relative', zIndex:1 }}>
+            <div className="font-nunito font-[800] text-[13px] tracking-[1px] text-rekah" style={{ textTransform:'uppercase' }}>
+              BEKAL
+            </div>
+            <h1 className="font-fredoka font-bold text-pekat" style={{ fontSize:56, lineHeight:.95, letterSpacing:-1, marginTop:10 }}>
+              Wawasan Tumbuh
+            </h1>
+            <div className="font-shantell text-[22px] text-rekah" style={{ marginTop:8 }}>
+              Perpustakaan tumbuh kembang untuk memahami anak sesuai tahap perkembangannya.
+            </div>
+          </div>
+
+          {/* Right search */}
+          <div style={{ position:'relative', zIndex:1, flexShrink:0, width:340 }}>
+            <div style={{
+              display:'flex', alignItems:'center', gap:10,
+              background:'white', borderRadius:999, padding:'14px 22px',
+              boxShadow:'0 8px 24px -12px rgba(110,59,87,.18)',
+            }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A98DA0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+              <input
+                type="text"
+                value={q}
+                onChange={e => setQ(e.target.value)}
+                placeholder="Cari buku, topik, usia…"
+                style={{
+                  border:'none', outline:'none', background:'transparent',
+                  fontFamily:'Nunito', fontWeight:700, fontSize:15, color:'#6E3B57',
+                  flex:1, minWidth:0,
+                }}
+              />
+            </div>
           </div>
         </div>
-
-        {/* Right search */}
-        <div style={{ position:'relative', zIndex:1, flexShrink:0, width:340 }}>
+      ) : (
+        /* Tanpa hero — sisakan kolom pencarian saja agar fungsinya tetap ada */
+        <div style={{ marginTop:4, width:'100%', maxWidth:340 }}>
           <div style={{
             display:'flex', alignItems:'center', gap:10,
-            background:'white', borderRadius:999, padding:'14px 22px',
-            boxShadow:'0 8px 24px -12px rgba(110,59,87,.18)',
+            background:'white', border:'2px solid #F3E2EC', borderRadius:999, padding:'12px 20px',
           }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A98DA0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F06BA8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
             <input
@@ -331,7 +359,7 @@ export default function KnowledgeGallery({ defaultAgeMonths, onJadwalkanBuku }: 
             />
           </div>
         </div>
-      </div>
+      )}
 
       {/* Status pills */}
       <div style={{ display:'flex', gap:14, marginTop:28, flexWrap:'wrap' }}>

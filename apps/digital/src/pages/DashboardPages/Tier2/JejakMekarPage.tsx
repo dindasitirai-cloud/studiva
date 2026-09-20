@@ -9,6 +9,14 @@ import { useRekahPlan } from '../../../context/RekahPlanContext';
 import Kelopak from '../../../components/Kelopak';
 import { JEJAK_COPY } from '../../../features/rekah-jejak/rekahJejakCopy';
 import { ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useAnakAktif } from '../../../context/AnakContext';
+import { useRingkasanMinggu } from '../../../hooks/useRingkasanMinggu';
+import { OPSI_REFLEKSI } from '../../../hooks/useRefleksiKegiatan';
+import { useAkarStateSync } from '../../../features/akar-keluarga/state';
+import { BUNGA_DARI_NAMA } from '../../../features/akar-keluarga/registryBunga';
+import type { NilaiAkar } from '../../../features/akar-keluarga/content';
+import { usePanenNilai } from '../../../hooks/usePanenNilai';
 
 // ── BungaMusim ─────────────────────────────────────────────────────────────
 
@@ -71,11 +79,68 @@ function BungaMusim({ nilaiId, selesaiCount }: { nilaiId: NilaiId; selesaiCount:
 
 // ── JejakMekarPage ─────────────────────────────────────────────────────────
 
+function BungaNilaiAkar({ nama, count }: { nama: NilaiAkar; count: number }) {
+  const warna = BUNGA_DARI_NAMA.get(nama)?.warnaPetal ?? '#E0526B';
+  const MAX_KELOPAK = 5;
+  const filled = Math.min(count, MAX_KELOPAK);
+  const ROTATIONS = [-36, 0, 36, 72, 108];
+  const R = 28;
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <div aria-label={`Bunga nilai ${nama}`} className="relative flex h-24 w-24 items-center justify-center">
+        {ROTATIONS.map((deg, i) => {
+          const rad = (deg * Math.PI) / 180;
+          const cx = 48 + R * Math.sin(rad);
+          const cy = 48 - R * Math.cos(rad);
+          return (
+            <div
+              key={i}
+              aria-hidden
+              style={{
+                position: 'absolute',
+                left: cx - 8,
+                top: cy - 13,
+                width: 16,
+                height: 26,
+                borderRadius: '70% 70% 70% 4px',
+                transform: `rotate(${deg}deg)`,
+                background: i < filled ? warna : 'transparent',
+                border: `2px solid ${i < filled ? warna : warna + '33'}`,
+                transition: 'background 0.3s ease, border-color 0.3s ease',
+              }}
+            />
+          );
+        })}
+        <div aria-hidden className="relative z-10 h-8 w-8 rounded-full" style={{ background: warna, opacity: 0.85 }} />
+      </div>
+      <p className="text-[12px] font-bold text-pekat">{nama}</p>
+      <p className="text-[11px] text-pekat/45">{count > 0 ? `${count}× pekan ini` : 'belum pekan ini'}</p>
+    </div>
+  );
+}
+
+function interpretasiMinggu(h: Record<string, number>): string {
+  const total = h.menyenangkan + h.terlalu_sulit + h.kurang_cocok + h.ingin_ulang;
+  if (total === 0) return '';
+  const maxLain = (x: number, ...rest: number[]) => x >= Math.max(...rest);
+  if (maxLain(h.menyenangkan, h.terlalu_sulit, h.kurang_cocok, h.ingin_ulang))
+    return 'Banyak yang terasa menyenangkan — lanjutkan iramanya.';
+  if (maxLain(h.terlalu_sulit, h.menyenangkan, h.kurang_cocok, h.ingin_ulang))
+    return 'Beberapa terasa menantang — Rekah menyederhanakan untuk pekan depan.';
+  if (maxLain(h.kurang_cocok, h.menyenangkan, h.terlalu_sulit, h.ingin_ulang))
+    return 'Ada yang kurang cocok — Rekah menawarkan arah yang berbeda.';
+  return 'Terus mengamati bersama, sepekan demi sepekan.';
+}
+
 export default function JejakMekarPage() {
-  const { profile } = useRekahProfile();
+  const { profile, profileLoading } = useRekahProfile();
   const { entries } = useRekahRefleksi();
   const { currentWeek } = useRekahPlan();
   const [arsipOpen, setArsipOpen] = useState(false);
+  const { anak } = useAnakAktif();
+  const ringkasan = useRingkasanMinggu(anak.id);
+  const [akarState] = useAkarStateSync(anak.id);
+  const panen = usePanenNilai(anak.id);
 
   // ── SEMUA HOOK DI ATAS GERBANG `if (!profile)` ─────────────────────────────
   //
@@ -114,10 +179,73 @@ export default function JejakMekarPage() {
     return lelahCount / entries.length > 0.5;
   }, [entries, cukupData]);
 
+  // Kartu Tinjauan Minggu tidak bergantung pada sistem "musim" (RekahProfile),
+  // jadi didefinisikan di sini agar bisa tampil di kedua jalur render.
+  const kartuTinjauan = (
+    <div className="mb-6 rounded-[20px] border border-rekah/15 bg-white p-5 shadow-[0_4px_20px_rgba(224,82,107,0.07)]">
+          <p className="font-shantell text-[15px] text-rekah">tinjauan minggu ini</p>
+          {ringkasan.total > 0 ? (
+            <>
+              <p className="mt-1 text-[14px] font-bold text-pekat">
+                {ringkasan.total} kegiatan direfleksikan bersama {anak.namaAnak || 'si kecil'} pekan ini.
+              </p>
+              <p className="mt-1 text-[13px] text-pekat/65">{interpretasiMinggu(ringkasan.hitung)}</p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {OPSI_REFLEKSI.map(op =>
+                  ringkasan.hitung[op.id] > 0 ? (
+                    <span key={op.id} className="rounded-full bg-fajar px-3 py-1 text-[12px] font-semibold text-pekat/70">
+                      {op.label} &middot; {ringkasan.hitung[op.id]}
+                    </span>
+                  ) : null,
+                )}
+              </div>
+            </>
+          ) : (
+            <p className="mt-1 text-[13px] leading-relaxed text-pekat/60">
+              Belum ada refleksi pekan ini. Setelah menandai kegiatan &ldquo;Berhasil dilakukan&rdquo; di Irama Hari,
+              ringkasannya muncul di sini.
+            </p>
+          )}
+          <Link
+            to="/dashboard/tier2/kompas-keluarga"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-[22px] bg-rekah px-5 py-2.5 text-[13px] font-extrabold text-white no-underline"
+          >
+            Perbarui pengamatan di Kompas untuk pekan depan &rarr;
+          </Link>
+        </div>
+  );
+
+  const nilaiAkar = akarState.nilai as NilaiAkar[];
+  const kartuBunga = nilaiAkar.length > 0 ? (
+    <div className="mb-6 rounded-[20px] bg-white p-6 shadow-[0_4px_20px_rgba(224,82,107,0.07)]">
+      <p className="mb-4 text-[12px] font-bold uppercase tracking-widest text-pekat/50">Nilai yang tumbuh pekan ini</p>
+      <div className="flex flex-wrap justify-around gap-4">
+        {nilaiAkar.slice(0, 4).map(n => (
+          <BungaNilaiAkar key={n} nama={n} count={panen[n] ?? 0} />
+        ))}
+      </div>
+      <p className="mt-4 text-center text-[12px] italic text-pekat/45">
+        Tiap kegiatan yang direfleksikan menumbuhkan nilai yang diangkatnya.
+      </p>
+    </div>
+  ) : null;
+
   if (!profile) {
+    // Belum ada "musim" berjalan (atau masih memuat). Tetap tampilkan tinjauan
+    // minggu — penutup loop yang mandiri dari sistem musim.
     return (
-      <div className="flex h-48 items-center justify-center text-[14px] text-pekat/50">
-        Memuat profil...
+      <div className="relative min-h-[calc(100vh-60px)] overflow-hidden bg-kanvas">
+        <div className="relative z-10 mx-auto max-w-lg px-4 py-6 sm:px-0 sm:py-8">
+          <h1 className="mb-1 font-bricolage text-[1.35rem] font-extrabold text-pekat">
+            {JEJAK_COPY.judulHalaman}
+          </h1>
+          <p className="mb-6 text-[13px] text-pekat/50">{JEJAK_COPY.sub}</p>
+          {profileLoading ? (
+            <p className="py-6 text-center text-[14px] text-pekat/50">Memuat…</p>
+          ) : (
+            <>{kartuTinjauan}{kartuBunga}</>
+          )}
+        </div>
       </div>
     );
   }
@@ -160,16 +288,11 @@ export default function JejakMekarPage() {
         </h1>
         <p className="mb-6 text-[13px] text-pekat/50">{JEJAK_COPY.sub}</p>
 
-        {/* ── Bunga Musim ──────────────────────────────────────────── */}
-        <div className="mb-6 rounded-[20px] bg-white p-6 shadow-[0_4px_20px_rgba(224,82,107,0.07)]">
-          <div className="flex justify-around">
-            <BungaMusim nilaiId={nilai1Id} selesaiCount={selesai1} />
-            <BungaMusim nilaiId={nilai2Id} selesaiCount={selesai2} />
-          </div>
-          <p className="mt-4 text-center text-[12px] text-pekat/45 italic">
-            {JEJAK_COPY.bungaCaption}
-          </p>
-        </div>
+        {/* ── Tinjauan minggu ini — menutup loop kembali ke Kompas ── */}
+        {kartuTinjauan}
+
+        {/* ── Nilai yang tumbuh (dari Nilai Akar Keluarga) ── */}
+        {kartuBunga}
 
         {/* ── Status Musim ─────────────────────────────────────────── */}
         <div className="mb-4 rounded-[14px] border border-fajar bg-white px-5 py-3">

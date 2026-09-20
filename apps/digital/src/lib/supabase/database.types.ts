@@ -128,6 +128,82 @@ export interface Database {
         Relationships: [];
       };
 
+      pengamatan_kompas: {
+        Row: {
+          id: string;
+          id_anak: string;
+          id_prompt: string;
+          diamati_pada: string;
+        };
+        Insert: {
+          id?: string;
+          id_anak: string;
+          id_prompt: string;
+          diamati_pada?: string;
+        };
+        Update: never;
+        Relationships: [];
+      };
+
+      refleksi_kegiatan: {
+        Row: {
+          id: string;
+          id_anak: string;
+          tanggal: string;
+          id_kegiatan: string;
+          hasil: string;
+          dibuat_pada: string;
+        };
+        Insert: {
+          id?: string;
+          id_anak: string;
+          tanggal: string;
+          id_kegiatan: string;
+          hasil: string;
+          dibuat_pada?: string;
+        };
+        Update: {
+          hasil?: string;
+        };
+        Relationships: [];
+      };
+
+      jejak_pengamatan_kompas: {
+        Row: {
+          id: string;
+          id_anak: string;
+          id_prompt: string;
+          aksi: string;
+          pada: string;
+        };
+        Insert: {
+          id?: string;
+          id_anak: string;
+          id_prompt: string;
+          aksi: string;
+          pada?: string;
+        };
+        Update: never;
+        Relationships: [];
+      };
+
+      catatan_pengamatan_kompas: {
+        Row: {
+          id: string;
+          id_anak: string;
+          teks: string;
+          pada: string;
+        };
+        Insert: {
+          id?: string;
+          id_anak: string;
+          teks: string;
+          pada?: string;
+        };
+        Update: never;
+        Relationships: [];
+      };
+
       pilihan_harian: {
         Row: {
           id: string;

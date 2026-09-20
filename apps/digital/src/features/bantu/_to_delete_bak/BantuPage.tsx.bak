@@ -1,0 +1,241 @@
+// Bantu — situational support (Phase 14, Model C). Understand → Clarify → Guide → Action.
+// Pemindai keselamatan (B5) berjalan PALING AWAL; saat terpicu, Bantu berhenti &
+// mengarahkan ke bantuan nyata (tidak menulis ke Kelola). Engine terkurasi; jujur saat
+// tak ada match. STATUS: DRAFT — menunggu review Psikolog Fitri Effendy.
+import React, { useMemo, useState } from 'react';
+import { ArrowLeft, Check, Eye, Heart, ChevronRight } from 'lucide-react';
+import { useAnakAktif } from '../../context/AnakContext';
+import { useAkarStateSync } from '../akar-keluarga/state';
+import type { NilaiAkar } from '../akar-keluarga/content';
+import { useChildProfile } from '../beranda-usia/useChildProfile';
+import { tanggalDariTimestampWIB } from '@studiva/shared';
+import { tambahKustomKeTanggal } from '../../lib/supabase/rekah';
+import { dispatchRekahError } from '../../utils/rekahApiError';
+import {
+  BANTU_SITUASI, adaSinyalBahaya, OPSI_MEMICU_B5, RUJUKAN_KESELAMATAN,
+} from './bantuSeed';
+import type { BantuSituasi } from './bantuSeed';
+
+type Layar = 'entry' | 'clarify' | 'guide' | 'safety';
+const PLUM = '#8E5FA6';
+
+export default function BantuPage() {
+  const { anak } = useAnakAktif();
+  const idAnak = anak.id;
+  const [akarState] = useAkarStateSync(idAnak);
+  const { profile, sapaan, usiaBulan } = useChildProfile();
+  const nama = profile.namaAnak || sapaan.cap || 'si kecil';
+  const nilaiKeluarga = (akarState.nilai as NilaiAkar[]) ?? [];
+  const tanggalHariIni = useMemo(() => tanggalDariTimestampWIB(new Date().toISOString()), []);
+
+  const [layar, setLayar] = useState<Layar>('entry');
+  const [pilih, setPilih] = useState<BantuSituasi | null>(null);
+  const [teks, setTeks] = useState('');
+  const [whyOpen, setWhyOpen] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const usiaTeks = useMemo(() => {
+    if (usiaBulan === null) return null;
+    const th = Math.floor(usiaBulan / 12); const bl = usiaBulan % 12;
+    if (th <= 0) return `${bl} bln`;
+    return bl === 0 ? `${th} thn` : `${th} thn ${bl} bln`;
+  }, [usiaBulan]);
+
+  const keGuideAtauClarify = (s: BantuSituasi) => {
+    setPilih(s); setWhyOpen(false);
+    setLayar(s.clarify.length > 0 ? 'clarify' : 'guide');
+  };
+
+  const submitEntry = () => {
+    if (teks.trim() && adaSinyalBahaya(teks)) { setLayar('safety'); return; }
+    if (pilih) { keGuideAtauClarify(pilih); return; }
+    if (teks.trim()) {
+      const meta = BANTU_SITUASI.find(s => s.slug === 'bingung_merespons');
+      if (meta) keGuideAtauClarify(meta);
+    }
+  };
+
+  const pilihOpsiClarify = (opsi: string) => {
+    if (OPSI_MEMICU_B5.includes(opsi)) { setLayar('safety'); return; }
+    setLayar('guide');
+  };
+
+  const tambahKeKelola = async () => {
+    if (!pilih) return;
+    const item = {
+      id: `bantu-${pilih.slug}-${Date.now().toString(36)}`,
+      judul: `Strategi: ${pilih.label}`,
+      tipe: 'aktivitas' as const,
+      domain: 'sos',
+      nilai: [] as NilaiAkar[],
+      pemilik: 'anak' as const,
+      sumberId: `bantu-${pilih.slug}`,
+      kustom: true,
+      kategoriKustom: 'rencana' as const,
+      keteranganKapan: 'Dari Bantu',
+      deskripsiKustom: pilih.respons.langkah.join(' · '),
+    };
+    try {
+      await tambahKustomKeTanggal(idAnak, tanggalHariIni, item);
+      setToast('Tersimpan sebagai rencana di Kelola.');
+    } catch (e) {
+      console.error('[Bantu] gagal menambah ke Kelola:', e);
+      dispatchRekahError('Koneksi terputus — strategi tadi belum masuk Kelola. Coba lagi ya.');
+    }
+  };
+
+  const plumBtn = 'w-full rounded-2xl px-6 py-3 font-nunito font-extrabold text-white shadow-[0_10px_20px_-10px_rgba(142,95,166,0.8)]';
+
+  // ── B1: Entry ───────────────────────────────────────────────────────────────
+  const Entry = () => (
+    <>
+      <p className="font-shantell text-lg" style={{ color: PLUM }}>bantu</p>
+      <h1 className="mt-1 font-fredoka text-[26px] font-semibold leading-tight text-pekat">Apa yang sedang terjadi?</h1>
+      <p className="mt-2 font-nunito text-[15px] text-pekat/70">Tarik napas dulu. Kita lihat bersama.</p>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {BANTU_SITUASI.filter(s => s.kategori !== 'meta').map(s => {
+          const aktif = pilih?.slug === s.slug;
+          return (
+            <button key={s.slug} onClick={() => setPilih(aktif ? null : s)}
+              className={`rounded-xl border px-3 py-2 font-nunito text-[12.5px] font-bold ${aktif ? 'text-white' : 'bg-white text-pekat'}`}
+              style={aktif ? { background: PLUM, borderColor: PLUM } : { borderColor: '#F0DCE6' }}>
+              {s.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <textarea value={teks} onChange={e => setTeks(e.target.value)} rows={3}
+        placeholder="atau ceritakan sendiri: &quot;Anakku setiap mau mandi menangis…&quot;"
+        className="mt-3 w-full rounded-2xl border bg-white px-3 py-2.5 font-nunito text-[13px] text-pekat placeholder:text-pekat/50 focus:outline-none focus:ring-2 focus:ring-langit"
+        style={{ borderColor: '#F0DCE6' }} />
+
+      <div className="mt-3 rounded-2xl border border-dashed bg-white p-3" style={{ borderColor: '#E0CBE9' }}>
+        <p className="text-[10.5px] font-extrabold uppercase tracking-wide" style={{ color: PLUM }}>Rekah sudah tahu</p>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          <span className="rounded-full bg-langit/30 px-2.5 py-1 text-[11px] font-bold text-pekat">{nama}{usiaTeks ? ` · ${usiaTeks}` : ''}</span>
+          {nilaiKeluarga.slice(0, 2).map(n => (
+            <span key={n} className="rounded-full bg-pucuk px-2.5 py-1 text-[11px] font-bold text-[#5C8A55]">Fokus: {n}</span>
+          ))}
+        </div>
+      </div>
+
+      <button onClick={submitEntry} disabled={!pilih && !teks.trim()} className={`mt-4 ${plumBtn} disabled:opacity-50`} style={{ background: PLUM }}>
+        Bantu saya
+      </button>
+    </>
+  );
+
+  // ── B2: Clarify ─────────────────────────────────────────────────────────────
+  const Clarify = () => {
+    if (!pilih) return null;
+    return (
+      <>
+        <button onClick={() => setLayar('entry')} className="mb-3 inline-flex items-center gap-1 font-nunito text-[13px] text-pekat/70"><ArrowLeft className="h-4 w-4" /> Kembali</button>
+        <h1 className="font-fredoka text-[24px] font-semibold leading-tight text-pekat">Boleh cerita sedikit?</h1>
+        <p className="mt-1 font-nunito text-[14px] text-pekat/70">Supaya saran lebih pas. Usia {nama} sudah kami tahu, jadi tenang saja.</p>
+        {pilih.clarify.map((c, i) => (
+          <div key={i} className="mt-4 rounded-2xl border p-3" style={{ borderColor: '#E0CBE9', background: '#F6EEFA' }}>
+            <div className="font-nunito text-[13px] font-bold text-pekat">{c.pertanyaan}</div>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {c.opsi.map(o => (
+                <button key={o} onClick={() => pilihOpsiClarify(o)} className="rounded-xl border bg-white px-3 py-2 font-nunito text-[12.5px] font-bold text-pekat" style={{ borderColor: '#F0DCE6' }}>{o}</button>
+              ))}
+            </div>
+          </div>
+        ))}
+        <button onClick={() => setLayar('guide')} className={`mt-4 ${plumBtn}`} style={{ background: PLUM }}>Lanjut</button>
+        <button onClick={() => setLayar('guide')} className="mx-auto mt-3 block font-nunito text-[12px] text-pekat/60 underline">Lewati — langsung saran saja</button>
+      </>
+    );
+  };
+
+  // ── B3/B4: Guide + Action ───────────────────────────────────────────────────
+  const Guide = () => {
+    if (!pilih) return null;
+    const r = pilih.respons;
+    return (
+      <>
+        <button onClick={() => setLayar('entry')} className="mb-3 inline-flex items-center gap-1 font-nunito text-[13px] text-pekat/70"><ArrowLeft className="h-4 w-4" /> Kembali</button>
+        <div className="rounded-2xl border p-4" style={{ borderColor: '#E0CBE9', background: '#F6EEFA' }}>
+          <p className="font-nunito text-[13.5px] leading-relaxed text-pekat">{r.validasi}</p>
+        </div>
+
+        <p className="mt-4 font-nunito text-[13px] font-extrabold text-pekat">Coba sekarang</p>
+        <ol className="mt-1 space-y-2">
+          {r.langkah.map((l, i) => (
+            <li key={i} className="flex items-start gap-2.5">
+              <span className="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full text-[12px] font-extrabold text-white" style={{ background: PLUM }}>{i + 1}</span>
+              <span className="font-nunito text-[13.5px] leading-snug text-pekat">{l}</span>
+            </li>
+          ))}
+        </ol>
+
+        {r.yangDiamati && (
+          <div className="mt-3 flex items-start gap-2 rounded-2xl border border-[#cfe2f2] bg-langit/20 px-3 py-2.5 text-[12.5px] text-pekat">
+            <Eye className="mt-0.5 h-4 w-4 flex-none" aria-hidden /> <span>Yang diamati: {r.yangDiamati}</span>
+          </div>
+        )}
+
+        {r.kenapaSederhana && (
+          <div className="mt-3 border-l-[3px] pl-3" style={{ borderColor: PLUM }}>
+            <button onClick={() => setWhyOpen(o => !o)} aria-expanded={whyOpen} className="flex items-center gap-1.5 font-nunito text-[12.5px] font-extrabold" style={{ color: PLUM }}>
+              <ChevronRight className={`h-4 w-4 transition ${whyOpen ? 'rotate-90' : ''}`} aria-hidden /> Kenapa ini membantu?
+            </button>
+            {whyOpen && (
+              <div className="mt-2 font-nunito text-[12.5px] leading-relaxed text-pekat/75">
+                {r.kenapaSederhana}
+                {r.kenapaSumber ? <div className="mt-2"><span className="rounded-md bg-langit/30 px-1.5 py-0.5 text-[9px] font-extrabold uppercase">sumber</span> {r.kenapaSumber}</div> : null}
+              </div>
+            )}
+          </div>
+        )}
+
+        {toast ? (
+          <div className="mt-4 flex items-center gap-2 rounded-2xl border border-[#c3ddba] bg-[#EAF6E4] px-3 py-2.5 text-[13px] font-bold text-[#4d7a47]"><Check className="h-4 w-4" /> {toast}</div>
+        ) : (
+          <button onClick={() => { void tambahKeKelola(); }} className={`mt-4 ${plumBtn}`} style={{ background: PLUM }}>Tambahkan ke Kelola</button>
+        )}
+      </>
+    );
+  };
+
+  // ── B5: Safety ──────────────────────────────────────────────────────────────
+  const Safety = () => (
+    <>
+      <button onClick={() => setLayar('entry')} className="mb-3 inline-flex items-center gap-1 font-nunito text-[13px] text-pekat/70"><ArrowLeft className="h-4 w-4" /> Kembali</button>
+      <div className="flex items-center gap-2">
+        <Heart className="h-5 w-5" style={{ color: PLUM }} aria-hidden />
+        <h1 className="font-fredoka text-[23px] font-semibold text-pekat">Kamu tidak sendiri</h1>
+      </div>
+      <div className="mt-3 rounded-2xl border p-4 font-nunito text-[14px] leading-relaxed text-pekat" style={{ borderColor: '#E0CBE9', background: '#F6EEFA' }}>
+        Apa yang kamu rasakan berat, dan kamu berani mengatakannya. Untuk hal seperti ini, berbicara dengan orang yang tepat akan lebih menolong daripada melewatinya sendiri.
+      </div>
+      <p className="mt-4 font-nunito text-[13px] font-extrabold" style={{ color: PLUM }}>Bantuan yang bisa dihubungi</p>
+      <div className="mt-2 space-y-2">
+        {RUJUKAN_KESELAMATAN.map(r => (
+          <div key={r.nama} className="rounded-2xl border bg-white p-3" style={{ borderColor: '#F0DCE6' }}>
+            <div className="font-nunito text-[13.5px] font-bold text-pekat">{r.nama}</div>
+            <div className="font-nunito text-[12px] text-pekat/70">{r.untuk}</div>
+            <div className="mt-1 font-nunito text-[13px] font-extrabold text-pekat">{r.kontak}</div>
+          </div>
+        ))}
+      </div>
+      <p className="mt-4 font-nunito text-[11.5px] italic leading-relaxed text-pekat/60">
+        Bantu bukan layanan krisis. Daftar ini sedang diverifikasi; pastikan nomor terbaru saat menghubungi.
+      </p>
+    </>
+  );
+
+  return (
+    <div style={{ background: '#FCEBD7' }} className="-mx-5 min-h-screen px-5 pb-14 pt-[34px] sm:-mx-8 sm:px-[46px]">
+      <section className="mx-auto w-full max-w-md" aria-live="polite">
+        {layar === 'entry' && <Entry />}
+        {layar === 'clarify' && <Clarify />}
+        {layar === 'guide' && <Guide />}
+        {layar === 'safety' && <Safety />}
+      </section>
+    </div>
+  );
+}

@@ -1,9 +1,9 @@
 // REVIEW: menunggu approval Psikolog Fitri Effendy sebelum rilis
 import React, { useMemo, useState } from 'react';
-import { X, BookOpen, CheckCircle2, Plus } from 'lucide-react';
+import { X, BookOpen, Plus } from 'lucide-react';
 import FilterSubUsia, { resolveSubUsia, SUB_USIA_TO_AGE_KEY } from '../../components/FilterSubUsia';
 import type { IdSubUsia } from '../../components/FilterSubUsia';
-import { CARDS, AGE_RANGES } from '../../pages/DashboardPages/Tier2/knowledgeCardData';
+import { CARDS } from '../../pages/DashboardPages/Tier2/knowledgeCardData';
 import type { KnowledgeCard } from '../../pages/DashboardPages/Tier2/knowledgeCardData';
 import { getBookColors, DOMAIN_CODE_LABEL } from '../../pages/DashboardPages/Tier2/bekalDomainTokens';
 import { usePilihanHarian } from './PilihanHarianContext';
@@ -16,46 +16,42 @@ const SPRIG_CFG = { type: 'sprig' as const, bloom: '#C79020', bloom2: '#FFE29A' 
 function BukuMini({ kartu }: { kartu: KnowledgeCard }) {
   const { soft, ink, blob, coverLo, spineHi, spineDark } = getBookColors(kartu.domain);
   const domainLabel = DOMAIN_CODE_LABEL[kartu.domain] ?? kartu.domain;
-  const ageLabel = AGE_RANGES.find(a => a.key === kartu.ageKey)?.label ?? kartu.ageKey;
-  const W = 160, H = 208, SPINE = 24;
+  const W = 96, H = 124, SPINE = 14;
 
   return (
-    <div style={{ perspective: 900, width: W, height: H + 28, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+    <div style={{ perspective: 540, width: W, height: H + 16, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
       <div style={{
         position: 'relative', width: W, height: H,
         transformStyle: 'preserve-3d',
-        transform: 'rotateY(26deg) translateY(-6px)',
+        transform: 'rotateY(26deg) translateY(-4px)',
       }}>
         {/* Ground shadow */}
-        <div style={{ position: 'absolute', left: '6%', bottom: -20, width: '88%', height: 28, background: 'rgba(90,50,70,.22)', filter: 'blur(14px)', borderRadius: '50%' }} />
+        <div style={{ position: 'absolute', left: '6%', bottom: -12, width: '88%', height: 16, background: 'rgba(90,50,70,.22)', filter: 'blur(8px)', borderRadius: '50%' }} />
 
         {/* Pages right */}
-        <div style={{ position: 'absolute', top: 6, right: -SPINE / 2, width: SPINE, height: H - 8, transform: 'rotateY(90deg)', background: 'repeating-linear-gradient(to bottom,#F7F0E1 0 2px,#DCCBB0 2px 4px)', borderRadius: 2 }} />
+        <div style={{ position: 'absolute', top: 4, right: -SPINE / 2, width: SPINE, height: H - 5, transform: 'rotateY(90deg)', background: 'repeating-linear-gradient(to bottom,#F7F0E1 0 2px,#DCCBB0 2px 4px)', borderRadius: 2 }} />
 
         {/* Spine left */}
-        <div style={{ position: 'absolute', top: 0, left: -SPINE / 2, width: SPINE, height: H, transform: 'rotateY(90deg)', background: `linear-gradient(90deg,${spineHi},${ink} 32%,${spineDark})`, borderRadius: 3 }}>
-          <div style={{ position: 'absolute', top: 20, left: 0, right: 0, height: 2, background: 'rgba(255,255,255,.4)' }} />
-          <div style={{ position: 'absolute', bottom: 20, left: 0, right: 0, height: 2, background: 'rgba(255,255,255,.4)' }} />
+        <div style={{ position: 'absolute', top: 0, left: -SPINE / 2, width: SPINE, height: H, transform: 'rotateY(90deg)', background: `linear-gradient(90deg,${spineHi},${ink} 32%,${spineDark})`, borderRadius: 2 }}>
+          <div style={{ position: 'absolute', top: 12, left: 0, right: 0, height: 1, background: 'rgba(255,255,255,.4)' }} />
+          <div style={{ position: 'absolute', bottom: 12, left: 0, right: 0, height: 1, background: 'rgba(255,255,255,.4)' }} />
         </div>
 
         {/* Cover face */}
         <div style={{
           position: 'absolute', inset: 0, transform: `translateZ(${SPINE / 2}px)`,
-          borderRadius: '4px 16px 16px 4px', overflow: 'hidden',
-          border: `2px solid rgba(110,59,87,.12)`,
+          borderRadius: '3px 10px 10px 3px', overflow: 'hidden',
+          border: `1.5px solid rgba(110,59,87,.12)`,
           background: `linear-gradient(135deg,${soft},${coverLo})`,
-          boxShadow: 'inset 5px 0 0 rgba(0,0,0,.05)',
+          boxShadow: 'inset 3px 0 0 rgba(0,0,0,.05)',
         }}>
           {/* Blob */}
-          <div style={{ position: 'absolute', right: -40, bottom: -40, width: 140, height: 140, borderRadius: '50%', background: blob, opacity: .45 }} />
+          <div style={{ position: 'absolute', right: -24, bottom: -24, width: 84, height: 84, borderRadius: '50%', background: blob, opacity: .45 }} />
           {/* Content */}
-          <div style={{ position: 'relative', zIndex: 1, padding: '14px 14px 14px 18px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 8 }}>
-            <div>
-              <div style={{ fontFamily: 'Nunito, system-ui', fontWeight: 800, fontSize: 11, letterSpacing: 1, color: ink, textTransform: 'uppercase' }}>{domainLabel}</div>
-              <div style={{ fontFamily: 'Nunito, system-ui', fontWeight: 600, fontSize: 10, color: '#A98DA0', marginTop: 3 }}>{ageLabel}</div>
-            </div>
-            <div style={{ fontFamily: 'Fredoka, system-ui', fontWeight: 700, fontSize: 16, lineHeight: 1.2, color: '#6E3B57', textTransform: 'uppercase' }}>
-              {kartu.title.length > 36 ? kartu.title.slice(0, 34) + '…' : kartu.title}
+          <div style={{ position: 'relative', zIndex: 1, padding: '8px 8px 8px 10px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 5 }}>
+            <div style={{ fontFamily: 'Nunito, system-ui', fontWeight: 800, fontSize: 8, letterSpacing: 0.8, color: ink, textTransform: 'uppercase' }}>{domainLabel}</div>
+            <div style={{ fontFamily: 'Fredoka, system-ui', fontWeight: 700, fontSize: 10, lineHeight: 1.25, color: '#6E3B57', textTransform: 'uppercase' }}>
+              {kartu.title.length > 28 ? kartu.title.slice(0, 26) + '…' : kartu.title}
             </div>
           </div>
         </div>
@@ -151,25 +147,19 @@ export default function WawasanTumbuh({ usiaBulan, idAnak }: PropsWawasanTumbuh)
           untuk menjadwalkan.
         </p>
       ) : (
-        /* Buku sudah dipilih — tampilkan semua */
-        <div className="flex flex-col gap-4">
+        /* Buku sudah dipilih — 3 kolom horizontal */
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
           {kartuTerpilih.map(kartu => (
-            <div key={kartu.id} className="flex flex-col items-center gap-3">
+            <div key={kartu.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
               <BukuMini kartu={kartu} />
-              <div className="flex flex-wrap items-center justify-center gap-2">
-                <span className="flex items-center gap-1.5 rounded-full bg-daun/15 px-3 py-1.5 font-nunito text-[12px] font-semibold text-daun">
-                  <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={2.5} />
-                  Masuk susunan hari
-                </span>
-                <button
-                  type="button"
-                  onClick={() => pilihWawasan(kartu.id)}
-                  className="flex items-center gap-1 font-nunito text-[12px] font-semibold text-pekat/40 hover:text-rekah"
-                >
-                  <X className="h-3 w-3" />
-                  Hapus
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => pilihWawasan(kartu.id)}
+                className="flex items-center gap-0.5 font-nunito text-[11px] font-semibold text-pekat/40 hover:text-rekah"
+              >
+                <X className="h-3 w-3" />
+                Hapus
+              </button>
             </div>
           ))}
         </div>

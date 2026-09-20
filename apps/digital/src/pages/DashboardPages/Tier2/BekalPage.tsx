@@ -23,7 +23,9 @@ export default function BekalPage() {
 
   function handleTanam(nilai: NilaiAkar) {
     akarDispatch({ type: 'TANAM_NILAI', nilai });
-    navigate('/dashboard/tier2/irama-hari');
+    // Setelah menanam nilai, bawa ke Kompas Keluarga agar caregiver melihat
+    // nilai tsb kini tertanam pada Arah Keluarga.
+    navigate('/dashboard/tier2/kompas-keluarga');
   }
 
   function handleCabut(nilai: NilaiAkar) {

@@ -8,6 +8,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./journey": {
+      "types": "./dist/journey/runtime.d.ts",
+      "default": "./dist/journey/runtime.js"
     }
   },
   "scripts": {

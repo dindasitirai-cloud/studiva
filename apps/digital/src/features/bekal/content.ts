@@ -136,7 +136,7 @@ export const BEKAL_HEAD = {
   },
   wawasanTumbuh: {
     judul: 'Wawasan Tumbuh',
-    sub: 'Bacaan pendamping singkat untuk memahami apa yang sedang tumbuh di tahun pertama.',
+    sub: 'Perpustakaan tumbuh kembang untuk memahami anak sesuai tahap perkembangannya.',
   },
 };
 
@@ -166,3 +166,11 @@ export const BEKAL_WAWASAN = [
 
 // MENUNGGU REVIEW PSIKOLOG FITRI
 export const BEKAL_FOOTER = 'arahkan kursor ke bunga — pilih yang terasa dekat, lalu tanam di taman keluarga';
+
+// MENUNGGU REVIEW PSIKOLOG FITRI
+// Catatan tulisan tangan per tab (footer note desain v2)
+export const BEKAL_FOOTER_TAB = {
+  kebiasaanBaik: 'arahkan kursor ke bunga — pilih yang terasa dekat, lalu tanam di taman keluarga',
+  ajakMain:      'pilih satu kegiatan, jadwalkan di hari yang terasa longgar',
+  wawasanTumbuh: 'simpan buku yang ingin dibaca — pita di sudut menandainya',
+};

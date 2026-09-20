@@ -17,7 +17,7 @@ export const CONTOH_VISI = [
 ];
 
 export interface BandInfo { usia: string; judul: string; nilaiInti: string; sains: string; }
-export interface MateriItem { judul: string; deskripsi: string; nilai: string[]; }
+export interface MateriItem { id?: string; judul: string; deskripsi: string; nilai: string[]; }
 
 export const BANDS: BandInfo[] = [
   { usia: "0–3 bl",  judul: "Rasa Aman Pertama",      nilaiInti: "Kelekatan sebagai fondasi seluruh nilai",
@@ -44,81 +44,81 @@ export const BANDS: BandInfo[] = [
 
 export const MATERI: MateriItem[][] = [
   [ // 0–3 bl
-    { judul: "Kontak mata & sapaan lembut", deskripsi: "Menyapa bayi dengan wajah dekat setiap kali terbangun.", nilai: ["Kasih Sayang"] },
-    { judul: "Merespons tangisan dengan tenang", deskripsi: "Hadir konsisten — bayi belajar dunia bisa dipercaya.", nilai: ["Kasih Sayang","Sabar"] },
-    { judul: "Sentuhan & pijat bayi", deskripsi: "Pijat ringan sambil mengajak bicara pelan.", nilai: ["Kasih Sayang"] },
-    { judul: "Bergumam & bernyanyi bersama", deskripsi: "Membalas suara bayi seperti percakapan.", nilai: ["Cinta Ilmu","Empati"] },
-    { judul: "Mengenalkan wajah keluarga", deskripsi: "Menyebut nama anggota keluarga saat menggendong.", nilai: ["Hormat pada Sesama"] }
+    { id: 'kb-001', judul: "Kontak mata & sapaan lembut", deskripsi: "Menyapa bayi dengan wajah dekat setiap kali terbangun.", nilai: ["Kasih Sayang"] },
+    { id: 'kb-002', judul: "Merespons tangisan dengan tenang", deskripsi: "Hadir konsisten — bayi belajar dunia bisa dipercaya.", nilai: ["Kasih Sayang","Sabar"] },
+    { id: 'kb-003', judul: "Sentuhan & pijat bayi", deskripsi: "Pijat ringan sambil mengajak bicara pelan.", nilai: ["Kasih Sayang"] },
+    { id: 'kb-004', judul: "Bergumam & bernyanyi bersama", deskripsi: "Membalas suara bayi seperti percakapan.", nilai: ["Cinta Ilmu","Empati"] },
+    { id: 'kb-005', judul: "Mengenalkan wajah keluarga", deskripsi: "Menyebut nama anggota keluarga saat menggendong.", nilai: ["Hormat pada Sesama"] }
   ],
   [ // 3–6 bl
-    { judul: "Ritual tidur yang sama", deskripsi: "Lagu atau cerita pendek yang berulang tiap malam.", nilai: ["Sabar","Kesederhanaan"] },
-    { judul: "Membacakan buku kontras", deskripsi: "Buku kain sederhana, dibaca dengan suara ekspresif.", nilai: ["Cinta Ilmu"] },
-    { judul: "Cilukba & permainan wajah", deskripsi: "Melatih antisipasi dan kegembiraan bersama.", nilai: ["Cinta Ilmu","Keberanian"] },
-    { judul: "Membalas ocehan bayi", deskripsi: "Setiap suara dibalas — dasar percakapan dan empati.", nilai: ["Empati","Kasih Sayang"] },
-    { judul: "Tummy time didampingi", deskripsi: "Memberi ruang berusaha sambil ditemani.", nilai: ["Kemandirian","Keberanian"] }
+    { id: 'kb-006', judul: "Ritual tidur yang sama", deskripsi: "Lagu atau cerita pendek yang berulang tiap malam.", nilai: ["Sabar","Kesederhanaan"] },
+    { id: 'kb-007', judul: "Membacakan buku kontras", deskripsi: "Buku kain sederhana, dibaca dengan suara ekspresif.", nilai: ["Cinta Ilmu"] },
+    { id: 'kb-008', judul: "Cilukba & permainan wajah", deskripsi: "Melatih antisipasi dan kegembiraan bersama.", nilai: ["Cinta Ilmu","Keberanian"] },
+    { id: 'kb-009', judul: "Membalas ocehan bayi", deskripsi: "Setiap suara dibalas — dasar percakapan dan empati.", nilai: ["Empati","Kasih Sayang"] },
+    { id: 'kb-010', judul: "Tummy time didampingi", deskripsi: "Memberi ruang berusaha sambil ditemani.", nilai: ["Kemandirian","Keberanian"] }
   ],
   [ // 6–9 bl
-    { judul: "Melihat kebiasaan baik keluarga", deskripsi: "Bayi mengamati orang tua berterima kasih & menolong.", nilai: ["Hormat pada Sesama","Berbagi"] },
-    { judul: "Ikut duduk di meja makan", deskripsi: "Merasakan kebersamaan makan keluarga.", nilai: ["Syukur","Kesederhanaan"] },
-    { judul: "Bermain sebab-akibat", deskripsi: "Menjatuhkan, menekan, membunyikan — rasa ingin tahu.", nilai: ["Cinta Ilmu"] },
-    { judul: "Memberi & menerima mainan", deskripsi: "Latihan pertama memberi dengan gembira.", nilai: ["Berbagi"] },
-    { judul: "Eksplorasi merangkak aman", deskripsi: "Rumah disiapkan agar bayi bebas menjelajah.", nilai: ["Kemandirian","Keberanian"] }
+    { id: 'kb-011', judul: "Melihat kebiasaan baik keluarga", deskripsi: "Bayi mengamati orang tua berterima kasih & menolong.", nilai: ["Hormat pada Sesama","Berbagi"] },
+    { id: 'kb-012', judul: "Ikut duduk di meja makan", deskripsi: "Merasakan kebersamaan makan keluarga.", nilai: ["Syukur","Kesederhanaan"] },
+    { id: 'kb-013', judul: "Bermain sebab-akibat", deskripsi: "Menjatuhkan, menekan, membunyikan — rasa ingin tahu.", nilai: ["Cinta Ilmu"] },
+    { id: 'kb-014', judul: "Memberi & menerima mainan", deskripsi: "Latihan pertama memberi dengan gembira.", nilai: ["Berbagi"] },
+    { id: 'kb-015', judul: "Eksplorasi merangkak aman", deskripsi: "Rumah disiapkan agar bayi bebas menjelajah.", nilai: ["Kemandirian","Keberanian"] }
   ],
   [ // 9–12 bl
-    { judul: "Menunjuk & menamai bersama", deskripsi: "Mengikuti arah minat bayi lalu menamainya.", nilai: ["Cinta Ilmu"] },
-    { judul: "\"Terima kasih\" untuk si kecil", deskripsi: "Setiap bayi memberi benda, sambut dengan terima kasih.", nilai: ["Hormat pada Sesama","Berbagi"] },
-    { judul: "Tugas mini pertama", deskripsi: "Memegang sendok sendiri, memasukkan mainan ke keranjang.", nilai: ["Kemandirian","Tanggung Jawab"] },
-    { judul: "Mengamati alam", deskripsi: "Daun, hujan, kucing — dinikmati dan disyukuri bersama.", nilai: ["Syukur","Cinta Ilmu"] },
-    { judul: "Permainan giliran sederhana", deskripsi: "Menggelindingkan bola bergantian.", nilai: ["Sabar","Berbagi"] },
-    { judul: "Ritual salam & pamit", deskripsi: "Melambai dan salam setiap ada yang datang/pergi.", nilai: ["Hormat pada Sesama"] }
+    { id: 'kb-016', judul: "Menunjuk & menamai bersama", deskripsi: "Mengikuti arah minat bayi lalu menamainya.", nilai: ["Cinta Ilmu"] },
+    { id: 'kb-017', judul: "\"Terima kasih\" untuk si kecil", deskripsi: "Setiap bayi memberi benda, sambut dengan terima kasih.", nilai: ["Hormat pada Sesama","Berbagi"] },
+    { id: 'kb-018', judul: "Tugas mini pertama", deskripsi: "Memegang sendok sendiri, memasukkan mainan ke keranjang.", nilai: ["Kemandirian","Tanggung Jawab"] },
+    { id: 'kb-019', judul: "Mengamati alam", deskripsi: "Daun, hujan, kucing — dinikmati dan disyukuri bersama.", nilai: ["Syukur","Cinta Ilmu"] },
+    { id: 'kb-020', judul: "Permainan giliran sederhana", deskripsi: "Menggelindingkan bola bergantian.", nilai: ["Sabar","Berbagi"] },
+    { id: 'kb-021', judul: "Ritual salam & pamit", deskripsi: "Melambai dan salam setiap ada yang datang/pergi.", nilai: ["Hormat pada Sesama"] }
   ],
   [ // 12–18 bl
-    { judul: "Meniru pekerjaan rumah ringan", deskripsi: "Mengelap, menyapu mini — sambutan untuk niat membantunya.", nilai: ["Tanggung Jawab","Kemandirian"] },
-    { judul: "Menarasikan perilaku baik", deskripsi: "\"Wah, Adik bantu Bunda!\" tepat saat terjadi.", nilai: ["Empati"] },
-    { judul: "Buku cerita keluarga & hewan", deskripsi: "Membaca berulang dengan menunjuk gambar.", nilai: ["Cinta Ilmu","Kasih Sayang"] },
-    { judul: "Berbagi camilan", deskripsi: "Menawarkan camilan ke anggota keluarga satu per satu.", nilai: ["Berbagi"] },
-    { judul: "Menyapa orang di sekitar", deskripsi: "Melambai pada tetangga dan pengasuh.", nilai: ["Hormat pada Sesama","Keberanian"] },
-    { judul: "Latihan menunggu sebentar", deskripsi: "\"Sabar ya... satu, dua...\" dengan hitungan pendek.", nilai: ["Sabar"] }
+    { id: 'kb-022', judul: "Meniru pekerjaan rumah ringan", deskripsi: "Mengelap, menyapu mini — sambutan untuk niat membantunya.", nilai: ["Tanggung Jawab","Kemandirian"] },
+    { id: 'kb-023', judul: "Menarasikan perilaku baik", deskripsi: "\"Wah, Adik bantu Bunda!\" tepat saat terjadi.", nilai: ["Empati"] },
+    { id: 'kb-024', judul: "Buku cerita keluarga & hewan", deskripsi: "Membaca berulang dengan menunjuk gambar.", nilai: ["Cinta Ilmu","Kasih Sayang"] },
+    { id: 'kb-025', judul: "Berbagi camilan", deskripsi: "Menawarkan camilan ke anggota keluarga satu per satu.", nilai: ["Berbagi"] },
+    { id: 'kb-026', judul: "Menyapa orang di sekitar", deskripsi: "Melambai pada tetangga dan pengasuh.", nilai: ["Hormat pada Sesama","Keberanian"] },
+    { id: 'kb-027', judul: "Latihan menunggu sebentar", deskripsi: "\"Sabar ya... satu, dua...\" dengan hitungan pendek.", nilai: ["Sabar"] }
   ],
   [ // 18–24 bl
-    { judul: "Tiga kata ajaib", deskripsi: "Tolong, terima kasih, maaf — dicontohkan di tiap interaksi.", nilai: ["Hormat pada Sesama","Kejujuran"] },
-    { judul: "Beres-beres mainan bersama", deskripsi: "Merapikan jadi bagian akhir dari bermain.", nilai: ["Tanggung Jawab"] },
-    { judul: "Memilih dari dua pilihan", deskripsi: "\"Baju merah atau biru?\" — latihan memutuskan.", nilai: ["Kemandirian"] },
-    { judul: "Cerita & syukur sebelum tidur", deskripsi: "Satu cerita, satu hal menyenangkan hari ini.", nilai: ["Syukur"] },
-    { judul: "Merawat tanaman/hewan", deskripsi: "Menyiram atau memberi makan dengan didampingi.", nilai: ["Kasih Sayang","Tanggung Jawab"] },
-    { judul: "Main peran menolong boneka", deskripsi: "Boneka \"sedih\" lalu dihibur bersama.", nilai: ["Empati"] }
+    { id: 'kb-028', judul: "Tiga kata ajaib", deskripsi: "Tolong, terima kasih, maaf — dicontohkan di tiap interaksi.", nilai: ["Hormat pada Sesama","Kejujuran"] },
+    { id: 'kb-029', judul: "Beres-beres mainan bersama", deskripsi: "Merapikan jadi bagian akhir dari bermain.", nilai: ["Tanggung Jawab"] },
+    { id: 'kb-030', judul: "Memilih dari dua pilihan", deskripsi: "\"Baju merah atau biru?\" — latihan memutuskan.", nilai: ["Kemandirian"] },
+    { id: 'kb-031', judul: "Cerita & syukur sebelum tidur", deskripsi: "Satu cerita, satu hal menyenangkan hari ini.", nilai: ["Syukur"] },
+    { id: 'kb-032', judul: "Merawat tanaman/hewan", deskripsi: "Menyiram atau memberi makan dengan didampingi.", nilai: ["Kasih Sayang","Tanggung Jawab"] },
+    { id: 'kb-033', judul: "Main peran menolong boneka", deskripsi: "Boneka \"sedih\" lalu dihibur bersama.", nilai: ["Empati"] }
   ],
   [ // 2–3 th
-    { judul: "\"Aku bisa sendiri\"", deskripsi: "Pakai sepatu, cuci tangan, makan sendiri — dengan waktu ekstra.", nilai: ["Kemandirian"] },
-    { judul: "Jujur tanpa takut", deskripsi: "Pengakuan disambut tenang sebelum kesalahan dibahas.", nilai: ["Kejujuran"] },
-    { judul: "Menamai emosi", deskripsi: "\"Kamu kesal ya?\" — kosakata perasaan diri & orang lain.", nilai: ["Empati"] },
-    { judul: "Syukur sebelum makan", deskripsi: "Ucapan syukur singkat jadi kebiasaan meja makan.", nilai: ["Syukur"] },
-    { judul: "Bergiliran di taman bermain", deskripsi: "Menunggu giliran ayunan dengan didampingi.", nilai: ["Sabar","Berbagi"] },
-    { judul: "Tugas rumah mini", deskripsi: "Menaruh piring plastik, memasukkan baju ke keranjang.", nilai: ["Tanggung Jawab"] }
+    { id: 'kb-034', judul: "\"Aku bisa sendiri\"", deskripsi: "Pakai sepatu, cuci tangan, makan sendiri — dengan waktu ekstra.", nilai: ["Kemandirian"] },
+    { id: 'kb-035', judul: "Jujur tanpa takut", deskripsi: "Pengakuan disambut tenang sebelum kesalahan dibahas.", nilai: ["Kejujuran"] },
+    { id: 'kb-036', judul: "Menamai emosi", deskripsi: "\"Kamu kesal ya?\" — kosakata perasaan diri & orang lain.", nilai: ["Empati"] },
+    { id: 'kb-037', judul: "Syukur sebelum makan", deskripsi: "Ucapan syukur singkat jadi kebiasaan meja makan.", nilai: ["Syukur"] },
+    { id: 'kb-038', judul: "Bergiliran di taman bermain", deskripsi: "Menunggu giliran ayunan dengan didampingi.", nilai: ["Sabar","Berbagi"] },
+    { id: 'kb-039', judul: "Tugas rumah mini", deskripsi: "Menaruh piring plastik, memasukkan baju ke keranjang.", nilai: ["Tanggung Jawab"] }
   ],
   [ // 3–4 th
-    { judul: "Satu kisah, satu sifat baik", deskripsi: "Cerita tokoh baik dibacakan berulang sepekan.", nilai: ["Cinta Ilmu","Kejujuran"] },
-    { judul: "Ritual syukur sebelum tidur", deskripsi: "\"Hari ini kamu senang karena apa?\"", nilai: ["Syukur"] },
-    { judul: "Kotak berbagi", deskripsi: "Menyisihkan mainan atau uang jajan untuk diberikan.", nilai: ["Berbagi","Kesederhanaan"] },
-    { judul: "Proyek menanam", deskripsi: "Merawat satu tanaman dari biji — menyiram tiap hari.", nilai: ["Tanggung Jawab","Sabar"] },
-    { judul: "Main peran penolong", deskripsi: "Jadi dokter, pemadam, penolong — merasakan membantu.", nilai: ["Empati","Keberanian"] },
-    { judul: "\"Bagaimana perasaanmu?\"", deskripsi: "Percakapan emosi jadi rutinitas santai.", nilai: ["Empati"] }
+    { id: 'kb-040', judul: "Satu kisah, satu sifat baik", deskripsi: "Cerita tokoh baik dibacakan berulang sepekan.", nilai: ["Cinta Ilmu","Kejujuran"] },
+    { id: 'kb-041', judul: "Ritual syukur sebelum tidur", deskripsi: "\"Hari ini kamu senang karena apa?\"", nilai: ["Syukur"] },
+    { id: 'kb-042', judul: "Kotak berbagi", deskripsi: "Menyisihkan mainan atau uang jajan untuk diberikan.", nilai: ["Berbagi","Kesederhanaan"] },
+    { id: 'kb-043', judul: "Proyek menanam", deskripsi: "Merawat satu tanaman dari biji — menyiram tiap hari.", nilai: ["Tanggung Jawab","Sabar"] },
+    { id: 'kb-044', judul: "Main peran penolong", deskripsi: "Jadi dokter, pemadam, penolong — merasakan membantu.", nilai: ["Empati","Keberanian"] },
+    { id: 'kb-045', judul: "\"Bagaimana perasaanmu?\"", deskripsi: "Percakapan emosi jadi rutinitas santai.", nilai: ["Empati"] }
   ],
   [ // 4–5 th
-    { judul: "Permainan kelompok beraturan", deskripsi: "Ular naga, lompat tali — belajar aturan main bersama.", nilai: ["Sabar","Hormat pada Sesama"] },
-    { judul: "Main peran adab", deskripsi: "Bertamu, meminta maaf, berterima kasih lewat drama kecil.", nilai: ["Hormat pada Sesama","Kejujuran"] },
-    { judul: "Lagu & sajak nilai", deskripsi: "Menghafal lewat irama dan gerakan.", nilai: ["Cinta Ilmu"] },
-    { judul: "Misi kebaikan mingguan", deskripsi: "Satu misi kecil: membantu adik, menyapa satpam.", nilai: ["Berbagi","Empati"] },
-    { judul: "Menuntaskan tugas", deskripsi: "Puzzle atau prakarya diselesaikan sampai akhir.", nilai: ["Tanggung Jawab","Kemandirian"] },
-    { judul: "Mencoba hal baru", deskripsi: "Naik panjatan lebih tinggi, kenalan dengan teman baru.", nilai: ["Keberanian"] }
+    { id: 'kb-046', judul: "Permainan kelompok beraturan", deskripsi: "Ular naga, lompat tali — belajar aturan main bersama.", nilai: ["Sabar","Hormat pada Sesama"] },
+    { id: 'kb-047', judul: "Main peran adab", deskripsi: "Bertamu, meminta maaf, berterima kasih lewat drama kecil.", nilai: ["Hormat pada Sesama","Kejujuran"] },
+    { id: 'kb-048', judul: "Lagu & sajak nilai", deskripsi: "Menghafal lewat irama dan gerakan.", nilai: ["Cinta Ilmu"] },
+    { id: 'kb-049', judul: "Misi kebaikan mingguan", deskripsi: "Satu misi kecil: membantu adik, menyapa satpam.", nilai: ["Berbagi","Empati"] },
+    { id: 'kb-050', judul: "Menuntaskan tugas", deskripsi: "Puzzle atau prakarya diselesaikan sampai akhir.", nilai: ["Tanggung Jawab","Kemandirian"] },
+    { id: 'kb-051', judul: "Mencoba hal baru", deskripsi: "Naik panjatan lebih tinggi, kenalan dengan teman baru.", nilai: ["Keberanian"] }
   ],
   [ // 5–6 th
-    { judul: "Tanggung jawab miliknya", deskripsi: "Satu tugas rumah yang benar-benar jadi miliknya.", nilai: ["Tanggung Jawab"] },
-    { judul: "Menabung: butuh vs ingin", deskripsi: "Celengan pertama dan percakapan sederhana soal uang.", nilai: ["Kesederhanaan"] },
-    { judul: "Proyek berbagi ke sesama", deskripsi: "Menyiapkan paket kecil untuk yang membutuhkan.", nilai: ["Berbagi","Empati"] },
-    { judul: "Refleksi jujur harian", deskripsi: "Cerita jujur tentang harinya — termasuk yang tidak enak.", nilai: ["Kejujuran"] },
-    { judul: "Persiapan sekolah mandiri", deskripsi: "Menyiapkan tas dan seragam sendiri malam sebelumnya.", nilai: ["Kemandirian"] },
-    { judul: "Presentasi kecil keluarga", deskripsi: "Bercerita di depan keluarga tentang hal yang disukainya.", nilai: ["Keberanian","Cinta Ilmu"] }
+    { id: 'kb-052', judul: "Tanggung jawab miliknya", deskripsi: "Satu tugas rumah yang benar-benar jadi miliknya.", nilai: ["Tanggung Jawab"] },
+    { id: 'kb-053', judul: "Menabung: butuh vs ingin", deskripsi: "Celengan pertama dan percakapan sederhana soal uang.", nilai: ["Kesederhanaan"] },
+    { id: 'kb-054', judul: "Proyek berbagi ke sesama", deskripsi: "Menyiapkan paket kecil untuk yang membutuhkan.", nilai: ["Berbagi","Empati"] },
+    { id: 'kb-055', judul: "Refleksi jujur harian", deskripsi: "Cerita jujur tentang harinya — termasuk yang tidak enak.", nilai: ["Kejujuran"] },
+    { id: 'kb-056', judul: "Persiapan sekolah mandiri", deskripsi: "Menyiapkan tas dan seragam sendiri malam sebelumnya.", nilai: ["Kemandirian"] },
+    { id: 'kb-057', judul: "Presentasi kecil keluarga", deskripsi: "Bercerita di depan keluarga tentang hal yang disukainya.", nilai: ["Keberanian","Cinta Ilmu"] }
   ]
 ];
 

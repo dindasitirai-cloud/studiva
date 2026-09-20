@@ -20,6 +20,7 @@ import PilihanHariIni from './PilihanHariIni';
 import SusunanHari from './SusunanHari';
 import CatatanHari from './CatatanHari';
 import WawasanTumbuh from './WawasanTumbuh';
+import FokusMingguIni from './FokusMingguIni';
 import BotanicalStem from '../../components/BotanicalStem';
 import {
   DRAF_BANNER,
@@ -75,50 +76,42 @@ function HeroBanner({ sapaan, usiaBulan }: { sapaan: SapaanSet; usiaBulan: numbe
     : null;
 
   return (
-    <div className="relative overflow-hidden rounded-[30px] bg-[#FCE3EE] px-[44px] py-[38px]">
+    <div className="relative overflow-hidden rounded-[24px] bg-[#FCE3EE] px-[28px] py-[22px]">
       {/* Tanggal + info anak */}
-      <p className="mb-1 font-nunito text-[11px] font-[800] uppercase tracking-widest text-rekah/60">
+      <p className="mb-1 font-nunito text-[10px] font-[800] uppercase tracking-widest text-rekah/60">
         {formatTanggalHero()}
         {infoAnak && <span className="text-pekat/40"> · {infoAnak}</span>}
       </p>
 
       {/* Judul */}
-      <h1 className="font-fredoka text-[42px] font-semibold leading-none text-pekat sm:text-[52px]">
+      <h1 className="font-fredoka text-[34px] font-semibold leading-none text-pekat sm:text-[40px]">
         Irama Hari
       </h1>
-      <p className="mt-1 font-shantell text-[18px] italic text-rekah">
-        Mekar pada waktunya.
+      {/* TODO: review Fitri */}
+      <p className="mt-1 font-nunito text-[13px] leading-snug text-rekah/70">
+        Irama Hari menjadi tempat kamu mengatur kegiatanmu dari Bekal - Ajak Main dan Wawasan Tumbuh, serta checklist Kebiasaan Baik dari nilai yang ingin kamu tanamkan kepada anak
       </p>
-
-      {/* Navigasi hari */}
-      <div className="mt-5">
-        <div className="inline-flex items-center gap-3 rounded-full border border-mawar/40 bg-white px-4 py-2 font-nunito text-[13px] font-semibold text-pekat shadow-sm">
-          <button type="button" aria-label="Hari sebelumnya" className="text-pekat/40 hover:text-rekah">‹</button>
-          <span>Hari ini</span>
-          <button type="button" aria-label="Hari berikutnya" className="text-pekat/40 hover:text-rekah">›</button>
-        </div>
-      </div>
 
       {/* Botanical decorations — positions tuned for 1280px viewport */}
       <div aria-hidden className="pointer-events-none select-none">
         {/* deco1: tulip — top-right */}
         <div
           className="absolute animate-sway"
-          style={{ top: '-10px', right: '40px', width: '86px', height: '136px' }}
+          style={{ top: '-6px', right: '28px', width: '56px', height: '88px' }}
         >
           <BotanicalStem cfg={DECO1} />
         </div>
         {/* deco3: sprig cornflower — middle-right */}
         <div
           className="absolute animate-sway"
-          style={{ top: '38px', right: '144px', width: '54px', height: '88px' }}
+          style={{ top: '22px', right: '96px', width: '36px', height: '58px' }}
         >
           <BotanicalStem cfg={DECO3} />
         </div>
         {/* deco2: daisy cornflower — bottom-right */}
         <div
           className="absolute animate-sway2"
-          style={{ bottom: '-18px', right: '130px', width: '68px', height: '112px' }}
+          style={{ bottom: '-10px', right: '86px', width: '44px', height: '72px' }}
         >
           <BotanicalStem cfg={DECO2} />
         </div>
@@ -128,6 +121,59 @@ function HeroBanner({ sapaan, usiaBulan }: { sapaan: SapaanSet; usiaBulan: numbe
 }
 
 // ─── Komponen utama ───────────────────────────────────────────────────────────
+
+// ─── Strip langkah "Kelola" ───────────────────────────────────────────────────
+// Membuat peran Irama Hari dalam Family Journey Map terbaca jelas:
+// Fokus → Ambil Bekal → KELOLA → Jalani. Additive, murni penanda alur.
+function StripKelola({ onBekal }: { onBekal: () => void }) {
+  const langkah = [
+    { n: 1, judul: 'Fokus', ket: 'Fokus dari Kompas', warna: '#F06BA8', aksi: undefined as undefined | (() => void), kunci: false },
+    { n: 2, judul: 'Ambil Bekal', ket: 'Tarik ide kegiatan', warna: '#8FB8F7', aksi: onBekal, kunci: false },
+    { n: 3, judul: 'Kelola', ket: 'Susun ke hari & minggu', warna: '#D04595', aksi: undefined, kunci: true },
+    { n: 4, judul: 'Jalani', ket: 'Temani & bantu', warna: '#4E9C6E', aksi: undefined, kunci: false },
+  ];
+  return (
+    <section className="px-6 sm:px-10 mt-5" aria-label="Alur mengelola hari">
+      <div className="rounded-[20px] border border-rekah/10 bg-white/70 px-4 py-4 sm:px-5">
+        <p className="mb-3 font-shantell text-[15px] text-rekah">di sinilah kamu mengelola hari</p>
+        <ol className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+          {langkah.map(l => {
+            const inner = (
+              <>
+                <span
+                  className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] font-fredoka text-[14px] font-semibold text-white"
+                  style={{ background: l.warna, boxShadow: l.kunci ? '0 0 0 4px rgba(208,69,149,.16)' : undefined }}
+                >
+                  {l.n}
+                </span>
+                <span className="min-w-0 text-left">
+                  <span className="block font-nunito text-[14px] font-extrabold leading-tight" style={{ color: l.kunci ? '#D04595' : '#6E3B57' }}>
+                    {l.judul}
+                  </span>
+                  <span className="block font-nunito text-[11.5px] leading-tight text-pekat/55">{l.ket}</span>
+                  {l.kunci && <span className="mt-0.5 block font-shantell text-[11px] text-rekah-tua">langkah kunci</span>}
+                </span>
+              </>
+            );
+            const base = 'flex items-center gap-2.5 rounded-[14px] border p-2.5';
+            const border = l.kunci ? 'border-rekah/30 bg-fajar/50' : 'border-rekah/10 bg-white';
+            return (
+              <li key={l.n}>
+                {l.aksi ? (
+                  <button type="button" onClick={l.aksi} className={base + ' w-full ' + border + ' text-left transition hover:border-rekah/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah motion-reduce:transition-none'}>
+                    {inner}
+                  </button>
+                ) : (
+                  <div className={base + ' h-full ' + border}>{inner}</div>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </section>
+  );
+}
 
 export default function IramaHari({ nilaiFokus = [], onPilihanChange, centangKebiasaan, tanggalHariIni, onCentangToggle, onBekal }: PropsIramaHari) {
   const { profile, sapaan, usiaBulan } = useChildProfile();
@@ -258,6 +304,8 @@ export default function IramaHari({ nilaiFokus = [], onPilihanChange, centangKeb
 
       <HeroBanner sapaan={sapaan} usiaBulan={usiaBulanOk} />
 
+      <StripKelola onBekal={onBekal} />
+
       <PilihanHarianProvider
         key={idAnak}
         idAnak={idAnak}
@@ -361,7 +409,7 @@ function KartuPilih({ item }: { item: ItemBekal }) {
 
 // ─── PopupPilihKegiatan ───────────────────────────────────────────────────────
 
-function PopupPilihKegiatan({ usiaBulan, onTutup }: { usiaBulan: number; onTutup: () => void }) {
+export function PopupPilihKegiatan({ usiaBulan, onTutup }: { usiaBulan: number; onTutup: () => void }) {
   const { kolamAnak } = usePilihanHarian();
   const elRef = useRef<HTMLDivElement>(null);
   const isYearOne = usiaBulan < 12;
@@ -485,22 +533,13 @@ function IramaHariIsi({ sapaan, wizardBelumDiisi, namaAnak, usiaBulan, idAnak, o
 
   return (
     <div className="bg-kanvas">
-      {/* Kebiasaan Baik — lebar penuh */}
+      {/* Poin 1 — Fokus minggu ini: ide Ajak Main tersaring sesuai Current Focus */}
       <div className="px-6 pt-6 sm:px-10">
-        <KartuKebiasaanBaik
-          nilaiFokus={nilaiFokus}
-          usiaBulan={usiaBulan}
-          katalogSikap={katalogSikap}
-          centangKebiasaan={centangKebiasaan}
-          tanggalHariIni={tanggalHariIni}
-          sapaan={sapaan}
-          onCentangToggle={onCentangToggle}
-          onBekal={onBekal}
-        />
+        <FokusMingguIni idAnak={idAnak} nilaiKeluarga={nilaiFokus} namaAnak={namaAnak ?? ''} usiaBulan={usiaBulan} />
       </div>
 
       {/* 2 kolom: Kegiatan + Jalur OT (kiri) | Susunan + Catatan (kanan) */}
-      <div className="grid gap-6 px-6 pt-6 pb-12 sm:px-10 lg:grid-cols-[1fr_1fr] lg:items-start">
+      <div className="grid gap-6 px-6 pt-6 sm:px-10 lg:grid-cols-[1fr_1fr] lg:items-start">
         {/* Kolom kiri */}
         <div className="flex flex-col gap-6">
           <PilihanHariIni
@@ -515,6 +554,20 @@ function IramaHariIsi({ sapaan, wizardBelumDiisi, namaAnak, usiaBulan, idAnak, o
           <SusunanHari />
           <CatatanHari namaAnak={namaAnak} />
         </div>
+      </div>
+
+      {/* Kebiasaan Baik — lebar penuh, paling bawah */}
+      <div className="px-6 pt-6 pb-12 sm:px-10">
+        <KartuKebiasaanBaik
+          nilaiFokus={nilaiFokus}
+          usiaBulan={usiaBulan}
+          katalogSikap={katalogSikap}
+          centangKebiasaan={centangKebiasaan}
+          tanggalHariIni={tanggalHariIni}
+          sapaan={sapaan}
+          onCentangToggle={onCentangToggle}
+          onBekal={onBekal}
+        />
       </div>
 
       {showTambahPopup && (

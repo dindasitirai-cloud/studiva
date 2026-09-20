@@ -1,8 +1,10 @@
 // REVIEW: menunggu approval Psikolog Fitri Effendy sebelum rilis
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { usePilihanHarian } from './PilihanHarianContext';
 import { PILIHAN_HARI_INI } from './content';
+import DetailKegiatan from './DetailKegiatan';
+import type { ItemBekal } from '../beranda-usia/bekal';
 
 // Domain colors from Langit Peony handoff
 interface DomainStyle { bg: string; ink: string; label: string; }
@@ -29,6 +31,7 @@ interface PropsPilihanHariIni {
 
 export default function PilihanHariIni({ onLihatSemua, onTambah }: PropsPilihanHariIni) {
   const { pilihanEfektif, kolamAnakJumlah } = usePilihanHarian();
+  const [detailItem, setDetailItem] = useState<ItemBekal | null>(null);
 
   return (
     <section aria-labelledby="pilihan-hari-ini-judul">
@@ -68,7 +71,12 @@ export default function PilihanHariIni({ onLihatSemua, onTambah }: PropsPilihanH
           return (
             <div
               key={item.id}
-              className="relative min-h-[130px] rounded-[22px] border p-4"
+              role="button"
+              tabIndex={0}
+              onClick={() => setDetailItem(item)}
+              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setDetailItem(item); } }}
+              aria-label={`Lihat detail: ${item.judul}`}
+              className="relative min-h-[130px] cursor-pointer rounded-[22px] border p-4 transition hover:brightness-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah motion-reduce:transition-none"
               style={{
                 background: ds.bg,
                 borderColor: ds.bg,
@@ -118,6 +126,8 @@ export default function PilihanHariIni({ onLihatSemua, onTambah }: PropsPilihanH
           <span className="text-[13px] font-semibold">Tambah</span>
         </button>
       </div>
+
+      <DetailKegiatan item={detailItem} onClose={() => setDetailItem(null)} />
     </section>
   );
 }

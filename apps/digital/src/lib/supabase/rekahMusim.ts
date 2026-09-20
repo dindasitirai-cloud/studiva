@@ -33,7 +33,7 @@ export async function getMusimBerjalan(idAnak: string): Promise<MusimRow | null>
     .select('*')
     .eq('id_anak', idAnak)
     .is('selesai', null)
-    .single();
+    .maybeSingle();
 
   if (error && error.code !== TIDAK_ADA_BARIS) throw error;
   return data ?? null;
@@ -300,7 +300,7 @@ export async function getRencanaPekan(
     .eq('id_anak', idAnak)
     .eq('musim_ke', musimKe)
     .eq('minggu_ke', mingguKe)
-    .single();
+    .maybeSingle();
 
   if (error && error.code !== TIDAK_ADA_BARIS) throw error;
   return data?.id_modul ?? null;

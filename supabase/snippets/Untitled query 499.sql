@@ -1,0 +1,1 @@
+select to_regclass('public.forum_thread'), to_regclass('public.forum_balasan'), to_regclass('public.forum_laporan');

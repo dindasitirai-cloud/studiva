@@ -15,7 +15,7 @@ import { TEMANI_JOURNEYS, journeysUntuk } from './temaniSeed';
 import { kebiasaanById } from './temaniSeed';
 import type { TemaniJourney, TemaniHari } from './temaniSeed';
 import JurnalTemani from './JurnalTemani';
-import { Ornament, Bloom } from './ornamen';
+import { Ornament } from './ornamen';
 
 type Layar = 'beranda' | 'hari' | 'reflect' | 'selesai' | 'jurnal';
 type HasilRefleksi = 'menyenangkan' | 'terlalu_sulit' | 'kurang_cocok';
@@ -157,7 +157,7 @@ export default function TemaniPage() {
   const [akarState] = useAkarStateSync(idAnak);
   const { profile, sapaan, usiaBulan } = useChildProfile();
   const nama = profile.namaAnak || sapaan.cap || 'si kecil';
-  const nilaiKeluarga = (akarState.nilai as NilaiAkar[]) ?? [];
+  const nilaiKeluarga = useMemo(() => (akarState.nilai as NilaiAkar[]) ?? [], [akarState.nilai]);
   const tanggalHariIni = useMemo(() => tanggalDariTimestampWIB(new Date().toISOString()), []);
 
   const [progres, setProgres] = useState<Progres | null>(() => bacaProgres(idAnak));

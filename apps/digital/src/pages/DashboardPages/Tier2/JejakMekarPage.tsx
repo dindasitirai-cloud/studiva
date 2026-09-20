@@ -20,6 +20,7 @@ import { usePanenNilai } from '../../../hooks/usePanenNilai';
 
 // ── BungaMusim ─────────────────────────────────────────────────────────────
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function BungaMusim({ nilaiId, selesaiCount }: { nilaiId: NilaiId; selesaiCount: number }) {
   const nilai = NILAI_REKAH.find(n => n.id === nilaiId);
   const MAX_KELOPAK = 5;
@@ -256,8 +257,6 @@ export default function JejakMekarPage() {
   const nilai2 = NILAI_REKAH.find(n => n.id === nilai2Id);
 
   // Hitung kelopak terisi per nilai dari completions refleksi
-  const selesai1 = entries.filter(e => e.nilaiUtama === nilai1Id).length;
-  const selesai2 = entries.filter(e => e.nilaiUtama === nilai2Id).length;
 
   function handleRingankan() {
     // TIDAK ADA EFEK YANG TERSIMPAN — dan itu memang keadaannya sejak dulu.

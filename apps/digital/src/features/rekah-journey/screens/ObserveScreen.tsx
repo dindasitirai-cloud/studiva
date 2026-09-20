@@ -5,7 +5,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useJourney } from '../useJourney';
 import { useAnakAktif } from '../../../context/AnakContext';
-import { JourneyShell, Card, Btn, EmptyState } from '../ui/brand';
+import { JourneyShell, Btn, EmptyState } from '../ui/brand';
 import { promptsForAge } from '../observation/observationPrompts';
 import { observationFromPrompt } from '../adapter/journeyInputAdapter';
 

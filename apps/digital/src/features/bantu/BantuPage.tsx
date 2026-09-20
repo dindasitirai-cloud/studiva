@@ -104,6 +104,7 @@ export default function BantuPage() {
   const [balasDraft, setBalasDraft] = useState('');
   const [forumMsg, setForumMsg] = useState<string | null>(null);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const tersimpan = useMemo(() => bacaTersimpan(idAnak), [idAnak, savedTick]);
   const namaAkun = ((supabaseUser?.user_metadata?.name as string | undefined) || (user as any)?.name || 'Orang tua').toString();
   const authorForum = pakaiNama ? (namaManual.trim() || namaAkun) : 'Anonim';

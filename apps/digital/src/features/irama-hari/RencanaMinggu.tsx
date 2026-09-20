@@ -7,7 +7,7 @@
 // Persistensi localStorage. Copy DRAFT — review Fitri.
 // =============================================================
 import React, { useMemo, useState } from 'react';
-import { Check, Plus, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Check, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { NilaiAkar } from '../akar-keluarga/content';
 import type { CentangKebiasaan } from '@studiva/shared';
 import { useAnak } from '../../context/AnakContext';

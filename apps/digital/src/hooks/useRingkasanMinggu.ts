@@ -83,6 +83,7 @@ export function useRingkasanMinggu(idAnak: string): RingkasanMinggu {
         /* tabel belum ada / offline → pakai cache lokal */
       });
     return () => { batal = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idAnak, supabaseUser, tglAwal, tglAkhir]);
 
   const total = hitung.menyenangkan + hitung.terlalu_sulit + hitung.kurang_cocok + hitung.ingin_ulang;

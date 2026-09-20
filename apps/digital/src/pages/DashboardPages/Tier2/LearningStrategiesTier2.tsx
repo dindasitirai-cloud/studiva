@@ -64,6 +64,7 @@ function SciBox({ sci, sumber }: { sci: string; sumber: string }) {
 
 // ── DomainBadge ──────────────────────────────────────────────────────────────
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function DomainBadge({ domain }: { domain: DomainKey }) {
   const meta = DOMAIN_META[domain];
   return (

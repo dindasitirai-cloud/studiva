@@ -162,7 +162,10 @@ export default function JurnalTemani({ idAnak, nama, onKembali }: Props) {
   const isoCur = pages[cur]?.iso;
   const jurnalCur: JurnalHari = (isoCur && jurnalMap[isoCur]) || { cerita: '', foto: [] };
 
-  useEffect(() => { setDraft(jurnalCur.cerita); /* eslint-disable-next-line */ }, [isoCur]);
+  useEffect(() => {
+    setDraft(jurnalCur.cerita);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isoCur]);
 
   useEffect(() => {
     let batal = false;
@@ -307,7 +310,7 @@ export default function JurnalTemani({ idAnak, nama, onKembali }: Props) {
             {/* Page mark — tab bulan */}
             <div className="jt-tabs" role="tablist" aria-label="Pilih bulan">
               {bulanList.map(b => (
-                <button key={b.key} className={`jt-mtab ${b.key === bulanAktif ? 'on' : 'off'}`} aria-selected={b.key === bulanAktif} onClick={() => setCur(b.idx)}>{b.label}</button>
+                <button key={b.key} className={`jt-mtab ${b.key === bulanAktif ? 'on' : 'off'}`} role="tab" aria-selected={b.key === bulanAktif} onClick={() => setCur(b.idx)}>{b.label}</button>
               ))}
             </div>
           </div>

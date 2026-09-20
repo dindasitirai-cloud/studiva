@@ -9,7 +9,7 @@
 // =============================================================
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Check, Compass, ArrowRight, BookOpen } from 'lucide-react';
+import { Plus, Check, Compass, BookOpen } from 'lucide-react';
 import { usePilihanHarian } from './PilihanHarianContext';
 import DetailKegiatan from './DetailKegiatan';
 import { useObservasiKompas } from '../../hooks/useObservasiKompas';

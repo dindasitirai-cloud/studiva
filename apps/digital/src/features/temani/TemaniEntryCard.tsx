@@ -5,7 +5,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useAnakAktif } from '../../context/AnakContext';
-import { TEMANI_JOURNEYS } from './temaniSeed';
+import { useTemaniKatalog } from './temaniKatalog';
 
 interface ProgresRingkas { slug: string; hari: number; status: string; }
 function bacaProgres(idAnak: string): ProgresRingkas | null {
@@ -18,7 +18,8 @@ function bacaProgres(idAnak: string): ProgresRingkas | null {
 export default function TemaniEntryCard({ className = '' }: { className?: string }) {
   const { anak } = useAnakAktif();
   const p = bacaProgres(anak.id);
-  const j = p ? TEMANI_JOURNEYS.find(x => x.slug === p.slug) : null;
+  const katalog = useTemaniKatalog();
+  const j = p ? katalog.find(x => x.slug === p.slug) : null;
   const aktif = !!(p && j && p.status === 'aktif');
   const total = j?.durasiHari ?? 0;
   const hari = p?.hari ?? 0;

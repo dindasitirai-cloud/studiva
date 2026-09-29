@@ -11,7 +11,7 @@ import { tanggalDariTimestampWIB } from '@studiva/shared';
 import { tambahKustomKeTanggal, getPilihanHarianRentang, setSelesaiKustom } from '../../lib/supabase/rekah';
 import { dispatchRekahError } from '../../utils/rekahApiError';
 import { Btn } from '../rekah-journey/ui/brand';
-import { TEMANI_JOURNEYS, journeysUntuk } from './temaniSeed';
+import { useTemaniKatalog, journeysUntuk } from './temaniKatalog'; // katalog admin (024) → fallback seed
 import { kebiasaanById } from './temaniSeed';
 import type { TemaniJourney, TemaniHari } from './temaniSeed';
 import JurnalTemani from './JurnalTemani';
@@ -175,12 +175,13 @@ export default function TemaniPage() {
   const [alasanOpen, setAlasanOpen] = useState(false);
   const [selesaiIds, setSelesaiIds] = useState<Set<string>>(() => new Set());
 
-  const cocok = useMemo(() => journeysUntuk(usiaBulan, nilaiKeluarga), [usiaBulan, nilaiKeluarga]);
+  const TEMANI_JOURNEYS = useTemaniKatalog();
+  const cocok = useMemo(() => journeysUntuk(TEMANI_JOURNEYS, usiaBulan, nilaiKeluarga), [TEMANI_JOURNEYS, usiaBulan, nilaiKeluarga]);
   const pratinjau = cocok.length === 0; // sementara: tampilkan semua agar bisa menata UI
   const saran = pratinjau ? TEMANI_JOURNEYS : cocok;
 
   const journeyAktif: TemaniJourney | null = useMemo(
-    () => (progres ? TEMANI_JOURNEYS.find(j => j.slug === progres.slug) ?? null : null), [progres],
+    () => (progres ? TEMANI_JOURNEYS.find(j => j.slug === progres.slug) ?? null : null), [progres, TEMANI_JOURNEYS],
   );
   const hariIni: TemaniHari | null = useMemo(() => {
     if (!journeyAktif || !progres) return null;

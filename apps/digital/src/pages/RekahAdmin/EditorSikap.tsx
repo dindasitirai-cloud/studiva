@@ -6,6 +6,7 @@ import {
 } from '../../features/akar-keluarga/content';
 import { buatDraf, buatDanAjukan } from '../../lib/supabase/pipeline';
 import { pindaiKata } from '../../lib/pemindaiKata';
+import { HeroAdmin } from './tema/temaAdmin';
 
 // Band index → fase (1-5)
 const BAND_TO_FASE = [1, 1, 1, 1, 2, 2, 3, 4, 5, 5] as const;
@@ -160,21 +161,21 @@ export default function EditorSikap() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
+    <div className="mx-auto max-w-5xl px-6 py-8">
       <button
         type="button"
-        onClick={() => navigate('/rekah-admin')}
+        onClick={() => navigate('/rekah-admin/sikap')}
         className="mb-5 flex items-center gap-1.5 text-[13px] font-semibold text-pekat/50 transition hover:text-rekah"
       >
-        <ArrowLeft className="h-4 w-4" /> Beranda Admin
+        <ArrowLeft className="h-4 w-4" /> Kebiasaan Baik
       </button>
 
-      <h1 className="mb-1 font-bricolage text-[22px] font-extrabold text-pekat">
-        Kebiasaan Baik
-      </h1>
-      <p className="mb-5 text-[13px] text-pekat/50">
-        12 nilai Akar Keluarga × 5 fase. Semua konten melewati tinjauan Fitri sebelum tayang.
-      </p>
+      <HeroAdmin
+        tema="sikap"
+        eyebrow="Kebiasaan Baik · Bekal"
+        judul="Sikap per Fase"
+        deskripsi="Daftar sikap per nilai × 5 fase yang tampil di kartu nilai Bekal. Kebiasaan rutin & situasional untuk Irama Hari diatur di halaman Kebiasaan Baik. Semua konten melewati tinjauan Psikolog Fitri sebelum tayang."
+      />
 
       {/* Tabs */}
       <div className="mb-6 flex gap-2 border-b border-rekah/10 pb-0">
@@ -185,7 +186,7 @@ export default function EditorSikap() {
             onClick={() => setTab(t)}
             className={`rounded-t-xl px-5 py-2.5 text-[13px] font-semibold transition ${
               tab === t
-                ? 'border-b-2 border-rekah bg-rekah/5 text-rekah'
+                ? 'border-b-2 border-[color:var(--ra-teks)] bg-[color:var(--ra-tint)] text-[color:var(--ra-teks)]'
                 : 'text-pekat/50 hover:text-pekat'
             }`}
           >

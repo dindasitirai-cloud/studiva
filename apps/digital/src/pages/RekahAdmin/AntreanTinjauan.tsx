@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, Clock } from 'lucide-react';
+import { Eye } from 'lucide-react';
 import { muatAntrean, KontenDraf, LABEL_JENIS } from '../../lib/supabase/pipeline';
+import { HeroAdmin, KosongBerilustrasi } from './tema/temaAdmin';
 
 function baris(d: KontenDraf, onClick: () => void) {
   return (
@@ -48,27 +49,20 @@ export default function AntreanTinjauan() {
   }, []);
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-8">
-      <div className="mb-6 flex items-center gap-3">
-        <Clock className="h-6 w-6 text-madu" />
-        <div>
-          <h1 className="font-bricolage text-[22px] font-extrabold text-pekat">Antrean Tinjauan</h1>
-          <p className="text-[13px] text-pekat/50">
-            Konten yang sudah diajukan admin dan menunggu persetujuan Fitri.
-          </p>
-        </div>
-      </div>
+    <div className="mx-auto max-w-6xl px-6 py-8">
+      <HeroAdmin
+        tema="antrean"
+        eyebrow="Tinjauan klinis"
+        judul="Antrean Tinjauan"
+        deskripsi="Konten yang sudah diajukan admin dan menunggu persetujuan Psikolog Fitri. Penulis tidak bisa menyetujui kontennya sendiri."
+      />
 
       {memuat ? (
         <p className="text-[14px] text-pekat/40">Memuat antrean...</p>
       ) : antrean.length === 0 ? (
-        <div className="rounded-2xl border border-rekah/10 bg-white px-8 py-12 text-center">
-          <Clock className="mx-auto mb-3 h-8 w-8 text-pekat/20" />
-          <p className="font-semibold text-pekat/40">Antrean kosong</p>
-          <p className="mt-1 text-[13px] text-pekat/30">
-            Belum ada konten yang menunggu tinjauan saat ini.
-          </p>
-        </div>
+        <KosongBerilustrasi tema="antrean" judul="Antrean kosong">
+          <p className="text-[13px] text-pekat/55">Belum ada konten yang menunggu tinjauan saat ini.</p>
+        </KosongBerilustrasi>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-rekah/10 bg-white">
           <table className="w-full">

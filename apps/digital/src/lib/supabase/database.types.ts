@@ -337,7 +337,7 @@ export interface Database {
       konten_draf: {
         Row: {
           id: string;
-          jenis: 'kegiatan_ajak_main' | 'panduan_tumbuh' | 'sikap';
+          jenis: 'kegiatan_ajak_main' | 'panduan_tumbuh' | 'sikap' | 'temani_journey' | 'bantu_situasi' | 'kebiasaan_baik';
           id_konten_sumber: string | null;
           judul: string;
           isi: Json;
@@ -351,7 +351,7 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          jenis: 'kegiatan_ajak_main' | 'panduan_tumbuh' | 'sikap';
+          jenis: 'kegiatan_ajak_main' | 'panduan_tumbuh' | 'sikap' | 'temani_journey' | 'bantu_situasi' | 'kebiasaan_baik';
           id_konten_sumber?: string | null;
           judul: string;
           isi?: Json;

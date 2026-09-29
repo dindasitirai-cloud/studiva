@@ -11,6 +11,8 @@ import type { NilaiAkar } from '../akar-keluarga/content';
 import { REGISTRY_BUNGA } from '../akar-keluarga/registryBunga';
 import { derivedRiwayatSiram, tingkatMekar } from '@studiva/shared';
 import type { IkonKey } from './susunanDefault';
+import { kegTemplate, useIramaKatalog } from './iramaKatalog';
+import type { KatalogIrama } from './iramaKatalog';
 
 export type Tipe = 'kebiasaan' | 'main' | 'buku' | 'lainnya';
 export type Waktu = 'pagi' | 'siang' | 'malam';
@@ -23,10 +25,17 @@ export const labelWarna = (tp: Tipe) => tp === 'kebiasaan' ? '#5F84E6' : tp === 
 export const statusMekar = (l: number) => l >= 3 ? 'Mekar' : l >= 1 ? 'Tumbuh' : 'Kuncup';
 export const idNilai = (n: string) => REGISTRY_BUNGA.find(b => b.nama === n)?.id ?? n.toLowerCase().replace(/\s+/g, '-');
 
-export interface Item { id: string; tipe: Tipe; t: string; n?: NilaiAkar }
+export interface Item {
+  id: string; tipe: Tipe; t: string; n?: NilaiAkar;
+  /** Butir katalog Kebiasaan Baik (Phase 19): semua nilai + rentang usia (bulan, inklusif). */
+  nilaiList?: NilaiAkar[]; usiaMin?: number; usiaMax?: number;
+}
 export interface KegDef { key: string; wk: string; ik: IkonKey; nm: string; items: Item[] }
 export interface KolomDef { key: Waktu; label: string; dot: string; soft: string; keg: KegDef[] }
 
+// Label & warna kolom dipakai papan. Daftar `keg` di sini kini hanya cadangan historis:
+// kegiatan template + kebiasaan rutinnya diambil dari katalog Irama (iramaKatalog.ts),
+// yang bisa diatur admin di /rekah-admin/sikap.
 export const DEFAULT_KOLOM: KolomDef[] = [
   { key: 'pagi', label: 'Pagi', dot: '#F06BA8', soft: '#FDEAF3', keg: [
     { key: 'bangun', wk: '06:30', ik: 'bangun', nm: 'Bangun tidur', items: [{ id: 'kbd-bangun-1', tipe: 'kebiasaan', t: 'Sapa hangat & kontak mata', n: 'Kasih Sayang' }] },
@@ -45,6 +54,7 @@ export const DEFAULT_KOLOM: KolomDef[] = [
   ] },
 ];
 
+// Cadangan historis — situasional kini dari katalog Kebiasaan Baik (situasionalUntuk).
 export const SITUASIONAL: { id: string; t: string; n: NilaiAkar; kapan: string }[] = [
   { id: 'sit-1', t: 'Tetap tenang saat anak rewel', n: 'Sabar', kapan: 'saat rewel' },
   { id: 'sit-2', t: 'Berbagi mainan saat ada teman', n: 'Berbagi', kapan: 'saat main dgn teman' },
@@ -76,9 +86,8 @@ function loadStore(kunci: string): Store {
 /** Kegiatan pada satu slot (default belum disembunyikan + buatan), terurut. */
 export interface KegRingkas { key: string; nm: string; wk?: string; items: Item[]; isDefault: boolean }
 
-function susunKeg(store: Store, slot: Waktu): KegRingkas[] {
-  const kolom = DEFAULT_KOLOM.find(c => c.key === slot);
-  const defaults: KegRingkas[] = (kolom?.keg ?? []).filter(k => !store.hiddenKeg.includes(k.key))
+function susunKeg(store: Store, slot: Waktu, katalog?: KatalogIrama): KegRingkas[] {
+  const defaults: KegRingkas[] = kegTemplate(slot, katalog).filter(k => !store.hiddenKeg.includes(k.key))
     .map(k => ({ key: k.key, nm: k.nm, wk: k.wk, items: k.items, isDefault: true }));
   const added: KegRingkas[] = (store.addedKeg[slot] ?? []).map(k => ({ key: k.id, nm: k.nm, wk: k.wk || 'buatan kamu', items: [], isDefault: false }));
   const all = [...defaults, ...added];
@@ -108,6 +117,7 @@ export function useDayPlan(idAnak: string, tanggal: string): DayPlan {
   const kunci = dayKey(idAnak, tanggal);
   const awal = useMemo(() => loadStore(kunci), [kunci]);
   const [store, setStore] = useState<Store>(awal);
+  const katalog = useIramaKatalog(); // render ulang saat katalog admin selesai dimuat
   const [kAktif, setKAktif] = useState(kunci);
   if (kAktif !== kunci) { setKAktif(kunci); setStore(loadStore(kunci)); }
 
@@ -125,14 +135,14 @@ export function useDayPlan(idAnak: string, tanggal: string): DayPlan {
   const delKeg = (slot: Waktu, id: string) => { const ex = { ...store.extra }; delete ex[id]; simpan({ ...store, addedKeg: { ...store.addedKeg, [slot]: (store.addedKeg[slot] ?? []).filter(k => k.id !== id) }, extra: ex }); };
   const hideKeg = (key: string) => simpan({ ...store, hiddenKeg: [...new Set([...store.hiddenKeg, key])] });
   const reorder = (slot: Waktu, key: string, arah: -1 | 1) => {
-    const cur = susunKeg(store, slot).map(a => a.key);
+    const cur = susunKeg(store, slot, katalog).map(a => a.key);
     const i = cur.indexOf(key); const j = i + arah;
     if (i < 0 || j < 0 || j >= cur.length) return;
     [cur[i], cur[j]] = [cur[j], cur[i]];
     simpan({ ...store, order: { ...store.order, [slot]: cur } });
   };
 
-  return { store, orderedKeg: (slot) => susunKeg(store, slot), addExtra, toggleExtra, hideItem, delExtra, addKeg, delKeg, hideKeg, reorder };
+  return { store, orderedKeg: (slot) => susunKeg(store, slot, katalog), addExtra, toggleExtra, hideItem, delExtra, addKeg, delKeg, hideKeg, reorder };
 }
 
 // ─── Penjadwalan dari Bekal ──────────────────────────────────────────────────

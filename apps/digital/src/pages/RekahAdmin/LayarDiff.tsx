@@ -10,6 +10,15 @@ import { pindaiFields } from '../../lib/pemindaiKata';
 import { api } from '../../api/client';
 import { KnowledgeCard, AgeKey, DomainCode } from '@studiva/shared';
 import PreviewBuku from '../AdminPages/PreviewBuku';
+import TinjauanTemani from './temani/TinjauanTemani';
+import TinjauanBantu from './bantu/TinjauanBantu';
+import TinjauanKebiasaan from './kebiasaan/TinjauanKebiasaan';
+import { terapkanKebiasaan } from '../../lib/supabase/kebiasaan';
+import { muatUlangKatalogIrama } from '../../features/irama-hari/iramaKatalog';
+import { terapkanBantu } from '../../lib/supabase/bantu';
+import { muatUlangKatalogBantu } from '../../features/bantu/bantuKatalog';
+import { terapkanTemani } from '../../lib/supabase/temani';
+import { muatUlangKatalog } from '../../features/temani/temaniKatalog';
 
 // ── Konversi draf panduan_tumbuh → KnowledgeCard untuk preview ───────────────
 
@@ -70,6 +79,18 @@ function Baris({ label, nilai }: { label: string; nilai: unknown }) {
 function PratampilanIsi({ draf }: { draf: KontenDraf }) {
   const isi = draf.isi as Record<string, unknown>;
 
+  if (draf.jenis === 'temani_journey') {
+    return <TinjauanTemani draf={draf} />;
+  }
+
+  if (draf.jenis === 'bantu_situasi') {
+    return <TinjauanBantu draf={draf} />;
+  }
+
+  if (draf.jenis === 'kebiasaan_baik') {
+    return <TinjauanKebiasaan draf={draf} />;
+  }
+
   if (draf.jenis === 'sikap') {
     return (
       <>
@@ -112,6 +133,7 @@ function PratampilanIsi({ draf }: { draf: KontenDraf }) {
 // ── Pemindai kata ─────────────────────────────────────────────────────────────
 
 function BannerKataTerlarang({ draf }: { draf: KontenDraf }) {
+  if (draf.jenis === 'temani_journey' || draf.jenis === 'bantu_situasi' || draf.jenis === 'kebiasaan_baik') return null; // tampilan tinjauan khusus memeriksa kata sendiri
   const teksFields: Record<string, string> = {};
   function tambah(k: string, v: unknown) {
     if (typeof v === 'string' && v) teksFields[k] = v;
@@ -227,7 +249,18 @@ export default function LayarDiff() {
     setMenyimpan(true);
     setPesan(null);
     try {
-      await api.post(`/rekah-admin/terapkan-konten/${id}`);
+      if (draf.jenis === 'temani_journey') {
+        await terapkanTemani(id); // RPC SECURITY DEFINER (024), tanpa backend
+        await muatUlangKatalog();
+      } else if (draf.jenis === 'bantu_situasi') {
+        await terapkanBantu(id); // RPC SECURITY DEFINER (025), tanpa backend
+        await muatUlangKatalogBantu();
+      } else if (draf.jenis === 'kebiasaan_baik') {
+        await terapkanKebiasaan(id); // RPC SECURITY DEFINER (026), tanpa backend
+        await muatUlangKatalogIrama();
+      } else {
+        await api.post(`/rekah-admin/terapkan-konten/${id}`);
+      }
       setPesan({ tipe: 'sukses', teks: 'Konten berhasil diterapkan ke dashboard pengguna.' });
       const [d, r] = await Promise.all([muatDraf(id), muatRiwayat(id)]);
       setDraf(d);

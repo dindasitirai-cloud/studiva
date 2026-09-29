@@ -64,7 +64,7 @@ function Kpi({ value, label, accent = 'text-stv-navy' }: KpiProps) {
 // ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
-export default function TrackerKontenAdmin() {
+export default function TrackerKontenAdmin({ tanpaJudul = false }: { tanpaJudul?: boolean } = {}) {
   // ---- Static derivations -------------------------------------------------
   const cards = CARDS;
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -349,8 +349,8 @@ export default function TrackerKontenAdmin() {
   return (
     <TrackerContext.Provider value={contextValue}>
       <div className="flex flex-col gap-6">
-        {/* Page heading */}
-        <div>
+        {/* Page heading (disembunyikan bila halaman sudah punya hero, mis. Rekah Admin) */}
+        <div className={tanpaJudul ? 'hidden' : undefined}>
           <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">
             Tracker Konten
           </h2>

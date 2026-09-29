@@ -14,6 +14,8 @@ import { derivedRiwayatSiram, tingkatMekar } from '@studiva/shared';
 import IlustrasiKegiatan from './IlustrasiKegiatan';
 import type { IkonKey } from './susunanDefault';
 import PanelKelola from './PanelKelola';
+import { ambilKatalogIrama, useIramaKatalog, situasionalUntuk } from './iramaKatalog';
+import { useChildProfile } from '../beranda-usia/useChildProfile';
 import { getPilihanHarian, setSelesaiKustom } from '../../lib/supabase/rekah';
 
 type Tipe = 'kebiasaan' | 'main' | 'buku' | 'lainnya';
@@ -67,6 +69,9 @@ export function katalogKelolaSeed(): Map<string, { judul: string; kategori: Kate
   const m = new Map<string, { judul: string; kategori: KategoriKelola }>();
   for (const w of WAKTU) for (const k of w.keg) for (const it of k.items) m.set(it.id, { judul: it.t, kategori: it.tipe });
   for (const sit of SITUASIONAL) m.set(sit.id, { judul: sit.t, kategori: 'situasional' });
+  // Katalog Kebiasaan Baik (Phase 19): rutin & situasional yang diatur admin.
+  for (const b of ambilKatalogIrama().kebiasaan) m.set(b.id, { judul: b.judul, kategori: b.kategori === 'situasional' ? 'situasional' : 'kebiasaan' });
+  for (const t of ambilKatalogIrama().templates) for (const sr of t.saran) m.set(sr.id, { judul: sr.t, kategori: sr.tipe });
   return m;
 }
 
@@ -118,6 +123,8 @@ export default function HariIni({ nilaiFokus = [], centangKebiasaan, tanggalHari
   };
 
   const fokusSet = useMemo(() => new Set(nilaiFokus), [nilaiFokus]);
+  const { usiaBulan: usiaAnak } = useChildProfile();
+  const katalogIrama = useIramaKatalog();
   const hidden = new Set(store.hidden);
   const doneExtra = new Set(store.doneExtra);
   const centangHari = centangKebiasaan[tanggalHariIni] ?? {};
@@ -203,7 +210,7 @@ export default function HariIni({ nilaiFokus = [], centangKebiasaan, tanggalHari
   if (nilaiFokus.length === 0) {
     return <div className="rounded-[16px] border border-rekah/12 bg-white px-5 py-6 text-center"><p className="font-fredoka text-[15px] font-semibold text-pekat">Belum ada nilai fokus</p><p className="mt-1 font-nunito text-[13px] text-pekat/60">Pilih nilai keluarga di Arah (Kompas Keluarga) agar Rekah menampilkan kebiasaan yang sesuai.</p></div>;
   }
-  const situFokus = SITUASIONAL.filter(s => fokusSet.has(s.n));
+  const situFokus = situasionalUntuk(usiaAnak ?? 0, fokusSet, katalogIrama);
 
   return (
     <div className="grid items-start gap-6 lg:grid-cols-[1fr_290px]">

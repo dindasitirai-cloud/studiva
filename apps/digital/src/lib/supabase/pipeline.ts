@@ -2,7 +2,7 @@ import { supabase } from './client';
 import type { Json } from './database.types';
 
 export type StatusPipeline = 'draf' | 'diajukan' | 'disetujui' | 'ditolak' | 'tayang';
-export type JenisKonten = 'kegiatan_ajak_main' | 'panduan_tumbuh' | 'sikap';
+export type JenisKonten = 'kegiatan_ajak_main' | 'panduan_tumbuh' | 'sikap' | 'temani_journey' | 'bantu_situasi' | 'kebiasaan_baik';
 
 export interface KontenDraf {
   id: string;
@@ -221,5 +221,8 @@ export const LABEL_STATUS: Record<StatusPipeline, string> = {
 export const LABEL_JENIS: Record<JenisKonten, string> = {
   kegiatan_ajak_main: 'Ajak Main',
   panduan_tumbuh:     'Panduan Tumbuh',
-  sikap:              'Kebiasaan Baik',
+  sikap:              'Sikap per Fase (Bekal)',
+  temani_journey:     'Temani',
+  bantu_situasi:      'Bantu',
+  kebiasaan_baik:     'Kebiasaan Baik',
 };

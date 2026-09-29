@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Plus, Pencil, Search, Trash2 } from 'lucide-react';
 import { useKnowledgeLibrary } from '../../context/KnowledgeLibraryContext';
 import { AGE_RANGES, DOMAIN_MAP, AgeKey, DomainCode } from '@studiva/shared';
+import { HeroAdmin, TEMA } from './tema/temaAdmin';
 
 export default function WawasanTumbuhAdmin() {
   const { managedCards, apiLoaded, adminDeleteCard } = useKnowledgeLibrary();
@@ -34,23 +35,18 @@ export default function WawasanTumbuhAdmin() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-8">
-      <div className="mb-6 flex items-start justify-between gap-4">
-        <div>
-          <h1 className="font-bricolage text-[22px] font-extrabold text-pekat">Wawasan Tumbuh</h1>
-          <p className="mt-0.5 text-[13px] text-pekat/50">
-            {managedCards.length} kartu Panduan Tumbuh Kembang
-            {!apiLoaded && ' · data dari sumber statik'}
-            {apiLoaded && ' · sinkron dari database'}
-          </p>
-        </div>
-        <Link
-          to="/rekah-admin/wawasan/new"
-          className="flex shrink-0 items-center gap-2 rounded-full bg-rekah px-5 py-2.5 text-[13px] font-bold text-white shadow-[0_3px_12px_rgba(224,82,107,0.22)] hover:bg-rekah-tua transition"
-        >
-          <Plus className="h-4 w-4" /> Tambah Kartu
-        </Link>
-      </div>
+    <div className="mx-auto max-w-6xl px-6 py-8">
+      <HeroAdmin
+        tema="wawasan"
+        eyebrow="Panduan tumbuh kembang"
+        judul="Wawasan Tumbuh"
+        deskripsi={`${managedCards.length} kartu Panduan Tumbuh Kembang${apiLoaded ? ' · sinkron dari database' : ' · data dari sumber statik'}`}
+        aksi={
+          <Link to="/rekah-admin/wawasan/new" className="flex items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-bold text-white shadow-[0_8px_18px_-10px_rgba(53,94,184,0.7)]" style={{ background: TEMA.wawasan.teks }}>
+            <Plus className="h-4 w-4" /> Tambah Kartu
+          </Link>
+        }
+      />
 
       {/* Filter bar */}
       <div className="mb-4 flex flex-wrap gap-2">

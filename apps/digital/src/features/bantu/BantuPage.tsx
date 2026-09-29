@@ -18,8 +18,9 @@ import { tanggalDariTimestampWIB } from '@studiva/shared';
 import { tambahKustomKeTanggal } from '../../lib/supabase/rekah';
 import { dispatchRekahError } from '../../utils/rekahApiError';
 import {
-  BANTU_SITUASI, adaSinyalBahaya, OPSI_MEMICU_B5, RUJUKAN_KESELAMATAN,
+  adaSinyalBahaya, RUJUKAN_KESELAMATAN,
 } from './bantuSeed';
+import { useBantuKatalog, opsiMemicuB5 } from './bantuKatalog'; // katalog admin (025) → fallback seed
 import type { BantuSituasi } from './bantuSeed';
 
 type Layar = 'hub' | 'clarify' | 'guide' | 'safety';
@@ -87,6 +88,7 @@ export default function BantuPage() {
 
   const [layar, setLayar] = useState<Layar>('hub');
   const [pilih, setPilih] = useState<BantuSituasi | null>(null);
+  const BANTU_SITUASI = useBantuKatalog();
   const [whyOpen, setWhyOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [savedTick, setSavedTick] = useState(0);
@@ -141,7 +143,7 @@ export default function BantuPage() {
   };
 
   const pilihOpsiClarify = (opsi: string) => {
-    if (OPSI_MEMICU_B5.includes(opsi)) { setLayar('safety'); return; }
+    if (opsiMemicuB5(pilih, opsi)) { setLayar('safety'); return; }
     setLayar('guide');
   };
 

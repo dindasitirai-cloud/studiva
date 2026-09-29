@@ -1096,7 +1096,7 @@ export default function StrategiesAdmin({ pipelineOnly = false }: { pipelineOnly
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Kelola Learning Strategies</h2>
+          {!pipelineOnly && <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Kelola Learning Strategies</h2>}
           <div className="mt-1 flex flex-wrap items-center gap-3 text-[13px]">
             <span className="text-stv-muted">
               Total: <strong className="text-stv-navy">{managedActivities.length + managedPlans.length + managedTools.length + managedDownloads.length}</strong> konten

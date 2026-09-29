@@ -1,0 +1,47 @@
+/* Rekah Admin — lapisan tema.
+   Halaman bersama dari /admin (Learning Strategies, Tracker, form Wawasan) memakai token
+   Studiva ("stv-", navy). Di dalam .ra-tema token itu dipetakan ke palet Langit Peony,
+   dan aksen mengikuti warna bagian (--ra-aksen/--ra-teks/--ra-tint dari RekahAdminShell). */
+
+.ra-tema { --ra-aksen: #F06BA8; --ra-teks: #B8337C; --ra-tint: #FFE3EF; --ra-tint2: #FFF3E6; }
+
+/* Teks & garis Studiva → Rekah */
+.ra-tema .text-stv-navy,
+.ra-tema .hover\:text-stv-navy:hover { color: #6E3B57; }
+.ra-tema .text-stv-navy\/60 { color: rgba(110, 59, 87, 0.6); }
+.ra-tema .text-stv-body,
+.ra-tema .hover\:text-stv-body:hover { color: rgba(110, 59, 87, 0.8); }
+.ra-tema .text-stv-muted { color: #8A7080; }
+.ra-tema .text-stv-muted-2 { color: rgba(138, 112, 128, 0.75); }
+.ra-tema .text-stv-sky,
+.ra-tema .hover\:text-stv-sky-stroke:hover { color: var(--ra-teks); }
+.ra-tema .border-stv-border { border-color: rgba(240, 107, 168, 0.14); }
+.ra-tema .border-stv-navy { border-color: var(--ra-teks); }
+.ra-tema .ring-stv-sky { --tw-ring-color: var(--ra-aksen); }
+.ra-tema .bg-stv-navy { background-color: var(--ra-teks); }
+.ra-tema .hover\:bg-stv-navy-dark:hover { background-color: #6E3B57; }
+.ra-tema .bg-stv-navy\/30 { background-color: rgba(110, 59, 87, 0.3); }
+.ra-tema .bg-stv-badge-navy-tint,
+.ra-tema .hover\:bg-stv-badge-navy-tint:hover,
+.ra-tema .hover\:bg-stv-badge-navy-tint\/60:hover { background-color: var(--ra-tint); }
+.ra-tema .font-baloo { font-family: 'Fredoka', system-ui, sans-serif; }
+.ra-tema .border-slate-300 { border-color: rgba(240, 107, 168, 0.25); }
+.ra-tema .hover\:bg-slate-50:hover { background-color: #FFF0F7; }
+
+/* Kartu putih mendapat bayangan hangat, bukan biru Studiva */
+.ra-tema [class*="shadow-[0_4px_16px_rgba(16,58,107"] { box-shadow: 0 6px 20px -8px rgba(110, 59, 87, 0.18); }
+
+/* Header tabel di semua halaman admin memakai warna bagian */
+.ra-tema table thead tr { background: var(--ra-tint) !important; }
+.ra-tema table thead th { color: var(--ra-teks) !important; }
+
+/* Fokus konsisten dengan warna bagian */
+.ra-tema input:focus-visible,
+.ra-tema select:focus-visible,
+.ra-tema textarea:focus-visible,
+.ra-tema button:focus-visible,
+.ra-tema a:focus-visible { outline: 2px solid var(--ra-aksen); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ra-tema * { transition: none !important; animation: none !important; }
+}

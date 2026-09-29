@@ -18,8 +18,15 @@ import BerandaRekahAdmin from './pages/RekahAdmin/BerandaRekahAdmin';
 import AntreanTinjauan from './pages/RekahAdmin/AntreanTinjauan';
 import LayarDiff from './pages/RekahAdmin/LayarDiff';
 import EditorSikap from './pages/RekahAdmin/EditorSikap';
+import KebiasaanAdmin from './pages/RekahAdmin/kebiasaan/KebiasaanAdmin';
+import EditorKebiasaan from './pages/RekahAdmin/kebiasaan/EditorKebiasaan';
 import SemuaDraf from './pages/RekahAdmin/SemuaDraf';
 import WawasanTumbuhAdmin from './pages/RekahAdmin/WawasanTumbuhAdmin';
+import TemaniAdmin from './pages/RekahAdmin/temani/TemaniAdmin';
+import EditorTemani from './pages/RekahAdmin/temani/EditorTemani';
+import BantuAdmin from './pages/RekahAdmin/bantu/BantuAdmin';
+import { HalamanTema } from './pages/RekahAdmin/tema/temaAdmin';
+import EditorBantu from './pages/RekahAdmin/bantu/EditorBantu';
 import SubscriptionGuard from './components/SubscriptionGuard';
 
 // Public pages
@@ -228,12 +235,24 @@ export default function App() {
               element={<PeninjauRoute><RekahAdminShell /></PeninjauRoute>}
             >
               <Route index element={<BerandaRekahAdmin />} />
-              <Route path="ajak-main" element={<StrategiesAdmin pipelineOnly />} />
+              <Route path="ajak-main" element={<HalamanTema tema="ajak" judul="Ajak Main" deskripsi="Kegiatan main sesuai usia untuk orang tua dan anak. Semua kegiatan baru diajukan ke tinjauan Psikolog Fitri."><StrategiesAdmin pipelineOnly /></HalamanTema>} />
               <Route path="wawasan" element={<WawasanTumbuhAdmin />} />
               <Route path="wawasan/new" element={<KnowledgeCardFormAdmin pipelineOnly backPath="/rekah-admin/wawasan" />} />
               <Route path="wawasan/:id/edit" element={<KnowledgeCardFormAdmin pipelineOnly backPath="/rekah-admin/wawasan" />} />
-              <Route path="sikap" element={<EditorSikap />} />
-              <Route path="tracker" element={<TrackerKontenAdmin />} />
+              <Route path="sikap" element={<KebiasaanAdmin />} />
+              <Route path="sikap/baru" element={<EditorKebiasaan />} />
+              <Route path="sikap/draf/:id" element={<EditorKebiasaan />} />
+              <Route path="sikap/revisi/:kid" element={<EditorKebiasaan />} />
+              <Route path="sikap/fase" element={<EditorSikap />} />
+              <Route path="temani" element={<TemaniAdmin />} />
+              <Route path="temani/baru" element={<EditorTemani />} />
+              <Route path="temani/draf/:id" element={<EditorTemani />} />
+              <Route path="temani/revisi/:slug" element={<EditorTemani />} />
+              <Route path="bantu" element={<BantuAdmin />} />
+              <Route path="bantu/baru" element={<EditorBantu />} />
+              <Route path="bantu/draf/:id" element={<EditorBantu />} />
+              <Route path="bantu/revisi/:slug" element={<EditorBantu />} />
+              <Route path="tracker" element={<HalamanTema tema="tracker" judul="Tracker Konten" deskripsi="Pantau kesegaran konten, tinjau sumber, dan kelola tanda secara terpusat."><TrackerKontenAdmin tanpaJudul /></HalamanTema>} />
               <Route path="antrean" element={<AntreanTinjauan />} />
               <Route path="diff/:id" element={<LayarDiff />} />
               <Route path="semua" element={<SemuaDraf />} />

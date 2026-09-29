@@ -16,9 +16,10 @@ import { useChildProfile } from '../beranda-usia/useChildProfile';
 import { useAnak } from '../../context/AnakContext';
 import { useInboxStore } from './inboxData';
 import { useRencanaMinggu, hariIndex, awalMinggu, localISO } from './rencanaData';
-import { SITUASIONAL, idNilai, statusMekar, buatMekar, useCentangHari } from './dayPlanData';
+import { idNilai, statusMekar, buatMekar, useCentangHari } from './dayPlanData';
 import { useParameterPenyesuaian, catatanPenyesuaianRingkas } from './kehidupanData';
 import PapanKegiatan from './PapanKegiatan';
+import { useIramaKatalog, situasionalUntuk } from './iramaKatalog';
 import { UntukDikelolaHari } from './RencanaMinggu';
 import KehidupanKeluarga from './KehidupanKeluarga';
 import InboxKelola from './InboxKelola';
@@ -228,6 +229,8 @@ function IramaKeseharian({ nilaiFokus, centangKebiasaan, tanggalHariIni, onCenta
   const idAnak = anakAktif?.id ?? 'anon';
   const inbox = useInboxStore(idAnak);
   const param = useParameterPenyesuaian(idAnak);
+  const { usiaBulan: usiaAnak } = useChildProfile();
+  const katalogIrama = useIramaKatalog();
   const catatanKel = catatanPenyesuaianRingkas(param);
 
   // Minggu + hari terpilih (default hari ini)
@@ -250,7 +253,7 @@ function IramaKeseharian({ nilaiFokus, centangKebiasaan, tanggalHariIni, onCenta
 
   // Data untuk panel kanan
   const fokusSet = useMemo(() => new Set(nilaiFokus), [nilaiFokus]);
-  const situFokus = SITUASIONAL.filter(s => fokusSet.has(s.n));
+  const situFokus = useMemo(() => situasionalUntuk(usiaAnak ?? 0, fokusSet, katalogIrama), [usiaAnak, fokusSet, katalogIrama]);
   const centangHariIni = centangKebiasaan[tanggalHariIni] ?? {};
   const kelolaHari = rencana.items.filter(p => p.hari === pilihHari && p.slot === 'kelola');
   const tugasTodo: RailTugas[] = [

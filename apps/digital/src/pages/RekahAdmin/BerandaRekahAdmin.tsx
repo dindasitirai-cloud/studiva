@@ -1,22 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ClipboardList, CheckCircle2, Clock, XCircle } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowRight, ClipboardList, CheckCircle2, Clock, XCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { muatSemuaDraf, KontenDraf, LABEL_STATUS, LABEL_JENIS } from '../../lib/supabase/pipeline';
+import { muatSemuaDraf, KontenDraf, LABEL_STATUS, LABEL_JENIS, JenisKonten, StatusPipeline } from '../../lib/supabase/pipeline';
+import { HeroAdmin, TEMA, BungaNilai, KosongBerilustrasi } from './tema/temaAdmin';
+import type { KunciTema } from './tema/temaAdmin';
 
-function KartuStat({ label, nilai, Icon, warna }: {
-  label: string; nilai: number;
-  Icon: React.ElementType; warna: string;
-}) {
+const TEMA_JENIS: Record<JenisKonten, KunciTema> = {
+  kegiatan_ajak_main: 'ajak', panduan_tumbuh: 'wawasan', sikap: 'sikap', temani_journey: 'temani', bantu_situasi: 'bantu', kebiasaan_baik: 'sikap',
+};
+
+const WARNA_STATUS: Record<StatusPipeline, string> = {
+  draf: 'bg-pekat/8 text-pekat/60',
+  diajukan: 'bg-kuning text-pekat',
+  disetujui: 'bg-daun/20 text-daun',
+  ditolak: 'bg-rekah/15 text-rekah-tua',
+  tayang: 'bg-langit/30 text-pekat',
+};
+
+const BAGIAN: Array<{ to: string; label: string; tema: KunciTema; jenis?: JenisKonten; ket: string }> = [
+  { to: '/rekah-admin/ajak-main', label: 'Ajak Main', tema: 'ajak', jenis: 'kegiatan_ajak_main', ket: 'Kegiatan main sesuai usia' },
+  { to: '/rekah-admin/wawasan', label: 'Wawasan Tumbuh', tema: 'wawasan', jenis: 'panduan_tumbuh', ket: 'Kartu panduan tumbuh kembang' },
+  { to: '/rekah-admin/sikap', label: 'Kebiasaan Baik', tema: 'sikap', jenis: 'kebiasaan_baik', ket: 'Rutin di Irama Hari & situasional' },
+  { to: '/rekah-admin/temani', label: 'Temani', tema: 'temani', jenis: 'temani_journey', ket: 'Perjalanan berpandu hari demi hari' },
+  { to: '/rekah-admin/bantu', label: 'Bantu', tema: 'bantu', jenis: 'bantu_situasi', ket: 'Situasi & respons momen sulit' },
+  { to: '/rekah-admin/tracker', label: 'Tracker Konten', tema: 'tracker', ket: 'Kesegaran sumber & modul' },
+];
+
+function KartuStat({ label, nilai, Icon, tema }: { label: string; nilai: number; Icon: React.ElementType; tema: KunciTema }) {
+  const t = TEMA[tema];
   return (
-    <div className="flex items-center gap-4 rounded-2xl border border-rekah/10 bg-white p-5">
-      <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${warna}`}>
-        <Icon className="h-5 w-5" />
-      </div>
-      <div>
-        <p className="text-[24px] font-bold text-pekat">{nilai}</p>
-        <p className="text-[13px] text-pekat/50">{label}</p>
-      </div>
+    <div className="relative overflow-hidden rounded-[22px] p-5" style={{ background: t.tint }}>
+      <span aria-hidden className="absolute -right-3 -top-3 opacity-80"><BungaNilai nilai={t.nilai} size={64} /></span>
+      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white" style={{ color: t.teks }}><Icon className="h-[18px] w-[18px]" /></span>
+      <p className="mt-3 font-bricolage text-[30px] font-extrabold leading-none tabular-nums text-pekat">{nilai}</p>
+      <p className="mt-1 text-[13px] font-semibold" style={{ color: t.teks }}>{label}</p>
     </div>
   );
 }
@@ -34,88 +52,91 @@ export default function BerandaRekahAdmin() {
       .finally(() => setMemuat(false));
   }, []);
 
-  const menunggu  = daftar.filter(d => d.status === 'diajukan').length;
-  const disetujui = daftar.filter(d => d.status === 'disetujui').length;
-  const ditolak   = daftar.filter(d => d.status === 'ditolak').length;
-  const tayang    = daftar.filter(d => d.status === 'tayang').length;
-
+  const hitung = (s: StatusPipeline) => daftar.filter(d => d.status === s).length;
+  const menunggu = hitung('diajukan');
   const terakhir = [...daftar]
     .sort((a, b) => new Date(b.diperbarui_pada).getTime() - new Date(a.diperbarui_pada).getTime())
     .slice(0, 6);
+  const peninjau = peranStaf === 'peninjau_klinis';
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-8">
-      <h1 className="mb-1 font-bricolage text-[26px] font-extrabold text-pekat">
-        Dashboard Konten Rekah
-      </h1>
-      <p className="mb-8 text-[14px] text-pekat/50">
-        {peranStaf === 'peninjau_klinis'
-          ? 'Tinjau dan setujui konten sebelum tayang ke orang tua.'
-          : 'Kelola dan ajukan konten untuk ditinjau Psikolog Fitri.'}
-      </p>
+    <div className="mx-auto max-w-6xl px-6 py-8">
+      <HeroAdmin
+        tema="beranda"
+        eyebrow={peninjau ? 'Peninjau klinis' : 'Admin konten'}
+        judul="Taman konten Rekah"
+        deskripsi={peninjau
+          ? 'Tinjau dan setujui konten sebelum tayang ke orang tua. Semua yang Anda setujui tumbuh di sini.'
+          : 'Kelola dan ajukan konten untuk ditinjau Psikolog Fitri. Setiap bagian punya warnanya sendiri.'}
+        aksi={menunggu > 0 ? (
+          <Link to="/rekah-admin/antrean" className="inline-flex items-center gap-2 rounded-full bg-pekat px-5 py-2.5 text-[13px] font-bold text-white hover:bg-rekah-tua">
+            {menunggu} menunggu tinjauan <ArrowRight className="h-4 w-4" />
+          </Link>
+        ) : undefined}
+      />
 
-      {/* Stats */}
-      <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <KartuStat label="Menunggu Tinjauan" nilai={menunggu}  Icon={Clock}        warna="bg-madu/15 text-madu" />
-        <KartuStat label="Disetujui"          nilai={disetujui} Icon={CheckCircle2} warna="bg-daun/15 text-daun" />
-        <KartuStat label="Ditolak"            nilai={ditolak}   Icon={XCircle}      warna="bg-rekah/15 text-rekah" />
-        <KartuStat label="Tayang"             nilai={tayang}    Icon={ClipboardList} warna="bg-fajar/60 text-pekat/70" />
+      <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+        <KartuStat label="Menunggu tinjauan" nilai={menunggu} Icon={Clock} tema="ajak" />
+        <KartuStat label="Disetujui" nilai={hitung('disetujui')} Icon={CheckCircle2} tema="sikap" />
+        <KartuStat label="Ditolak" nilai={hitung('ditolak')} Icon={XCircle} tema="bantu" />
+        <KartuStat label="Tayang" nilai={hitung('tayang')} Icon={ClipboardList} tema="wawasan" />
       </div>
 
-      {/* CTA Fitri */}
-      {peranStaf === 'peninjau_klinis' && menunggu > 0 && (
-        <div
-          className="mb-8 cursor-pointer rounded-2xl border border-madu/30 bg-madu/10 px-6 py-5 transition hover:border-madu/60"
-          onClick={() => navigate('/rekah-admin/antrean')}
-          role="button"
-        >
-          <p className="font-bricolage text-[16px] font-bold text-pekat">
-            {menunggu} konten menunggu tinjauan Fitri
-          </p>
-          <p className="mt-1 text-[13px] text-pekat/60">
-            Klik untuk membuka antrean dan mulai meninjau.
-          </p>
+      <h2 className="mb-3 font-bricolage text-[18px] font-bold text-pekat">Bagian konten</h2>
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {BAGIAN.map(b => {
+          const t = TEMA[b.tema];
+          const aktif = b.jenis ? daftar.filter(d => d.jenis === b.jenis && d.status !== 'tayang').length : null;
+          return (
+            <Link key={b.to} to={b.to}
+              className="group relative flex min-h-[120px] items-center gap-4 overflow-hidden rounded-[24px] border bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-[0_12px_28px_-16px_rgba(110,59,87,0.45)]"
+              style={{ borderColor: `${t.aksen}66` }}>
+              <span aria-hidden className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[20px_20px_20px_6px]" style={{ background: t.tint }}>
+                <BungaNilai nilai={t.nilai} size={46} />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-bricolage text-[16px] font-bold text-pekat">{b.label}</span>
+                <span className="block text-[12.5px] text-pekat/60">{b.ket}</span>
+                {aktif !== null && (
+                  <span className="mt-2 inline-block rounded-full px-2.5 py-0.5 text-[11px] font-bold" style={{ background: t.tint, color: t.teks }}>
+                    {aktif} draf aktif
+                  </span>
+                )}
+              </span>
+              <ArrowRight className="h-4 w-4 shrink-0 transition group-hover:translate-x-0.5" style={{ color: t.teks }} />
+            </Link>
+          );
+        })}
+      </div>
+
+      <h2 className="mb-3 font-bricolage text-[18px] font-bold text-pekat">Aktivitas terakhir</h2>
+      {memuat ? (
+        <p className="text-[14px] text-pekat/40">Memuat...</p>
+      ) : terakhir.length === 0 ? (
+        <KosongBerilustrasi tema="beranda" judul="Belum ada draf konten">
+          <p className="text-[13px] text-pekat/55">Draf yang dibuat di setiap bagian akan muncul di sini.</p>
+        </KosongBerilustrasi>
+      ) : (
+        <div className="overflow-hidden rounded-[24px] border border-rekah/10 bg-white">
+          {terakhir.map((d, i) => {
+            const t = TEMA[TEMA_JENIS[d.jenis] ?? 'beranda'];
+            return (
+              <div key={d.id} onClick={() => navigate(`/rekah-admin/diff/${d.id}`)} role="button" tabIndex={0}
+                onKeyDown={e => { if (e.key === 'Enter') navigate(`/rekah-admin/diff/${d.id}`); }}
+                className={`flex cursor-pointer items-center gap-4 px-5 py-4 transition hover:bg-fajar ${i > 0 ? 'border-t border-rekah/8' : ''}`}>
+                <span aria-hidden className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl" style={{ background: t.tint }}>
+                  <BungaNilai nilai={t.nilai} size={26} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[14px] font-semibold text-pekat">{d.judul}</p>
+                  <p className="text-[12px]"><span className="font-semibold" style={{ color: t.teks }}>{LABEL_JENIS[d.jenis]}</span><span className="text-pekat/45"> · {new Date(d.diperbarui_pada).toLocaleDateString('id-ID')}</span></p>
+                </div>
+                <span className={`shrink-0 rounded-full px-3 py-1 text-[11px] font-bold ${WARNA_STATUS[d.status]}`}>{LABEL_STATUS[d.status]}</span>
+              </div>
+            );
+          })}
         </div>
       )}
-
-      {/* Aktivitas terakhir */}
-      <div>
-        <h2 className="mb-4 font-bricolage text-[16px] font-bold text-pekat">Aktivitas Terakhir</h2>
-        {memuat ? (
-          <p className="text-[14px] text-pekat/40">Memuat...</p>
-        ) : terakhir.length === 0 ? (
-          <p className="text-[14px] text-pekat/40">Belum ada draf konten.</p>
-        ) : (
-          <div className="overflow-hidden rounded-2xl border border-rekah/10 bg-white">
-            {terakhir.map((d, i) => (
-              <div
-                key={d.id}
-                onClick={() => navigate(`/rekah-admin/diff/${d.id}`)}
-                role="button"
-                className={`flex cursor-pointer items-center gap-4 px-5 py-4 transition hover:bg-rekah/5 ${
-                  i > 0 ? 'border-t border-rekah/8' : ''
-                }`}
-              >
-                <div className="flex-1 min-w-0">
-                  <p className="truncate text-[14px] font-semibold text-pekat">{d.judul}</p>
-                  <p className="text-[12px] text-pekat/45">
-                    {LABEL_JENIS[d.jenis]} · {new Date(d.diperbarui_pada).toLocaleDateString('id-ID')}
-                  </p>
-                </div>
-                <span className={`shrink-0 rounded-full px-3 py-1 text-[11px] font-bold ${
-                  d.status === 'diajukan'  ? 'bg-madu/20 text-madu' :
-                  d.status === 'disetujui' ? 'bg-daun/20 text-daun' :
-                  d.status === 'ditolak'   ? 'bg-rekah/20 text-rekah' :
-                  d.status === 'tayang'    ? 'bg-rekah/10 text-rekah-tua' :
-                  'bg-pekat/10 text-pekat/60'
-                }`}>
-                  {LABEL_STATUS[d.status]}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAnakAktif } from '../../context/AnakContext';
 import { tanggalDariTimestampWIB } from '@studiva/shared';
 import { getPilihanHarianRentang } from '../../lib/supabase/rekah';
-import { TEMANI_JOURNEYS } from './temaniSeed';
+import { useTemaniKatalog } from './temaniKatalog';
 import { Ornament } from './ornamen';
 
 interface Progres { slug: string; hari: number; status: string; mulaiTanggal?: string; }
@@ -28,7 +28,8 @@ export default function PerjalananProgresCard() {
   const { anak } = useAnakAktif();
   const idAnak = anak.id;
   const progres = bacaProgres(idAnak);
-  const jAktif = progres && progres.status === 'aktif' ? (TEMANI_JOURNEYS.find(j => j.slug === progres.slug) ?? null) : null;
+  const katalog = useTemaniKatalog();
+  const jAktif = progres && progres.status === 'aktif' ? (katalog.find(j => j.slug === progres.slug) ?? null) : null;
   const [selesai, setSelesai] = useState(0);
   const tanggalHariIni = tanggalDariTimestampWIB(new Date().toISOString());
 

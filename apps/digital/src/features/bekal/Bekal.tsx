@@ -21,7 +21,7 @@ import type { JadwalItem } from '../../components/PopupPilihHari';
 import { tanggalDariTimestampWIB } from '@studiva/shared';
 import { useAnakAktif } from '../../context/AnakContext';
 import { tambahKustomKeTanggal } from '../../lib/supabase/rekah';
-import { journeyUntukKebiasaan } from '../temani/temaniSeed';
+import { useTemaniKatalog, journeyUntukKebiasaan } from '../temani/temaniKatalog';
 import {
   ActivityCard, ActivityModal,
   ToolCard, ToolModal,
@@ -308,6 +308,7 @@ function PopupDetailNilai({
   onTambahRutinitas?: (s: ItemSikap) => Promise<void>;
   onTemani?: (s: ItemSikap) => void;
 }) {
+  const katalogTemani = useTemaniKatalog();
   const [statusRutin, setStatusRutin] = useState<Record<string, 'ok' | 'err'>>({});
   const info = PENJELASAN_NILAI[nilai];
   const bunga = BUNGA_DARI_NAMA.get(nilai);
@@ -409,7 +410,7 @@ function PopupDetailNilai({
               <ul className="space-y-2.5">
                 {sikapList.map(s => {
                   const kbId = s.kebiasaanId ?? s.id;
-                  const adaJourney = !!journeyUntukKebiasaan(kbId);
+                  const adaJourney = !!journeyUntukKebiasaan(katalogTemani, kbId);
                   return (
                     <li key={s.id} className="rounded-[14px] bg-white" style={{ padding: '12px 14px' }}>
                       <div className="flex items-start gap-2.5">
@@ -1015,6 +1016,7 @@ function IsiBekal({
   isDev,
   bekalLabel,
 }: PropsIsiBekal) {
+  const katalogTemani = useTemaniKatalog();
   const navigate = useNavigate();
   const [tabAktif, setTabAktif] = useState<TabId>(tabAwal);
   const [nilaiDibuka, setNilaiDibuka] = useState<NilaiAkar | null>(null);
@@ -1031,9 +1033,9 @@ function IsiBekal({
   }, [anak.id, tanggalHariIni]);
   const handleTemaniKb = useCallback((s: ItemSikap) => {
     const kbId = s.kebiasaanId ?? s.id;
-    const j = journeyUntukKebiasaan(kbId);
+    const j = journeyUntukKebiasaan(katalogTemani, kbId);
     navigate(j ? `/dashboard/tier2/temani?journey=${j.slug}` : '/dashboard/tier2/temani');
-  }, [navigate]);
+  }, [navigate, katalogTemani]);
 
 
   const nilaiFokusSet = useMemo(() => new Set<string>(nilaiFokus), [nilaiFokus]);

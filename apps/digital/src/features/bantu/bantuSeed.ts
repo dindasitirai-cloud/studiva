@@ -6,6 +6,8 @@ export type KategoriSituasi = 'perilaku_anak' | 'relasional' | 'caregiver' | 'me
 export interface BantuClarify {
   pertanyaan: string;
   opsi: string[];
+  /** Opsi yang membuka layar keselamatan (ditandai admin, migrasi 025). */
+  opsiKeselamatan?: string[];
 }
 export interface BantuRespons {
   validasi: string;

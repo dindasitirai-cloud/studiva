@@ -18,6 +18,7 @@ import {
 } from './dayPlanData';
 import type { Tipe, Item, Store } from './dayPlanData';
 import type { ParameterPenyesuaian } from './kehidupanData';
+import { saringKebiasaanKartu } from './iramaKatalog';
 
 // ─── Marker jenis to-do non-kebiasaan ────────────────────────────────────────
 
@@ -368,7 +369,7 @@ export default function PapanKegiatan({ idAnak, tanggal, nilaiFokus, centangHari
                 </div>
                 {kegs.map((k, idx) => (
                   <KartuAktivitas key={k.key} kegKey={k.key} nm={k.nm} wk={k.wk} accent={col.dot}
-                    items={k.items} extra={plan.store.extra[k.key] ?? []} store={plan.store} centangHari={centangHari} mekarDari={mekarDari} fokusSet={fokusSet} nilaiFokus={nilaiFokus}
+                    items={saringKebiasaanKartu(k.items, usia, fokusSet)} extra={plan.store.extra[k.key] ?? []} store={plan.store} centangHari={centangHari} mekarDari={mekarDari} fokusSet={fokusSet} nilaiFokus={nilaiFokus}
                     onToggleKeb={onToggleKeb} onToggleExtra={plan.toggleExtra} onHide={plan.hideItem} onDelExtra={plan.delExtra} onAddExtra={plan.addExtra}
                     onOpenPicker={tp => setPicker({ kegKey: k.key, tipe: tp })}
                     onDelKeg={() => k.isDefault ? plan.hideKeg(k.key) : plan.delKeg(col.key, k.key)}

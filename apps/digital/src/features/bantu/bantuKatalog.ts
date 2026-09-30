@@ -20,6 +20,8 @@ export function dariKatalogBantu(s: SituasiKatalog): BantuSituasi {
     ringkas: s.ringkas || undefined,
     kategori: s.kategori,
     sensitifKeselamatan: s.sensitif_keselamatan,
+    usiaMinBulan: s.usia_min_bulan,
+    usiaMaxBulan: s.usia_max_bulan,
     status: 'disetujui',
     clarify: s.clarify.map(c => ({ pertanyaan: c.pertanyaan, opsi: c.opsi, opsiKeselamatan: c.opsi_keselamatan })),
     respons: {
@@ -47,6 +49,13 @@ function berlangganan(fn: () => void) {
   pendengar.add(fn);
   if (!sudahDimuat) { sudahDimuat = true; void muatUlangKatalogBantu(); }
   return () => { pendengar.delete(fn); };
+}
+
+/** Situasi yang cocok dengan usia anak (usia tidak diketahui → semua situasi). */
+export function cocokUsiaBantu(s: BantuSituasi, usiaBulan: number | null): boolean {
+  if (usiaBulan === null) return true;
+  const u = Math.min(Math.max(0, usiaBulan), 71);
+  return u >= (s.usiaMinBulan ?? 0) && u <= (s.usiaMaxBulan ?? 71);
 }
 
 export function useBantuKatalog(): BantuSituasi[] {

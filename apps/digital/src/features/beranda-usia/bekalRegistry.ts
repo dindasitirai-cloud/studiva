@@ -138,7 +138,7 @@ export const DAFTAR_BEKAL: readonly Bekal[] = [
     usiaBulanMulai: 12,
     usiaBulanSelesai: 24,
     subTahap: [ST_T1218, ST_T1824],
-    aktif: false,
+    aktif: true,  // konten Ajak Main, Kebiasaan Baik & Wawasan Tumbuh sudah tersedia untuk rentang ini
   },
   {
     id: '2-3',
@@ -146,7 +146,7 @@ export const DAFTAR_BEKAL: readonly Bekal[] = [
     usiaBulanMulai: 24,
     usiaBulanSelesai: 36,
     subTahap: [ST_U23],
-    aktif: false,
+    aktif: true,  // konten Ajak Main, Kebiasaan Baik & Wawasan Tumbuh sudah tersedia untuk rentang ini
   },
   {
     id: '3-4',
@@ -154,7 +154,7 @@ export const DAFTAR_BEKAL: readonly Bekal[] = [
     usiaBulanMulai: 36,
     usiaBulanSelesai: 48,
     subTahap: [ST_U34],
-    aktif: false,
+    aktif: true,  // konten Ajak Main, Kebiasaan Baik & Wawasan Tumbuh sudah tersedia untuk rentang ini
   },
   {
     id: '4-5',
@@ -162,7 +162,7 @@ export const DAFTAR_BEKAL: readonly Bekal[] = [
     usiaBulanMulai: 48,
     usiaBulanSelesai: 60,
     subTahap: [ST_U45],
-    aktif: false,
+    aktif: true,  // konten Ajak Main, Kebiasaan Baik & Wawasan Tumbuh sudah tersedia untuk rentang ini
   },
   {
     id: '5-6',
@@ -170,7 +170,7 @@ export const DAFTAR_BEKAL: readonly Bekal[] = [
     usiaBulanMulai: 60,
     usiaBulanSelesai: 72,
     subTahap: [ST_U56],
-    aktif: false,
+    aktif: true,  // konten Ajak Main, Kebiasaan Baik & Wawasan Tumbuh sudah tersedia untuk rentang ini
   },
 ];
 

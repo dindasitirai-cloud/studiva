@@ -177,66 +177,66 @@ describe('resolveTahapAktif — batas usia tepat', () => {
     }
   });
 
-  // Usia 12 → t1218, kontenBelumSiap (Bekal 1-2 aktif: false)
-  it('usia 12 bulan → kontenBelumSiap, sub-tahap t1218', () => {
+  // Usia 12 → t1218, ok (Bekal 1-2 aktif)
+  it('usia 12 bulan → ok, sub-tahap t1218', () => {
     const r = resolveTahapAktif(profilDari(lahirUsia(12)), ACUAN);
-    expect(r.status).toBe('kontenBelumSiap');
-    if (r.status === 'kontenBelumSiap') {
-      expect(r.bekal.id).toBe('1-2');
+    expect(r.status).toBe('ok');
+    if (r.status === 'ok') {
+      expect(r.hasil.bekal.id).toBe('1-2');
     }
   });
 
   // Usia 18 → t1824
-  it('usia 18 bulan → kontenBelumSiap, bekal 1-2', () => {
+  it('usia 18 bulan → ok, bekal 1-2', () => {
     const r = resolveTahapAktif(profilDari(lahirUsia(18)), ACUAN);
-    expect(r.status).toBe('kontenBelumSiap');
-    if (r.status === 'kontenBelumSiap') {
-      expect(r.bekal.id).toBe('1-2');
+    expect(r.status).toBe('ok');
+    if (r.status === 'ok') {
+      expect(r.hasil.bekal.id).toBe('1-2');
     }
   });
 
   // Usia 24 → u23, Bekal 2-3
-  it('usia 24 bulan → kontenBelumSiap, bekal 2-3', () => {
+  it('usia 24 bulan → ok, bekal 2-3', () => {
     const r = resolveTahapAktif(profilDari(lahirUsia(24)), ACUAN);
-    expect(r.status).toBe('kontenBelumSiap');
-    if (r.status === 'kontenBelumSiap') {
-      expect(r.bekal.id).toBe('2-3');
+    expect(r.status).toBe('ok');
+    if (r.status === 'ok') {
+      expect(r.hasil.bekal.id).toBe('2-3');
     }
   });
 
   // Usia 36 → u34, Bekal 3-4
-  it('usia 36 bulan → kontenBelumSiap, bekal 3-4', () => {
+  it('usia 36 bulan → ok, bekal 3-4', () => {
     const r = resolveTahapAktif(profilDari(lahirUsia(36)), ACUAN);
-    expect(r.status).toBe('kontenBelumSiap');
-    if (r.status === 'kontenBelumSiap') {
-      expect(r.bekal.id).toBe('3-4');
+    expect(r.status).toBe('ok');
+    if (r.status === 'ok') {
+      expect(r.hasil.bekal.id).toBe('3-4');
     }
   });
 
   // Usia 48 → u45, Bekal 4-5
-  it('usia 48 bulan → kontenBelumSiap, bekal 4-5', () => {
+  it('usia 48 bulan → ok, bekal 4-5', () => {
     const r = resolveTahapAktif(profilDari(lahirUsia(48)), ACUAN);
-    expect(r.status).toBe('kontenBelumSiap');
-    if (r.status === 'kontenBelumSiap') {
-      expect(r.bekal.id).toBe('4-5');
+    expect(r.status).toBe('ok');
+    if (r.status === 'ok') {
+      expect(r.hasil.bekal.id).toBe('4-5');
     }
   });
 
   // Usia 60 → u56, Bekal 5-6
-  it('usia 60 bulan → kontenBelumSiap, bekal 5-6', () => {
+  it('usia 60 bulan → ok, bekal 5-6', () => {
     const r = resolveTahapAktif(profilDari(lahirUsia(60)), ACUAN);
-    expect(r.status).toBe('kontenBelumSiap');
-    if (r.status === 'kontenBelumSiap') {
-      expect(r.bekal.id).toBe('5-6');
+    expect(r.status).toBe('ok');
+    if (r.status === 'ok') {
+      expect(r.hasil.bekal.id).toBe('5-6');
     }
   });
 
   // Usia 71 → u56, Bekal 5-6 (60 ≤ 71 < 72)
-  it('usia 71 bulan → kontenBelumSiap, bekal 5-6', () => {
+  it('usia 71 bulan → ok, bekal 5-6', () => {
     const r = resolveTahapAktif(profilDari(lahirUsia(71)), ACUAN);
-    expect(r.status).toBe('kontenBelumSiap');
-    if (r.status === 'kontenBelumSiap') {
-      expect(r.bekal.id).toBe('5-6');
+    expect(r.status).toBe('ok');
+    if (r.status === 'ok') {
+      expect(r.hasil.bekal.id).toBe('5-6');
     }
   });
 
@@ -264,13 +264,13 @@ describe('resolveTahapAktif — kasus tepi', () => {
 
   it('lahir 29 Feb tahun kabisat, acuan 28 Feb dua tahun kemudian → 23 bulan → ok, b912', () => {
     // Nope: 23 bulan → b912 ada di Bekal 0-1 (aktif) — 9 ≤ 23? Tidak.
-    // b912 = 9–12, bukan 9–23. 23 bulan ada di t1824 (18–24) → Bekal 1-2 → kontenBelumSiap
+    // b912 = 9–12, bukan 9–23. 23 bulan ada di t1824 (18–24) → Bekal 1-2 → ok
     const lahir = tgl(2024, 2, 29);
     const acuan = tgl(2026, 2, 28);
     const r = resolveTahapAktif(profilDari(lahir), acuan);
-    expect(r.status).toBe('kontenBelumSiap');
-    if (r.status === 'kontenBelumSiap') {
-      expect(r.bekal.id).toBe('1-2');
+    expect(r.status).toBe('ok');
+    if (r.status === 'ok') {
+      expect(r.hasil.bekal.id).toBe('1-2');
     }
   });
 
@@ -294,10 +294,10 @@ describe('resolveTahapAktif — kasus tepi', () => {
   it('prematur 30 minggu pada usia kronologis 25 bulan → koreksi tidak diterapkan', () => {
     const lahir = lahirUsia(25);
     const r = resolveTahapAktif(profilDari(lahir, 30), ACUAN);
-    // 25 bulan, tidak dikoreksi → kontenBelumSiap (Bekal 2-3 aktif: false)
-    expect(r.status).toBe('kontenBelumSiap');
-    if (r.status === 'kontenBelumSiap') {
-      expect(r.usiaBulan).toBe(25);  // tidak dikoreksi
+    // 25 bulan, tidak dikoreksi → ok (Bekal 2-3 aktif: false)
+    expect(r.status).toBe('ok');
+    if (r.status === 'ok') {
+      expect(r.hasil.usiaBulan).toBe(25);  // tidak dikoreksi
     }
   });
 
@@ -353,10 +353,9 @@ describe('integritas registry DAFTAR_BEKAL', () => {
     expect(idsActual).toEqual(idsExpected);
   });
 
-  it('hanya Bekal 0-1 yang aktif', () => {
+  it('semua Bekal 0–6 tahun aktif', () => {
     const aktif = DAFTAR_BEKAL.filter(b => b.aktif);
-    expect(aktif).toHaveLength(1);
-    expect(aktif[0].id).toBe('0-1');
+    expect(aktif.map(b => b.id)).toEqual(['0-1', '1-2', '2-3', '3-4', '4-5', '5-6']);
   });
 
   it('cariSubTahap menemukan sub-tahap yang benar', () => {

@@ -23,6 +23,9 @@ export interface BantuSituasi {
   ringkas?: string;
   kategori: KategoriSituasi;
   sensitifKeselamatan?: boolean;
+  /** Rentang usia anak (bulan, inklusif). Kosong = semua usia 0–71. */
+  usiaMinBulan?: number;
+  usiaMaxBulan?: number;
   clarify: BantuClarify[];
   respons: BantuRespons;
   status: 'menunggu_review' | 'disetujui';
@@ -30,7 +33,7 @@ export interface BantuSituasi {
 
 export const BANTU_SITUASI: BantuSituasi[] = [
   {
-    slug: 'tantrum', label: 'Anak tantrum', ringkas: 'Ledakan emosi, sulit menenangkan', kategori: 'perilaku_anak', status: 'menunggu_review',
+    slug: 'tantrum', label: 'Anak tantrum', ringkas: 'Ledakan emosi, sulit menenangkan', kategori: 'perilaku_anak', usiaMinBulan: 12, usiaMaxBulan: 71, status: 'menunggu_review',
     clarify: [{ pertanyaan: 'Biasanya sebelum tantrum ada pemicunya?', opsi: ['Lapar/lelah', 'Transisi', 'Tidak dituruti', 'Tidak yakin'] }],
     respons: {
       validasi: 'Tantrum itu cara anak menyalurkan perasaan yang belum bisa ia ungkap dengan kata. Kamu tidak sedang melakukan sesuatu yang keliru.',
@@ -52,7 +55,7 @@ export const BANTU_SITUASI: BantuSituasi[] = [
     },
   },
   {
-    slug: 'tidak_mau_makan', label: 'Tidak mau makan', ringkas: 'Menolak makan atau pilih-pilih', kategori: 'perilaku_anak', status: 'menunggu_review',
+    slug: 'tidak_mau_makan', label: 'Tidak mau makan', ringkas: 'Menolak makan atau pilih-pilih', kategori: 'perilaku_anak', usiaMinBulan: 6, usiaMaxBulan: 71, status: 'menunggu_review',
     clarify: [{ pertanyaan: 'Menolaknya seperti apa?', opsi: ['Jenis tertentu', 'Makan secara umum', 'Tergantung suasana'] }],
     respons: {
       validasi: 'Selera & jumlah makan anak sering naik-turun; ini umum pada usia ini.',
@@ -63,7 +66,7 @@ export const BANTU_SITUASI: BantuSituasi[] = [
     },
   },
   {
-    slug: 'memukul', label: 'Memukul', ringkas: 'Memukul, menggigit, atau melukai', kategori: 'perilaku_anak', sensitifKeselamatan: true, status: 'menunggu_review',
+    slug: 'memukul', label: 'Memukul', ringkas: 'Memukul, menggigit, atau melukai', kategori: 'perilaku_anak', usiaMinBulan: 9, usiaMaxBulan: 71, sensitifKeselamatan: true, status: 'menunggu_review',
     clarify: [{ pertanyaan: 'Apakah sampai ada yang terluka?', opsi: ['Tidak', 'Ada yang terluka', 'Sering & parah'] }],
     respons: {
       validasi: 'Di usia ini, memukul sering muncul karena kemampuan bahasa belum secepat perasaannya — ini bukan tanda anak "nakal".',
@@ -74,7 +77,7 @@ export const BANTU_SITUASI: BantuSituasi[] = [
     },
   },
   {
-    slug: 'konflik_saudara', label: 'Konflik saudara', ringkas: 'Rebutan, cemburu, atau bertengkar', kategori: 'relasional', sensitifKeselamatan: true, status: 'menunggu_review',
+    slug: 'konflik_saudara', label: 'Konflik saudara', ringkas: 'Rebutan, cemburu, atau bertengkar', kategori: 'relasional', usiaMinBulan: 12, usiaMaxBulan: 71, sensitifKeselamatan: true, status: 'menunggu_review',
     clarify: [{ pertanyaan: 'Situasinya bagaimana?', opsi: ['Rebutan barang', 'Aman, hanya ribut', 'Sampai menyakiti'] }],
     respons: {
       validasi: 'Konflik antar-saudara adalah bagian wajar mereka belajar berbagi & bernegosiasi.',

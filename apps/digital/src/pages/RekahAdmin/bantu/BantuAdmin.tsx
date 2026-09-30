@@ -9,8 +9,9 @@ import { useAuth } from '../../../context/AuthContext';
 import { HeroAdmin, TEMA, TamanTema } from '../tema/temaAdmin';
 import {
   muatKatalogBantu, muatDrafBantu, ajukanDrafBantu, hapusDrafBantu, terapkanBantu, aturStatusBantu,
-  buatDrafBantu, perbaruiDrafBantu, isiDariSituasi, LABEL_KATEGORI,
+  buatDrafBantu, perbaruiDrafBantu, isiDariSituasi, LABEL_KATEGORI, rentangUsia,
 } from '../../../lib/supabase/bantu';
+import { labelUsia } from '../../../features/irama-hari/kebiasaanSeed';
 import type { DrafBantu, IsiBantu, SituasiKatalog, KategoriBantu } from '../../../lib/supabase/bantu';
 import { muatUlangKatalogBantu } from '../../../features/bantu/bantuKatalog';
 import {
@@ -30,6 +31,7 @@ function isiDariSeed(s: BantuSituasi, i: number): IsiBantu {
   return {
     slug: s.slug, label: s.label, ringkas: s.ringkas ?? '', kategori: s.kategori, sensitif_keselamatan: !!s.sensitifKeselamatan,
     urutan: (i + 1) * 10,
+    ...rentangUsia(s.usiaMinBulan, s.usiaMaxBulan),
     clarify: s.clarify.map(c => ({ pertanyaan: c.pertanyaan, opsi: [...c.opsi], opsi_keselamatan: [] })),
     validasi: s.respons.validasi, langkah: [...s.respons.langkah], yang_diamati: s.respons.yangDiamati ?? '',
     kenapa_sederhana: s.respons.kenapaSederhana ?? '', kenapa_sumber: s.respons.kenapaSumber ?? '',
@@ -250,6 +252,7 @@ export default function BantuAdmin() {
                     {admin && <th className="w-10 px-4 py-3"><span className="sr-only">Pilih</span></th>}
                     <th className="px-4 py-3 text-[12px] font-bold uppercase tracking-wider text-pekat/40">Situasi</th>
                     <th className="px-3 py-3 text-[12px] font-bold uppercase tracking-wider text-pekat/40">Kategori</th>
+                    <th className="px-3 py-3 text-[12px] font-bold uppercase tracking-wider text-pekat/40">Usia</th>
                     <th className="px-3 py-3 text-[12px] font-bold uppercase tracking-wider text-pekat/40">Langkah</th>
                     <th className="px-3 py-3 text-[12px] font-bold uppercase tracking-wider text-pekat/40">Status</th>
                     <th className="px-4 py-3 text-right text-[12px] font-bold uppercase tracking-wider text-pekat/40">Aksi</th>
@@ -277,6 +280,7 @@ export default function BantuAdmin() {
                           {b.draf?.catatan_tinjauan && <p className="mt-1 line-clamp-2 text-[12px] text-pekat/55">Catatan peninjau: {b.draf.catatan_tinjauan}</p>}
                         </td>
                         <td className="px-3 py-3.5 text-[13px] text-pekat/60">{LABEL_KATEGORI[b.isi.kategori]}</td>
+                        <td className="px-3 py-3.5 text-[13px] text-pekat/60">{labelUsia(b.isi.usia_min_bulan, b.isi.usia_max_bulan)}</td>
                         <td className="px-3 py-3.5 text-[13px] tabular-nums text-pekat/60">{b.isi.langkah.length}</td>
                         <td className="px-3 py-3.5">
                           <span className={`whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-bold ${WARNA[s]}`}>{LABEL[s]}{s === 'tayang' && b.live ? ` · v${b.live.versi}` : ''}</span>

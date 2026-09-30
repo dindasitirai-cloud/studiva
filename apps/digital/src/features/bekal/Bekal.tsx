@@ -10,7 +10,8 @@ import { renderRichText } from '../beranda-usia/renderRichText';
 import { resolveTahapAktif } from '../beranda-usia/resolveTahap';
 import { rakitBekal } from '../beranda-usia/adapter/rakitBekal';
 import type { ItemSikap } from '../beranda-usia/adapter/sikapAdapter';
-import { resolveSikap } from '../beranda-usia/adapter/sikapAdapter';
+import { resolveSikap, sikapDariKebiasaan } from '../beranda-usia/adapter/sikapAdapter';
+import { useIramaKatalog } from '../irama-hari/iramaKatalog';
 import { BUNGA_DARI_NAMA } from '../akar-keluarga/registryBunga';
 import KnowledgeGallery from '../../pages/DashboardPages/Tier2/KnowledgeGallery';
 import type { KnowledgeCard } from '../../pages/DashboardPages/Tier2/knowledgeCardData';
@@ -725,7 +726,13 @@ export default function Bekal({
   // Sikap per fase yang tayang dari admin (Supabase, migrasi 028) ditambahkan ke katalog bawaan.
   const [sikapTayang, setSikapTayang] = useState<ItemSikap[]>([]);
   useEffect(() => { let batal = false; muatKatalogSikap().then(s => { if (!batal) setSikapTayang(s); }); return () => { batal = true; }; }, []);
-  const katalogSikap = useMemo(() => [...katalogSikapStatis, ...sikapTayang], [katalogSikapStatis, sikapTayang]);
+  // Ditambah katalog Kebiasaan Baik (tabel kebiasaan_baik / seed) yang punya rentang usia persis,
+  // agar setiap usia 0–6 tahun punya kebiasaan untuk tiap nilai.
+  const { kebiasaan: katalogKebiasaan } = useIramaKatalog();
+  const katalogSikap = useMemo(
+    () => [...katalogSikapStatis, ...sikapTayang, ...sikapDariKebiasaan(katalogKebiasaan)],
+    [katalogSikapStatis, sikapTayang, katalogKebiasaan],
+  );
 
   const profilAnak = useMemo<ProfilAnak | null>(() => {
     if (!profile.tanggalLahir) return null;

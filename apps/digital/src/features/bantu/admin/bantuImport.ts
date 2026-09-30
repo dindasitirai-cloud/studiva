@@ -3,15 +3,16 @@
 // pertanyaan clarify (pertanyaan_n, opsi_n dipisah ";", opsi_keselamatan_n dipisah ";").
 import Papa from 'papaparse';
 import { cekKata } from '../../temani/admin/temaniImport';
-import { normalisasiBantu, LABEL_KATEGORI } from '../../../lib/supabase/bantu';
+import { normalisasiBantu, LABEL_KATEGORI, rentangUsia } from '../../../lib/supabase/bantu';
 import type { IsiBantu, KategoriBantu, ClarifyBantu } from '../../../lib/supabase/bantu';
 import { OPSI_MEMICU_B5 } from '../bantuSeed';
+import { labelUsia } from '../../irama-hari/kebiasaanSeed';
 
 export const MAKS_LANGKAH = 6;
 export const MAKS_CLARIFY = 2;
 
 export const KOLOM_BANTU = [
-  'slug', 'label', 'ringkas', 'kategori', 'sensitif_keselamatan', 'urutan', 'validasi',
+  'slug', 'label', 'ringkas', 'kategori', 'sensitif_keselamatan', 'urutan', 'usia_min_bulan', 'usia_max_bulan', 'validasi',
   ...Array.from({ length: MAKS_LANGKAH }, (_, i) => `langkah_${i + 1}`),
   ...Array.from({ length: MAKS_CLARIFY }, (_, i) => [`pertanyaan_${i + 1}`, `opsi_${i + 1}`, `opsi_keselamatan_${i + 1}`]).flat(),
   'yang_diamati', 'kenapa_sederhana', 'kenapa_sumber',
@@ -131,6 +132,10 @@ export function validasiImportBantu(data: Baris[]): BarisImportBantu[] {
     const kategori = KATEGORI.find(k => k === katInput.replace(/\s+/g, '_') || (!!katInput && LABEL_KATEGORI[k].toLowerCase().startsWith(katInput))) ?? null;
     if (!kategori) E.push(`${b}: kategori "${r.kategori ?? ''}" tidak dikenal (perilaku_anak, relasional, caregiver, meta).`);
     if (r.urutan && Number.isNaN(Number(r.urutan))) E.push(`${b}: urutan perlu berupa angka.`);
+    for (const k of ['usia_min_bulan', 'usia_max_bulan']) {
+      const v = r[k];
+      if (v && (Number.isNaN(Number(v)) || Number(v) < 0 || Number(v) > 71)) E.push(`${b}: ${k} perlu angka 0–71.`);
+    }
 
     const langkah = Array.from({ length: MAKS_LANGKAH }, (_, i) => r[`langkah_${i + 1}`] ?? '').filter(Boolean);
     const clarify: ClarifyBantu[] = [];
@@ -146,6 +151,7 @@ export function validasiImportBantu(data: Baris[]): BarisImportBantu[] {
     const isi = normalisasiBantu({
       slug, label: r.label, ringkas: r.ringkas, kategori: kategori ?? 'perilaku_anak',
       sensitif_keselamatan: bool(r.sensitif_keselamatan), urutan: r.urutan ? Number(r.urutan) : 100,
+      ...rentangUsia(r.usia_min_bulan, r.usia_max_bulan),
       clarify, validasi: r.validasi, langkah, yang_diamati: r.yang_diamati,
       kenapa_sederhana: r.kenapa_sederhana, kenapa_sumber: r.kenapa_sumber,
     });
@@ -165,7 +171,8 @@ export function keCSVBantu(daftar: IsiBantu[]): string {
   daftar.forEach(s => {
     const r: Record<string, string> = {
       slug: s.slug, label: s.label, ringkas: s.ringkas, kategori: s.kategori,
-      sensitif_keselamatan: s.sensitif_keselamatan ? 'ya' : 'tidak', urutan: String(s.urutan), validasi: s.validasi,
+      sensitif_keselamatan: s.sensitif_keselamatan ? 'ya' : 'tidak', urutan: String(s.urutan),
+      usia_min_bulan: String(s.usia_min_bulan), usia_max_bulan: String(s.usia_max_bulan), validasi: s.validasi,
       yang_diamati: s.yang_diamati, kenapa_sederhana: s.kenapa_sederhana, kenapa_sumber: s.kenapa_sumber,
     };
     s.langkah.forEach((l, i) => { r[`langkah_${i + 1}`] = l; });
@@ -188,6 +195,7 @@ export function bandingkanBantu(lama: IsiBantu, baru: IsiBantu): Array<{ bagian:
   cek('Kategori', LABEL_KATEGORI[lama.kategori], LABEL_KATEGORI[baru.kategori]);
   cek('Sensitif keselamatan', lama.sensitif_keselamatan, baru.sensitif_keselamatan);
   cek('Urutan', lama.urutan, baru.urutan);
+  cek('Usia anak', labelUsia(lama.usia_min_bulan, lama.usia_max_bulan), labelUsia(baru.usia_min_bulan, baru.usia_max_bulan));
   cek('Validasi', lama.validasi, baru.validasi);
   for (let i = 0; i < Math.max(lama.langkah.length, baru.langkah.length); i++) cek(`Langkah ${i + 1}`, lama.langkah[i] ?? '', baru.langkah[i] ?? '');
   for (let i = 0; i < Math.max(lama.clarify.length, baru.clarify.length); i++) {

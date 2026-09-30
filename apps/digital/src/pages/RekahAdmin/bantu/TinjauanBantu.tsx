@@ -5,6 +5,7 @@ import { AlertTriangle, ShieldAlert } from 'lucide-react';
 import type { KontenDraf } from '../../../lib/supabase/pipeline';
 import { muatKatalogBantu, normalisasiBantu, isiDariSituasi, LABEL_KATEGORI } from '../../../lib/supabase/bantu';
 import type { IsiBantu, SituasiKatalog } from '../../../lib/supabase/bantu';
+import { labelUsia } from '../../../features/irama-hari/kebiasaanSeed';
 import { bandingkanBantu, periksaKataBantu, catatanKeselamatan } from '../../../features/bantu/admin/bantuImport';
 import PratinjauBantu from './PratinjauBantu';
 
@@ -25,7 +26,7 @@ export default function TinjauanBantu({ draf }: { draf: KontenDraf }) {
     <div className="grid gap-5 px-5 py-5 md:grid-cols-[minmax(0,1fr)_260px]">
       <div className="flex min-w-0 flex-col gap-3">
         <p className="text-[13px] text-pekat/70">
-          <b className="text-pekat">{LABEL_KATEGORI[isi.kategori]}</b> · {isi.ringkas || '—'}
+          <b className="text-pekat">{LABEL_KATEGORI[isi.kategori]}</b> · {labelUsia(isi.usia_min_bulan, isi.usia_max_bulan)} · {isi.ringkas || '—'}
           {isi.sensitif_keselamatan && <span className="ml-2 inline-flex items-center gap-0.5 rounded-md bg-rekah/10 px-1.5 py-0.5 text-[11px] font-bold text-rekah-tua"><ShieldAlert className="h-3 w-3" /> sensitif keselamatan</span>}
         </p>
         {kata.length > 0 && (

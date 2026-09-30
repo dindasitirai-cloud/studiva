@@ -17,6 +17,9 @@ export interface ItemSikap {
   sumberId: string;
   /** ID Kebiasaan Baik kanonik (MATERI kb-XXX) — jembatan agar Temani & Bekal menunjuk butir yang sama. */
   kebiasaanId?: string;
+  /** Opsional: rentang usia persis (bulan, inklusif). Bila diisi, dipakai menggantikan fase. */
+  usiaMinBulan?: number;
+  usiaMaxBulan?: number;
 }
 
 export interface HasilSikap {
@@ -76,12 +79,44 @@ export function resolveSikap(
   const fase = faseDariUsiaBulan(usiaBulan);
   if (fase === null) return [];
   const fokusSet = new Set<string>(nilaiFokus);
-  return katalog.filter(
-    s =>
-      fase >= s.faseMulai &&
-      fase <= s.faseSelesai &&
-      s.nilai.some(n => fokusSet.has(n)),
-  );
+  const terlihat = new Set<string>();
+  return katalog.filter(s => {
+    const cocokUsia = s.usiaMinBulan !== undefined && s.usiaMaxBulan !== undefined
+      ? usiaBulan >= s.usiaMinBulan && usiaBulan <= s.usiaMaxBulan
+      : fase >= s.faseMulai && fase <= s.faseSelesai;
+    if (!cocokUsia || !s.nilai.some(n => fokusSet.has(n))) return false;
+    // Satu kebiasaan cukup muncul sekali (sikap per fase & katalog Kebiasaan Baik bisa menunjuk butir yang sama).
+    const kunci = s.kebiasaanId ?? s.id;
+    if (terlihat.has(kunci)) return false;
+    terlihat.add(kunci);
+    return true;
+  });
+}
+
+/**
+ * Butir katalog Kebiasaan Baik (tabel kebiasaan_baik / seed) → ItemSikap, supaya tab
+ * Kebiasaan Baik di Bekal ikut memakai kebiasaan yang sesuai usia anak.
+ */
+export function sikapDariKebiasaan(daftar: readonly {
+  id: string; judul: string; nilai: readonly string[]; usia_min_bulan: number; usia_max_bulan: number; status?: string;
+}[]): ItemSikap[] {
+  return daftar
+    .filter(k => k.status !== 'diarsipkan')
+    .map(k => {
+      const nilai = k.nilai.filter(n => NILAI_KANONIK.has(n)) as NilaiAkar[];
+      return {
+        id: `kb:${k.id}`,
+        kebiasaanId: k.id,
+        judul: k.judul,
+        nilai,
+        faseMulai: faseDariUsiaBulan(k.usia_min_bulan) ?? 1,
+        faseSelesai: faseDariUsiaBulan(Math.min(k.usia_max_bulan, 71)) ?? 5,
+        usiaMinBulan: k.usia_min_bulan,
+        usiaMaxBulan: k.usia_max_bulan,
+        sumberId: `kebiasaan_baik:${k.id}`,
+      };
+    })
+    .filter(s => s.nilai.length > 0);
 }
 
 // ─── Adapter ─────────────────────────────────────────────────────────────────

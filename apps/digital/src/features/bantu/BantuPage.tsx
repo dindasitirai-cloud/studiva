@@ -21,7 +21,7 @@ import { dispatchRekahError } from '../../utils/rekahApiError';
 import {
   adaSinyalBahaya, RUJUKAN_KESELAMATAN,
 } from './bantuSeed';
-import { useBantuKatalog, opsiMemicuB5 } from './bantuKatalog'; // katalog admin (025) → fallback seed
+import { useBantuKatalog, opsiMemicuB5, cocokUsiaBantu } from './bantuKatalog'; // katalog admin (025) → fallback seed
 import type { BantuSituasi } from './bantuSeed';
 
 type Layar = 'hub' | 'clarify' | 'guide' | 'safety';
@@ -230,7 +230,8 @@ export default function BantuPage() {
   const plumOutlineBtn = 'inline-flex w-full items-center justify-center gap-1.5 rounded-2xl border-2 bg-white px-4 py-2.5 font-nunito text-[13px] font-extrabold';
   const inputCls = 'w-full rounded-2xl border bg-white px-3.5 py-2.5 font-nunito text-[13.5px] focus:outline-none focus:ring-2 focus:ring-langit';
 
-  const situasiTampil = BANTU_SITUASI.filter(s => s.kategori !== 'meta');
+  // Hanya situasi yang sesuai usia anak aktif (situasi tanpa rentang usia tampil untuk semua).
+  const situasiTampil = BANTU_SITUASI.filter(s => s.kategori !== 'meta' && cocokUsiaBantu(s, usiaBulan));
   const waHref = `https://wa.me/${NOMOR_WA_KONSELING}?text=${encodeURIComponent(PESAN_WA_KONSELING)}`;
   const sneakPeek = threadsTampil.slice(0, 2);
 

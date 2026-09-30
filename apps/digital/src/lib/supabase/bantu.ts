@@ -27,6 +27,9 @@ export interface IsiBantu {
   kategori: KategoriBantu;
   sensitif_keselamatan: boolean;
   urutan: number;
+  /** Rentang usia anak (bulan, inklusif) tempat situasi ini ditampilkan. 0–71 = semua usia. */
+  usia_min_bulan: number;
+  usia_max_bulan: number;
   clarify: ClarifyBantu[];
   validasi: string;
   langkah: string[];
@@ -49,11 +52,22 @@ export interface DrafBantu extends Omit<KontenDraf, 'isi'> {
 export function isiBantuKosong(): IsiBantu {
   return {
     slug: '', label: '', ringkas: '', kategori: 'perilaku_anak', sensitif_keselamatan: false, urutan: 100,
+    usia_min_bulan: 0, usia_max_bulan: 71,
     clarify: [], validasi: '', langkah: ['', ''], yang_diamati: '', kenapa_sederhana: '', kenapa_sumber: '',
   };
 }
 
 const KATEGORI: KategoriBantu[] = ['perilaku_anak', 'relasional', 'caregiver', 'meta'];
+
+/** Rentang usia yang aman: bilangan bulat 0–71, min ≤ max; kosong = semua usia. */
+export function rentangUsia(min: unknown, max: unknown): { usia_min_bulan: number; usia_max_bulan: number } {
+  const bulat = (v: unknown, d: number) => {
+    const n = Number(v);
+    return v === '' || v === null || v === undefined || !Number.isFinite(n) ? d : Math.min(71, Math.max(0, Math.round(n)));
+  };
+  const a = bulat(min, 0), b = bulat(max, 71);
+  return a <= b ? { usia_min_bulan: a, usia_max_bulan: b } : { usia_min_bulan: b, usia_max_bulan: a };
+}
 
 export function normalisasiBantu(isi: Partial<IsiBantu>): IsiBantu {
   const t = (s: unknown) => (typeof s === 'string' ? s.trim() : '');
@@ -65,6 +79,7 @@ export function normalisasiBantu(isi: Partial<IsiBantu>): IsiBantu {
     kategori: KATEGORI.includes(isi.kategori as KategoriBantu) ? (isi.kategori as KategoriBantu) : 'perilaku_anak',
     sensitif_keselamatan: !!isi.sensitif_keselamatan,
     urutan: Number.isFinite(Number(isi.urutan)) ? Number(isi.urutan) : 100,
+    ...rentangUsia(isi.usia_min_bulan, isi.usia_max_bulan),
     clarify: (Array.isArray(isi.clarify) ? isi.clarify : [])
       .map(c => {
         const opsi = daftar(c?.opsi);

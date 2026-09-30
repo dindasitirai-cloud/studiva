@@ -11,6 +11,7 @@ import {
   buatDrafBantu, perbaruiDrafBantu, muatSatuDrafBantu, muatDrafBantu, muatKatalogBantu,
   isiBantuKosong, isiDariSituasi, LABEL_KATEGORI,
 } from '../../../lib/supabase/bantu';
+import { labelUsia } from '../../../features/irama-hari/kebiasaanSeed';
 import type { IsiBantu, DrafBantu, SituasiKatalog, KategoriBantu, ClarifyBantu } from '../../../lib/supabase/bantu';
 import {
   periksaKelengkapanBantu, periksaKataBantu, catatanKeselamatan, MAKS_LANGKAH, MAKS_CLARIFY,
@@ -199,6 +200,12 @@ export default function EditorBantu() {
               </Kolom>
               <Kolom label="Urutan tampil" htmlFor="b-urut" bantuan="Angka kecil tampil lebih dulu.">
                 <input id="b-urut" type="number" className={input} value={isi.urutan} disabled={!bisaDiubah} onChange={e => atur('urutan', Number(e.target.value))} />
+              </Kolom>
+              <Kolom label="Usia anak dari (bulan)" htmlFor="b-umin" bantuan="0 = sejak lahir.">
+                <input id="b-umin" type="number" min={0} max={71} className={input} value={isi.usia_min_bulan} disabled={!bisaDiubah} onChange={e => atur('usia_min_bulan', Number(e.target.value))} />
+              </Kolom>
+              <Kolom label="Sampai (bulan)" htmlFor="b-umax" bantuan={`71 = sampai 6 tahun. Tampil untuk: ${labelUsia(isi.usia_min_bulan, isi.usia_max_bulan)}.`}>
+                <input id="b-umax" type="number" min={0} max={71} className={input} value={isi.usia_max_bulan} disabled={!bisaDiubah} onChange={e => atur('usia_max_bulan', Number(e.target.value))} />
               </Kolom>
               <label htmlFor="b-sensitif" className="flex items-start gap-2 pt-6 text-[13px] text-pekat/80">
                 <input id="b-sensitif" type="checkbox" className="mt-0.5" checked={isi.sensitif_keselamatan} disabled={!bisaDiubah} onChange={e => atur('sensitif_keselamatan', e.target.checked)} />

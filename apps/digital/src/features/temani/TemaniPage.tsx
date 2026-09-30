@@ -2,6 +2,7 @@
 // satu fokus kecil per hari, "Saya akan coba" menulis ke Kelola. Additive.
 // STATUS: DRAFT copy — menunggu review Psikolog Fitri Effendy. Tanpa skor/level/persen.
 import React, { useMemo, useState, useEffect, useCallback } from 'react';
+import TautanSumber from '../../components/TautanSumber';
 import { ArrowLeft, ChevronRight, Check } from 'lucide-react';
 import { useAnakAktif } from '../../context/AnakContext';
 import { useAkarStateSync } from '../akar-keluarga/state';
@@ -507,7 +508,7 @@ export default function TemaniPage() {
                     <div className="mt-2 flex items-start gap-2"><span className="rounded-md bg-langit/30 px-1.5 py-0.5 text-[9px] font-extrabold uppercase text-pekat">catatan</span><span>{hariIni.kenapaEvidence}</span></div>
                   )}
                   {hariIni.kenapaSumber ? (
-                    <div className="mt-2 flex items-start gap-2"><span className="rounded-md bg-langit/30 px-1.5 py-0.5 text-[9px] font-extrabold uppercase text-pekat">sumber</span><span>{hariIni.kenapaSumber}</span></div>
+                    <div className="mt-2 flex items-start gap-2"><span className="rounded-md bg-langit/30 px-1.5 py-0.5 text-[9px] font-extrabold uppercase text-pekat">sumber</span><span><TautanSumber sumber={hariIni.kenapaSumber} /></span></div>
                   ) : null}
                 </div>
               )}

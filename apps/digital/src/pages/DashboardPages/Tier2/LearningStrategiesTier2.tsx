@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import TautanSumber from '../../../components/TautanSumber';
 import {
   Star, CheckCircle2, Download, ShoppingBag,
   X, FlaskConical, Clock,
@@ -55,7 +56,7 @@ function SciBox({ sci, sumber }: { sci: string; sumber: string }) {
         <FlaskConical className="mt-0.5 h-4 w-4 shrink-0 text-blue-500" strokeWidth={1.5} />
         <div>
           <p className="text-[12px] leading-[1.6] text-blue-800">{sci}</p>
-          <p className="mt-1 text-[11px] text-blue-500"><span className="font-semibold">Sumber:</span> {sumber}</p>
+          <p className="mt-1 text-[11px] text-blue-500"><span className="font-semibold">Sumber:</span> <TautanSumber sumber={sumber} /></p>
         </div>
       </div>
     </div>
@@ -457,7 +458,7 @@ export function ActivityModal({ activity, onClose, onJadwalkan }: { activity: Ac
                 <FlaskConical className="h-4 w-4" /> Kenapa ini bermanfaat?
               </p>
               <p className="font-nunito font-semibold" style={{ fontSize: 15, lineHeight: 1.6, color: '#5B6E93' }}>{activity.sci}</p>
-              <p className="mt-2 font-nunito font-bold" style={{ fontSize: 12.5, color: '#7C93C4' }}>Sumber: {activity.sumber}</p>
+              <p className="mt-2 font-nunito font-bold" style={{ fontSize: 12.5, color: '#7C93C4' }}>Sumber: <TautanSumber sumber={activity.sumber} /></p>
             </div>
 
             {/* Tujuan */}
@@ -740,7 +741,7 @@ export function ToolModal({ tool, onClose }: { tool: EduTool; onClose: () => voi
                 <FlaskConical className="h-4 w-4" /> Kenapa ini bermanfaat?
               </p>
               <p className="font-nunito font-semibold" style={{ fontSize: 15, lineHeight: 1.6, color: '#5B6E93' }}>{tool.sci}</p>
-              <p className="mt-2 font-nunito font-bold" style={{ fontSize: 12.5, color: '#7C93C4' }}>Sumber: {tool.sumber}</p>
+              <p className="mt-2 font-nunito font-bold" style={{ fontSize: 12.5, color: '#7C93C4' }}>Sumber: <TautanSumber sumber={tool.sumber} /></p>
             </div>
 
             <div>
@@ -842,7 +843,7 @@ export function DownloadModal({ item, onClose }: { item: Downloadable; onClose: 
                 <FlaskConical className="h-4 w-4" /> Kenapa ini bermanfaat?
               </p>
               <p className="font-nunito font-semibold" style={{ fontSize: 15, lineHeight: 1.6, color: '#5B6E93' }}>{item.sci}</p>
-              <p className="mt-2 font-nunito font-bold" style={{ fontSize: 12.5, color: '#7C93C4' }}>Sumber: {item.sumber}</p>
+              <p className="mt-2 font-nunito font-bold" style={{ fontSize: 12.5, color: '#7C93C4' }}>Sumber: <TautanSumber sumber={item.sumber} /></p>
             </div>
 
             <div>

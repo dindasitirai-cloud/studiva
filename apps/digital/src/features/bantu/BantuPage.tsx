@@ -5,6 +5,7 @@
 // forum Supabase + moderasi, CTA WA, pemindai keselamatan. Sub-alur Clarify/Guide/Safety
 // tidak termasuk handoff → dipertahankan. STATUS copy: DRAFT (menunggu Fitri); nomor WA: KONFIRMASI.
 import React, { useMemo, useState } from 'react';
+import TautanSumber from '../../components/TautanSumber';
 import { ArrowLeft, Check, Eye, Heart, ChevronRight, Bookmark, Share2, Lightbulb } from 'lucide-react';
 import BotanicalStem from '../../components/BotanicalStem';
 import type { BotanicalConfig } from '../../components/BotanicalStem';
@@ -559,7 +560,7 @@ export default function BantuPage() {
                 {whyOpen && (
                   <div className="mt-2 font-nunito text-[12.5px] leading-relaxed text-pekat/75">
                     {r.kenapaSederhana}
-                    {r.kenapaSumber ? <div className="mt-2"><span className="rounded-md bg-langit/30 px-1.5 py-0.5 text-[9px] font-extrabold uppercase">sumber</span> {r.kenapaSumber}</div> : null}
+                    {r.kenapaSumber ? <div className="mt-2"><span className="rounded-md bg-langit/30 px-1.5 py-0.5 text-[9px] font-extrabold uppercase">sumber</span> <TautanSumber sumber={r.kenapaSumber} /></div> : null}
                   </div>
                 )}
               </div>

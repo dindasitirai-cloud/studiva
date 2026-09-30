@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import TautanSumber from '../../../components/TautanSumber';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft, ArrowRight, Clock, BadgeCheck, CheckCircle2, Bookmark, ExternalLink,
@@ -241,7 +242,7 @@ export default function KnowledgeCardScientific() {
                 <li key={ref.n} id={`ref-${ref.n}`} className="flex items-start gap-2 text-[13px] text-stv-body">
                   <span className="mt-0.5 shrink-0 font-bold text-amber-700">[{ref.n}]</span>
                   <span>
-                    {ref.text}
+                    {ref.url ? ref.text : <TautanSumber sumber={ref.text} />}
                     {ref.url && (
                       <>
                         {' '}

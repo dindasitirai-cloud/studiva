@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import TautanSumber from '../../../components/TautanSumber';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft, ArrowRight, Clock, BookOpen, FlaskConical,
@@ -309,7 +310,7 @@ export default function KnowledgeCardSummary() {
         {card.sources.length > 0 && (
           <div className="mt-5 flex items-start gap-2 text-[12px] text-stv-muted">
             <BookOpen className="mt-0.5 h-3.5 w-3.5 shrink-0" strokeWidth={2} />
-            <div><span className="font-semibold">Sumber: </span>{card.sources.join(' · ')}</div>
+            <div><span className="font-semibold">Sumber: </span><TautanSumber sumber={card.sources} /></div>
           </div>
         )}
 

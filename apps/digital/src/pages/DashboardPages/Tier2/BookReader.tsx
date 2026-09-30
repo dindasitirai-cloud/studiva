@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import TautanSumber from '../../../components/TautanSumber';
 import { CheckCircle2, AlertTriangle, BookOpen, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import { CoverImage } from './BookCarousel';
 import { KnowledgeCard, DOMAIN_MAP } from './knowledgeCardData';
@@ -214,7 +215,7 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
                   {card.sources.length > 0 && (
                     <div style={{ marginTop:18, display:'flex', alignItems:'center', gap:9, fontFamily:'Nunito', fontWeight:600, fontSize:13.5, color:'#A98DA0' }}>
                       <BookOpen className="h-4 w-4 shrink-0" strokeWidth={2} />
-                      <span><strong>Sumber:</strong> {card.sources.join(' · ')}</span>
+                      <span><strong>Sumber:</strong> <TautanSumber sumber={card.sources} /></span>
                     </div>
                   )}
 
@@ -467,7 +468,7 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
                             {card.sources.map((text, i) => (
                               <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 11 }}>
                                 <span style={{ flexShrink: 0, width: 22, height: 22, borderRadius: 6, background: '#F1E7D7', color: '#8A7280', fontFamily: 'Nunito', fontWeight: 800, fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{i + 1}</span>
-                                <span style={{ fontFamily: 'Nunito', fontWeight: 600, fontSize: 13.5, lineHeight: 1.5, color: '#8A7280' }}>{text}</span>
+                                <span style={{ fontFamily: 'Nunito', fontWeight: 600, fontSize: 13.5, lineHeight: 1.5, color: '#8A7280' }}><TautanSumber sumber={text} /></span>
                               </div>
                             ))}
                           </div>
@@ -703,7 +704,7 @@ export default function BookReader({ card, isRead, onToggleRead, onClose, prevCa
                         {sciDetail.refs.map((text, i) => (
                           <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 11 }}>
                             <span style={{ flexShrink: 0, width: 22, height: 22, borderRadius: 6, background: '#F1E7D7', color: '#8A7280', fontFamily: 'Nunito', fontWeight: 800, fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{i + 1}</span>
-                            <span style={{ fontFamily: 'Nunito', fontWeight: 600, fontSize: 13.5, lineHeight: 1.5, color: '#8A7280' }}>{text}</span>
+                            <span style={{ fontFamily: 'Nunito', fontWeight: 600, fontSize: 13.5, lineHeight: 1.5, color: '#8A7280' }}><TautanSumber sumber={text} /></span>
                           </div>
                         ))}
                       </div>

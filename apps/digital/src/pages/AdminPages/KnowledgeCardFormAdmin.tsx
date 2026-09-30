@@ -4,6 +4,7 @@ import { Plus, X, ArrowLeft, AlertCircle, Send, Info, Eye } from 'lucide-react';
 import { api } from '../../api/client';
 import { AGE_RANGES, DOMAIN_MAP, AgeKey, DomainCode, CARDS, KnowledgeCard } from '@studiva/shared';
 import { useAuth } from '../../context/AuthContext';
+import { useKnowledgeLibrary } from '../../context/KnowledgeLibraryContext';
 import { buatDanAjukan } from '../../lib/supabase/pipeline';
 import { pindaiFields } from '../../lib/pemindaiKata';
 import { composeScientific } from '../../lib/composeScientific';
@@ -353,6 +354,7 @@ function formToCard(form: FormState): KnowledgeCard {
 }
 
 export default function KnowledgeCardFormAdmin({ pipelineOnly = false, backPath = '/admin/knowledge-cards' }: { pipelineOnly?: boolean; backPath?: string }) {
+  const { managedCards, slugSupabase } = useKnowledgeLibrary();
   const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
   const isEditing = Boolean(id);
@@ -383,6 +385,14 @@ export default function KnowledgeCardFormAdmin({ pipelineOnly = false, backPath 
     // lalu fallback ke kc_managed (untuk kartu yang diterbitkan via pipeline).
     if (pipelineOnly && isNaN(Number(id))) {
       const decoded = decodeURIComponent(id);
+      // Kartu yang sudah tayang lewat pipeline Rekah (Supabase) dipakai lebih dulu.
+      const kartuTayang = managedCards.find(c => c.id === decoded && slugSupabase.has(c.id));
+      if (kartuTayang) {
+        setForm(fromKcManaged(kartuTayang));
+        setExistingStatus('PUBLISHED');
+        setLoading(false);
+        return;
+      }
       const staticCard = CARDS.find(c => c.id === decoded);
       if (staticCard) {
         const base = fromKcManaged(staticCard);
@@ -461,7 +471,7 @@ export default function KnowledgeCardFormAdmin({ pipelineOnly = false, backPath 
       })
       .catch(() => setError('Gagal memuat data kartu.'))
       .finally(() => setLoading(false));
-  }, [id, pipelineOnly]);
+  }, [id, pipelineOnly, slugSupabase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function setField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm(prev => ({ ...prev, [key]: value }));

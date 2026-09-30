@@ -105,7 +105,7 @@ interface PropsKnowledgeGallery {
 
 export default function KnowledgeGallery({ defaultAgeMonths, onJadwalkanBuku, tampilkanHero = true }: PropsKnowledgeGallery = {}) {
   const { setSegments } = useAudioPlayer();
-  const { isBookmarked, toggleBookmark, publishedCards } = useKnowledgeLibrary();
+  const { isBookmarked, toggleBookmark, publishedCards, slugSupabase } = useKnowledgeLibrary();
   // Anak aktif dari AnakContext, sumber tunggal data anak. Komponen ini juga
   // dipakai di dalam Bekal dengan defaultAgeMonths, jadi anak aktif boleh null.
   const { anakAktif } = useAnak();
@@ -154,11 +154,14 @@ export default function KnowledgeGallery({ defaultAgeMonths, onJadwalkanBuku, ta
   }, []);
 
   // Merge: API cards take priority; fall back to published managed cards
+  // Kartu tayang dari admin Rekah (Supabase) selalu menang, lalu backend lokal, lalu statis.
   const allCards = useMemo<KnowledgeCard[]>(() => {
     if (!apiCards) return publishedCards;
-    const apiSlugs = new Set(apiCards.map(c => c.id));
-    return [...apiCards, ...publishedCards.filter(c => !apiSlugs.has(c.id))];
-  }, [apiCards, publishedCards]);
+    const dariSupabase = publishedCards.filter(c => slugSupabase.has(c.id));
+    const api = apiCards.filter(c => !slugSupabase.has(c.id));
+    const sudah = new Set([...dariSupabase, ...api].map(c => c.id));
+    return [...dariSupabase, ...api, ...publishedCards.filter(c => !sudah.has(c.id))];
+  }, [apiCards, publishedCards, slugSupabase]);
 
   // API-backed "sudah dibaca" state
   const [apiReadIds, setApiReadIds] = useState<Set<string>>(new Set());

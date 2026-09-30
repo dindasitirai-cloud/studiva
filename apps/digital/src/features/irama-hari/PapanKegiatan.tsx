@@ -12,7 +12,7 @@ import BungaNilai from '../../components/BungaNilai';
 import IlustrasiKegiatan from './IlustrasiKegiatan';
 import { useChildProfile } from '../beranda-usia/useChildProfile';
 import { useLearningStrategies } from '../../context/LearningStrategiesContext';
-import { CARDS } from '../../pages/DashboardPages/Tier2/knowledgeCardData';
+import { useKnowledgeLibrary } from '../../context/KnowledgeLibraryContext';
 import {
   useDayPlan, DEFAULT_KOLOM, LB, SUBT, TINT, CHIP, labelWarna, idNilai, ORDER,
 } from './dayPlanData';
@@ -342,6 +342,7 @@ export default function PapanKegiatan({ idAnak, tanggal, nilaiFokus, centangHari
   const plan = useDayPlan(idAnak, tanggal);
   const { usiaBulan } = useChildProfile();
   const { publishedActivities } = useLearningStrategies();
+  const { publishedCards: CARDS } = useKnowledgeLibrary(); // statis + kartu tayang dari admin
   const usia = usiaBulan ?? 0;
   const fokusSet = useMemo(() => new Set(nilaiFokus), [nilaiFokus]);
   const [picker, setPicker] = useState<{ kegKey: string; tipe: 'main' | 'buku' } | null>(null);
@@ -353,7 +354,7 @@ export default function PapanKegiatan({ idAnak, tanggal, nilaiFokus, centangHari
   const wawasanList = useMemo<PilihanBekal[]>(() => {
     const keys = wawasanKeys(usia);
     return CARDS.filter(c => keys.has(c.ageKey) && c.summary).map(c => ({ id: `wt-${c.id}`, judul: c.title }));
-  }, [usia]);
+  }, [usia, CARDS]);
 
   return (
     <>

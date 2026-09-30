@@ -6,7 +6,7 @@ import { AGE_RANGES, DOMAIN_MAP, AgeKey, DomainCode } from '@studiva/shared';
 import { HeroAdmin, TEMA } from './tema/temaAdmin';
 
 export default function WawasanTumbuhAdmin() {
-  const { managedCards, apiLoaded, adminDeleteCard } = useKnowledgeLibrary();
+  const { managedCards, apiLoaded, adminDeleteCard, slugSupabase } = useKnowledgeLibrary();
   const [search, setSearch] = useState('');
   const [filterAge, setFilterAge] = useState<AgeKey | 'semua'>('semua');
   const [filterDomain, setFilterDomain] = useState<DomainCode | 'semua'>('semua');
@@ -123,7 +123,7 @@ export default function WawasanTumbuhAdmin() {
                           ? 'bg-rekah/10 text-rekah/70'
                           : 'bg-daun/20 text-daun'
                     }`}>
-                      {isPlaceholder ? 'Segera Hadir' : isDraft ? 'Draft' : 'Tayang'}
+                      {isPlaceholder ? 'Segera Hadir' : isDraft ? 'Draft' : slugSupabase.has(card.id) ? 'Tayang · dari admin' : 'Tayang'}
                     </span>
                     <Link
                       to={`/rekah-admin/wawasan/${encodeURIComponent(card.id)}/edit`}
@@ -145,7 +145,7 @@ export default function WawasanTumbuhAdmin() {
                 {confirmId === card.id && (
                   <div className="flex items-center justify-between gap-3 rounded-lg border border-red-100 bg-red-50 px-3 py-2">
                     <p className="text-[12px] text-red-700 font-medium">
-                      Hapus kartu ini secara permanen?
+                      {slugSupabase.has(card.id) ? 'Sembunyikan kartu ini dari orang tua? (diarsipkan, bisa diterbitkan ulang lewat Edit & Ajukan)' : 'Hapus kartu ini secara permanen?'}
                     </p>
                     <div className="flex gap-2">
                       <button
@@ -161,7 +161,7 @@ export default function WawasanTumbuhAdmin() {
                         onClick={() => handleDelete(card.id)}
                         className="rounded-full bg-red-500 px-3 py-1 text-[11px] font-bold text-white hover:bg-red-600 transition disabled:opacity-50"
                       >
-                        {deletingId === card.id ? 'Menghapus...' : 'Ya, Hapus'}
+                        {deletingId === card.id ? 'Memproses...' : slugSupabase.has(card.id) ? 'Ya, Arsipkan' : 'Ya, Hapus'}
                       </button>
                     </div>
                   </div>

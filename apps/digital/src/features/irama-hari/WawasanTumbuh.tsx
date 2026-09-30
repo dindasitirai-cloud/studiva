@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { X, BookOpen, Plus } from 'lucide-react';
 import FilterSubUsia, { resolveSubUsia, SUB_USIA_TO_AGE_KEY } from '../../components/FilterSubUsia';
 import type { IdSubUsia } from '../../components/FilterSubUsia';
-import { CARDS } from '../../pages/DashboardPages/Tier2/knowledgeCardData';
+import { useKnowledgeLibrary } from '../../context/KnowledgeLibraryContext';
 import type { KnowledgeCard } from '../../pages/DashboardPages/Tier2/knowledgeCardData';
 import { getBookColors, DOMAIN_CODE_LABEL } from '../../pages/DashboardPages/Tier2/bekalDomainTokens';
 import { usePilihanHarian } from './PilihanHarianContext';
@@ -85,15 +85,16 @@ interface PropsWawasanTumbuh {
 export default function WawasanTumbuh({ usiaBulan, idAnak }: PropsWawasanTumbuh) {
   const { wawasanIds, pilihWawasan } = usePilihanHarian();
   const [showBrowse, setShowBrowse] = useState(false);
+  const { publishedCards: CARDS } = useKnowledgeLibrary(); // statis + kartu tayang dari admin
 
   const kartuSesuaiUsia = useMemo(() => {
     const allowed = allowedAgeKeys(usiaBulan);
     return CARDS.filter(c => allowed.has(c.ageKey) && c.summary);
-  }, [usiaBulan]);
+  }, [usiaBulan, CARDS]);
 
   const kartuTerpilih = useMemo(
     () => wawasanIds.flatMap(id => { const c = CARDS.find(k => k.id === id); return c ? [c] : []; }),
-    [wawasanIds],
+    [wawasanIds, CARDS],
   );
 
   const sudahDipilih = wawasanIds.length > 0;

@@ -1075,9 +1075,10 @@ export default function StrategiesAdmin({ pipelineOnly = false }: { pipelineOnly
     );
   }, [managedDownloads, search, filterAge, filterStatus]);
 
+  // Di Rekah admin (pipelineOnly) Program Mingguan sudah tidak dipakai — isinya dipindah ke perjalanan Temani.
   const TABS: { id: TabKey; label: string; count: number }[] = [
     { id: 'aktivitas', label: 'Aktivitas',       count: managedActivities.length },
-    { id: 'program',   label: 'Program Mingguan', count: managedPlans.length },
+    ...(pipelineOnly ? [] : [{ id: 'program' as TabKey, label: 'Program Mingguan', count: managedPlans.length }]),
     { id: 'alat',      label: 'Alat Edukasi',     count: managedTools.length },
     { id: 'unduhan',   label: 'Unduhan',           count: managedDownloads.length },
   ];
@@ -1099,7 +1100,7 @@ export default function StrategiesAdmin({ pipelineOnly = false }: { pipelineOnly
           {!pipelineOnly && <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Kelola Learning Strategies</h2>}
           <div className="mt-1 flex flex-wrap items-center gap-3 text-[13px]">
             <span className="text-stv-muted">
-              Total: <strong className="text-stv-navy">{managedActivities.length + managedPlans.length + managedTools.length + managedDownloads.length}</strong> konten
+              Total: <strong className="text-stv-navy">{managedActivities.length + (pipelineOnly ? 0 : managedPlans.length) + managedTools.length + managedDownloads.length}</strong> konten
             </span>
             {!apiLoaded && (
               <span className="text-slate-400 text-[12px]">Memuat dari backend...</span>
@@ -1119,9 +1120,15 @@ export default function StrategiesAdmin({ pipelineOnly = false }: { pipelineOnly
       </div>
 
       {/* Overview stat cards */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      {pipelineOnly && (
+        <div className="rounded-xl bg-[color:var(--ra-tint)] px-4 py-3 text-[13px] text-pekat/80">
+          Program Mingguan tidak lagi ada di Ajak Main. Isinya sudah dipindah menjadi perjalanan berpandu di{' '}
+          <a href="/rekah-admin/temani" className="font-bold underline">Temani</a> (slug berawalan <code className="font-mono">program-</code>).
+        </div>
+      )}
+      <div className={`grid grid-cols-2 gap-3 ${pipelineOnly ? 'sm:grid-cols-3' : 'sm:grid-cols-4'}`}>
         <StatCard label="Aktivitas" items={managedActivities} />
-        <StatCard label="Program Mingguan" items={managedPlans} />
+        {!pipelineOnly && <StatCard label="Program Mingguan" items={managedPlans} />}
         <StatCard label="Alat Edukasi" items={managedTools} />
         <StatCard label="Unduhan" items={managedDownloads} />
       </div>

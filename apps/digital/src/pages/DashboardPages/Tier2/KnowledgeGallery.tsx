@@ -59,7 +59,7 @@ function apiToLocal(c: ApiKnowledgeCard): KnowledgeCard {
 // ── Age band mapping ─────────────────────────────────────────────────────────
 // Maps child age in months → the set of ageKey tags to show in the gallery.
 // Rules per product spec:
-//   0-12 months  → show all  0-3m, 3-6m, 6-9m, 9-12m
+//   0–11 bulan   → show all  0-3m, 3-6m, 6-9m, 9-12m  (batas atas eksklusif, sama dengan Bekal & Ajak Main)
 //   >12-24 months → show 12-18m, 18-24m
 //   >24-36 months → show 2-3y
 //   >36-48 months → show 3-4y
@@ -77,7 +77,7 @@ const AGE_BAND_KEYS: ReadonlyArray<{ maxMonths: number; keys: AgeKey[] }> = [
 
 function childAgeToAllowedKeys(ageMonths: number): Set<AgeKey> {
   for (const band of AGE_BAND_KEYS) {
-    if (ageMonths <= band.maxMonths) return new Set(band.keys);
+    if (ageMonths < band.maxMonths) return new Set(band.keys);
   }
   return new Set(['5-6y'] as AgeKey[]);
 }
@@ -85,7 +85,7 @@ function childAgeToAllowedKeys(ageMonths: number): Set<AgeKey> {
 // Returns the first (youngest) ageKey in the band — used for carousel fallback.
 function childAgeToAgeKey(ageMonths: number): AgeKey {
   for (const band of AGE_BAND_KEYS) {
-    if (ageMonths <= band.maxMonths) return band.keys[0];
+    if (ageMonths < band.maxMonths) return band.keys[0];
   }
   return '5-6y';
 }

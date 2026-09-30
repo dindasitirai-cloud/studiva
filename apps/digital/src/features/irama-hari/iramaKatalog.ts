@@ -6,7 +6,7 @@
 import { useSyncExternalStore } from 'react';
 import type { NilaiAkar } from '../akar-keluarga/content';
 import type { Item, KegDef, Waktu } from './dayPlanData';
-import { TEMPLATE_SEED, KEBIASAAN_SEED, USIA_MAKS } from './kebiasaanSeed';
+import { TEMPLATE_SEED, KEBIASAAN_SEED, USIA_MAKS, sumberUntuk } from './kebiasaanSeed';
 import type { TemplateIrama, KebiasaanKatalog } from './kebiasaanSeed';
 import { muatKatalogKebiasaan, muatTemplateIrama } from '../../lib/supabase/kebiasaan';
 
@@ -56,9 +56,20 @@ export function ambilKatalogIrama(): KatalogIrama {
 
 const tayang = (k: KebiasaanKatalog) => k.status !== 'diarsipkan';
 
+/** Sumber butir: dari katalog admin; bila kosong (data lama) pakai rujukan bawaan per ID. */
+function sumberDari(k: KebiasaanKatalog): string {
+  return (k.sumber ?? '').trim() || sumberUntuk(k.id);
+}
+
+/** Sumber untuk satu ID Kebiasaan Baik (mis. dari Bekal yang memakai kb-###). */
+export function sumberKebiasaan(id: string, k: KatalogIrama = katalog): string {
+  const b = k.kebiasaan.find(x => x.id === id);
+  return b ? sumberDari(b) : sumberUntuk(id);
+}
+
 /** Butir kebiasaan rutin → item papan (n diisi saat disaring sesuai fokus). */
 export function keItem(k: KebiasaanKatalog): Item {
-  return { id: k.id, tipe: 'kebiasaan', t: k.judul, n: k.nilai[0], nilaiList: k.nilai, usiaMin: k.usia_min_bulan, usiaMax: k.usia_max_bulan };
+  return { id: k.id, tipe: 'kebiasaan', t: k.judul, n: k.nilai[0], nilaiList: k.nilai, usiaMin: k.usia_min_bulan, usiaMax: k.usia_max_bulan, sumber: sumberDari(k) };
 }
 
 /** Kegiatan template aktif untuk satu bagian waktu, lengkap dengan kebiasaan rutinnya. */
@@ -103,7 +114,7 @@ export function saringKebiasaanKartu(items: Item[], usiaBulan: number, fokus: Re
   return out;
 }
 
-export interface ItemSituasional { id: string; t: string; n: NilaiAkar; kapan: string; deskripsi: string }
+export interface ItemSituasional { id: string; t: string; n: NilaiAkar; kapan: string; deskripsi: string; sumber: string }
 
 /** Kebiasaan situasional untuk usia anak & nilai fokus keluarga. */
 export function situasionalUntuk(usiaBulan: number, fokus: ReadonlySet<NilaiAkar>, k: KatalogIrama = katalog): ItemSituasional[] {
@@ -111,7 +122,7 @@ export function situasionalUntuk(usiaBulan: number, fokus: ReadonlySet<NilaiAkar
   for (const b of [...k.kebiasaan].sort((a, c) => a.urutan - c.urutan)) {
     if (!tayang(b) || b.kategori !== 'situasional' || !cocokUsia(usiaBulan, b.usia_min_bulan, b.usia_max_bulan)) continue;
     const n = nilaiCocok(b.nilai, fokus);
-    if (n) out.push({ id: b.id, t: b.judul, n, kapan: b.kapan || 'kapan saja', deskripsi: b.deskripsi });
+    if (n) out.push({ id: b.id, t: b.judul, n, kapan: b.kapan || 'kapan saja', deskripsi: b.deskripsi, sumber: sumberDari(b) });
   }
   return out;
 }

@@ -40,6 +40,8 @@ export interface KebiasaanKatalog {
   template_key: string | null;
   kapan: string | null;
   urutan: number;
+  /** Rujukan ilmiah/pedoman; beberapa sumber dipisah "; ". Tampil sebagai tautan (TautanSumber). */
+  sumber: string;
   status: 'tayang' | 'diarsipkan';
 }
 
@@ -100,7 +102,68 @@ export const KLASIFIKASI_MATERI: Record<string, string | { kapan: string }> = {
   'kb-056': 'tidur', 'kb-057': { kapan: 'saat kumpul keluarga' },
 };
 
-type Baris = Omit<KebiasaanKatalog, 'status' | 'deskripsi' | 'usia_min_bulan' | 'usia_max_bulan'> & { deskripsi?: string; usia_min_bulan?: number; usia_max_bulan?: number };
+// ─── Sumber rujukan (diverifikasi September 2026) ──────────────────────────────
+// Pedoman lembaga (AAP, CDC, WHO, Harvard, ZERO TO THREE) dan riset yang ditelaah sejawat.
+// Setiap butir memakai 1–2 rujukan yang paling dekat dengan praktiknya. DRAFT — review Fitri.
+export const SUMBER_RUJUKAN = {
+  serve: 'Center on the Developing Child, Harvard University — Serve and Return. https://developingchild.harvard.edu/key-concepts/serve-and-return/',
+  tangis: "AAP HealthyChildren.org — Responding to Your Baby's Cries. https://www.healthychildren.org/English/ages-stages/baby/crying-colic/Pages/Responding-to-Your-Babys-Cries.aspx",
+  pijat: 'Field, T. (2019). Pediatric Massage Therapy Research: A Narrative Review. Children, 6(6), 78. https://doi.org/10.3390/children6060078',
+  main: 'Yogman, M. dkk. (2018). The Power of Play: A Pediatric Role in Enhancing Development in Young Children. Pediatrics, 142(3). https://doi.org/10.1542/peds.2018-2058',
+  baca: 'AAP (2014). Literacy Promotion: An Essential Component of Primary Care Pediatric Practice. Pediatrics, 134(2). https://pubmed.ncbi.nlm.nih.gov/24962987/',
+  tidur: 'Mindell, J. A. & Williamson, A. A. (2018). Benefits of a bedtime routine in young children. Sleep Medicine Reviews, 40. https://pubmed.ncbi.nlm.nih.gov/29195725/',
+  tummy: 'AAP HealthyChildren.org — Back to Sleep, Tummy to Play. https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/back-to-sleep-tummy-to-play.aspx',
+  menolong: 'Warneken, F. & Tomasello, M. (2006). Altruistic Helping in Human Infants and Young Chimpanzees. Science, 311. https://doi.org/10.1126/science.1121448',
+  memberi: 'Aknin, L. B., Hamlin, J. K. & Dunn, E. W. (2012). Giving Leads to Happiness in Young Children. PLoS ONE, 7(6). https://doi.org/10.1371/journal.pone.0039211',
+  cerita: 'Lee, K. dkk. (2014). Can Classic Moral Stories Promote Honesty in Children? Psychological Science, 25(8). https://pubmed.ncbi.nlm.nih.gov/24928424/',
+  jujur: "Talwar, V., Arruda, C. & Yachison, S. (2015). The effects of punishment and appeals for honesty on children's truth-telling behavior. Journal of Experimental Child Psychology, 130. https://pubmed.ncbi.nlm.nih.gov/25447716/",
+  pujian: 'CDC — Tips for Praise, Imitation, and Description (Essentials for Parenting Toddlers). https://www.cdc.gov/parenting-toddlers/communication/praise.html',
+  usaha: "Mueller, C. M. & Dweck, C. S. (1998). Praise for intelligence can undermine children's motivation and performance. Journal of Personality and Social Psychology, 75(1). https://pubmed.ncbi.nlm.nih.gov/9686450/",
+  makan: 'AAP HealthyChildren.org — Benefits of Family Meals: Eat Together, Thrive Together. https://www.healthychildren.org/English/family-life/family-dynamics/Pages/family-meals-eat-together-thrive-together.aspx',
+  makanSendiri: 'AAP HealthyChildren.org — Self-Feeding. https://www.healthychildren.org/English/ages-stages/toddler/nutrition/Pages/Self-Feeding.aspx',
+  gigi: 'AAP HealthyChildren.org — Toothbrushing Tips for Young Children. https://www.healthychildren.org/English/healthy-living/oral-health/Pages/Toothbrushing-Tips-for-Young-Children.aspx',
+  cuciTangan: 'CDC — About Handwashing (Clean Hands). https://www.cdc.gov/clean-hands/about/index.html',
+  syukur: "Hussong, A. M. dkk. (2021). Parenting and the development of children's gratitude. Child Development Perspectives. https://doi.org/10.1111/cdep.12434",
+  emosi: 'ZERO TO THREE — Tips for Promoting Social-Emotional Development in Infants and Toddlers. https://www.zerotothree.org/resource/tips-for-promoting-social-emotional-development/',
+  empati: 'ZERO TO THREE — How to Help Your Child Develop Empathy. https://www.zerotothree.org/resource/how-to-help-your-child-develop-empathy/',
+  berbagi: 'ZERO TO THREE — Helping Young Children With Sharing. https://www.zerotothree.org/resource/helping-young-children-with-sharing/',
+  kendali: 'ZERO TO THREE — How to Help Children Develop Self-Control. https://www.zerotothree.org/resource/help-your-child-develop-self-control/',
+  ef: 'Center on the Developing Child, Harvard University — Executive Function & Self-Regulation. https://developingchild.harvard.edu/key-concept/executive-function/',
+  tugas: 'Tepper dkk. (2022). Executive functions and household chores: Does engagement in chores predict children\'s cognition? Australian Occupational Therapy Journal. https://doi.org/10.1111/1440-1630.12822',
+  alam: 'Kuo, M., Barnes, M. & Jordan, C. (2019). Do Experiences With Nature Promote Learning? Frontiers in Psychology, 10. https://doi.org/10.3389/fpsyg.2019.00305',
+  berani: 'Brussoni, M. dkk. (2015). What is the Relationship between Risky Outdoor Play and Health in Children? A Systematic Review. IJERPH, 12(6). https://doi.org/10.3390/ijerph120606423',
+  perhatian: 'Tomasello, M. & Farrar, M. J. (1986). Joint attention and early language. Child Development, 57(6). https://pubmed.ncbi.nlm.nih.gov/3802971/',
+  uang: 'CFPB (2016). Building Blocks to Help Youth Achieve Financial Capability. https://files.consumerfinance.gov/f/documents/092016_cfpb_BuildingBlocksReport_ModelAndRecommendations_web.pdf',
+  tahap: 'CDC — Learn the Signs. Act Early. (tahapan perkembangan). https://www.cdc.gov/act-early/',
+} as const;
+type KunciSumber = keyof typeof SUMBER_RUJUKAN;
+
+/** Rujukan per butir Kebiasaan Baik. */
+export const SUMBER_KEBIASAAN: Record<string, KunciSumber[]> = {
+  'kb-001': ['serve'], 'kb-002': ['tangis', 'serve'], 'kb-003': ['pijat'], 'kb-004': ['serve'], 'kb-005': ['serve'],
+  'kb-006': ['tidur'], 'kb-007': ['baca'], 'kb-008': ['main'], 'kb-009': ['serve'], 'kb-010': ['tummy'],
+  'kb-011': ['menolong'], 'kb-012': ['makan'], 'kb-013': ['main'], 'kb-014': ['memberi'], 'kb-015': ['main'],
+  'kb-016': ['perhatian'], 'kb-017': ['memberi'], 'kb-018': ['makanSendiri', 'tugas'], 'kb-019': ['alam'], 'kb-020': ['berbagi'],
+  'kb-021': ['tahap'], 'kb-022': ['menolong', 'tugas'], 'kb-023': ['pujian'], 'kb-024': ['baca'], 'kb-025': ['memberi'],
+  'kb-026': ['tahap'], 'kb-027': ['kendali'], 'kb-028': ['pujian'], 'kb-029': ['tugas'], 'kb-030': ['kendali'],
+  'kb-031': ['syukur', 'tidur'], 'kb-032': ['tugas', 'alam'], 'kb-033': ['empati', 'main'], 'kb-034': ['ef'], 'kb-035': ['jujur'],
+  'kb-036': ['emosi'], 'kb-037': ['syukur', 'makan'], 'kb-038': ['berbagi'], 'kb-039': ['tugas'], 'kb-040': ['cerita'],
+  'kb-041': ['syukur'], 'kb-042': ['memberi'], 'kb-043': ['alam', 'tugas'], 'kb-044': ['main', 'empati'], 'kb-045': ['emosi'],
+  'kb-046': ['ef', 'main'], 'kb-047': ['main'], 'kb-048': ['main'], 'kb-049': ['memberi'], 'kb-050': ['ef'],
+  'kb-051': ['berani'], 'kb-052': ['tugas'], 'kb-053': ['uang'], 'kb-054': ['memberi'], 'kb-055': ['jujur'],
+  'kb-056': ['ef', 'tugas'], 'kb-057': ['usaha'],
+  'kbd-bangun-1': ['serve'], 'kbd-sarap-1': ['cuciTangan'], 'kbd-sarap-2': ['syukur'], 'kbd-mandi-1': ['ef'],
+  'kbd-main-1': ['berbagi'], 'kbd-main-2': ['empati'], 'kbd-msiang-1': ['makanSendiri'], 'kbd-mmalam-1': ['tugas'],
+  'kbd-beres-1': ['tugas'], 'kbd-tidur-1': ['gigi'], 'kbd-tidur-2': ['tidur'],
+  'msh-001': ['serve'], 'msh-002': ['empati'], 'msh-003': ['jujur'], 'msh-004': ['main'], 'msh-005': ['perhatian'],
+  'sit-1': ['kendali'], 'sit-2': ['berbagi'], 'sit-3': ['jujur'], 'sit-4': ['berani'],
+};
+
+export function sumberUntuk(id: string): string {
+  return (SUMBER_KEBIASAAN[id] ?? []).map(k => SUMBER_RUJUKAN[k]).join('; ');
+}
+
+type Baris = Omit<KebiasaanKatalog, 'status' | 'deskripsi' | 'usia_min_bulan' | 'usia_max_bulan' | 'sumber'> & { deskripsi?: string; usia_min_bulan?: number; usia_max_bulan?: number };
 
 const BAWAAN: Baris[] = [
   { id: 'kbd-bangun-1',  judul: 'Sapa hangat & kontak mata', nilai: ['Kasih Sayang'],   kategori: 'rutin', template_key: 'bangun',     kapan: null, urutan: 10 },
@@ -127,7 +190,7 @@ const BAWAAN: Baris[] = [
 
 function bangunSeed(): KebiasaanKatalog[] {
   const out: KebiasaanKatalog[] = BAWAAN.map(b => ({
-    deskripsi: '', usia_min_bulan: 0, usia_max_bulan: USIA_MAKS, status: 'tayang', ...b,
+    deskripsi: '', usia_min_bulan: 0, usia_max_bulan: USIA_MAKS, status: 'tayang', sumber: sumberUntuk(b.id), ...b,
   } as KebiasaanKatalog));
   MATERI.forEach((band, i) => {
     const u = BAND_USIA[i];
@@ -142,6 +205,7 @@ function bangunSeed(): KebiasaanKatalog[] {
         template_key: rutin ? (k as string) : null,
         kapan: rutin ? null : (k as { kapan: string } | undefined)?.kapan ?? 'kapan saja',
         urutan: 100 + Number(m.id.slice(3)),
+        sumber: sumberUntuk(m.id),
         status: 'tayang',
       });
     });

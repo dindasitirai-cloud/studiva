@@ -19,6 +19,8 @@ import type { TemplateIrama, Waktu, KategoriKebiasaan } from '../../../features/
 import { periksaKelengkapanKeb, periksaKataKeb, POLA_ID } from '../../../features/irama-hari/admin/kebiasaanImport';
 import { TEMA, BungaNilai } from '../tema/temaAdmin';
 import PratinjauKebiasaan from './PratinjauKebiasaan';
+import TautanSumber from '../../../components/TautanSumber';
+import { sumberUntuk } from '../../../features/irama-hari/kebiasaanSeed';
 
 const T = TEMA.sikap;
 const input = 'w-full rounded-xl border border-rekah/15 bg-white px-3.5 py-2.5 text-[14px] text-pekat placeholder:text-pekat/30 focus:border-[color:var(--ra-aksen)] focus:outline-none focus:ring-2 focus:ring-[color:var(--ra-tint)] disabled:bg-pekat/5 disabled:text-pekat/50';
@@ -72,7 +74,7 @@ export default function EditorKebiasaan() {
           if (terbuka) { navigate(`/rekah-admin/sikap/draf/${terbuka.id}`, { replace: true }); return; }
           const s = (kat ?? []).find(x => x.id === kid) ?? null;
           if (!s) { setPesan({ tipe: 'galat', teks: 'Kebiasaan tayang tidak ditemukan.' }); return; }
-          setLive(s); setIsi(isiDariKebiasaan(s));
+          setLive(s); { const isiLive = isiDariKebiasaan(s); setIsi({ ...isiLive, sumber: isiLive.sumber || sumberUntuk(isiLive.id) }); }
         } else if (!(location.state as { isi?: IsiKebiasaan } | null)?.isi) {
           setIsi(p => ({ ...p, id: idKebiasaanBerikutnya([...(kat ?? []).map(k => k.id), ...drafs.map(d => d.isi.id)]) }));
         }
@@ -231,6 +233,11 @@ export default function EditorKebiasaan() {
             </div>
             <Kolom label="Deskripsi singkat" htmlFor="k-desk" bantuan="Satu kalimat: apa yang dilakukan dan bagaimana rasanya bagi anak.">
               <textarea id="k-desk" rows={2} className={input} value={isi.deskripsi} disabled={!bisaDiubah} onChange={e => atur('deskripsi', e.target.value)} />
+            </Kolom>
+            <Kolom label="Sumber" htmlFor="k-sumber" bantuan="Pisahkan beberapa sumber dengan titik koma (;). Tulis alamat web atau DOI agar tautan langsung ke halaman yang tepat.">
+              <textarea id="k-sumber" rows={2} className={input} value={isi.sumber} disabled={!bisaDiubah} onChange={e => atur('sumber', e.target.value)}
+                placeholder="mis. Yogman dkk. (2018). The Power of Play. Pediatrics. https://doi.org/10.1542/peds.2018-2058" />
+              {isi.sumber.trim() && <span className="text-[12px] text-pekat/60">Pratinjau tautan: <TautanSumber sumber={isi.sumber} ringkas /></span>}
             </Kolom>
             <div>
               <p className="mb-1.5 text-[12px] font-bold text-pekat/70">Nilai yang ditanam <span className="font-normal text-pekat/45">· maksimal 3, yang pertama dipakai bila beberapa jadi fokus</span></p>

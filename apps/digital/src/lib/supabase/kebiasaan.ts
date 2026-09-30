@@ -27,6 +27,7 @@ export function isiKebiasaanKosong(kategori: KategoriKebiasaan = 'rutin', templa
   return {
     id: '', judul: '', deskripsi: '', nilai: [], usia_min_bulan: 0, usia_max_bulan: USIA_MAKS,
     kategori, template_key: kategori === 'rutin' ? template_key : null, kapan: kategori === 'situasional' ? '' : null, urutan: 100,
+    sumber: '',
   };
 }
 
@@ -54,6 +55,7 @@ export function normalisasiKebiasaan(isi: Partial<IsiKebiasaan>): IsiKebiasaan {
     template_key: kategori === 'rutin' ? (t(isi.template_key) || null) : null,
     kapan: kategori === 'situasional' ? t(isi.kapan) : null,
     urutan: bulat(isi.urutan, 100),
+    sumber: t(isi.sumber),
   };
 }
 

@@ -6,6 +6,7 @@
 // Copy DRAFT — review Psikolog Fitri Effendy.
 // =============================================================
 import React, { useMemo, useState } from 'react';
+import TautanSumber from '../../components/TautanSumber';
 import { Check, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { NilaiAkar } from '../akar-keluarga/content';
 import type { CentangKebiasaan } from '@studiva/shared';
@@ -105,7 +106,7 @@ function RailKelola({
   nilaiFokus, situFokus, centangHari, mekarDari, tugasTodo, tugasDone, tugasTotal, onToggleTugas, onAddTugas, onToggleKeb, onKeInbox, onKeKeluarga,
 }: {
   nilaiFokus: readonly NilaiAkar[];
-  situFokus: { id: string; t: string; n: NilaiAkar; kapan: string }[];
+  situFokus: { id: string; t: string; n: NilaiAkar; kapan: string; sumber?: string }[];
   centangHari: Record<string, string[]>;
   mekarDari: (n: NilaiAkar) => number;
   tugasTodo: RailTugas[];
@@ -134,8 +135,9 @@ function RailKelola({
             {situFokus.map((it, i) => {
               const done = (centangHari[it.n] ?? []).includes(it.id);
               return (
-                <button key={it.id} type="button" role="checkbox" aria-checked={done} aria-label={it.t} onClick={() => onToggleKeb(it.n, it.id)}
-                  style={{ display: 'flex', alignItems: 'flex-start', gap: 10, textAlign: 'left', width: '100%', cursor: 'pointer', border: '1px solid rgba(110,59,87,.08)', borderRadius: 12, padding: '10px 12px', background: '#FDF7FB', boxShadow: '0 8px 18px -14px rgba(90,50,70,.55)', transform: `rotate(${i % 2 ? 0.8 : -0.9}deg)` }}>
+                <div key={it.id} style={{ transform: `rotate(${i % 2 ? 0.8 : -0.9}deg)` }}>
+                <button type="button" role="checkbox" aria-checked={done} aria-label={it.t} onClick={() => onToggleKeb(it.n, it.id)}
+                  style={{ display: 'flex', alignItems: 'flex-start', gap: 10, textAlign: 'left', width: '100%', cursor: 'pointer', border: '1px solid rgba(110,59,87,.08)', borderRadius: 12, padding: '10px 12px', background: '#FDF7FB', boxShadow: '0 8px 18px -14px rgba(90,50,70,.55)' }}>
                   <span style={{ width: 20, height: 20, flexShrink: 0, marginTop: 1, borderRadius: 6, background: done ? '#F06BA8' : '#fff', border: done ? '2px solid #F06BA8' : '2px solid #E7CFDD', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Check style={{ width: 12, height: 12, opacity: done ? 1 : 0 }} stroke="#fff" strokeWidth={3.4} />
                   </span>
@@ -147,6 +149,12 @@ function RailKelola({
                     <span style={{ display: 'block', fontFamily: 'Nunito, sans-serif', fontWeight: 700, fontSize: 10.5, color: '#B79AAC', marginTop: 2 }}>{it.kapan} · {it.n}</span>
                   </span>
                 </button>
+                {it.sumber && (
+                  <div style={{ padding: '4px 12px 0 42px', fontFamily: 'Nunito, sans-serif', fontWeight: 700, fontSize: 10.5, lineHeight: 1.45, color: '#B79AAC' }}>
+                    Sumber: <TautanSumber sumber={it.sumber} ringkas />
+                  </div>
+                )}
+                </div>
               );
             })}
           </div>

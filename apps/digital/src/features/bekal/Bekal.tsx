@@ -22,6 +22,8 @@ import { tanggalDariTimestampWIB } from '@studiva/shared';
 import { useAnakAktif } from '../../context/AnakContext';
 import { tambahKustomKeTanggal } from '../../lib/supabase/rekah';
 import { muatKatalogSikap } from '../../lib/supabase/ajakMain';
+import TautanSumber from '../../components/TautanSumber';
+import { sumberKebiasaan } from '../irama-hari/iramaKatalog';
 import { useTemaniKatalog, journeyUntukKebiasaan } from '../temani/temaniKatalog';
 import {
   ActivityCard, ActivityModal,
@@ -418,6 +420,11 @@ function PopupDetailNilai({
                         <span className="mt-1.5 flex-shrink-0 rounded-full" style={{ width: 9, height: 9, background: pal.ink }} />
                         <span className="font-nunito font-bold" style={{ fontSize: 14.5, lineHeight: 1.4, color: '#6E3B57' }}>{s.judul}</span>
                       </div>
+                      {sumberKebiasaan(kbId) && (
+                        <p className="mt-1 pl-[19px] font-nunito font-semibold" style={{ fontSize: 11.5, lineHeight: 1.45, color: '#A98BA0' }}>
+                          Sumber: <TautanSumber sumber={sumberKebiasaan(kbId)} ringkas />
+                        </p>
+                      )}
                       {(onTambahRutinitas || (onTemani && adaJourney)) && (
                         <div className="mt-2 flex flex-wrap gap-2 pl-[19px]">
                           {onTambahRutinitas && (

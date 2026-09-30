@@ -10,7 +10,7 @@ import type { IsiKebiasaan } from '../../../lib/supabase/kebiasaan';
 import { USIA_MAKS, labelUsia } from '../kebiasaanSeed';
 
 export const KOLOM_KEB = [
-  'id', 'judul', 'deskripsi', 'nilai', 'usia_min_bulan', 'usia_max_bulan', 'kategori', 'kegiatan', 'kapan', 'urutan',
+  'id', 'judul', 'deskripsi', 'nilai', 'usia_min_bulan', 'usia_max_bulan', 'kategori', 'kegiatan', 'kapan', 'urutan', 'sumber',
 ] as const;
 type Kolom = typeof KOLOM_KEB[number];
 type Baris = Partial<Record<Kolom, string>> & { _baris: number };
@@ -111,7 +111,7 @@ export function validasiImportKeb(data: Baris[], kunciTemplate: readonly string[
     const isi = normalisasiKebiasaan({
       id: r.id ?? '', judul: r.judul, deskripsi: r.deskripsi, nilai: nilaiMentah as IsiKebiasaan['nilai'],
       usia_min_bulan: min, usia_max_bulan: max, kategori: kat === 'situasional' ? 'situasional' : 'rutin',
-      template_key: r.kegiatan ?? null, kapan: r.kapan ?? null, urutan: angka(r.urutan, 100),
+      template_key: r.kegiatan ?? null, kapan: r.kapan ?? null, urutan: angka(r.urutan, 100), sumber: r.sumber ?? '',
     });
     const idKosong = !isi.id;
     if (!idKosong) {
@@ -133,7 +133,7 @@ export function keCSVKeb(daftar: IsiKebiasaan[]): string {
   const rows: string[][] = [[...KOLOM_KEB]];
   daftar.forEach(k => rows.push([
     k.id, k.judul, k.deskripsi, k.nilai.join(';'), String(k.usia_min_bulan), String(k.usia_max_bulan),
-    k.kategori, k.template_key ?? '', k.kapan ?? '', String(k.urutan),
+    k.kategori, k.template_key ?? '', k.kapan ?? '', String(k.urutan), k.sumber,
   ]));
   return '﻿' + Papa.unparse(rows);
 }
@@ -154,5 +154,6 @@ export function bandingkanKeb(lama: IsiKebiasaan, baru: IsiKebiasaan, namaKegiat
   cek('Kegiatan', namaKegiatan(lama.template_key), namaKegiatan(baru.template_key));
   cek('Kapan', lama.kapan, baru.kapan);
   cek('Urutan', lama.urutan, baru.urutan);
+  cek('Sumber', lama.sumber, baru.sumber);
   return out;
 }

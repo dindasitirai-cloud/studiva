@@ -6,6 +6,7 @@
 // dan atur urutan lewat tombol naik/turun. Copy DRAFT — review Fitri.
 // =============================================================
 import React, { useMemo, useState } from 'react';
+import TautanSumber from '../../components/TautanSumber';
 import { Trash2, Check, Pencil, X, ChevronUp, ChevronDown, Leaf } from 'lucide-react';
 import type { NilaiAkar } from '../akar-keluarga/content';
 import BungaNilai from '../../components/BungaNilai';
@@ -245,6 +246,11 @@ function KartuAktivitas({
                         <div style={{ fontFamily: 'Nunito, sans-serif', fontWeight: 700, fontSize: 14, lineHeight: 1.35, color: done ? '#8A5A74' : '#6E3B57', textDecoration: done ? 'line-through' : 'none', transition: 'color .16s' }}>{it.t}</div>
                         <div style={{ marginTop: 5 }}>
                           <span style={{ display: 'inline-block', fontFamily: 'Nunito, sans-serif', fontWeight: 800, fontSize: 11.5, lineHeight: 1.3, color: '#6E3B57', background: '#FBEFF5', borderRadius: 999, padding: '3px 10px' }}>Menanam: {c}</span>
+                          {it.sumber && (
+                            <div style={{ marginTop: 5, fontFamily: 'Nunito, sans-serif', fontWeight: 700, fontSize: 11, lineHeight: 1.45, color: '#A98BA0' }}>
+                              Sumber: <TautanSumber sumber={it.sumber} ringkas />
+                            </div>
+                          )}
                         </div>
                       </div>
                       <button type="button" aria-label={`Hapus ${it.t}`} onClick={() => def ? onHide(it.id) : onDelExtra(kegKey, it.id)} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: '#C9AEBD', marginTop: 2, padding: 0, lineHeight: 1 }}>

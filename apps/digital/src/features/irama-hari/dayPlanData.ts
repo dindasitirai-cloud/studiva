@@ -29,6 +29,8 @@ export interface Item {
   id: string; tipe: Tipe; t: string; n?: NilaiAkar;
   /** Butir katalog Kebiasaan Baik (Phase 19): semua nilai + rentang usia (bulan, inklusif). */
   nilaiList?: NilaiAkar[]; usiaMin?: number; usiaMax?: number;
+  /** Rujukan butir Kebiasaan Baik (teks; tampil sebagai tautan). */
+  sumber?: string;
 }
 export interface KegDef { key: string; wk: string; ik: IkonKey; nm: string; items: Item[] }
 export interface KolomDef { key: Waktu; label: string; dot: string; soft: string; keg: KegDef[] }

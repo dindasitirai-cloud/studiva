@@ -2,6 +2,7 @@
 //   rutin        → baris centang di kartu kegiatan papan Irama Hari
 //   situasional  → catatan tempel di panel "Kebiasaan situasional" Kelola
 import React from 'react';
+import TautanSumber from '../../../components/TautanSumber';
 import { Check } from 'lucide-react';
 import type { IsiKebiasaan } from '../../../lib/supabase/kebiasaan';
 import type { TemplateIrama } from '../../../features/irama-hari/kebiasaanSeed';
@@ -63,6 +64,7 @@ export default function PratinjauKebiasaan({ isi, templates }: { isi: IsiKebiasa
         Tampil untuk anak usia <b className="text-pekat/75">{labelUsia(isi.usia_min_bulan, isi.usia_max_bulan)}</b>, bila keluarga memilih
         {isi.nilai.length ? <> <b className="text-pekat/75">{isi.nilai.join(' atau ')}</b></> : ' (pilih nilai)'} sebagai nilai fokus.
         {isi.deskripsi && <><br /><span className="text-pekat/45">Deskripsi dipakai di Jejak & materi pendamping.</span></>}
+        {isi.sumber.trim() && <><br /><span className="text-pekat/60">Sumber: <TautanSumber sumber={isi.sumber} ringkas /></span></>}
       </p>
     </div>
   );

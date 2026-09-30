@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { muatSemuaDraf, KontenDraf, LABEL_STATUS, LABEL_JENIS, JenisKonten, StatusPipeline } from '../../lib/supabase/pipeline';
 import { HeroAdmin, TEMA, BungaNilai, KosongBerilustrasi } from './tema/temaAdmin';
 import type { KunciTema } from './tema/temaAdmin';
+import BerandaPeninjau from './peninjau/BerandaPeninjau';
 
 const TEMA_JENIS: Record<JenisKonten, KunciTema> = {
   kegiatan_ajak_main: 'ajak', panduan_tumbuh: 'wawasan', sikap: 'sikap', temani_journey: 'temani', bantu_situasi: 'bantu', kebiasaan_baik: 'sikap',
@@ -40,6 +41,14 @@ function KartuStat({ label, nilai, Icon, tema }: { label: string; nilai: number;
 }
 
 export default function BerandaRekahAdmin() {
+  const { peranStaf } = useAuth();
+  // Admin bisa melihat tampilan Ruang Tinjauan Fitri lewat ?lihat=peninjau (tampilan saja).
+  const lihatPeninjau = new URLSearchParams(window.location.search).get('lihat') === 'peninjau';
+  if (peranStaf === 'peninjau_klinis' || lihatPeninjau) return <BerandaPeninjau />;
+  return <BerandaAdmin />;
+}
+
+function BerandaAdmin() {
   const { peranStaf } = useAuth();
   const navigate = useNavigate();
   const [daftar, setDaftar] = useState<KontenDraf[]>([]);

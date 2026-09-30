@@ -80,7 +80,7 @@ export function temaDariPath(path: string): KunciTema {
   const seg = path.replace(/^\/rekah-admin\/?/, '').split('/')[0];
   const peta: Record<string, KunciTema> = {
     '': 'beranda', 'ajak-main': 'ajak', wawasan: 'wawasan', sikap: 'sikap', temani: 'temani', bantu: 'bantu',
-    tracker: 'tracker', antrean: 'antrean', semua: 'semua', diff: 'antrean',
+    tracker: 'tracker', antrean: 'antrean', semua: 'semua', diff: 'antrean', riwayat: 'antrean',
   };
   return peta[seg] ?? 'beranda';
 }

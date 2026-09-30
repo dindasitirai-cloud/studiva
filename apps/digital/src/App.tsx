@@ -14,6 +14,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PrivateRoute, { AdminRoute, ParentRoute, PeninjauRoute } from './components/PrivateRoute';
 import RekahAdminShell from './pages/RekahAdmin/RekahAdminShell';
+import RiwayatTinjauanPeninjau from './pages/RekahAdmin/peninjau/RiwayatTinjauan';
 import BerandaRekahAdmin from './pages/RekahAdmin/BerandaRekahAdmin';
 import AntreanTinjauan from './pages/RekahAdmin/AntreanTinjauan';
 import LayarDiff from './pages/RekahAdmin/LayarDiff';
@@ -255,6 +256,7 @@ export default function App() {
               <Route path="tracker" element={<HalamanTema tema="tracker" judul="Tracker Konten" deskripsi="Pantau kesegaran konten, tinjau sumber, dan kelola tanda secara terpusat."><TrackerKontenAdmin tanpaJudul /></HalamanTema>} />
               <Route path="antrean" element={<AntreanTinjauan />} />
               <Route path="diff/:id" element={<LayarDiff />} />
+              <Route path="riwayat" element={<RiwayatTinjauanPeninjau />} />
               <Route path="semua" element={<SemuaDraf />} />
             </Route>
 

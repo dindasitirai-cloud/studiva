@@ -123,7 +123,7 @@ export async function muatAntrean(): Promise<KontenDraf[]> {
     .from('konten_draf')
     .select('*')
     .eq('status', 'diajukan')
-    .order('diperbarui_pada', { ascending: false });
+    .order('diperbarui_pada', { ascending: true }); // yang paling lama menunggu lebih dulu
 
   if (error) throw error;
   return (data ?? []) as KontenDraf[];
@@ -195,10 +195,12 @@ export async function tolakDraf(
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Sesi tidak ditemukan.');
 
-  const statusBaru: StatusPipeline = tindakan === 'ditolak' ? 'ditolak' : 'diajukan';
+  // Revisi dikembalikan ke penulis sebagai draf (bisa diedit & diajukan ulang), bukan tetap di antrean.
+  // id_penyetuju wajib diisi: kebijakan RLS peninjau memeriksa id_penyetuju = auth.uid().
+  const statusBaru: StatusPipeline = tindakan === 'ditolak' ? 'ditolak' : 'draf';
   const { error: updateErr } = await supabase
     .from('konten_draf')
-    .update({ status: statusBaru, catatan_tinjauan: catatan })
+    .update({ status: statusBaru, catatan_tinjauan: catatan, id_penyetuju: user.id })
     .eq('id', idDraf);
 
   if (updateErr) throw updateErr;
@@ -206,6 +208,26 @@ export async function tolakDraf(
   await supabase.from('riwayat_tinjauan').insert({
     id_draf: idDraf, id_pelaku: user.id, tindakan, catatan,
   });
+}
+
+// ── Riwayat keputusan seorang peninjau ───────────────────────────────────────
+
+export interface RiwayatDenganDraf extends RiwayatTinjauan {
+  draf: { judul: string; jenis: JenisKonten; status: StatusPipeline } | null;
+}
+
+export async function muatRiwayatSaya(batas = 100): Promise<RiwayatDenganDraf[]> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+  const sb = supabase as unknown as { from: (t: string) => any };
+  const { data, error } = await sb.from('riwayat_tinjauan')
+    .select('*, draf:konten_draf(judul, jenis, status)')
+    .eq('id_pelaku', user.id)
+    .in('tindakan', ['disetujui', 'ditolak', 'revisi_diminta'])
+    .order('dibuat_pada', { ascending: false })
+    .limit(batas);
+  if (error) throw error;
+  return (data ?? []) as RiwayatDenganDraf[];
 }
 
 // ── Label status untuk UI ─────────────────────────────────────────────────────

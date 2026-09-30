@@ -4,7 +4,7 @@ import {
   Star, CheckCircle2, Download, ShoppingBag,
   X, FlaskConical, Clock,
   Calendar, ChevronRight, Check,
-  Sparkles,
+  Sparkles, Baby, Search,
 } from 'lucide-react';
 import {
   DOMAIN_META, AGE_RANGES,
@@ -71,7 +71,7 @@ function DomainBadge({ domain }: { domain: DomainKey }) {
   return (
     <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold"
       style={{ background: meta.bg, color: meta.color }}>
-      {meta.emoji} {meta.label}
+      {meta.label}
     </span>
   );
 }
@@ -95,7 +95,7 @@ function AgePill({ ageId }: { ageId: string }) {
 const DL_PAL = { soft: '#F4E6EF', ink: '#A85683', border: '#E9CADB' };
 
 /** Ikon stroke per domain untuk tile kartu/modal (desain v2, bukan emoji). */
-function DomIcon({ domain, size = 26, color }: { domain: DomainKey; size?: number; color?: string }) {
+export function DomIcon({ domain, size = 26, color }: { domain: DomainKey; size?: number; color?: string }) {
   const paths = STR_DOM[domain]?.icon ?? STR_DOM.kog.icon;
   const clr = color ?? STR_DOM[domain]?.ink ?? '#6E3B57';
   return (
@@ -194,8 +194,8 @@ export function PlanCard({ plan, onOpen }: { plan: WeeklyPlan; onOpen: () => voi
       done ? 'border-green-200 bg-green-50/30 hover:shadow-[0_8px_24px_rgba(34,197,94,.14)]' : 'border-slate-100 hover:shadow-[0_8px_24px_rgba(217,119,6,.10)]'
     }`}>
       <div className="flex items-start gap-3">
-        <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl ${done ? 'bg-green-100' : 'bg-amber-50'}`}>
-          {plan.icon}
+        <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${done ? 'bg-green-100 text-green-600' : 'bg-amber-50 text-amber-600'}`}>
+          <Calendar className="h-6 w-6" aria-hidden />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
@@ -292,7 +292,7 @@ export function ToolCard({ tool, onOpen, onJadwalkan }: { tool: EduTool; onOpen:
             <span className="rounded-full px-2.5 py-0.5 text-[11px] font-bold" style={{ background: '#FFF3D0', color: '#8A5510' }}>{tool.ageLabel}</span>
             {tool.pilihanPsikolog && (
               <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold" style={{ background: '#F1EBFB', color: '#8A6DC7' }}>
-                ⭐ Pilihan Psikolog
+                <Star className="h-3 w-3 fill-current" aria-hidden /> Pilihan Psikolog
               </span>
             )}
           </div>
@@ -575,7 +575,7 @@ export function PlanModal({ plan, onClose, childId }: { plan: WeeklyPlan; onClos
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
       <div className="relative z-10 flex max-h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl animate-[slideUp_0.3s_ease-out]">
         <div className="flex items-start gap-3 bg-amber-50 p-5 pb-4">
-          <span className="text-3xl">{plan.icon}</span>
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-amber-600"><Calendar className="h-5 w-5" aria-hidden /></span>
           <div className="flex-1">
             <span className="text-[11px] font-bold text-amber-600">{plan.ageLabel}</span>
             <h2 className="font-baloo text-[18px] font-bold leading-tight text-stv-navy">{plan.judul}</h2>
@@ -716,8 +716,8 @@ export function ToolModal({ tool, onClose }: { tool: EduTool; onClose: () => voi
           <div className="min-w-0 flex-1 pr-8">
             <div className="mb-1.5 flex flex-wrap gap-1.5">
               {tool.pilihanPsikolog && (
-                <span className="rounded-full px-2.5 py-0.5 font-nunito text-[11px] font-[800]" style={{ background: '#F1EBFB', color: '#8A6DC7' }}>
-                  ⭐ Pilihan Psikolog
+                <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 font-nunito text-[11px] font-[800]" style={{ background: '#F1EBFB', color: '#8A6DC7' }}>
+                  <Star className="h-3 w-3 fill-current" aria-hidden /> Pilihan Psikolog
                 </span>
               )}
               <span className="rounded-full px-2.5 py-0.5 font-nunito text-[11px] font-[800]" style={{ background: '#FFE29A', color: '#8A5510' }}>{tool.ageLabel}</span>
@@ -1110,7 +1110,7 @@ function PersonalView({
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-3xl">
             {fotoAnak
               ? <img src={fotoAnak} alt="" className="h-14 w-14 rounded-2xl object-cover" />
-              : '👶'}
+              : <Baby className="h-7 w-7 text-amber-600" aria-hidden />}
           </div>
           <div className="flex-1">
             <p className="font-baloo text-[18px] font-bold text-stv-navy">{child.namaAnak}</p>
@@ -1143,8 +1143,8 @@ function PersonalView({
             onClick={() => onOpenPlan(followedPlan, selectedChildId)}
             className="mt-3 w-full rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-left transition hover:bg-green-100">
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 text-lg">
-                {followedPlan.icon}
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
+                <Calendar className="h-4 w-4" aria-hidden />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] font-bold uppercase tracking-wide text-green-600">Sedang Mengikuti Program</p>
@@ -1200,7 +1200,7 @@ function PersonalView({
                   className="flex w-44 shrink-0 flex-col gap-2 rounded-2xl border border-slate-100 bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl text-xl"
                     style={{ background: DOMAIN_META[todayActivity.domain[0]].bg }}>
-                    {todayActivity.icon}
+                    <DomIcon domain={todayActivity.domain[0]} size={20} />
                   </div>
                   <div>
                     <span className="text-[10px] font-bold text-amber-600">Aktivitas</span>
@@ -1214,8 +1214,8 @@ function PersonalView({
               {todayPlan && (
                 <button type="button" onClick={() => onOpenPlan(todayPlan, selectedChildId)}
                   className="flex w-44 shrink-0 flex-col gap-2 rounded-2xl border border-slate-100 bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-xl">
-                    {todayPlan.icon}
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                    <Calendar className="h-5 w-5" aria-hidden />
                   </div>
                   <div>
                     <span className="text-[10px] font-bold text-stv-navy">Program Mingguan</span>
@@ -1228,14 +1228,14 @@ function PersonalView({
                 <button type="button" onClick={() => onOpenTool(todayTool)}
                   className="flex w-44 shrink-0 flex-col gap-2 rounded-2xl border border-slate-100 bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 text-xl">
-                    {todayTool.icon}
+                    <DomIcon domain={todayTool.domain} size={20} />
                   </div>
                   <div>
                     <span className="text-[10px] font-bold text-violet-600">Alat Edukasi</span>
                     <p className="text-[12px] font-bold leading-tight text-stv-navy line-clamp-2">{todayTool.nama}</p>
                   </div>
                   {todayTool.pilihanPsikolog && (
-                    <span className="mt-auto text-[10px] font-bold text-violet-500">⭐ Pilihan Psikolog</span>
+                    <span className="mt-auto inline-flex items-center gap-1 text-[10px] font-bold text-violet-500"><Star className="h-3 w-3 fill-current" aria-hidden /> Pilihan Psikolog</span>
                   )}
                 </button>
               )}
@@ -1243,7 +1243,7 @@ function PersonalView({
                 <button type="button" onClick={() => onOpenDownload(todayDownload)}
                   className="flex w-44 shrink-0 flex-col gap-2 rounded-2xl border border-slate-100 bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-xl">
-                    {todayDownload.icon}
+                    <DomIcon domain={todayDownload.domain} size={20} />
                   </div>
                   <div>
                     <span className="text-[10px] font-bold text-blue-600">Unduhan</span>
@@ -1676,7 +1676,7 @@ function SelesaiContent({
 function EmptyState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-amber-100 py-14 text-center">
-      <span className="text-4xl mb-3">🔍</span>
+      <Search className="mb-3 h-9 w-9 text-amber-300" aria-hidden />
       <p className="font-semibold text-stv-navy">{message}</p>
       <p className="mt-1 text-[13px] text-stv-muted">Coba ubah filter atau kata kunci pencarian.</p>
     </div>

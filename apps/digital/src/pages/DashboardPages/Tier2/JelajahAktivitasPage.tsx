@@ -11,7 +11,7 @@ import {
   type AgeBandId,
   type NilaiId,
 } from '@studiva/shared';
-import { Search, X, Wrench, BookOpen, ChevronRight } from 'lucide-react';
+import { Search, X, Wrench, BookOpen, ChevronRight, Hand } from 'lucide-react';
 import { useRekahProfile } from '../../../context/RekahProfileContext';
 import { useRekahPlan } from '../../../context/RekahPlanContext';
 import LangkahKecilCard from '../../../features/rekah-plan/LangkahKecilCard';
@@ -268,8 +268,8 @@ export default function JelajahAktivitasPage() {
                   : 'border border-fajar bg-white text-pekat/60 hover:border-pekat/20'
               }`}
             >
-              {a === 'pakai' && <span aria-hidden>🧸</span>}
-              {a === 'tanpa' && <span aria-hidden>🙌</span>}
+              {a === 'pakai' && <Wrench className="h-3.5 w-3.5" aria-hidden />}
+              {a === 'tanpa' && <Hand className="h-3.5 w-3.5" aria-hidden />}
               {a === 'semua'
                 ? JELAJAH_COPY.filterSemuaAlatLabel
                 : a === 'pakai'

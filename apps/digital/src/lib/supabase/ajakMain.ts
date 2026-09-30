@@ -27,7 +27,7 @@ export async function muatKatalogAjakMain(): Promise<Activity[] | null> {
     return (data ?? []).map((r: any) => {
       const a = (r.isi ?? {}) as Partial<Activity>;
       return {
-        icon: '🎯', domain: [], durasiMenit: 15, isDIY: true, deskripsi: '', sci: '', sumber: '', tujuan: '',
+        icon: '', domain: [], durasiMenit: 15, isDIY: true, deskripsi: '', sci: '', sumber: '', tujuan: '',
         bahan: [], langkah: [], variasiMudah: '', variasiMenantang: '', adaptasiABK: '',
         ...a,
         id: Number(r.id_kegiatan),

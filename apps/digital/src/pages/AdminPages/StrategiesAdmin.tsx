@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import {
   Plus, Pencil, Trash2, Search, X, Save, ChevronDown, ChevronUp,
-  Send, RefreshCw, Copy, ShoppingBag, ExternalLink, AlertTriangle, ChevronRight, Eye,
+  Send, RefreshCw, Copy, ShoppingBag, ExternalLink, AlertTriangle, ChevronRight, Eye, Calendar,
 } from 'lucide-react';
 import { useLearningStrategies } from '../../context/LearningStrategiesContext';
 import {
@@ -28,6 +28,7 @@ import {
   ToolModal as ToolDetailModal,
   DownloadCard,
   DownloadModal as DownloadDetailModal,
+  DomIcon,
 } from '../DashboardPages/Tier2/LearningStrategiesTier2';
 
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -138,7 +139,7 @@ type AForm = Omit<Activity, 'id' | 'bahan' | 'langkah' | 'domain'> & {
 };
 
 const EMPTY_AFORM: AForm = {
-  icon: '🎯', judul: '', ageId: 'b03', domain: ['mk'],
+  icon: '', judul: '', ageId: 'b03', domain: ['mk'],
   durasiMenit: 15, isDIY: true,
   deskripsi: '', sci: '', sumber: '', tujuan: '',
   bahanItems: [], langkahItems: [''],
@@ -246,9 +247,6 @@ function ActivityModal({ initial, id, onClose, pipelineOnly = false }: { initial
     <Modal title={id !== undefined ? 'Edit Aktivitas' : 'Tambah Aktivitas'} onClose={onClose}>
       <form onSubmit={submit} className="flex flex-col gap-3">
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Ikon (emoji)" required>
-            <input value={form.icon} onChange={e => setForm(f => ({ ...f, icon: e.target.value }))} className={inp} />
-          </Field>
           <Field label="Status">
             <select value={form.status ?? 'draft'} onChange={e => setForm(f => ({ ...f, status: e.target.value as ContentStatus }))} className={inp}>
               <option value="draft">Draft</option>
@@ -278,7 +276,7 @@ function ActivityModal({ initial, id, onClose, pipelineOnly = false }: { initial
                 <button key={d} type="button" onClick={() => toggleDomain(d)}
                   className="rounded-full px-2.5 py-1 text-[11px] font-bold transition"
                   style={active ? { background: m.bg, color: m.color, outline: `2px solid ${m.color}` } : { background: '#F1F5F9', color: '#64748B' }}>
-                  {m.emoji} {m.label}
+                  {m.label}
                 </button>
               );
             })}
@@ -428,7 +426,7 @@ function ActivityModal({ initial, id, onClose, pipelineOnly = false }: { initial
 type PForm = Omit<WeeklyPlan, 'id'>;
 
 const EMPTY_PFORM: PForm = {
-  icon: '📅', judul: '', ageLabel: '', minBulan: 0, maxBulan: 12,
+  icon: '', judul: '', ageLabel: '', minBulan: 0, maxBulan: 12,
   deskripsi: '', sci: '', sumber: '', caraPakai: '',
   hari: Array.from({ length: 7 }, (_, i) => ({ judul: `Hari ${i + 1}`, deskripsi: '', activityIds: [] })),
   catatanReviewer: '', status: 'draft',
@@ -462,7 +460,6 @@ function PlanModal({ initial, id, onClose }: { initial: PForm; id?: number; onCl
     <Modal title={id !== undefined ? 'Edit Program Mingguan' : 'Tambah Program'} onClose={onClose}>
       <form onSubmit={submit} className="flex flex-col gap-3">
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Ikon"><input value={form.icon} onChange={e => setForm(f => ({ ...f, icon: e.target.value }))} className={inp} /></Field>
           <Field label="Status">
             <select value={form.status ?? 'draft'} onChange={e => setForm(f => ({ ...f, status: e.target.value as ContentStatus }))} className={inp}>
               <option value="draft">Draft</option>
@@ -513,7 +510,7 @@ function PlanModal({ initial, id, onClose }: { initial: PForm; id?: number; onCl
                                 updateHari(i, { activityIds: ids });
                               }}
                             />
-                            <span className="text-[12px] text-stv-body">{a.icon} {a.judul}</span>
+                            <span className="text-[12px] text-stv-body">{a.judul}</span>
                           </label>
                         ))}
                       </div>
@@ -541,7 +538,7 @@ function PlanModal({ initial, id, onClose }: { initial: PForm; id?: number; onCl
 type TForm = Omit<EduTool, 'id' | 'keunggulan'> & { keunggulanItems: string[] };
 
 const EMPTY_TFORM: TForm = {
-  icon: '🧸', nama: '', domain: 'kog', hargaEstimasi: '', pilihanPsikolog: false,
+  icon: '', nama: '', domain: 'kog', hargaEstimasi: '', pilihanPsikolog: false,
   minBulan: 0, maxBulan: 12, ageLabel: '',
   deskripsi: '', sci: '', sumber: '', keunggulanItems: [''], affiliateUrl: '',
   statusLink: 'KOSONG', tanggalCekLink: '', catatanReviewer: '', status: 'draft',
@@ -584,7 +581,6 @@ function ToolModal({ initial, id, onClose }: { initial: TForm; id?: number; onCl
     <Modal title={id !== undefined ? 'Edit Alat Edukasi' : 'Tambah Alat Edukasi'} onClose={onClose}>
       <form onSubmit={submit} className="flex flex-col gap-3">
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Ikon"><input value={form.icon} onChange={e => setForm(f => ({ ...f, icon: e.target.value }))} className={inp} /></Field>
           <Field label="Status">
             <select value={form.status ?? 'draft'} onChange={e => setForm(f => ({ ...f, status: e.target.value as ContentStatus }))} className={inp}>
               <option value="draft">Draft</option>
@@ -662,7 +658,7 @@ function ToolModal({ initial, id, onClose }: { initial: TForm; id?: number; onCl
 type DForm = Omit<Downloadable, 'id'>;
 
 const EMPTY_DFORM: DForm = {
-  icon: '📄', nama: '', domain: 'kog', kategori: 'Panduan', minBulan: 0, maxBulan: 72,
+  icon: '', nama: '', domain: 'kog', kategori: 'Panduan', minBulan: 0, maxBulan: 72,
   deskripsi: '', sci: '', sumber: '', caraPakai: '',
   halaman: '', jumlahUnduhan: 0, fileUrl: '',
   catatanReviewer: '', status: 'draft',
@@ -687,7 +683,6 @@ function DownloadModal({ initial, id, onClose }: { initial: DForm; id?: number; 
     <Modal title={id !== undefined ? 'Edit Materi Unduhan' : 'Tambah Unduhan'} onClose={onClose}>
       <form onSubmit={submit} className="flex flex-col gap-3">
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Ikon"><input value={form.icon} onChange={e => setForm(f => ({ ...f, icon: e.target.value }))} className={inp} /></Field>
           <Field label="Status">
             <select value={form.status ?? 'draft'} onChange={e => setForm(f => ({ ...f, status: e.target.value as ContentStatus }))} className={inp}>
               <option value="draft">Draft</option>
@@ -849,7 +844,7 @@ function AffiliatePanelRow({ tool }: { tool: EduTool }) {
   return (
     <div className="flex flex-wrap items-center gap-3 rounded-xl border border-slate-100 bg-white p-3">
       <div className="flex-1 min-w-0">
-        <p className="text-[13px] font-semibold text-stv-navy truncate">{tool.icon} {tool.nama}</p>
+        <p className="text-[13px] font-semibold text-stv-navy truncate">{tool.nama}</p>
         <p className="text-[11px] text-stv-muted">{tool.hargaEstimasi}</p>
       </div>
       <LinkStatusBadge statusLink={tool.statusLink} />
@@ -914,7 +909,7 @@ function AffiliatePanel({ tools }: { tools: EduTool[] }) {
 function Row({
   icon, title, meta, status, statusLink, onEdit, onDelete, onDuplicate, onStatusChange, onPreview,
 }: {
-  icon: string; title: string; meta: string[];
+  icon: React.ReactNode; title: string; meta: string[];
   status?: ContentStatus;
   statusLink?: string;
   onEdit: () => void; onDelete: () => void; onDuplicate: () => void;
@@ -923,7 +918,7 @@ function Row({
 }) {
   return (
     <div className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[0_2px_8px_rgba(16,58,107,.05)]">
-      <span className="shrink-0 text-xl opacity-70">{icon}</span>
+      <span className="flex shrink-0 items-center opacity-80">{icon}</span>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <p className="font-semibold text-[14px] truncate text-stv-navy">{title}</p>
@@ -1211,8 +1206,8 @@ export default function StrategiesAdmin({ pipelineOnly = false }: { pipelineOnly
             ? <Empty label="aktivitas" />
             : filteredActs.map(a => (
               <Row key={a.id}
-                icon={a.icon} title={a.judul} status={a.status}
-                meta={[AGE_RANGES.find(r => r.id === a.ageId)?.label ?? a.ageId, `${a.durasiMenit} mnt`, a.isDIY ? 'DIY' : 'Perlu Alat', a.domain.map(d => DOMAIN_META[d]?.emoji ?? d).join(' ')]}
+                icon={<DomIcon domain={a.domain[0] ?? 'kog'} size={20} />} title={a.judul} status={a.status}
+                meta={[AGE_RANGES.find(r => r.id === a.ageId)?.label ?? a.ageId, `${a.durasiMenit} mnt`, a.isDIY ? 'DIY' : 'Perlu Alat', a.domain.map(d => DOMAIN_META[d]?.label ?? d).join(', ')]}
                 onEdit={() => setActivityModal({ form: toAForm(a), id: a.id })}
                 onDelete={() => confirmDelete(a.judul, () => adminDeleteActivity(a.id))}
                 onDuplicate={() => adminDuplicateActivity(a.id)}
@@ -1230,7 +1225,7 @@ export default function StrategiesAdmin({ pipelineOnly = false }: { pipelineOnly
             ? <Empty label="program" />
             : filteredPlans.map(p => (
               <Row key={p.id}
-                icon={p.icon} title={p.judul} status={p.status}
+                icon={<Calendar className="h-5 w-5 text-amber-600" aria-hidden />} title={p.judul} status={p.status}
                 meta={[p.ageLabel, ageStr(p.minBulan, p.maxBulan), `${p.hari.length} hari`]}
                 onEdit={() => setPlanModal({ form: { icon: p.icon, judul: p.judul, ageLabel: p.ageLabel, minBulan: p.minBulan, maxBulan: p.maxBulan, deskripsi: p.deskripsi, sci: p.sci, sumber: p.sumber, caraPakai: p.caraPakai, hari: p.hari, catatanReviewer: p.catatanReviewer, status: p.status }, id: p.id })}
                 onDelete={() => confirmDelete(p.judul, () => adminDeletePlan(p.id))}
@@ -1250,7 +1245,7 @@ export default function StrategiesAdmin({ pipelineOnly = false }: { pipelineOnly
               ? <Empty label="alat edukasi" />
               : filteredTools.map(t => (
                 <Row key={t.id}
-                  icon={t.icon} title={t.nama} status={t.status} statusLink={t.statusLink}
+                  icon={<DomIcon domain={t.domain} size={20} />} title={t.nama} status={t.status} statusLink={t.statusLink}
                   meta={[t.ageLabel, t.hargaEstimasi, t.pilihanPsikolog ? 'Pilihan Psikolog' : '']}
                   onEdit={() => setToolModal({ form: toTForm(t), id: t.id })}
                   onDelete={() => confirmDelete(t.nama, () => adminDeleteTool(t.id))}
@@ -1271,7 +1266,7 @@ export default function StrategiesAdmin({ pipelineOnly = false }: { pipelineOnly
             ? <Empty label="unduhan" />
             : filteredDls.map(d => (
               <Row key={d.id}
-                icon={d.icon} title={d.nama} status={d.status}
+                icon={<DomIcon domain={d.domain} size={20} />} title={d.nama} status={d.status}
                 meta={[d.kategori, ageStr(d.minBulan, d.maxBulan), d.halaman]}
                 onEdit={() => setDownloadModal({ form: { icon: d.icon, nama: d.nama, domain: d.domain, kategori: d.kategori, minBulan: d.minBulan, maxBulan: d.maxBulan, deskripsi: d.deskripsi, sci: d.sci, sumber: d.sumber, caraPakai: d.caraPakai, halaman: d.halaman, jumlahUnduhan: d.jumlahUnduhan, fileUrl: d.fileUrl, catatanReviewer: d.catatanReviewer, status: d.status }, id: d.id })}
                 onDelete={() => confirmDelete(d.nama, () => adminDeleteDownload(d.id))}
@@ -1327,7 +1322,7 @@ export default function StrategiesAdmin({ pipelineOnly = false }: { pipelineOnly
             <button
               onClick={() => setLsPreview(null)}
               className="flex items-center gap-1.5 rounded-full bg-white/10 px-4 py-1.5 text-[13px] font-semibold text-white hover:bg-white/20 transition">
-              ✕ Tutup Preview
+              <X className="h-3.5 w-3.5" aria-hidden /> Tutup Preview
             </button>
           </div>
 

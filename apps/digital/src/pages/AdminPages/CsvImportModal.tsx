@@ -178,7 +178,7 @@ export default function CsvImportModal({ type, onClose }: CsvImportModalProps) {
     const langkah: string[] = [data.langkah1, data.langkah2, data.langkah3, data.langkah4].filter(Boolean);
 
     return {
-      icon: data.icon?.trim() || '🎯',
+      icon: data.icon?.trim() || '',
       judul: data.judul?.trim() ?? '',
       ageId: data.ageId?.trim() || 'b03',
       domain: domain.length > 0 ? domain : ['mk'],
@@ -210,7 +210,7 @@ export default function CsvImportModal({ type, onClose }: CsvImportModalProps) {
     });
 
     return {
-      icon: data.icon?.trim() || '📅',
+      icon: data.icon?.trim() || '',
       judul: data.judul?.trim() ?? '',
       ageLabel: data.ageLabel?.trim() ?? '',
       minBulan: Number(data.minBulan) || 0,
@@ -234,7 +234,7 @@ export default function CsvImportModal({ type, onClose }: CsvImportModalProps) {
       ? (data.domain.trim() as DomainKey)
       : 'kog';
     return {
-      icon: data.icon?.trim() || '🧸',
+      icon: data.icon?.trim() || '',
       nama: data.nama?.trim() ?? '',
       domain: domainTool,
       hargaEstimasi: data.hargaEstimasi?.trim() ?? '',
@@ -262,7 +262,7 @@ export default function CsvImportModal({ type, onClose }: CsvImportModalProps) {
       ? (data.domain.trim() as DomainKey)
       : 'kog';
     return {
-      icon: data.icon?.trim() || '📄',
+      icon: data.icon?.trim() || '',
       nama: data.nama?.trim() ?? '',
       domain: domainDl,
       kategori,

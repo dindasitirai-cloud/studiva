@@ -3,15 +3,15 @@
 
 export type DomainKey = 'mk' | 'mh' | 'bhs' | 'kog' | 'sos' | 'sen' | 'fe';
 
-export const DOMAIN_META: Record<DomainKey, { label: string; color: string; bg: string; emoji: string }> = {
-  mk:  { label: 'Motorik Kasar',     color: '#DC2626', bg: '#FEF2F2', emoji: '🏃' },
-  mh:  { label: 'Motorik Halus',     color: '#EA580C', bg: '#FFF7ED', emoji: '✋' },
-  bhs: { label: 'Bahasa',            color: '#2563EB', bg: '#EFF6FF', emoji: '💬' },
-  kog: { label: 'Kognitif',          color: '#7C3AED', bg: '#F5F3FF', emoji: '🧠' },
-  sos: { label: 'Sosial-Emosional',  color: '#DB2777', bg: '#FDF2F8', emoji: '❤️' },
-  sen: { label: 'Sensorik',          color: '#059669', bg: '#ECFDF5', emoji: '✨' },
+export const DOMAIN_META: Record<DomainKey, { label: string; color: string; bg: string }> = {
+  mk:  { label: 'Motorik Kasar',     color: '#DC2626', bg: '#FEF2F2' },
+  mh:  { label: 'Motorik Halus',     color: '#EA580C', bg: '#FFF7ED' },
+  bhs: { label: 'Bahasa',            color: '#2563EB', bg: '#EFF6FF' },
+  kog: { label: 'Kognitif',          color: '#7C3AED', bg: '#F5F3FF' },
+  sos: { label: 'Sosial-Emosional',  color: '#DB2777', bg: '#FDF2F8' },
+  sen: { label: 'Sensorik',          color: '#059669', bg: '#ECFDF5' },
   // MENUNGGU REVIEW PSIKOLOG FITRI — domain ke-7, belum ada kegiatan yang ditag
-  fe:  { label: 'Fungsi Eksekutif',  color: '#0891B2', bg: '#ECFEFF', emoji: '🎯' },
+  fe:  { label: 'Fungsi Eksekutif',  color: '#0891B2', bg: '#ECFEFF' },
 };
 
 export interface ActivityBahan {
@@ -163,7 +163,7 @@ export const AGE_RANGES = [
 export const ACTIVITIES: Activity[] = [
   // ── 0-3 bulan ──────────────────────────────────────────────────────────────
   {
-    id: 1, icon: '👶', judul: 'Tummy Time Bertahap', ageId: 'b03', domain: ['mk'],
+    id: 1, icon: '', judul: 'Tummy Time Bertahap', ageId: 'b03', domain: ['mk'],
     durasiMenit: 5, isDIY: false,
     deskripsi: 'Latihan tengkurap singkat dicicil beberapa kali sehari, dimulai di dada orang tua lalu di alas datar.',
     sci: 'Systematic review menunjukkan tummy time berhubungan positif dengan perkembangan motorik kasar (berguling, merangkak) dan pencegahan kepala peyang; WHO menganjurkan total 30 menit per hari yang dicicil selama bayi terjaga.',
@@ -181,7 +181,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk bayi dengan tonus otot rendah, gunakan guling tipis di bawah dada sebagai penopang dan tingkatkan durasi sangat bertahap. Untuk bayi yang sensitif sensorik, mulai di permukaan sangat lembut dengan cahaya dan suara minimal, dan beri jeda setiap kali bayi memberi sinyal tidak nyaman.',
   },
   {
-    id: 2, icon: '🖤', judul: 'Kartu Kontras Hitam-Putih', ageId: 'b03', domain: ['sen'],
+    id: 2, icon: '', judul: 'Kartu Kontras Hitam-Putih', ageId: 'b03', domain: ['sen'],
     durasiMenit: 5, isDIY: false,
     deskripsi: 'Menunjukkan pola kontras tinggi pada jarak 20-30 cm dari wajah bayi untuk melatih fokus visual awal.',
     sci: 'Penelitian klasik menunjukkan bayi baru lahir secara bawaan lebih lama menatap pola kontras tinggi dan wajah dibanding permukaan polos, yaitu stimulus yang paling mudah ditangkap penglihatan bayi yang masih berkembang.',
@@ -199,7 +199,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk bayi dengan gangguan penglihatan, pegang kartu lebih dekat (10-15 cm) dan gunakan kontras paling ekstrem. Untuk bayi yang mudah kewalahan secara visual, gunakan satu pola saja per sesi dan perhatikan tanda-tanda stres seperti berpaling atau rewel.',
   },
   {
-    id: 3, icon: '💬', judul: 'Saling Balas Celoteh (Serve & Return)', ageId: 'b03', domain: ['bhs', 'sos'],
+    id: 3, icon: '', judul: 'Saling Balas Celoteh (Serve & Return)', ageId: 'b03', domain: ['bhs', 'sos'],
     durasiMenit: 10, isDIY: true,
     deskripsi: 'Menanggapi setiap suara dan ekspresi bayi dengan tatapan, senyum, dan bicara bernada lembut secara bergantian.',
     sci: 'Interaksi bolak-balik yang responsif membangun arsitektur otak awal; uji coba terkontrol menunjukkan orang tua yang dilatih memakai parentese dan giliran bicara memiliki bayi dengan perkembangan bahasa lebih baik.',
@@ -217,7 +217,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk bayi dengan keterlambatan komunikasi, terima segala bentuk respons termasuk gerakan tangan dan ekspresi wajah sebagai giliran yang valid dan rayakan setiap upayanya. Tunggu lebih lama (10-15 detik) sebelum memulai giliran berikutnya untuk memberi ruang yang cukup.',
   },
   {
-    id: 4, icon: '🎵', judul: 'Lagu dan Ayunan Ritmis', ageId: 'b03', domain: ['sen', 'bhs'],
+    id: 4, icon: '', judul: 'Lagu dan Ayunan Ritmis', ageId: 'b03', domain: ['sen', 'bhs'],
     durasiMenit: 10, isDIY: true,
     deskripsi: 'Menyanyikan lagu sederhana sambil mengayun bayi mengikuti irama untuk stimulasi ritme dan bahasa awal.',
     sci: 'Paparan pola ritmis musik dalam suasana sosial membantu otak bayi memproses struktur waktu, yaitu kemampuan yang juga dipakai untuk memproses irama bicara.',
@@ -236,7 +236,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 3-6 bulan ──────────────────────────────────────────────────────────────
   {
-    id: 5, icon: '👁️', judul: 'Ciluk Ba Awal', ageId: 'b36', domain: ['kog', 'sos'],
+    id: 5, icon: '', judul: 'Ciluk Ba Awal', ageId: 'b36', domain: ['kog', 'sos'],
     durasiMenit: 5, isDIY: true,
     deskripsi: 'Menutup wajah dengan kain tipis lalu muncul kembali sambil tersenyum untuk melatih pemahaman object permanence awal.',
     sci: 'Permainan muncul-hilang melatih pemahaman object permanence, yaitu kesadaran bahwa benda atau orang tetap ada meski tidak terlihat, yang mulai berkembang pada paruh pertama tahun pertama.',
@@ -254,7 +254,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak yang mudah kaget, gunakan gerakan sangat lambat dan suara sangat lembut. Beri tanda visual seperti menunjuk kain sebelum disembunyikan agar anak dengan sensitivitas sensorik bisa mengantisipasi.',
   },
   {
-    id: 6, icon: '🤲', judul: 'Meraih Mainan Gantung', ageId: 'b36', domain: ['mh', 'mk'],
+    id: 6, icon: '', judul: 'Meraih Mainan Gantung', ageId: 'b36', domain: ['mh', 'mk'],
     durasiMenit: 10, isDIY: false,
     deskripsi: 'Menggantung mainan aman dalam jangkauan bayi agar berlatih meraih dan mengkoordinasikan tangan dengan mata.',
     sci: 'Meraih (reaching) adalah tonggak motorik yang membuka pintu eksplorasi; setiap keterampilan gerak baru mengubah cara bayi belajar tentang dunianya.',
@@ -272,7 +272,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk bayi dengan koordinasi tangan-mata terbatas, dekatkan mainan sampai sangat mudah disentuh dan tingkatkan jarak sangat perlahan. Gunakan mainan kontras tinggi dan berbunyi untuk menarik perhatian lebih kuat.',
   },
   {
-    id: 7, icon: '🪞', judul: 'Cermin Ajaib', ageId: 'b36', domain: ['sos', 'bhs'],
+    id: 7, icon: '', judul: 'Cermin Ajaib', ageId: 'b36', domain: ['sos', 'bhs'],
     durasiMenit: 10, isDIY: false,
     deskripsi: 'Tummy time di depan cermin sambil menyebut nama dan ekspresi bayi untuk mengenalkan diri dan interaksi responsif.',
     sci: 'Bayi secara bawaan tertarik pada wajah; bermain cermin menggabungkan preferensi ini dengan interaksi responsif yang menjadi fondasi kelekatan dan komunikasi awal.',
@@ -290,7 +290,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak yang menghindari kontak mata langsung, cermin bisa menjadi perantara yang lebih nyaman karena tatapan terasa tidak langsung. Untuk anak hipersensitif visual, gunakan cermin kecil dengan pantulan tidak terlalu terang.',
   },
   {
-    id: 8, icon: '🧶', judul: 'Eksplorasi Tekstur Aman', ageId: 'b36', domain: ['sen'],
+    id: 8, icon: '', judul: 'Eksplorasi Tekstur Aman', ageId: 'b36', domain: ['sen'],
     durasiMenit: 10, isDIY: true,
     deskripsi: 'Mengenalkan kain beragam tekstur ke telapak tangan dan kaki bayi secara perlahan untuk mendukung integrasi sensorik taktil.',
     sci: 'Sentuhan adalah indra paling matang di awal kehidupan; pengalaman taktil yang kaya dan aman mendukung integrasi sensorik, yaitu kemampuan otak mengolah input indra menjadi respons yang teratur.',
@@ -309,7 +309,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 6-9 bulan ──────────────────────────────────────────────────────────────
   {
-    id: 9, icon: '🔮', judul: 'Sembunyikan Mainan', ageId: 'b69', domain: ['kog'],
+    id: 9, icon: '', judul: 'Sembunyikan Mainan', ageId: 'b69', domain: ['kog'],
     durasiMenit: 10, isDIY: true,
     deskripsi: 'Sembunyikan mainan di bawah kain untuk melatih object permanence yang lebih aktif.',
     sci: 'Antara 6-9 bulan, bayi mulai aktif mencari benda yang disembunyikan, menandai pematangan konsep object permanence.',
@@ -327,7 +327,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan keterbatasan motorik, sediakan kain yang mudah ditarik. Untuk anak dengan keterlambatan kognitif, perpanjang waktu tunggu dan beri petunjuk visual.',
   },
   {
-    id: 10, icon: '🪣', judul: 'Jatuhkan dan Masukkan', ageId: 'b69', domain: ['kog', 'mh'],
+    id: 10, icon: '', judul: 'Jatuhkan dan Masukkan', ageId: 'b69', domain: ['kog', 'mh'],
     durasiMenit: 10, isDIY: true,
     deskripsi: 'Aktivitas memasukkan dan menjatuhkan benda untuk eksplorasi sebab-akibat.',
     sci: 'Bayi secara aktif menguji sebab-akibat melalui tindakan berulang, yaitu proses penting dalam perkembangan kognitif awal.',
@@ -345,7 +345,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan motorik halus terbatas, gunakan bola lebih besar dan wadah yang lebih besar. Untuk anak dengan sensitivitas bunyi, gunakan wadah kain yang tidak berisik.',
   },
   {
-    id: 11, icon: '🎶', judul: 'Sesi Musik dan Marakas', ageId: 'b69', domain: ['sen', 'bhs'],
+    id: 11, icon: '', judul: 'Sesi Musik dan Marakas', ageId: 'b69', domain: ['sen', 'bhs'],
     durasiMenit: 10, isDIY: true,
     deskripsi: 'Mainkan marakas sederhana bersama untuk stimulasi sensorik dan ritme.',
     sci: 'Pengalaman musik aktif meningkatkan kemampuan bayi memproses irama, yang berkorelasi dengan perkembangan bahasa selanjutnya.',
@@ -363,7 +363,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak hipersensitif bunyi, gunakan marakas dengan suara sangat lembut. Untuk anak dengan motorik terbatas, pegang marakas bersama dan bantu gerakannya.',
   },
   {
-    id: 12, icon: '👆', judul: 'Tunjuk dan Beri Nama', ageId: 'b69', domain: ['bhs'],
+    id: 12, icon: '', judul: 'Tunjuk dan Beri Nama', ageId: 'b69', domain: ['bhs'],
     durasiMenit: 10, isDIY: true,
     deskripsi: 'Tunjuk benda-benda sekitar dan beri nama untuk memperkaya kosakata awal.',
     sci: 'Pemberian nama benda secara konsisten saat menunjuk membangun asosiasi kata-benda dan mempercepat perkembangan kosakata.',
@@ -381,7 +381,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan kesulitan mengikuti arah tunjuk, gunakan benda bergerak atau bercahaya yang lebih mudah menarik perhatian.',
   },
   {
-    id: 13, icon: '⛰️', judul: 'Rintangan Bantal Merangkak', ageId: 'b69', domain: ['mk'],
+    id: 13, icon: '', judul: 'Rintangan Bantal Merangkak', ageId: 'b69', domain: ['mk'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Menyusun bantal dan guling sebagai lintasan rintangan rendah untuk mendorong bayi yang mulai merangkak bergerak aktif.',
     sci: 'WHO menganjurkan bayi aktif bergerak di lantai beberapa kali sehari; pengalaman lokomotor seperti merangkak melatih keseimbangan dan persepsi ruang.',
@@ -400,7 +400,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 9-12 bulan ──────────────────────────────────────────────────────────────
   {
-    id: 14, icon: '📦', judul: 'Masukkan dan Keluarkan', ageId: 'b912', domain: ['kog', 'mh'],
+    id: 14, icon: '', judul: 'Masukkan dan Keluarkan', ageId: 'b912', domain: ['kog', 'mh'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Aktivitas memasukkan dan mengeluarkan benda untuk melatih kontrol motorik halus.',
     sci: 'Aktivitas memasukkan-mengeluarkan melatih koordinasi tangan-mata dan pemahaman konsep ruang sederhana.',
@@ -418,7 +418,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan motorik halus terbatas, gunakan benda lebih besar dan pandu tangan secara hand-over-hand jika diperlukan.',
   },
   {
-    id: 15, icon: '🚶', judul: 'Latihan Berdiri dan Merambat', ageId: 'b912', domain: ['mk'],
+    id: 15, icon: '', judul: 'Latihan Berdiri dan Merambat', ageId: 'b912', domain: ['mk'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Dukung anak berdiri dan merambat di sepanjang furnitur yang aman.',
     sci: 'Latihan berdiri dan merambat memperkuat otot kaki dan mengembangkan keseimbangan sebagai persiapan berjalan.',
@@ -436,7 +436,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan keterlambatan motorik, konsultasikan dulu dengan fisioterapis. Gunakan alat bantu yang sesuai rekomendasi terapis.',
   },
   {
-    id: 16, icon: '🎨', judul: 'Finger Painting Pertama', ageId: 'b912', domain: ['sen', 'mh'],
+    id: 16, icon: '', judul: 'Finger Painting Pertama', ageId: 'b912', domain: ['sen', 'mh'],
     durasiMenit: 15, isDIY: false,
     deskripsi: 'Kenalkan cat jari aman untuk eksplorasi sensorik dan ekspresi kreatif pertama.',
     sci: 'Eksplorasi media seni melatih integrasi sensorik multimoda dan mendorong ekspresi diri sejak dini.',
@@ -455,7 +455,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 12-18 bulan ────────────────────────────────────────────────────────────
   {
-    id: 17, icon: '🗼', judul: 'Menara Balok', ageId: 't1218', domain: ['mh', 'kog'],
+    id: 17, icon: '', judul: 'Menara Balok', ageId: 't1218', domain: ['mh', 'kog'],
     durasiMenit: 15, isDIY: false,
     deskripsi: 'Susun menara balok bersama untuk melatih motorik halus dan konsep sebab-akibat.',
     sci: 'Bermain balok mengembangkan kemampuan spasial, matematika awal, dan persistensi dalam menghadapi kegagalan.',
@@ -473,7 +473,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan motorik halus terbatas, gunakan balok besar foam yang mudah digenggam. Untuk anak dengan frustrasi tinggi, buat menara kecil dulu untuk membangun rasa berhasil.',
   },
   {
-    id: 18, icon: '📖', judul: 'Membaca Interaktif Harian', ageId: 't1218', domain: ['bhs', 'kog'],
+    id: 18, icon: '', judul: 'Membaca Interaktif Harian', ageId: 't1218', domain: ['bhs', 'kog'],
     durasiMenit: 15, isDIY: false,
     deskripsi: 'Baca buku bergambar bersama dengan pertanyaan interaktif setiap harinya.',
     sci: 'Membaca bersama harian dengan dialog dan pertanyaan meningkatkan perkembangan bahasa lebih besar dibanding membaca pasif.',
@@ -491,7 +491,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan gangguan pendengaran, perkuat dengan isyarat dan tunjuk gambar lebih sering. Untuk anak yang sulit fokus, buku pendek 4-6 halaman saja.',
   },
   {
-    id: 19, icon: '🎭', judul: 'Bermain Peran Sederhana', ageId: 't1218', domain: ['sos', 'bhs'],
+    id: 19, icon: '', judul: 'Bermain Peran Sederhana', ageId: 't1218', domain: ['sos', 'bhs'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Kenalkan bermain pura-pura sederhana seperti makan boneka atau telepon-teleponan.',
     sci: 'Bermain pura-pura awal mengembangkan kemampuan representasi simbolik yang menjadi fondasi bahasa dan kreativitas.',
@@ -510,7 +510,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 18-24 bulan ────────────────────────────────────────────────────────────
   {
-    id: 20, icon: '🎨', judul: 'Coret-Coret Bebas', ageId: 't1824', domain: ['mh', 'sen'],
+    id: 20, icon: '', judul: 'Coret-Coret Bebas', ageId: 't1824', domain: ['mh', 'sen'],
     durasiMenit: 15, isDIY: false,
     deskripsi: 'Beri crayon besar dan kertas luas untuk ekspresi kreatif bebas.',
     sci: 'Tahap scribbling adalah dasar perkembangan seni dan tulisan; kebebasan berekspresitanpa koreksi membangun kreativitas intrinsik.',
@@ -528,7 +528,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan motorik halus terbatas, gunakan crayon tebal atau alat genggam khusus. Untuk anak hipersensitif taktil, coba crayon berbungkus kertas agar tidak langsung menyentuh lilin.',
   },
   {
-    id: 21, icon: '🧩', judul: 'Puzzle Knob 2-3 Keping', ageId: 't1824', domain: ['kog', 'mh'],
+    id: 21, icon: '', judul: 'Puzzle Knob 2-3 Keping', ageId: 't1824', domain: ['kog', 'mh'],
     durasiMenit: 15, isDIY: false,
     deskripsi: 'Kenalkan puzzle knob sederhana untuk melatih pemecahan masalah visual-spasial.',
     sci: 'Bermain puzzle melatih penalaran spasial, persepsi visual, dan kemampuan memecahkan masalah yang terstruktur.',
@@ -546,7 +546,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan motorik halus terbatas, pilih knob sangat besar. Untuk anak yang frustrasi, kurangi jumlah keping dan bantu secara bertahap.',
   },
   {
-    id: 22, icon: '🌿', judul: 'Bermain Pasir atau Tepung', ageId: 't1824', domain: ['sen', 'mh'],
+    id: 22, icon: '', judul: 'Bermain Pasir atau Tepung', ageId: 't1824', domain: ['sen', 'mh'],
     durasiMenit: 20, isDIY: true,
     deskripsi: 'Eksplorasi pasir kinetik atau tepung terigu untuk stimulasi sensorik messy play.',
     sci: 'Messy play dengan material berbeda mendukung integrasi sensorik proprioseptif dan taktil yang penting untuk regulasi diri.',
@@ -565,7 +565,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 2-3 tahun ──────────────────────────────────────────────────────────────
   {
-    id: 23, icon: '⚽', judul: 'Tendang Bola ke Gawang', ageId: 'u23', domain: ['mk'],
+    id: 23, icon: '', judul: 'Tendang Bola ke Gawang', ageId: 'u23', domain: ['mk'],
     durasiMenit: 20, isDIY: true,
     deskripsi: 'Latihan menendang bola ke gawang sederhana untuk motorik kasar dan koordinasi.',
     sci: 'Permainan bola mengembangkan koordinasi mata-kaki, keseimbangan dinamis, dan kemampuan mengikuti aturan sederhana.',
@@ -583,7 +583,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan keseimbangan terbatas, biarkan berpegangan saat menendang. Untuk anak dengan gangguan koordinasi, gunakan bola lebih besar dan lebih lambat gerakannya.',
   },
   {
-    id: 24, icon: '✂️', judul: 'Menggunting Garis Lurus', ageId: 'u23', domain: ['mh'],
+    id: 24, icon: '', judul: 'Menggunting Garis Lurus', ageId: 'u23', domain: ['mh'],
     durasiMenit: 15, isDIY: false,
     deskripsi: 'Kenalkan gunting anak untuk menggunting sepanjang garis lurus.',
     sci: 'Menggunting mengembangkan kekuatan tangan, koordinasi bilateral, dan konsentrasi yang dibutuhkan untuk menulis.',
@@ -601,7 +601,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan motorik halus terbatas, tersedia gunting khusus dengan per yang membuka otomatis. Bimbing hand-over-hand tanpa memaksa.',
   },
   {
-    id: 25, icon: '👥', judul: 'Bermain Bersama Teman', ageId: 'u23', domain: ['sos'],
+    id: 25, icon: '', judul: 'Bermain Bersama Teman', ageId: 'u23', domain: ['sos'],
     durasiMenit: 30, isDIY: true,
     deskripsi: 'Fasilitasi sesi bermain bersama teman sebaya untuk belajar berbagi dan bergiliran.',
     sci: 'Bermain paralel dan asosiasi dengan teman sebaya adalah tahap perkembangan sosial normal usia 2-3 tahun yang menjadi fondasi persahabatan.',
@@ -620,7 +620,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 3-4 tahun ──────────────────────────────────────────────────────────────
   {
-    id: 26, icon: '🏠', judul: 'Bermain Rumah-Rumahan', ageId: 'u34', domain: ['sos', 'bhs'],
+    id: 26, icon: '', judul: 'Bermain Rumah-Rumahan', ageId: 'u34', domain: ['sos', 'bhs'],
     durasiMenit: 30, isDIY: true,
     deskripsi: 'Bangun rumah-rumahan dari kardus atau selimut untuk bermain peran imajinatif.',
     sci: 'Bermain peran yang kompleks mengembangkan teori pikiran, kemampuan mengambil perspektif orang lain, dan kosa kata yang kaya.',
@@ -638,7 +638,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak yang kesulitan bermain peran, mulai dengan skrip singkat yang berulang. Berikan giliran jelas dan penguatan saat anak mengikuti skrip.',
   },
   {
-    id: 27, icon: '🔢', judul: 'Menghitung Benda Nyata', ageId: 'u34', domain: ['kog'],
+    id: 27, icon: '', judul: 'Menghitung Benda Nyata', ageId: 'u34', domain: ['kog'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Hitung benda-benda nyata di sekitar untuk membangun pemahaman angka konkret.',
     sci: 'Berhitung dengan benda nyata membangun one-to-one correspondence, yaitu fondasi pemahaman matematika sejati.',
@@ -656,7 +656,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan keterlambatan kognitif, fokus pada 1-3 saja dan gunakan benda yang menarik perhatiannya. Pendekatan multisensori: hitung sambil tepuk tangan.',
   },
   {
-    id: 28, icon: '🎤', judul: 'Bercerita dengan Boneka', ageId: 'u34', domain: ['bhs', 'sos'],
+    id: 28, icon: '', judul: 'Bercerita dengan Boneka', ageId: 'u34', domain: ['bhs', 'sos'],
     durasiMenit: 20, isDIY: true,
     deskripsi: 'Gunakan boneka sebagai media bercerita untuk mengembangkan narasi dan empati.',
     sci: 'Bercerita mengembangkan kemampuan naratif yang berkorelasi kuat dengan literasi dan pemahaman sosial.',
@@ -675,7 +675,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 4-5 tahun ──────────────────────────────────────────────────────────────
   {
-    id: 29, icon: '✏️', judul: 'Menebalkan Huruf dan Angka', ageId: 'u45', domain: ['mh', 'kog'],
+    id: 29, icon: '', judul: 'Menebalkan Huruf dan Angka', ageId: 'u45', domain: ['mh', 'kog'],
     durasiMenit: 15, isDIY: false,
     deskripsi: 'Latihan menebalkan garis huruf dan angka untuk persiapan menulis.',
     sci: 'Latihan pre-writing yang terstruktur mempersiapkan kontrol motorik halus yang dibutuhkan untuk menulis.',
@@ -693,7 +693,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan dispraxia, gunakan pensil dengan grip yang lebih tebal. Untuk anak yang mudah frustrasi, batasi hanya 3-5 huruf per sesi.',
   },
   {
-    id: 30, icon: '🧪', judul: 'Sains Sederhana: Air dan Minyak', ageId: 'u45', domain: ['kog'],
+    id: 30, icon: '', judul: 'Sains Sederhana: Air dan Minyak', ageId: 'u45', domain: ['kog'],
     durasiMenit: 20, isDIY: true,
     deskripsi: 'Eksperimen sederhana mencampur air dan minyak untuk belajar konsep sains dasar.',
     sci: 'Eksplorasi sains hands-on mengembangkan pemikiran ilmiah: mengamati, memprediksi, dan menarik kesimpulan.',
@@ -711,7 +711,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak yang tidak suka basah, gunakan botol tertutup sehingga tidak ada kontak langsung dengan cairan.',
   },
   {
-    id: 31, icon: '🎭', judul: 'Drama Mini Dongeng', ageId: 'u45', domain: ['bhs', 'sos'],
+    id: 31, icon: '', judul: 'Drama Mini Dongeng', ageId: 'u45', domain: ['bhs', 'sos'],
     durasiMenit: 30, isDIY: true,
     deskripsi: 'Perankan bersama sebuah dongeng pendek untuk mengembangkan bahasa dan empati.',
     sci: 'Bermain peran berbasis cerita mengembangkan pemahaman narasi, empati, dan kemampuan mengambil perspektif yang lebih kompleks.',
@@ -729,7 +729,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak yang tidak suka improvisasi, siapkan skrip sederhana yang bisa dihafalkan. Beri peran yang sesuai kemampuan komunikasinya.',
   },
   {
-    id: 32, icon: '🎸', judul: 'Membuat Instrumen dari Barang Bekas', ageId: 'u45', domain: ['sen', 'kog'],
+    id: 32, icon: '', judul: 'Membuat Instrumen dari Barang Bekas', ageId: 'u45', domain: ['sen', 'kog'],
     durasiMenit: 30, isDIY: true,
     deskripsi: 'Buat alat musik sederhana dari barang bekas untuk eksplorasi bunyi kreatif.',
     sci: 'Pembuatan instrumen menggabungkan pemikiran kreatif, pemahaman sebab-akibat, dan pengalaman sensorik auditif.',
@@ -748,7 +748,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 5-6 tahun ──────────────────────────────────────────────────────────────
   {
-    id: 33, icon: '📝', judul: 'Menulis Kata Pertama', ageId: 'u56', domain: ['mh', 'bhs'],
+    id: 33, icon: '', judul: 'Menulis Kata Pertama', ageId: 'u56', domain: ['mh', 'bhs'],
     durasiMenit: 20, isDIY: false,
     deskripsi: 'Latihan menulis nama sendiri dan kata-kata sederhana sebagai milestone literasi.',
     sci: 'Menulis nama sendiri adalah tonggak literasi penting yang mengintegrasikan motorik halus, pengenalan huruf, dan identitas diri.',
@@ -766,7 +766,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan kesulitan motorik halus, gunakan kertas bergaris tebal dan pensil grip. Terapi okupasi dapat membantu persiapan lebih lanjut.',
   },
   {
-    id: 34, icon: '🔬', judul: 'Proyek Sains Benih Tanaman', ageId: 'u56', domain: ['kog'],
+    id: 34, icon: '', judul: 'Proyek Sains Benih Tanaman', ageId: 'u56', domain: ['kog'],
     durasiMenit: 20, isDIY: true,
     deskripsi: 'Tanam benih bersama dan amati pertumbuhannya sebagai proyek sains jangka panjang.',
     sci: 'Proyek sains jangka panjang mengembangkan pemikiran ilmiah, tanggung jawab, dan pemahaman siklus alam.',
@@ -784,7 +784,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak yang butuh hasil cepat, pilih benih kacang hijau yang cepat berkecambah (3-5 hari). Beri penguatan visual dengan foto perkembangan.',
   },
   {
-    id: 35, icon: '🤝', judul: 'Proyek Kelompok Mini', ageId: 'u56', domain: ['sos', 'kog'],
+    id: 35, icon: '', judul: 'Proyek Kelompok Mini', ageId: 'u56', domain: ['sos', 'kog'],
     durasiMenit: 45, isDIY: true,
     deskripsi: 'Selesaikan proyek bersama teman seperti puzzle besar atau bangunan balok raksasa.',
     sci: 'Kolaborasi pada tugas bersama mengembangkan negosiasi, pembagian peran, dan regulasi emosi dalam konteks sosial.',
@@ -802,7 +802,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak yang kesulitan berkolaborasi, berikan peran yang sangat jelas dan berstruktur. Hindari peran yang membutuhkan banyak negosiasi di awal.',
   },
   {
-    id: 36, icon: '📚', judul: 'Membaca Mandiri Pertama', ageId: 'u56', domain: ['bhs', 'kog'],
+    id: 36, icon: '', judul: 'Membaca Mandiri Pertama', ageId: 'u56', domain: ['bhs', 'kog'],
     durasiMenit: 20, isDIY: false,
     deskripsi: 'Dampingi anak membaca buku sederhana secara mandiri untuk pertama kalinya.',
     sci: 'Kemampuan decoding awal yang kuat berkorelasi dengan pemahaman membaca jangka panjang dan prestasi akademik.',
@@ -820,7 +820,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan disleksia, pilih font khusus disleksia dan kertas krem. Jangan perbaiki setiap kesalahan, biarkan anak memahami konteks dulu.',
   },
   {
-    id: 37, icon: '🎯', judul: 'Permainan Konsentrasi Memory', ageId: 'u56', domain: ['kog'],
+    id: 37, icon: '', judul: 'Permainan Konsentrasi Memory', ageId: 'u56', domain: ['kog'],
     durasiMenit: 20, isDIY: false,
     deskripsi: 'Mainkan kartu memori berpasangan untuk melatih konsentrasi dan memori kerja.',
     sci: 'Permainan memori secara langsung melatih working memory yang berperan penting dalam belajar membaca dan matematika.',
@@ -838,7 +838,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan ADHD, mulai dengan sangat sedikit kartu dan sesi pendek. Berikan jeda gerak antara giliran.',
   },
   {
-    id: 38, icon: '🌱', judul: 'Tanggung Jawab Rumah Sederhana', ageId: 'u56', domain: ['sos'],
+    id: 38, icon: '', judul: 'Tanggung Jawab Rumah Sederhana', ageId: 'u56', domain: ['sos'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Berikan tugas rumah sederhana yang konsisten sebagai latihan tanggung jawab dan otonomi.',
     sci: 'Anak yang memiliki tanggung jawab di rumah sejak dini mengembangkan rasa kompetensi, disiplin diri, dan empati sosial yang lebih kuat.',
@@ -856,7 +856,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan disabilitas, pilih tugas yang bisa disesuaikan dengan kemampuannya dan masih memberikan rasa kontribusi nyata.',
   },
   {
-    id: 39, icon: '🏃', judul: 'Permainan Gerak Aktif Kelompok', ageId: 'u56', domain: ['mk', 'sos'],
+    id: 39, icon: '', judul: 'Permainan Gerak Aktif Kelompok', ageId: 'u56', domain: ['mk', 'sos'],
     durasiMenit: 30, isDIY: true,
     deskripsi: 'Permainan gerak aktif bersama seperti estafet, lompat tali, atau gobak sodor sederhana.',
     sci: 'Aktivitas fisik terstruktur meningkatkan fungsi eksekutif, regulasi diri, dan keterampilan sosial-motorik sekaligus.',
@@ -875,7 +875,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 3-6 bulan (tambahan) ───────────────────────────────────────────────────
   {
-    id: 40, icon: '📖', judul: 'Membaca Buku Kain Bersama', ageId: 'b36', domain: ['bhs'],
+    id: 40, icon: '', judul: 'Membaca Buku Kain Bersama', ageId: 'b36', domain: ['bhs'],
     durasiMenit: 10, isDIY: false,
     deskripsi: 'Membacakan buku kain dengan intonasi hidup dan menunjuk gambar agar bayi terbiasa dengan rutinitas membaca sejak dini.',
     sci: 'Meta-analisis menunjukkan membaca bersama sejak dini berhubungan dengan pertumbuhan bahasa dan kesiapan membaca; efeknya berlaku lintas latar ekonomi keluarga.',
@@ -894,7 +894,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 6-9 bulan (tambahan) ───────────────────────────────────────────────────
   {
-    id: 41, icon: '🎭', judul: 'Sembunyikan Mainan di Balik Kain', ageId: 'b69', domain: ['kog'],
+    id: 41, icon: '', judul: 'Sembunyikan Mainan di Balik Kain', ageId: 'b69', domain: ['kog'],
     durasiMenit: 10, isDIY: true,
     deskripsi: 'Menyembunyikan mainan sebagian lalu seluruhnya di balik kain, lalu biarkan bayi menemukannya sendiri.',
     sci: 'Mencari benda yang disembunyikan adalah latihan langsung object permanence dan memori kerja awal; riset modern menunjukkan pemahaman ini mulai muncul usia 4-8 bulan.',
@@ -912,7 +912,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan keterbatasan motorik, siapkan kain yang sangat ringan dan mudah ditarik. Untuk anak dengan keterlambatan kognitif, perpanjang waktu tunggu dan beri petunjuk visual tambahan seperti mengetuk permukaan kain.',
   },
   {
-    id: 42, icon: '📥', judul: 'Jatuhkan & Masukkan ke Wadah', ageId: 'b69', domain: ['kog', 'mh'],
+    id: 42, icon: '', judul: 'Jatuhkan & Masukkan ke Wadah', ageId: 'b69', domain: ['kog', 'mh'],
     durasiMenit: 10, isDIY: true,
     deskripsi: 'Memasukkan dan menjatuhkan benda ke wadah berulang-ulang sebagai eksperimen sebab-akibat pertama bayi.',
     sci: 'Perilaku menjatuhkan berulang adalah eksperimen sebab-akibat pertama bayi, yaitu fondasi berpikir kausal yang berkembang pesat di paruh kedua tahun pertama.',
@@ -930,7 +930,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan motorik halus terbatas, gunakan benda lebih besar dan wadah berukuran lebih luas. Untuk anak yang sensitif terhadap bunyi keras, lapisi dalam wadah dengan kain tipis agar bunyi lebih lembut.',
   },
   {
-    id: 43, icon: '🎶', judul: 'Sesi Musik & Marakas', ageId: 'b69', domain: ['sen', 'bhs'],
+    id: 43, icon: '', judul: 'Sesi Musik & Marakas', ageId: 'b69', domain: ['sen', 'bhs'],
     durasiMenit: 15, isDIY: false,
     deskripsi: 'Bermain marakas mengikuti irama lagu bersama orang tua untuk stimulasi sensorik auditif dan ritme.',
     sci: 'Uji coba acak pada bayi 9 bulan: sesi bermain musik berirama dalam kelompok sosial meningkatkan respons otak terhadap irama musik DAN irama bicara sekaligus.',
@@ -948,7 +948,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak hipersensitif bunyi, pilih marakas dengan isian yang menghasilkan suara sangat lembut. Untuk anak dengan motorik halus terbatas, pegang marakas bersama-sama dan bantu gerakan mengocok secara bertahap.',
   },
   {
-    id: 44, icon: '👆', judul: 'Tunjuk & Beri Nama', ageId: 'b69', domain: ['bhs'],
+    id: 44, icon: '', judul: 'Tunjuk & Beri Nama', ageId: 'b69', domain: ['bhs'],
     durasiMenit: 10, isDIY: true,
     deskripsi: 'Menunjuk benda yang diperhatikan bayi lalu menyebut namanya berulang dalam konteks perhatian bersama.',
     sci: 'Perhatian bersama (joint attention) yaitu melihat benda yang sama sambil diberi label adalah salah satu mekanisme utama bayi memetakan kata ke benda.',
@@ -967,7 +967,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 9-12 bulan (tambahan) ──────────────────────────────────────────────────
   {
-    id: 45, icon: '🏃', judul: 'Kejar-kejaran Merangkak', ageId: 'b912', domain: ['mk', 'sos'],
+    id: 45, icon: '', judul: 'Kejar-kejaran Merangkak', ageId: 'b912', domain: ['mk', 'sos'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Orang tua merangkak mengejar bayi sambil tertawa bersama untuk memenuhi aktivitas fisik interaktif dan melatih antisipasi sosial.',
     sci: 'Permainan gerak bersama memenuhi anjuran aktivitas fisik interaktif berbasis lantai dan sekaligus melatih antisipasi sosial yaitu bayi belajar membaca maksud orang lain lewat permainan.',
@@ -985,7 +985,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk bayi dengan tonus rendah, pastikan lantai tidak terlalu keras dan beri dukungan tangan jika perlu. Untuk bayi yang mudah kewalahan, pendekkan durasi dan beri jeda istirahat yang lebih sering.',
   },
   {
-    id: 46, icon: '🤏', judul: 'Menjumput Finger Food', ageId: 'b912', domain: ['mh'],
+    id: 46, icon: '', judul: 'Menjumput Finger Food', ageId: 'b912', domain: ['mh'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Meletakkan potongan makanan lunak kecil agar bayi berlatih menjumput dengan ibu jari dan telunjuk (pincer grasp).',
     sci: 'Genggaman menjumput (pincer grasp) matang di sekitar usia ini; keterampilan motorik halus awal menjadi salah satu prediktor kesiapan sekolah di kemudian hari.',
@@ -1003,7 +1003,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk bayi dengan tonus tangan rendah, berikan potongan makanan yang lebih lengket seperti nasi atau buah yang membantu "menempel" di jari saat mencoba dijumput. Untuk anak dengan gangguan sensorik oral, mulai dengan makanan yang teksturnya paling disukai anak.',
   },
   {
-    id: 47, icon: '📚', judul: 'Baca & Tunjuk Gambar', ageId: 'b912', domain: ['bhs'],
+    id: 47, icon: '', judul: 'Baca & Tunjuk Gambar', ageId: 'b912', domain: ['bhs'],
     durasiMenit: 10, isDIY: false,
     deskripsi: 'Membaca buku board sambil mengajak bayi menunjuk gambar yang disebut untuk membangun kosakata dan perhatian bersama.',
     sci: 'Frekuensi membaca bersama pada masa pra-sekolah berhubungan konsisten dengan pertumbuhan bahasa; menunjuk gambar menambahkan lapisan perhatian bersama yang memperkuat pemetaan kata-benda.',
@@ -1021,7 +1021,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk bayi dengan gangguan pendengaran, perkuat dengan ekspresi wajah yang jelas dan sentuhan sambil menunjuk gambar. Untuk anak yang sulit fokus, gunakan buku dengan hanya 1-2 gambar besar per halaman.',
   },
   {
-    id: 48, icon: '🤙', judul: 'Permainan Tunjuk-Minta', ageId: 'b912', domain: ['bhs', 'sos'],
+    id: 48, icon: '', judul: 'Permainan Tunjuk-Minta', ageId: 'b912', domain: ['bhs', 'sos'],
     durasiMenit: 10, isDIY: true,
     deskripsi: 'Mendorong bayi menunjuk benda yang diinginkan sebelum diberikan sambil orang tua menamainya dengan jelas.',
     sci: 'Gestur menunjuk pada usia dini secara selektif memprediksi ukuran kosakata anak di kemudian hari; menunjuk adalah "kata pertama" dalam bentuk gerakan.',
@@ -1039,7 +1039,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan speech delay, terima semua bentuk komunikasi: tatapan, vokalisasi, atau gerakan ke arah benda sebagai bentuk menunjuk yang valid dan segera direspons. Hindari meminta verbal sebelum isyarat non-verbal dikuasai.',
   },
   {
-    id: 49, icon: '📦', judul: 'Kotak Kejutan (Permanence Box)', ageId: 'b912', domain: ['kog', 'mh'],
+    id: 49, icon: '', judul: 'Kotak Kejutan (Permanence Box)', ageId: 'b912', domain: ['kog', 'mh'],
     durasiMenit: 10, isDIY: false,
     deskripsi: 'Memasukkan bola ke lubang kotak dan menyaksikannya muncul kembali di laci bawah untuk melatih object permanence dan koordinasi.',
     sci: 'Alat klasik Montessori ini melatih pemahaman bahwa benda yang hilang dapat muncul kembali di tempat lain, sekaligus mengembangkan koordinasi mata-tangan secara bersamaan.',
@@ -1058,7 +1058,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 12-18 bulan (tambahan) ─────────────────────────────────────────────────
   {
-    id: 50, icon: '🗼', judul: 'Menara Gelas & Balok Besar', ageId: 't1218', domain: ['mh', 'kog'],
+    id: 50, icon: '', judul: 'Menara Gelas & Balok Besar', ageId: 't1218', domain: ['mh', 'kog'],
     durasiMenit: 15, isDIY: false,
     deskripsi: 'Menumpuk gelas plastik atau balok besar secara berurutan lalu merobohkannya untuk melatih kemampuan spasial dan motorik halus.',
     sci: 'Kemampuan merakit dan menyusun benda pada usia dini berkaitan dengan keterampilan spasial yang kelak berhubungan dengan kemampuan matematika awal.',
@@ -1076,7 +1076,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan motorik halus terbatas, gunakan balok besar foam yang mudah digenggam dan tidak mudah jatuh saat ditumpuk. Untuk anak yang mudah frustrasi, mulai dengan menara sangat rendah untuk membangun rasa berhasil sebelum menambah tinggi.',
   },
   {
-    id: 51, icon: '🚶', judul: 'Berjalan & Mendorong Mainan', ageId: 't1218', domain: ['mk'],
+    id: 51, icon: '', judul: 'Berjalan & Mendorong Mainan', ageId: 't1218', domain: ['mk'],
     durasiMenit: 20, isDIY: false,
     deskripsi: 'Berlatih berjalan sambil mendorong mainan dorong atau kursi ringan untuk melatih keseimbangan dinamis dan kepercayaan diri.',
     sci: 'WHO menganjurkan batita aktif bergerak minimal 180 menit sehari dalam berbagai bentuk aktivitas; berjalan sambil mendorong melatih keseimbangan dinamis dan kepercayaan diri motorik.',
@@ -1094,7 +1094,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan keterlambatan motorik, konsultasikan dulu dengan fisioterapis sebelum memilih alat bantu berjalan yang tepat. Gunakan push toy yang berat dan stabil agar tidak mudah terbalik.',
   },
   {
-    id: 52, icon: '🔔', judul: 'Tebak Suara', ageId: 't1218', domain: ['bhs', 'sen'],
+    id: 52, icon: '', judul: 'Tebak Suara', ageId: 't1218', domain: ['bhs', 'sen'],
     durasiMenit: 10, isDIY: true,
     deskripsi: 'Membunyikan benda dari balik punggung dan membiarkan anak menunjuk atau menebak sumber bunyi untuk melatih diskriminasi auditori.',
     sci: 'Membedakan bunyi (diskriminasi auditori) adalah fondasi kesadaran fonologis yang kelak dipakai anak untuk belajar bicara dan membaca.',
@@ -1112,7 +1112,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan sensitivitas pendengaran, pastikan semua bunyi lembut dan jauhkan dari telinga. Untuk anak dengan speech delay, terima menunjuk benda sebagai jawaban yang valid tanpa meminta ucapan verbal.',
   },
   {
-    id: 53, icon: '✏️', judul: 'Coret-coret Bebas Krayon Besar', ageId: 't1218', domain: ['mh'],
+    id: 53, icon: '', judul: 'Coret-coret Bebas Krayon Besar', ageId: 't1218', domain: ['mh'],
     durasiMenit: 15, isDIY: false,
     deskripsi: 'Memberi krayon jumbo dan kertas lebar agar anak bereksplorasi membuat coretan bebas sebagai awal jalur motorik halus.',
     sci: 'Membuat coretan sendiri (bukan sekadar melihat) adalah langkah awal jalur motorik halus menuju menulis; keterampilan motorik halus saat masuk sekolah memprediksi capaian membaca dan matematika.',
@@ -1130,7 +1130,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan motorik halus terbatas, gunakan krayon sangat tebal (triangular crayon) yang mudah digenggam atau gunakan grip khusus. Untuk anak hipersensitif taktil terhadap tekstur lilin, coba crayon berbungkus kertas agar tidak langsung menyentuh lilin.',
   },
   {
-    id: 54, icon: '💧', judul: 'Tuang-Menuang Air', ageId: 't1218', domain: ['sen', 'kog'],
+    id: 54, icon: '', judul: 'Tuang-Menuang Air', ageId: 't1218', domain: ['sen', 'kog'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Menuangkan air antar wadah plastik di bak atau ember sebagai aktivitas practical life yang melatih kontrol gerak dan konsentrasi.',
     sci: 'Aktivitas practical life ala Montessori melatih kontrol gerak, konsentrasi, dan kemandirian; bermain air juga memberi input sensorik yang menenangkan sistem saraf.',
@@ -1149,7 +1149,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 18-24 bulan (tambahan) ─────────────────────────────────────────────────
   {
-    id: 55, icon: '📎', judul: 'Menjepit Jemuran Mini', ageId: 't1824', domain: ['mh'],
+    id: 55, icon: '', judul: 'Menjepit Jemuran Mini', ageId: 't1824', domain: ['mh'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Menjepitkan jepitan jemuran ke tepi kardus atau tali untuk melatih tripod grasp yang sama dengan memegang pensil.',
     sci: 'Membuka jepitan melawan pegas melatih tripod grasp (tiga jari), yaitu pola genggaman yang sama dengan memegang pensil; motorik halus awal memprediksi kesiapan akademik.',
@@ -1167,7 +1167,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan tonus tangan rendah, pilih jepitan dengan pegas sangat ringan atau beri bantuan hand-over-hand yang dikurangi bertahap. Untuk anak dengan sensitivitas taktil, pastikan tekstur jepitan tidak menggangu dan coba lapisi dengan karet tipis.',
   },
   {
-    id: 56, icon: '🧩', judul: 'Puzzle Knob Sederhana', ageId: 't1824', domain: ['kog', 'mh'],
+    id: 56, icon: '', judul: 'Puzzle Knob Sederhana', ageId: 't1824', domain: ['kog', 'mh'],
     durasiMenit: 15, isDIY: false,
     deskripsi: 'Memasang dan melepas puzzle kayu berpegangan besar untuk melatih pengenalan bentuk dan kemampuan spasial awal.',
     sci: 'Studi longitudinal: anak yang bermain puzzle antara usia 2-4 tahun menunjukkan kemampuan transformasi spasial yang lebih baik di usia 4,5 tahun, terlepas dari pendidikan dan pendapatan orang tua.',
@@ -1185,7 +1185,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan motorik halus terbatas, pilih knob sangat besar berbentuk silinder yang mudah dicengkeram. Untuk anak yang mudah frustrasi, beri satu clue fisik (taruh keping dekat lubangnya) untuk mengurangi beban kognitif.',
   },
   {
-    id: 57, icon: '🔍', judul: 'Berburu & Menamai Benda', ageId: 't1824', domain: ['bhs', 'mk'],
+    id: 57, icon: '', judul: 'Berburu & Menamai Benda', ageId: 't1824', domain: ['bhs', 'mk'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Misi berkeliling rumah mencari benda tertentu; setiap temuan dinamai bersama orang tua untuk memperkaya kosakata.',
     sci: 'Jumlah dan keragaman kata yang didengar anak dalam interaksi sehari-hari berhubungan kuat dengan pertumbuhan kosakata; percakapan saat eksplorasi adalah sumber kata yang kaya dan kontekstual.',
@@ -1203,7 +1203,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan keterbatasan mobilitas, bawa benda-benda ke depan anak untuk diperiksa. Untuk anak yang mudah kewalahan, batasi area pencarian hanya di satu ruangan dengan pilihan benda yang tidak terlalu banyak.',
   },
   {
-    id: 58, icon: '🔢', judul: 'Hitung Apa Saja 1-2-3', ageId: 't1824', domain: ['kog'],
+    id: 58, icon: '', judul: 'Hitung Apa Saja 1-2-3', ageId: 't1824', domain: ['kog'],
     durasiMenit: 10, isDIY: true,
     deskripsi: 'Menghitung benda nyata seperti anak tangga, kancing, atau jari dalam rutinitas harian untuk membangun pemahaman angka konkret.',
     sci: 'Frekuensi "obrolan angka" orang tua pada usia 14-30 bulan memprediksi pemahaman makna bilangan anak di usia prasekolah.',
@@ -1221,7 +1221,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan keterlambatan kognitif, fokus pada konsep 1 dan banyak sebelum melanjutkan ke angka spesifik. Gunakan pendekatan multisensori: hitung sambil bertepuk tangan atau melompat.',
   },
   {
-    id: 59, icon: '⚽', judul: 'Lempar-Tangkap Bola Besar', ageId: 't1824', domain: ['mk', 'sos'],
+    id: 59, icon: '', judul: 'Lempar-Tangkap Bola Besar', ageId: 't1824', domain: ['mk', 'sos'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Menggelindingkan lalu melempar bola besar bergantian dengan orang tua untuk melatih koordinasi tubuh dan giliran.',
     sci: 'Bermain bola bergantian melatih koordinasi seluruh tubuh sekaligus giliran (turn-taking), yaitu keterampilan sosial dasar percakapan; memenuhi anjuran aktivitas fisik harian WHO.',
@@ -1240,7 +1240,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 2-3 tahun (tambahan) ───────────────────────────────────────────────────
   {
-    id: 60, icon: '🎨', judul: 'Sortir Warna Pom-pom', ageId: 'u23', domain: ['mh', 'kog'],
+    id: 60, icon: '', judul: 'Sortir Warna Pom-pom', ageId: 'u23', domain: ['mh', 'kog'],
     durasiMenit: 20, isDIY: false,
     deskripsi: 'Memindahkan pom-pom ke mangkuk sesuai warna menggunakan penjepit untuk melatih pincer grasp dan klasifikasi warna.',
     sci: 'Menjepit melatih pincer grasp untuk persiapan menulis; mengklasifikasi warna melatih atensi dan fungsi eksekutif awal, yaitu keduanya prediktor kesiapan sekolah.',
@@ -1258,7 +1258,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan tonus tangan rendah, gunakan penjepit berpegas sangat ringan atau mulai dengan memindahkan tangan kosong dulu. Untuk anak yang mudah kewalahan oleh banyak warna, mulai hanya dengan 2 warna saja.',
   },
   {
-    id: 61, icon: '🎭', judul: 'Cerita Boneka Kaus Kaki', ageId: 'u23', domain: ['bhs', 'sos'],
+    id: 61, icon: '', judul: 'Cerita Boneka Kaus Kaki', ageId: 'u23', domain: ['bhs', 'sos'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Membuat boneka DIY dari kaus kaki sebagai teman bercakap-cakap untuk mendorong giliran bicara yang lebih aktif dari anak.',
     sci: 'Riset pencitraan otak menunjukkan yang paling menumbuhkan bahasa bukan banyaknya kata yang didengar, melainkan banyaknya giliran percakapan bolak-balik; boneka membuat anak lebih berani ikut bicara.',
@@ -1276,7 +1276,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan hambatan bicara, terima respons melalui boneka dalam bentuk gerakan atau suara apapun. Untuk anak autistik, boneka bisa menjadi cara belajar aturan sosial yang lebih aman karena konteks fantasinya lebih dapat diprediksi.',
   },
   {
-    id: 62, icon: '📖', judul: 'Membaca Dialogis', ageId: 'u23', domain: ['bhs'],
+    id: 62, icon: '', judul: 'Membaca Dialogis', ageId: 'u23', domain: ['bhs'],
     durasiMenit: 15, isDIY: false,
     deskripsi: 'Membaca buku dengan bertanya, menunggu jawaban anak, lalu mengembangkan jawabannya menjadi kalimat lebih lengkap.',
     sci: 'Uji coba terkontrol: teknik membaca dialogis (bertanya-menunggu-mengembangkan) meningkatkan kemampuan bahasa ekspresif anak dibanding membaca satu arah tanpa interaksi.',
@@ -1294,7 +1294,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan speech delay, terima jawaban berupa menunjuk gambar atau suara sebagai respons valid dan ekspansi tetap dilakukan. Untuk anak yang sulit memusatkan perhatian, pilih buku dengan hanya 2-4 halaman bergambar besar.',
   },
   {
-    id: 63, icon: '🔶', judul: 'Berburu Bentuk di Rumah', ageId: 'u23', domain: ['kog', 'mk'],
+    id: 63, icon: '', judul: 'Berburu Bentuk di Rumah', ageId: 'u23', domain: ['kog', 'mk'],
     durasiMenit: 20, isDIY: true,
     deskripsi: 'Mencari benda berbentuk lingkaran, kotak, atau segitiga di sekitar rumah menggunakan kartu misi sebagai panduan.',
     sci: 'Guided play yaitu bermain bebas yang diarahkan lembut oleh orang dewasa menuju tujuan belajar terbukti efektif untuk penguasaan konsep termasuk bentuk geometri.',
@@ -1312,7 +1312,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan keterbatasan mobilitas, bawa benda-benda ke area bermain anak untuk dicocokkan. Untuk anak yang mudah kewalahan, batasi pilihan hanya 2 bentuk dan sediakan petunjuk visual yang sangat jelas.',
   },
   {
-    id: 64, icon: '🧫', judul: 'Botol Sensorik Warna', ageId: 'u23', domain: ['sen'],
+    id: 64, icon: '', judul: 'Botol Sensorik Warna', ageId: 'u23', domain: ['sen'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Membuat botol air berisi glitter berwarna bersama anak dan mengamatinya saat membutuhkan ketenangan.',
     sci: 'Input visual yang lambat dan berulang membantu regulasi diri; prinsip integrasi sensorik dipakai terapis okupasi untuk membantu anak menenangkan sistem sarafnya saat overwhelmed.',
@@ -1331,7 +1331,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 3-4 tahun (tambahan) ───────────────────────────────────────────────────
   {
-    id: 65, icon: '🎨', judul: 'Playdough Bentuk & Huruf', ageId: 'u34', domain: ['mh'],
+    id: 65, icon: '', judul: 'Playdough Bentuk & Huruf', ageId: 'u34', domain: ['mh'],
     durasiMenit: 25, isDIY: false,
     deskripsi: 'Meremas dan membentuk playdough menjadi bentuk dasar dan huruf pertama nama anak untuk memperkuat otot tangan.',
     sci: 'Meremas menguatkan otot tangan untuk kontrol pensil; membentuk huruf secara fisik mengaktifkan jalur belajar huruf lebih kuat daripada sekadar melihat.',
@@ -1349,7 +1349,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak hipersensitif taktil, mulai dengan memakai sarung tangan tipis atau sentuh dari luar kantong ziplock berisi playdough. Perkenalkan tekstur bertahap. Untuk anak dengan tonus rendah, gunakan playdough yang lebih lembut agar lebih mudah dibentuk.',
   },
   {
-    id: 66, icon: '🛤️', judul: 'Lompat Garis Lakban', ageId: 'u34', domain: ['mk'],
+    id: 66, icon: '', judul: 'Lompat Garis Lakban', ageId: 'u34', domain: ['mk'],
     durasiMenit: 20, isDIY: true,
     deskripsi: 'Membuat lintasan lakban di lantai untuk dititi, dilompati, dan dijalani mundur sebagai latihan keseimbangan.',
     sci: 'Aktivitas keseimbangan dan perencanaan gerak memenuhi anjuran 180 menit aktivitas fisik harian; permainan gerak dengan aturan sederhana juga melatih kontrol diri dan pengikutan instruksi.',
@@ -1367,7 +1367,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan keseimbangan terbatas, sediakan dinding atau tangan orang tua sebagai pegangan saat meniti. Untuk anak dengan gangguan perencanaan motorik (dyspraxia), demonstrasikan setiap aksi perlahan dan beri instruksi verbal yang sangat singkat.',
   },
   {
-    id: 67, icon: '🏗️', judul: 'Membangun Balok Bertantangan', ageId: 'u34', domain: ['kog', 'mh'],
+    id: 67, icon: '', judul: 'Membangun Balok Bertantangan', ageId: 'u34', domain: ['kog', 'mh'],
     durasiMenit: 25, isDIY: false,
     deskripsi: 'Membangun bebas dengan balok lalu orang tua memberi tantangan spesifik untuk memperkuat penalaran spasial.',
     sci: 'Kemampuan merakit balok pada usia 3 tahun berhubungan dengan kemampuan matematika awal; kualitas bangunan balok prasekolah bahkan berkaitan dengan capaian akademik jangka panjang.',
@@ -1385,7 +1385,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan motorik halus terbatas, gunakan balok magnetik yang saling menempel lebih mudah. Untuk anak yang mudah frustrasi saat bangunan roboh, gunakan balok foam yang lebih stabil.',
   },
   {
-    id: 68, icon: '👨‍🍳', judul: 'Masak Bersama: Menakar & Menghitung', ageId: 'u34', domain: ['kog', 'mh'],
+    id: 68, icon: '', judul: 'Masak Bersama: Menakar & Menghitung', ageId: 'u34', domain: ['kog', 'mh'],
     durasiMenit: 30, isDIY: true,
     deskripsi: 'Mengajak anak membantu menakar, menuang, dan menghitung bahan masakan sederhana sebagai number talk nyata.',
     sci: 'Obrolan angka dalam konteks nyata seperti menakar dan membagi adalah bentuk number talk yang memprediksi pemahaman bilangan; kegiatan practical life juga melatih kemandirian dan konsentrasi.',
@@ -1403,7 +1403,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak hipersensitif taktil, sediakan peralatan memasak yang meminimalkan kontak langsung tangan dengan bahan. Untuk anak dengan gangguan atensi, batasi kegiatan pada 1-2 langkah memasak saja per sesi.',
   },
   {
-    id: 69, icon: '🚦', judul: 'Lampu Merah, Lampu Ungu', ageId: 'u34', domain: ['mk', 'sos'],
+    id: 69, icon: '', judul: 'Lampu Merah, Lampu Ungu', ageId: 'u34', domain: ['mk', 'sos'],
     durasiMenit: 20, isDIY: true,
     deskripsi: 'Permainan gerak-berhenti dengan aturan yang dibalik-balik untuk melatih regulasi diri dan kontrol impuls.',
     sci: 'Uji coba acak: permainan lingkaran bergerak-berhenti meningkatkan regulasi diri terutama pada anak yang regulasinya masih rendah, dan berdampak pada kemampuan mengenal huruf selanjutnya.',
@@ -1422,7 +1422,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 4-5 tahun (tambahan) ───────────────────────────────────────────────────
   {
-    id: 70, icon: '🏪', judul: 'Bermain Toko-tokoan', ageId: 'u45', domain: ['sos', 'kog'],
+    id: 70, icon: '', judul: 'Bermain Toko-tokoan', ageId: 'u45', domain: ['sos', 'kog'],
     durasiMenit: 30, isDIY: true,
     deskripsi: 'Role-play jual beli dengan uang mainan dan barang-barang rumah sebagai konteks bermakna untuk melatih bahasa dan numerasi.',
     sci: 'Dalam kerangka guided play, bermain peran memberi kesempatan berlatih bahasa, negosiasi giliran, dan berhitung dalam konteks bermakna, yaitu cara belajar yang efektif untuk usia prasekolah.',
@@ -1440,7 +1440,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak yang kesulitan bermain peran bebas, berikan skrip visual singkat berupa kartu bergambar tentang urutan transaksi (salam, tanya harga, bayar, terima kasih). Untuk anak autistik, skrip visual mendukung pembelajaran skenario sosial (Steinbrenner et al., 2020).',
   },
   {
-    id: 71, icon: '🧩', judul: 'Puzzle 12-24 Keping', ageId: 'u45', domain: ['kog'],
+    id: 71, icon: '', judul: 'Puzzle 12-24 Keping', ageId: 'u45', domain: ['kog'],
     durasiMenit: 25, isDIY: false,
     deskripsi: 'Menyusun puzzle bertahap dengan strategi mencari tepi terlebih dahulu untuk mengembangkan kemampuan spasial.',
     sci: 'Frekuensi bermain puzzle pada usia dini memprediksi kemampuan transformasi spasial yang menjadi fondasi berpikir matematis dan sains.',
@@ -1458,7 +1458,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak yang mudah frustrasi, berikan frame puzzle (bingkai cetakan) agar keping tidak meluncur jauh saat coba dipasang. Untuk anak dengan gangguan persepsi visual, pilih puzzle dengan kontras warna tinggi dan kepingan berukuran besar.',
   },
   {
-    id: 72, icon: '🖊️', judul: 'Menggambar & Menulis Nama Sendiri', ageId: 'u45', domain: ['mh', 'bhs'],
+    id: 72, icon: '', judul: 'Menggambar & Menulis Nama Sendiri', ageId: 'u45', domain: ['mh', 'bhs'],
     durasiMenit: 20, isDIY: true,
     deskripsi: 'Menggambar bebas lalu berlatih menulis huruf-huruf dari nama sendiri dengan tangan tanpa menjiplak.',
     sci: 'Studi fMRI: menulis huruf dengan tangan sendiri (bukan mengetik atau menjiplak) mengaktifkan sirkuit membaca di otak anak pra-baca, yaitu tulisan tangan menyiapkan otak untuk literasi.',
@@ -1476,7 +1476,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan kesulitan motorik halus, gunakan kertas bergaris tebal dan pensil dengan grip khusus. Jangan perbaiki setiap ketidaksempurnaan tulisan karena usaha menulis mandiri lebih penting daripada hasil untuk saat ini.',
   },
   {
-    id: 73, icon: '🌱', judul: 'Berkebun Mini Kacang Hijau', ageId: 'u45', domain: ['kog', 'sen'],
+    id: 73, icon: '', judul: 'Berkebun Mini Kacang Hijau', ageId: 'u45', domain: ['kog', 'sen'],
     durasiMenit: 20, isDIY: true,
     deskripsi: 'Menanam benih kacang hijau, membuat prediksi, mengamati, dan mencatat pertumbuhan setiap hari sebagai proyek sains mini.',
     sci: 'Anak kecil secara alami bernalar seperti ilmuwan yaitu membentuk dugaan dan mengujinya lewat pengalaman; kegiatan prediksi-amati-catat menyalurkan kemampuan ini secara terstruktur.',
@@ -1494,7 +1494,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak yang butuh hasil cepat agar tidak frustrasi, pilih kacang hijau yang berkecambah dalam 3-5 hari dan tunjukkan foto tahapan pertumbuhan di awal. Foto perkembangan harian memberi penguatan visual yang konkret bagi anak.',
   },
   {
-    id: 74, icon: '🎲', judul: 'Permainan Papan Angka (Ular Tangga Mini)', ageId: 'u45', domain: ['kog', 'sos'],
+    id: 74, icon: '', judul: 'Permainan Papan Angka (Ular Tangga Mini)', ageId: 'u45', domain: ['kog', 'sos'],
     durasiMenit: 20, isDIY: false,
     deskripsi: 'Bermain papan angka linear sederhana secara bergantian untuk meningkatkan pemahaman garis bilangan.',
     sci: 'Uji coba terkontrol: bermain papan angka linear meningkatkan pemahaman garis bilangan, membilang, dan membandingkan besaran pada anak prasekolah secara signifikan.',
@@ -1513,7 +1513,7 @@ export const ACTIVITIES: Activity[] = [
   },
   // ── 5-6 tahun (tambahan) ───────────────────────────────────────────────────
   {
-    id: 75, icon: '📣', judul: 'Simon Berkata (Versi Dibalik)', ageId: 'u56', domain: ['sos', 'kog'],
+    id: 75, icon: '', judul: 'Simon Berkata (Versi Dibalik)', ageId: 'u56', domain: ['sos', 'kog'],
     durasiMenit: 15, isDIY: true,
     deskripsi: 'Permainan ikuti instruksi dengan kata kunci; versi lanjut adalah lakukan kebalikan dari yang dikatakan.',
     sci: 'Permainan yang menuntut menahan respons spontan melatih inhibisi yaitu komponen inti fungsi eksekutif; latihan yang menantang secara bertahap terbukti paling efektif untuk anak 4-12 tahun.',
@@ -1531,7 +1531,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan ADHD, mulai dengan versi sangat lambat dan beri pujian spesifik tiap berhasil menahan diri. Kartu visual yang menunjukkan "ikut" vs "kebalikan" dapat membantu anak autistik memahami aturan yang berubah.',
   },
   {
-    id: 76, icon: '📓', judul: 'Jurnal Gambar Harian', ageId: 'u56', domain: ['mh', 'bhs'],
+    id: 76, icon: '', judul: 'Jurnal Gambar Harian', ageId: 'u56', domain: ['mh', 'bhs'],
     durasiMenit: 20, isDIY: true,
     deskripsi: 'Menggambar satu kejadian hari ini lalu menceritakannya; orang tua menuliskan cerita anak sebagai rekaman bahasa naratif.',
     sci: 'Menggambar dan menulis mandiri mengaktifkan jalur saraf literasi; menceritakan kembali pengalaman melatih bahasa naratif yang menjadi fondasi pemahaman bacaan jangka panjang.',
@@ -1549,7 +1549,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak dengan kesulitan motorik halus, biarkan menggunakan stiker atau gambar potong-tempel sebagai pengganti menggambar. Untuk anak yang sulit mengingat kejadian hari ini, beri petunjuk foto atau benda yang mengingatkan pengalaman itu.',
   },
   {
-    id: 77, icon: '🧪', judul: 'Eksperimen Tenggelam atau Terapung', ageId: 'u56', domain: ['kog'],
+    id: 77, icon: '', judul: 'Eksperimen Tenggelam atau Terapung', ageId: 'u56', domain: ['kog'],
     durasiMenit: 25, isDIY: true,
     deskripsi: 'Menebak lalu menguji benda-benda mana yang tenggelam dan mana yang terapung dalam baskom berisi air.',
     sci: 'Siklus prediksi-uji-amati adalah inti berpikir ilmiah yang secara alami sudah dilakukan anak; eksperimen sederhana menguatkan kebiasaan bernalar dari bukti dan hasil nyata.',
@@ -1567,7 +1567,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak yang tidak suka basah, gunakan penjepit untuk meletakkan benda ke air tanpa tangan basah. Untuk anak yang butuh struktur lebih jelas, siapkan tabel bergambar "terapung" dan "tenggelam" yang bisa ditempel stiker.',
   },
   {
-    id: 78, icon: '🩺', judul: 'Bermain Peran Profesi', ageId: 'u56', domain: ['sos', 'bhs'],
+    id: 78, icon: '', judul: 'Bermain Peran Profesi', ageId: 'u56', domain: ['sos', 'bhs'],
     durasiMenit: 30, isDIY: true,
     deskripsi: 'Skenario dokter-pasien atau guru-murid dengan alur cerita yang dibangun bersama untuk melatih kosakata dan alur sosial.',
     sci: 'Bermain peran dalam kerangka guided play memberi kesempatan berlatih kosakata khusus, alur sosial, dan pengaturan diri dengan orang tua sebagai lawan main yang mengarahkan lembut.',
@@ -1585,7 +1585,7 @@ export const ACTIVITIES: Activity[] = [
     adaptasiABK: 'Untuk anak yang kesulitan bermain peran bebas, sediakan skrip visual berisi kartu bergambar urutan skenario. Untuk anak autistik, bermain peran dengan skrip terstruktur adalah praktik berbasis bukti untuk melatih skenario sosial (Steinbrenner et al., 2020).',
   },
   {
-    id: 79, icon: '📋', judul: 'Estafet Tugas Dua Langkah', ageId: 'u56', domain: ['mk', 'kog'],
+    id: 79, icon: '', judul: 'Estafet Tugas Dua Langkah', ageId: 'u56', domain: ['mk', 'kog'],
     durasiMenit: 20, isDIY: true,
     deskripsi: 'Instruksi berantai dua langkah yang makin panjang untuk melatih memori kerja dan eksekusi berurutan.',
     sci: 'Mengingat dan mengeksekusi instruksi berurutan melatih memori kerja yaitu komponen fungsi eksekutif yang penting untuk mengikuti pembelajaran di kelas secara efektif.',
@@ -1606,7 +1606,7 @@ export const ACTIVITIES: Activity[] = [
 
 export const WEEKLY_PLANS: WeeklyPlan[] = [
   {
-    id: 1, icon: '🌟', judul: 'Stimulasi Awal Bayi 0-3 Bulan', ageLabel: '0-3 bulan',
+    id: 1, icon: '', judul: 'Stimulasi Awal Bayi 0-3 Bulan', ageLabel: '0-3 bulan',
     minBulan: 0, maxBulan: 3,
     deskripsi: 'Program stimulasi 7 hari yang mencakup semua domain perkembangan untuk bayi baru lahir.',
     sci: 'Stimulasi multisensori yang konsisten pada periode sensitif awal membangun koneksi sinaptik yang menjadi fondasi perkembangan selanjutnya.',
@@ -1623,7 +1623,7 @@ export const WEEKLY_PLANS: WeeklyPlan[] = [
     ],
   },
   {
-    id: 2, icon: '🌈', judul: 'Eksplorasi Sensorik 3-6 Bulan', ageLabel: '3-6 bulan',
+    id: 2, icon: '', judul: 'Eksplorasi Sensorik 3-6 Bulan', ageLabel: '3-6 bulan',
     minBulan: 3, maxBulan: 6,
     deskripsi: 'Tujuh hari stimulasi sensorik kaya untuk bayi yang mulai aktif mengeksplorasi dunianya.',
     sci: 'Jendela kesempatan sensorik antara 3-6 bulan sangat kritis untuk pembentukan jaras saraf sensorik yang mendukung integrasi multimoda.',
@@ -1640,7 +1640,7 @@ export const WEEKLY_PLANS: WeeklyPlan[] = [
     ],
   },
   {
-    id: 3, icon: '🔍', judul: 'Kognitif Aktif 6-9 Bulan', ageLabel: '6-9 bulan',
+    id: 3, icon: '', judul: 'Kognitif Aktif 6-9 Bulan', ageLabel: '6-9 bulan',
     minBulan: 6, maxBulan: 9,
     deskripsi: 'Program tujuh hari untuk merangsang perkembangan kognitif dan motorik bayi yang mulai aktif merangkak.',
     sci: 'Pematangan lobus frontal antara 6-9 bulan mendukung perkembangan memori kerja, object permanence, dan eksplorasi aktif.',
@@ -1657,7 +1657,7 @@ export const WEEKLY_PLANS: WeeklyPlan[] = [
     ],
   },
   {
-    id: 4, icon: '🚀', judul: 'Motorik dan Bahasa 9-12 Bulan', ageLabel: '9-12 bulan',
+    id: 4, icon: '', judul: 'Motorik dan Bahasa 9-12 Bulan', ageLabel: '9-12 bulan',
     minBulan: 9, maxBulan: 12,
     deskripsi: 'Tujuh hari program persiapan berjalan dan ledakan bahasa untuk bayi yang akan setahun.',
     sci: 'Periode 9-12 bulan ditandai perkembangan pesat dalam bahasa reseptif dan kesiapan berjalan yang saling memperkuat.',
@@ -1674,7 +1674,7 @@ export const WEEKLY_PLANS: WeeklyPlan[] = [
     ],
   },
   {
-    id: 5, icon: '🌙', judul: 'Rutinitas Batita 12-18 Bulan', ageLabel: '12-18 bulan',
+    id: 5, icon: '', judul: 'Rutinitas Batita 12-18 Bulan', ageLabel: '12-18 bulan',
     minBulan: 12, maxBulan: 18,
     deskripsi: 'Program rutinitas harian terstruktur untuk batita yang baru mulai berjalan.',
     sci: 'Rutinitas yang dapat diprediksi memberikan rasa aman pada batita dan mendukung regulasi diri dan perkembangan bahasa.',
@@ -1691,7 +1691,7 @@ export const WEEKLY_PLANS: WeeklyPlan[] = [
     ],
   },
   {
-    id: 6, icon: '🎨', judul: 'Kreativitas Batita 18-36 Bulan', ageLabel: '18 bln - 3 thn',
+    id: 6, icon: '', judul: 'Kreativitas Batita 18-36 Bulan', ageLabel: '18 bln - 3 thn',
     minBulan: 18, maxBulan: 36,
     deskripsi: 'Program kreativitas dan bahasa untuk batita yang mulai berbicara dalam frasa.',
     sci: 'Periode ledakan bahasa 18-36 bulan memerlukan paparan kosakata yang kaya melalui bermain aktif dan dialog yang responsif.',
@@ -1708,7 +1708,7 @@ export const WEEKLY_PLANS: WeeklyPlan[] = [
     ],
   },
   {
-    id: 7, icon: '🧠', judul: 'Kesiapan Sekolah 4-5 Tahun', ageLabel: '4-5 tahun',
+    id: 7, icon: '', judul: 'Kesiapan Sekolah 4-5 Tahun', ageLabel: '4-5 tahun',
     minBulan: 48, maxBulan: 60,
     deskripsi: 'Program persiapan sekolah yang menyeimbangkan akademik awal dengan keterampilan sosial.',
     sci: 'Kesiapan sekolah yang sesungguhnya mencakup regulasi diri, keterampilan sosial, dan keingintahuan lebih dari kemampuan akademik semata.',
@@ -1725,7 +1725,7 @@ export const WEEKLY_PLANS: WeeklyPlan[] = [
     ],
   },
   {
-    id: 8, icon: '🎓', judul: 'Mandiri dan Bertanggung Jawab 5-6 Tahun', ageLabel: '5-6 tahun',
+    id: 8, icon: '', judul: 'Mandiri dan Bertanggung Jawab 5-6 Tahun', ageLabel: '5-6 tahun',
     minBulan: 60, maxBulan: 72,
     deskripsi: 'Program kemandirian dan tanggung jawab untuk anak prasekolah yang siap masuk SD.',
     sci: 'Kemandirian dan kemampuan regulasi diri di usia 5-6 tahun adalah prediktor kuat kesuksesan akademik dan sosial jangka panjang.',
@@ -1747,7 +1747,7 @@ export const WEEKLY_PLANS: WeeklyPlan[] = [
 // Domain dalam blok ini adalah usulan tim; tolong konfirmasi sebelum rilis.
 export const EDU_TOOLS: EduTool[] = [
   {
-    id: 1, icon: '🧩', nama: 'Puzzle Knob Kayu Berhuruf', domain: 'mh', hargaEstimasi: 'Rp 85.000-150.000',
+    id: 1, icon: '', nama: 'Puzzle Knob Kayu Berhuruf', domain: 'mh', hargaEstimasi: 'Rp 85.000-150.000',
     pilihanPsikolog: true, minBulan: 18, maxBulan: 48, ageLabel: '18 bln - 4 thn',
     deskripsi: 'Puzzle kayu dengan knob yang mudah digenggam, menampilkan huruf dan gambar benda.',
     sci: 'Bermain puzzle secara aktif melatih pengenalan bentuk, persepsi spasial, dan ketekunan dalam memecahkan masalah.',
@@ -1756,7 +1756,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 2, icon: '🎨', nama: 'Set Cat Jari Aman Bayi', domain: 'mh', hargaEstimasi: 'Rp 60.000-120.000',
+    id: 2, icon: '', nama: 'Set Cat Jari Aman Bayi', domain: 'mh', hargaEstimasi: 'Rp 60.000-120.000',
     pilihanPsikolog: false, minBulan: 9, maxBulan: 36, ageLabel: '9 bln - 3 thn',
     deskripsi: 'Cat jari berbahan dasar air, tidak beracun, dan mudah dibersihkan untuk eksplorasi seni sejak dini.',
     sci: 'Eksplorasi media seni melatih integrasi sensorik multimoda dan mendorong ekspresi diri serta kreativitas awal.',
@@ -1765,7 +1765,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 3, icon: '📚', nama: 'Buku Kain Sensorik Bayi', domain: 'kog', hargaEstimasi: 'Rp 75.000-180.000',
+    id: 3, icon: '', nama: 'Buku Kain Sensorik Bayi', domain: 'kog', hargaEstimasi: 'Rp 75.000-180.000',
     pilihanPsikolog: true, minBulan: 0, maxBulan: 18, ageLabel: '0-18 bulan',
     deskripsi: 'Buku kain dengan halaman bertekstur berbeda, cermin kecil, dan elemen berbunyi untuk stimulasi multisensori.',
     sci: 'Membaca bersama sejak dini berhubungan dengan pertumbuhan bahasa dan kesiapan membaca; buku sensorik menambahkan dimensi taktil yang memperkaya pengalaman.',
@@ -1774,7 +1774,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 4, icon: '🎵', nama: 'Marakas dan Instrumen Bayi', domain: 'kog', hargaEstimasi: 'Rp 50.000-100.000',
+    id: 4, icon: '', nama: 'Marakas dan Instrumen Bayi', domain: 'kog', hargaEstimasi: 'Rp 50.000-100.000',
     pilihanPsikolog: false, minBulan: 6, maxBulan: 36, ageLabel: '6 bln - 3 thn',
     deskripsi: 'Set instrumen perkusi aman untuk bayi dan batita: marakas, drum kecil, kastanyet.',
     sci: 'Pengalaman musik aktif meningkatkan kemampuan bayi memproses irama, yang berkorelasi dengan perkembangan bahasa dan matematis.',
@@ -1783,7 +1783,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 5, icon: '🏗️', nama: 'Set Balok Kayu 50 Pcs', domain: 'kog', hargaEstimasi: 'Rp 150.000-300.000',
+    id: 5, icon: '', nama: 'Set Balok Kayu 50 Pcs', domain: 'kog', hargaEstimasi: 'Rp 150.000-300.000',
     pilihanPsikolog: true, minBulan: 12, maxBulan: 72, ageLabel: '1-6 tahun',
     deskripsi: 'Set balok kayu solid tanpa cat dalam berbagai bentuk geometris untuk konstruksi bebas.',
     sci: 'Bermain balok secara konsisten dikaitkan dengan perkembangan penalaran spasial, matematika awal, dan kreativitas yang lebih tinggi.',
@@ -1792,7 +1792,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 6, icon: '🪞', nama: 'Cermin Bayi Anti Pecah', domain: 'sos', hargaEstimasi: 'Rp 40.000-80.000',
+    id: 6, icon: '', nama: 'Cermin Bayi Anti Pecah', domain: 'sos', hargaEstimasi: 'Rp 40.000-80.000',
     pilihanPsikolog: false, minBulan: 0, maxBulan: 12, ageLabel: '0-12 bulan',
     deskripsi: 'Cermin akrilik aman untuk bayi, bisa dipasang di dinding atau play gym.',
     sci: 'Bayi secara bawaan tertarik pada wajah dan refleksinya; bermain cermin mendukung perkembangan kesadaran diri dan interaksi sosial.',
@@ -1801,7 +1801,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 7, icon: '🎭', nama: 'Puppet Tangan Karakter Binatang', domain: 'bhs', hargaEstimasi: 'Rp 80.000-150.000',
+    id: 7, icon: '', nama: 'Puppet Tangan Karakter Binatang', domain: 'bhs', hargaEstimasi: 'Rp 80.000-150.000',
     pilihanPsikolog: true, minBulan: 12, maxBulan: 60, ageLabel: '1-5 tahun',
     deskripsi: 'Puppet tangan berbentuk binatang untuk mendukung bercerita, bermain peran, dan pengenalan emosi.',
     sci: 'Bercerita dan bermain peran dengan puppet mengembangkan kemampuan naratif yang berkorelasi kuat dengan literasi dan pemahaman sosial.',
@@ -1810,7 +1810,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 8, icon: '🖍️', nama: 'Crayon Jumbo Segitiga Anak', domain: 'mh', hargaEstimasi: 'Rp 35.000-70.000',
+    id: 8, icon: '', nama: 'Crayon Jumbo Segitiga Anak', domain: 'mh', hargaEstimasi: 'Rp 35.000-70.000',
     pilihanPsikolog: false, minBulan: 18, maxBulan: 60, ageLabel: '18 bln - 5 thn',
     deskripsi: 'Crayon berpenampang segitiga yang secara ergonomis mendorong cara memegang yang benar.',
     sci: 'Crayon segitiga mendorong grip tripod yang merupakan persiapan optimal untuk memegang pensil saat menulis.',
@@ -1819,7 +1819,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 9, icon: '🔠', nama: 'Kartu Flash Kata Bergambar', domain: 'bhs', hargaEstimasi: 'Rp 45.000-90.000',
+    id: 9, icon: '', nama: 'Kartu Flash Kata Bergambar', domain: 'bhs', hargaEstimasi: 'Rp 45.000-90.000',
     pilihanPsikolog: false, minBulan: 12, maxBulan: 48, ageLabel: '1-4 tahun',
     deskripsi: 'Kartu flash dengan gambar benda sehari-hari dan nama dalam Bahasa Indonesia.',
     sci: 'Flashcard yang digunakan dalam sesi interaktif dan bermakna lebih efektif untuk pengembangan kosakata daripada penggunaan pasif.',
@@ -1828,7 +1828,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 10, icon: '⚖️', nama: 'Timbangan Mainan Montessori', domain: 'kog', hargaEstimasi: 'Rp 120.000-200.000',
+    id: 10, icon: '', nama: 'Timbangan Mainan Montessori', domain: 'kog', hargaEstimasi: 'Rp 120.000-200.000',
     pilihanPsikolog: true, minBulan: 36, maxBulan: 72, ageLabel: '3-6 tahun',
     deskripsi: 'Timbangan mainan untuk eksplorasi konsep berat, keseimbangan, dan perbandingan.',
     sci: 'Eksplorasi konkret konsep berat dan keseimbangan membangun pemahaman fisika intuitif dan matematika awal yang kuat.',
@@ -1837,7 +1837,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 11, icon: '🧪', nama: 'Kit Sains Anak Prasekolah', domain: 'kog', hargaEstimasi: 'Rp 130.000-250.000',
+    id: 11, icon: '', nama: 'Kit Sains Anak Prasekolah', domain: 'kog', hargaEstimasi: 'Rp 130.000-250.000',
     pilihanPsikolog: true, minBulan: 48, maxBulan: 72, ageLabel: '4-6 tahun',
     deskripsi: 'Kit berisi alat-alat sains sederhana: kaca pembesar, magnet, pipet, bahan eksperimen aman.',
     sci: 'Eksplorasi sains hands-on sejak prasekolah membangun pemikiran ilmiah: mengamati, memprediksi, menguji, dan menyimpulkan.',
@@ -1846,7 +1846,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 12, icon: '🎮', nama: 'Play Gym Bayi Multifungsi', domain: 'mk', hargaEstimasi: 'Rp 200.000-450.000',
+    id: 12, icon: '', nama: 'Play Gym Bayi Multifungsi', domain: 'mk', hargaEstimasi: 'Rp 200.000-450.000',
     pilihanPsikolog: false, minBulan: 0, maxBulan: 12, ageLabel: '0-12 bulan',
     deskripsi: 'Play gym dengan mainan gantung, cermin, dan alas aktivitas berbagai tekstur.',
     sci: 'Play gym yang kaya stimulasi mendukung tummy time, meraih, dan eksplorasi sensorik yang menjadi fondasi perkembangan motorik.',
@@ -1855,7 +1855,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 13, icon: '🎲', nama: 'Kartu Permainan Emosi', domain: 'sos', hargaEstimasi: 'Rp 65.000-120.000',
+    id: 13, icon: '', nama: 'Kartu Permainan Emosi', domain: 'sos', hargaEstimasi: 'Rp 65.000-120.000',
     pilihanPsikolog: true, minBulan: 36, maxBulan: 72, ageLabel: '3-6 tahun',
     deskripsi: 'Kartu bergambar ekspresi emosi untuk membantu anak mengenali dan menamai perasaan.',
     sci: 'Literasi emosional yang dikembangkan sejak usia 3 tahun berkorelasi dengan kesehatan mental dan kemampuan sosial yang lebih baik di kemudian hari.',
@@ -1864,7 +1864,7 @@ export const EDU_TOOLS: EduTool[] = [
     affiliateUrl: '#todo',
   },
   {
-    id: 14, icon: '🔢', nama: 'Abakus Kayu Warna-Warni', domain: 'kog', hargaEstimasi: 'Rp 80.000-140.000',
+    id: 14, icon: '', nama: 'Abakus Kayu Warna-Warni', domain: 'kog', hargaEstimasi: 'Rp 80.000-140.000',
     pilihanPsikolog: false, minBulan: 24, maxBulan: 72, ageLabel: '2-6 tahun',
     deskripsi: 'Abakus kayu dengan manik-manik warna berbeda untuk berhitung konkret dan pengenalan warna.',
     sci: 'Manipulasi fisik manik-manik abakus memberikan representasi konkret angka yang mendukung pemahaman matematika yang lebih dalam.',
@@ -1879,7 +1879,7 @@ export const EDU_TOOLS: EduTool[] = [
 // Item bertanda pemilik: 'orangtua' tidak masuk ke plafon harian anak.
 export const DOWNLOADABLES: Downloadable[] = [
   {
-    id: 2, icon: '🗓️', nama: 'Jadwal Stimulasi Harian Bayi 0-3 Bulan',
+    id: 2, icon: '', nama: 'Jadwal Stimulasi Harian Bayi 0-3 Bulan',
     domain: 'kog', pemilik: 'orangtua',
     kategori: 'Panduan', minBulan: 0, maxBulan: 3,
     deskripsi: 'Panduan jadwal stimulasi terstruktur berdasarkan jendela terjaga bayi untuk 12 minggu pertama.',
@@ -1889,7 +1889,7 @@ export const DOWNLOADABLES: Downloadable[] = [
     halaman: '4 halaman', jumlahUnduhan: 892, fileUrl: '#todo',
   },
   {
-    id: 3, icon: '📖', nama: 'Buku Cerita: Si Kancil Belajar Berbagi',
+    id: 3, icon: '', nama: 'Buku Cerita: Si Kancil Belajar Berbagi',
     domain: 'sos',
     kategori: 'Buku Cerita', minBulan: 24, maxBulan: 60,
     deskripsi: 'Buku cerita digital bergambar tentang berbagi dan pertemanan untuk batita dan prasekolah.',
@@ -1899,7 +1899,7 @@ export const DOWNLOADABLES: Downloadable[] = [
     halaman: '16 halaman', jumlahUnduhan: 2341, fileUrl: '#todo',
   },
   {
-    id: 4, icon: '🔤', nama: 'Flashcard Kosakata Tematik: Buah-Buahan',
+    id: 4, icon: '', nama: 'Flashcard Kosakata Tematik: Buah-Buahan',
     domain: 'bhs',
     kategori: 'Flashcard', minBulan: 12, maxBulan: 48,
     deskripsi: '20 kartu kosakata buah-buahan lokal Indonesia dengan gambar nyata dan tulisan besar.',
@@ -1909,7 +1909,7 @@ export const DOWNLOADABLES: Downloadable[] = [
     halaman: '5 halaman', jumlahUnduhan: 1856, fileUrl: '#todo',
   },
   {
-    id: 5, icon: '✏️', nama: 'Worksheet Pre-Writing: Garis dan Bentuk',
+    id: 5, icon: '', nama: 'Worksheet Pre-Writing: Garis dan Bentuk',
     domain: 'mh',
     kategori: 'Worksheet', minBulan: 36, maxBulan: 60,
     deskripsi: 'Lembar kerja latihan pra-menulis dengan garis lurus, lengkung, spiral, dan zigzag bertahap.',
@@ -1919,7 +1919,7 @@ export const DOWNLOADABLES: Downloadable[] = [
     halaman: '12 halaman', jumlahUnduhan: 3102, fileUrl: '#todo',
   },
   {
-    id: 6, icon: '🔢', nama: 'Worksheet Matematika Konkret 3-5 Tahun',
+    id: 6, icon: '', nama: 'Worksheet Matematika Konkret 3-5 Tahun',
     domain: 'kog',
     kategori: 'Worksheet', minBulan: 36, maxBulan: 60,
     deskripsi: 'Lembar kerja matematika awal dengan konsep banyak-sedikit, menghitung, dan mencocokkan angka-benda.',
@@ -1929,7 +1929,7 @@ export const DOWNLOADABLES: Downloadable[] = [
     halaman: '10 halaman', jumlahUnduhan: 1678, fileUrl: '#todo',
   },
   {
-    id: 7, icon: '🌱', nama: 'Panduan Bermain Bebas untuk Orang Tua',
+    id: 7, icon: '', nama: 'Panduan Bermain Bebas untuk Orang Tua',
     domain: 'kog', pemilik: 'orangtua',
     kategori: 'Panduan', minBulan: 0, maxBulan: 72,
     deskripsi: 'Panduan ilmiah tentang pentingnya bermain bebas dan cara memfasilitasinya di rumah.',
@@ -1939,7 +1939,7 @@ export const DOWNLOADABLES: Downloadable[] = [
     halaman: '8 halaman', jumlahUnduhan: 2198, fileUrl: '#todo',
   },
   {
-    id: 8, icon: '😊', nama: 'Flashcard Ekspresi Emosi',
+    id: 8, icon: '', nama: 'Flashcard Ekspresi Emosi',
     domain: 'sos',
     kategori: 'Flashcard', minBulan: 24, maxBulan: 72,
     deskripsi: '12 kartu ekspresi emosi dasar dengan gambar wajah dan nama emosi untuk literasi emosional.',
@@ -1949,7 +1949,7 @@ export const DOWNLOADABLES: Downloadable[] = [
     halaman: '3 halaman', jumlahUnduhan: 1423, fileUrl: '#todo',
   },
   {
-    id: 9, icon: '💤', nama: 'Panduan Rutinitas Tidur Sehat Bayi',
+    id: 9, icon: '', nama: 'Panduan Rutinitas Tidur Sehat Bayi',
     domain: 'sos', pemilik: 'orangtua',
     kategori: 'Panduan', minBulan: 0, maxBulan: 36,
     deskripsi: 'Panduan berbasis bukti untuk membangun rutinitas tidur yang konsisten dan aman bagi bayi dan batita.',
@@ -1959,7 +1959,7 @@ export const DOWNLOADABLES: Downloadable[] = [
     halaman: '6 halaman', jumlahUnduhan: 3456, fileUrl: '#todo',
   },
   {
-    id: 10, icon: '🥦', nama: 'Panduan MPASI Responsif 6-12 Bulan',
+    id: 10, icon: '', nama: 'Panduan MPASI Responsif 6-12 Bulan',
     domain: 'sos', pemilik: 'orangtua',
     kategori: 'Panduan', minBulan: 6, maxBulan: 12,
     deskripsi: 'Panduan pemberian MPASI yang responsif terhadap sinyal lapar dan kenyang bayi, dengan textur progression.',
@@ -1969,7 +1969,7 @@ export const DOWNLOADABLES: Downloadable[] = [
     halaman: '10 halaman', jumlahUnduhan: 4123, fileUrl: '#todo',
   },
   {
-    id: 11, icon: '📖', nama: 'Buku Cerita: Aku Bisa Sendiri!',
+    id: 11, icon: '', nama: 'Buku Cerita: Aku Bisa Sendiri!',
     domain: 'sos',
     kategori: 'Buku Cerita', minBulan: 24, maxBulan: 48,
     deskripsi: 'Buku cerita tentang kemandirian batita: berpakaian sendiri, makan sendiri, dan beres-beres mainan.',
@@ -1979,7 +1979,7 @@ export const DOWNLOADABLES: Downloadable[] = [
     halaman: '14 halaman', jumlahUnduhan: 1789, fileUrl: '#todo',
   },
   {
-    id: 12, icon: '🧘', nama: 'Panduan Mindfulness untuk Anak 3-6 Tahun',
+    id: 12, icon: '', nama: 'Panduan Mindfulness untuk Anak 3-6 Tahun',
     domain: 'sos',
     kategori: 'Panduan', minBulan: 36, maxBulan: 72,
     deskripsi: 'Panduan latihan perhatian penuh (mindfulness) sederhana yang bisa dilakukan bersama anak.',

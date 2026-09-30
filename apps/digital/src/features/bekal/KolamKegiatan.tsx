@@ -6,6 +6,7 @@ import type { DomainKey } from '../../data/learningStrategies';
 import { DOMAIN_META } from '../../data/learningStrategies';
 import { usePilihanHarian } from '../irama-hari/PilihanHarianContext';
 import { KOLAM_KEGIATAN } from './content';
+import { DomIcon } from '../../pages/DashboardPages/Tier2/LearningStrategiesTier2';
 
 // MENUNGGU REVIEW PSIKOLOG FITRI
 const LABEL_TIPE: Record<TipeItem, string> = {
@@ -97,7 +98,7 @@ function KartuKegiatan({
         className="flex h-[72px] items-center justify-center"
         style={{ background: dm?.bg ?? '#FFF0F7' }}
       >
-        <span className="text-4xl" aria-hidden>{dm?.emoji ?? '🌱'}</span>
+        <DomIcon domain={item.domain as DomainKey} size={34} color={dm?.color} />
         {isAdded && (
           <div className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-daun px-2 py-0.5">
             <Check className="h-3 w-3 text-white" strokeWidth={3} aria-hidden />

@@ -270,17 +270,6 @@ export default function LoginPage() {
             </Link>
           </p>
 
-          <div className="mt-5 rounded-[16px] bg-fajar px-4 py-4">
-            <p className="text-[13px] leading-[1.6] text-pekat/60">
-              <span className="font-semibold text-pekat/80">Akun Sekolah Studiva & Guru</span> dibuat
-              oleh tim kami secara langsung.{' '}
-              <Link to="/kontak" className="font-semibold text-rekah no-underline hover:underline">
-                Hubungi kami
-              </Link>{' '}
-              untuk informasi lebih lanjut.
-            </p>
-          </div>
-
         </div>
       </div>
     </div>

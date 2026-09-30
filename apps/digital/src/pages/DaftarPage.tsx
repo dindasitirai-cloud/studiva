@@ -1,184 +1,110 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Eye, EyeOff, AlertCircle, CheckCircle, MessageCircle,
-  MapPin, Mail as MailIcon, ArrowRight, ArrowLeft,
-  Monitor, Globe, Lock, ChevronLeft,
-} from 'lucide-react';
+import { Eye, EyeOff, AlertCircle, Check, ChevronLeft, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import PlanConfirmModal from '../components/PlanConfirmModal';
+import LogoRekah from '../components/LogoRekah';
+import Kelopak from '../components/Kelopak';
 import { Plan, Tier } from '../types';
 
-// ── Constants ────────────────────────────────────────────────────────────────
+// Halaman pendaftaran — khusus akun Rekah (orang tua).
+// Akun Sekolah Studiva & guru tidak didaftarkan dari sini.
+// Alur: 1) pilih paket → 2) buat akun → lanjut pembayaran (PlanConfirmModal).
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const WA_NUMBER = '6281211470407';
-const WA_MSG = encodeURIComponent('Halo Studiva, saya ingin mendaftarkan anak saya ke Sekolah Studiva.');
 
-const TIER2_FEATURES = [
-  'Ribuan panduan parenting berbasis riset',
-  'Kursus self-paced & webinar psikolog',
-  'Komunitas forum orang tua',
-  'Konsultasi 1-on-1 dengan psikolog',
-  'Resource library lengkap',
-  'Dashboard kemajuan perjalanan anak',
+const FITUR_REKAH = [
+  'Bekal: Ajak Main, Kebiasaan Baik, dan Wawasan Tumbuh sesuai usia anak',
+  'Kelola: susun irama hari keluarga dengan ringan',
+  'Temani: perjalanan berpandu hari demi hari',
+  'Bantu: pegangan saat menghadapi situasi sulit',
+  'Dikurasi Psikolog Fitri Effendy, untuk anak usia 0–6 tahun',
 ];
 
-const FEATURE_BADGE: { bg: string; color: string }[] = [
-  { bg: '#E4F1FB', color: '#2E8BC9' },
-  { bg: '#E4F1FB', color: '#2E8BC9' },
-  { bg: '#FCE7DD', color: '#E07B4F' },
-  { bg: '#FCE7DD', color: '#E07B4F' },
-  { bg: '#E7F7EF', color: '#3FBF6A' },
-  { bg: '#E7F7EF', color: '#3FBF6A' },
+const PAKET: { id: Plan; label: string; harga: string; hemat: string | null; unggulan: boolean }[] = [
+  { id: 'monthly',   label: 'Bulanan', harga: 'Rp 79.000',  hemat: null,        unggulan: false },
+  { id: 'quarterly', label: '3 Bulan', harga: 'Rp 200.000', hemat: 'Hemat 15%', unggulan: false },
+  { id: 'yearly',    label: 'Tahunan', harga: 'Rp 650.000', hemat: 'Hemat 30%', unggulan: true },
 ];
 
-const PLANS: { id: Plan; label: string; labelColor: string; price: string; savings: string | null; badge: string | null }[] = [
-  { id: 'monthly',   label: 'BULANAN',  labelColor: '#6B7790', price: 'Rp 79.000',  savings: null,        badge: null },
-  { id: 'quarterly', label: '3 BULAN',  labelColor: '#2E8BC9', price: 'Rp 200.000', savings: 'Hemat 15%', badge: null },
-  { id: 'yearly',    label: 'TAHUNAN',  labelColor: '#E07B4F', price: 'Rp 650.000', savings: 'Hemat 30%', badge: 'TERPOPULER' },
-];
+const NAMA_PAKET: Record<Plan, string> = { monthly: 'Bulanan', quarterly: '3 Bulan', yearly: 'Tahunan' };
 
-// ── Types ────────────────────────────────────────────────────────────────────
-
-type Step = 'info' | 'pricing' | 'form';
+type Langkah = 'paket' | 'akun';
 
 interface FormState {
-  namaLengkap: string; email: string; password: string;
-  konfirmasiPassword: string; noHp: string;
-  namaAnak: string; usiaAnak: string; setuju: boolean;
+  namaLengkap: string; email: string; password: string; konfirmasiPassword: string; setuju: boolean;
 }
+type FormErrors = Partial<Record<keyof FormState, string>>;
 
-interface FormErrors {
-  namaLengkap?: string; email?: string; password?: string;
-  konfirmasiPassword?: string; namaAnak?: string; usiaAnak?: string; setuju?: string;
-}
+// ── Penanda langkah ──────────────────────────────────────────────────────────
 
-// ── Step indicator (design-spec exact) ──────────────────────────────────────
-
-const STEP_LABELS = ['Pilih Jalur', 'Pilih Paket', 'Buat Akun'];
-
-function StepperBar({ current }: { current: Step }) {
-  const idx = current === 'info' ? 0 : current === 'pricing' ? 1 : 2;
+function PenandaLangkah({ aktif }: { aktif: Langkah }) {
+  const daftar: { id: Langkah; label: string }[] = [{ id: 'paket', label: 'Pilih paket' }, { id: 'akun', label: 'Buat akun' }];
+  const idx = daftar.findIndex(d => d.id === aktif);
   return (
-    <div
-      className="sticky z-40 flex items-center justify-center gap-0 border-b bg-white px-8 py-[14px] font-nunito-sans"
-      style={{ top: 82, borderBottomColor: '#EEF0F4', borderBottomWidth: 1.5 }}
-    >
-      {STEP_LABELS.map((label, i) => {
-        const done   = i < idx;
-        const active = i === idx;
+    <ol className="mb-8 flex items-center gap-3" aria-label="Langkah pendaftaran">
+      {daftar.map((d, i) => {
+        const selesai = i < idx;
+        const kini = i === idx;
         return (
-          <React.Fragment key={label}>
-            {/* Circle + label */}
-            <div className="flex flex-col items-center gap-1.5">
-              <div
-                className="flex h-8 w-8 items-center justify-center rounded-full"
-                style={{
-                  background: done ? '#3FBF6A' : active ? '#103A6B' : '#fff',
-                  border: done || active ? 'none' : '2px solid #D1D9E6',
-                  boxShadow: done
-                    ? '0 4px 12px rgba(63,191,106,.28)'
-                    : active
-                    ? '0 4px 14px rgba(16,58,107,.25)'
-                    : 'none',
-                }}
-              >
-                {done ? (
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <path d="M2.5 7L5.5 10L11.5 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                ) : (
-                  <span
-                    className="text-[13px]"
-                    style={{
-                      fontFamily: "'Baloo 2', sans-serif",
-                      fontWeight: active ? 800 : 600,
-                      color: active ? '#fff' : '#94A0B8',
-                    }}
-                  >
-                    {i + 1}
-                  </span>
-                )}
-              </div>
+          <li key={d.id} className="flex items-center gap-3">
+            <span className="flex items-center gap-2">
               <span
-                className="text-[12px]"
-                style={{
-                  fontWeight: 600,
-                  color: done ? '#3FBF6A' : active ? '#103A6B' : '#94A0B8',
-                  fontFamily: "'Nunito Sans', sans-serif",
-                }}
+                className={`flex h-7 w-7 items-center justify-center rounded-full text-[13px] font-bold ${
+                  selesai ? 'bg-daun text-white' : kini ? 'bg-rekah text-white' : 'border-2 border-pekat/15 text-pekat/40'
+                }`}
+                aria-current={kini ? 'step' : undefined}
               >
-                {label}
+                {selesai ? <Check className="h-3.5 w-3.5" strokeWidth={3} aria-hidden /> : i + 1}
               </span>
-            </div>
-
-            {/* Connector */}
-            {i < STEP_LABELS.length - 1 && (
-              <div className="mx-3 mb-5 h-[2px] w-16 rounded-full" style={{
-                background: i < idx
-                  ? 'linear-gradient(90deg, #3FBF6A 40%, #D1D9E6 100%)'
-                  : '#EEF0F4',
-              }} />
-            )}
-          </React.Fragment>
+              <span className={`text-[13px] font-semibold ${kini ? 'text-pekat' : 'text-pekat/45'}`}>{d.label}</span>
+            </span>
+            {i < daftar.length - 1 && <span aria-hidden className="h-[2px] w-8 rounded-full bg-pekat/10" />}
+          </li>
         );
       })}
-    </div>
+    </ol>
   );
 }
 
-// ── Password strength bar ────────────────────────────────────────────────────
+// ── Kekuatan password ────────────────────────────────────────────────────────
 
-function PasswordStrengthBar({ password }: { password: string }) {
+function KekuatanPassword({ password }: { password: string }) {
   const s = password.length === 0 ? 0 : password.length < 8 ? 1 : /[A-Z]/.test(password) && /[0-9]/.test(password) ? 3 : 2;
   if (s === 0) return null;
-  const colors = ['', 'bg-red-400', 'bg-madu', 'bg-emerald-500'];
-  const labels = ['', 'Lemah', 'Cukup', 'Kuat'];
+  const warna = ['', 'bg-rekah-tua', 'bg-madu', 'bg-daun'];
+  const label = ['', 'Lemah', 'Cukup', 'Kuat'];
   return (
     <div className="mt-1.5 flex items-center gap-2">
       <div className="flex flex-1 gap-1">
-        {[1,2,3].map(n => <div key={n} className={`h-1.5 flex-1 rounded-full transition-colors ${s >= n ? colors[s] : 'bg-stv-border'}`}/>)}
+        {[1, 2, 3].map(n => <div key={n} className={`h-1.5 flex-1 rounded-full ${s >= n ? warna[s] : 'bg-pekat/10'}`} />)}
       </div>
-      <span className={`text-[11px] font-semibold ${s===3?'text-emerald-600':s===2?'text-rekah':'text-red-500'}`}>{labels[s]}</span>
+      <span className="text-[11px] font-semibold text-pekat/60">{label[s]}</span>
     </div>
   );
 }
 
-// ── Sparkle SVG (4-point star) ───────────────────────────────────────────────
-
-function Star4({ size = 18, color = 'rgba(251,208,10,.55)' }: { size?: number; color?: string }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
-      <path d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z"/>
-    </svg>
-  );
-}
-
-// ── Main page ────────────────────────────────────────────────────────────────
+// ── Halaman ──────────────────────────────────────────────────────────────────
 
 export default function DaftarPage() {
   const { signup } = useAuth();
-  const [step, setStep]                 = useState<Step>('info');
-  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
-  const [selection, setSelection]       = useState<{ tier: Tier; plan: Plan } | null>(null);
-  const [showPass, setShowPass]         = useState(false);
-  const [showConfirm, setShowConfirm]   = useState(false);
-  const [submitting, setSubmitting]     = useState(false);
-  const [apiError, setApiError]         = useState<string | null>(null);
-  const [form, setForm] = useState<FormState>({
-    namaLengkap: '', email: '', password: '', konfirmasiPassword: '',
-    noHp: '', namaAnak: '', usiaAnak: '', setuju: false,
-  });
+  const [langkah, setLangkah]         = useState<Langkah>('paket');
+  const [paket, setPaket]             = useState<Plan | null>(null);
+  const [konfirmasi, setKonfirmasi]   = useState<{ tier: Tier; plan: Plan } | null>(null);
+  const [showPass, setShowPass]       = useState(false);
+  const [showKonfirm, setShowKonfirm] = useState(false);
+  const [submitting, setSubmitting]   = useState(false);
+  const [apiError, setApiError]       = useState<string | null>(null);
+  const [form, setForm] = useState<FormState>({ namaLengkap: '', email: '', password: '', konfirmasiPassword: '', setuju: false });
   const [errors, setErrors] = useState<FormErrors>({});
 
   function setField<K extends keyof FormState>(k: K, v: FormState[K]) {
     setForm(p => ({ ...p, [k]: v }));
-    if (errors[k as keyof FormErrors]) setErrors(p => ({ ...p, [k]: undefined }));
+    if (errors[k]) setErrors(p => ({ ...p, [k]: undefined }));
     setApiError(null);
   }
 
-  function validate(): boolean {
+  function validasi(): boolean {
     const e: FormErrors = {};
     if (!form.namaLengkap.trim()) e.namaLengkap = 'Nama wajib diisi.';
     if (!form.email.trim()) e.email = 'Email wajib diisi.';
@@ -187,447 +113,220 @@ export default function DaftarPage() {
     else if (form.password.length < 8) e.password = 'Password minimal 8 karakter.';
     if (!form.konfirmasiPassword) e.konfirmasiPassword = 'Konfirmasi password wajib diisi.';
     else if (form.password !== form.konfirmasiPassword) e.konfirmasiPassword = 'Password tidak cocok.';
-    if (!form.namaAnak.trim()) e.namaAnak = 'Nama anak wajib diisi.';
-    if (!form.usiaAnak || isNaN(Number(form.usiaAnak))) e.usiaAnak = 'Usia anak wajib diisi.';
-    if (!form.setuju) e.setuju = 'Anda harus menyetujui syarat & ketentuan.';
+    if (!form.setuju) e.setuju = 'Setujui syarat & kebijakan privasi untuk melanjutkan.';
     setErrors(e);
     return Object.keys(e).length === 0;
   }
 
   async function handleDaftar() {
-    if (!validate()) return;
+    if (!validasi()) return;
     setSubmitting(true); setApiError(null);
     try {
-      // TODO: POST /api/auth/signup, backend buat Stripe customer & kembalikan checkoutSessionUrl
       // TODO: teks kebijakan privasi final oleh manusia + tinjauan hukum sebelum live
-      await signup({ email: form.email, password: form.password, name: form.namaLengkap, role: 'parent', childName: form.namaAnak, childAge: Number(form.usiaAnak), consentDiberikan: form.setuju });
-      if (selectedPlan) setSelection({ tier: 'tier2', plan: selectedPlan });
+      await signup({ email: form.email, password: form.password, name: form.namaLengkap, role: 'parent', consentDiberikan: form.setuju });
+      if (paket) setKonfirmasi({ tier: 'tier2', plan: paket });
     } catch (e: unknown) {
-      const msg = (e as { response?: { data?: { error?: string } } })?.response?.data?.error;
-      setApiError(msg || 'Gagal membuat akun. Periksa kembali data Anda atau coba lagi.');
+      const msg = (e instanceof Error ? e.message : null) || (e as { response?: { data?: { error?: string } } })?.response?.data?.error;
+      setApiError(msg || 'Gagal membuat akun. Periksa kembali data kamu atau coba lagi.');
     } finally { setSubmitting(false); }
   }
 
   const inputCls = (f: keyof FormErrors) =>
-    `w-full rounded-xl border px-4 py-3 text-[15px] text-stv-navy placeholder:text-stv-muted-2 transition focus:outline-none focus:ring-2 ${errors[f] ? 'border-red-400 bg-red-50 focus:ring-red-400/20' : 'border-stv-border bg-white focus:border-stv-sky-stroke focus:ring-stv-sky-stroke/20'}`;
+    `w-full min-h-[52px] rounded-[14px] border bg-white px-4 py-3 text-[15px] text-pekat placeholder:text-pekat/35 transition focus:outline-none focus:ring-2 ${
+      errors[f] ? 'border-rekah-tua focus:ring-rekah-tua/20' : 'border-daun/30 focus:border-rekah focus:ring-rekah/20'
+    }`;
+
+  const Galat = ({ f }: { f: keyof FormErrors }) =>
+    errors[f] ? <p className="mt-1 flex items-center gap-1 text-[12px] text-rekah-tua"><AlertCircle className="h-3 w-3" aria-hidden />{errors[f]}</p> : null;
 
   return (
-    <div className="font-nunito-sans">
+    <div className="flex min-h-[calc(100vh-82px)]">
 
-      {/* Step bar, sticky below nav */}
-      <StepperBar current={step} />
+      {/* ── Panel kiri, branding ─────────────────────────────────────── */}
+      <div className="relative hidden w-[40%] shrink-0 flex-col justify-between overflow-hidden bg-pekat p-12 lg:flex">
+        <Kelopak aria-hidden rotate={90} className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 bg-rekah/20" />
+        <Kelopak aria-hidden rotate={270} className="pointer-events-none absolute -bottom-20 -left-12 h-64 w-64 bg-rekah/10" />
 
-      {/* ════════════════════════════════════════════════════════════════
-          STEP 1, PILIH JALUR
-      ════════════════════════════════════════════════════════════════ */}
-      {step === 'info' && (
-        <section className="px-4 py-14 sm:px-8 sm:py-20">
-          <div className="mx-auto max-w-[1100px]">
-            <div className="mb-10 text-center">
-              <h1 className="mb-3 font-baloo text-[32px] font-extrabold leading-[1.1] text-stv-navy sm:text-[40px]">
-                Daftar ke Studiva
-              </h1>
-              <p className="text-[16px] text-stv-body">Pilih jalur yang sesuai untuk anak dan keluarga Anda.</p>
-            </div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              {/* Sekolah Studiva */}
-              <div className="flex flex-col rounded-2xl border-2 border-stv-sky-tint bg-stv-sky-tint/40 p-6">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-stv-sky-stroke">
-                    <MapPin className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-stv-sky-stroke">Sekolah Studiva</p>
-                    <h2 className="font-baloo text-[18px] font-bold text-stv-navy">Sekolah Studiva</h2>
-                  </div>
-                </div>
-                <p className="mb-4 text-[14px] leading-[1.7] text-stv-body">
-                  Sekolah fisik inklusif di Bukittinggi untuk anak berkebutuhan khusus usia 5–10 tahun.
-                  Pendaftaran dilakukan secara <strong className="text-stv-navy">offline</strong>, kami ingin memastikan setiap anak mendapat pendampingan yang tepat.
-                </p>
-                <ul className="mb-6 flex-1 space-y-2">
-                  {['Hubungi via WhatsApp untuk sesi perkenalan','Asesmen awal bersama tim psikolog','Akun orang tua dibuatkan oleh admin'].map(item => (
-                    <li key={item} className="flex items-center gap-2 text-[13px] text-stv-body">
-                      <CheckCircle className="h-4 w-4 shrink-0 text-stv-sky-stroke" />{item}
-                    </li>
-                  ))}
-                </ul>
-                <a href={`https://wa.me/${WA_NUMBER}?text=${WA_MSG}`} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 self-start rounded-full bg-stv-sky-stroke px-5 py-2.5 text-[14px] font-bold text-white no-underline transition hover:bg-stv-sky-stroke/90">
-                  <MessageCircle className="h-4 w-4" />Hubungi via WhatsApp
-                </a>
-              </div>
-              {/* Rekah */}
-              <div className="flex flex-col rounded-2xl border-2 border-madu bg-fajar p-6 shadow-[0_4px_20px_rgba(251,146,60,.12)]">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-madu">
-                    <MailIcon className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-rekah">Rekah</p>
-                    <h2 className="font-baloo text-[18px] font-bold text-stv-navy">Rekah</h2>
-                  </div>
-                </div>
-                <p className="mb-4 text-[14px] leading-[1.7] text-stv-body">
-                  Platform berlangganan online untuk orang tua di seluruh Indonesia. Akses ribuan panduan,
-                  webinar psikolog, komunitas, dan konsultasi, <strong className="text-stv-navy">kapan saja, di mana saja</strong>.
-                </p>
-                <ul className="mb-6 flex-1 space-y-2">
-                  {TIER2_FEATURES.map(f => (
-                    <li key={f} className="flex items-center gap-2 text-[13px] text-stv-body">
-                      <CheckCircle className="h-4 w-4 shrink-0 text-madu" />{f}
-                    </li>
-                  ))}
-                </ul>
-                <button type="button" onClick={() => setStep('pricing')}
-                  className="inline-flex items-center gap-1.5 self-start rounded-full bg-madu px-6 py-3 font-baloo text-[15px] font-bold text-white shadow-[0_6px_16px_rgba(251,146,60,.3)] transition hover:-translate-y-0.5 hover:bg-rekah">
-                  Daftar Sekarang <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-            <p className="mt-8 text-center text-[14px] text-stv-body">
-              Sudah punya akun?{' '}
-              <Link to="/login" className="font-bold text-stv-sky-stroke no-underline hover:underline">Masuk</Link>
-            </p>
-          </div>
-        </section>
-      )}
+        <div className="relative">
+          <LogoRekah size={40} withWordmark light />
+        </div>
 
-      {/* ════════════════════════════════════════════════════════════════
-          STEP 2, PILIH PAKET  (design handoff exact)
-      ════════════════════════════════════════════════════════════════ */}
-      {step === 'pricing' && (
-        <main className="relative min-h-screen overflow-hidden" style={{ background: '#FCF4DE' }}>
+        <div className="relative">
+          <h2 className="mb-4 font-bricolage text-[32px] font-extrabold leading-[1.1] text-white">
+            Mulai menemani<br />si kecil bersama Rekah.
+          </h2>
+          <p className="mb-10 text-[15px] leading-[1.7] text-white/60">
+            Satu ajakan sederhana setiap hari, sesuai usia dan nilai keluarga kamu.
+          </p>
+          <ul className="space-y-3">
+            {FITUR_REKAH.map(item => (
+              <li key={item} className="flex items-start gap-3 text-[14px] leading-[1.5] text-white/75">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-rekah/25 text-mawar">
+                  <Check className="h-3 w-3" strokeWidth={3} aria-hidden />
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
 
-          {/* ── Blob decorations ── */}
-          <div className="pointer-events-none absolute inset-0" aria-hidden>
-            {/* Blob 1 */}
-            <div className="animate-stv-float-slow motion-reduce:animate-none absolute -top-[60px] right-[-80px] h-[380px] w-[380px] rounded-full"
-              style={{ background: 'rgba(251,208,10,.16)', filter: 'blur(70px)' }} />
-            {/* Blob 2 */}
-            <div className="animate-stv-float motion-reduce:animate-none absolute -bottom-[40px] left-[-60px] h-[300px] w-[300px] rounded-full"
-              style={{ background: 'rgba(95,176,221,.15)', filter: 'blur(60px)' }} />
-            {/* Sparkle top-right */}
-            <span className="absolute right-[5%]" style={{ top: '22%' }}>
-              <Star4 size={18} color="rgba(251,208,10,.55)" />
-            </span>
-            {/* Coral dot */}
-            <span className="absolute left-[4%] h-[10px] w-[10px] rounded-full" style={{ top: '55%', background: 'rgba(224,123,79,.38)' }} />
-            {/* Sky sparkle */}
-            <span className="absolute right-[7%]" style={{ bottom: '28%' }}>
-              <Star4 size={13} color="rgba(95,176,221,.45)" />
-            </span>
-            {/* Green dot */}
-            <span className="absolute left-[8%] h-[7px] w-[7px] rounded-full" style={{ top: '12%', background: 'rgba(63,191,106,.40)' }} />
+        <p className="relative text-[13px] text-white/30">
+          © {new Date().getFullYear()} Rekah · oleh Psikolog Fitri Effendy
+        </p>
+      </div>
+
+      {/* ── Panel kanan ──────────────────────────────────────────────── */}
+      <div className="flex flex-1 justify-center bg-kanvas px-4 py-12 sm:px-8">
+        <div className="w-full max-w-[480px]">
+
+          {/* Logo mobile */}
+          <div className="mb-8 flex items-center gap-3 lg:hidden">
+            <LogoRekah size={36} withWordmark />
           </div>
 
-          {/* ── Page content ── */}
-          <div className="relative mx-auto max-w-[780px] px-5 pb-20 pt-10 sm:px-6">
+          <PenandaLangkah aktif={langkah} />
 
-            {/* Back link */}
-            <button
-              type="button"
-              onClick={() => setStep('info')}
-              className="mb-10 flex items-center gap-1.5 transition"
-              style={{ color: '#6B7790', fontFamily: "'Nunito Sans', sans-serif", fontWeight: 600, fontSize: 15 }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#103A6B')}
-              onMouseLeave={e => (e.currentTarget.style.color = '#6B7790')}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Kembali
-            </button>
+          {/* ── Langkah 1: pilih paket ─────────────────────────────── */}
+          {langkah === 'paket' && (
+            <>
+              <h1 className="mb-1 font-bricolage text-[28px] font-extrabold text-pekat sm:text-[32px]">Pilih paket Rekah</h1>
+              <p className="mb-7 text-[15px] text-pekat/60">Semua paket berisi fitur yang sama. Kamu bisa berlangganan kembali kapan saja.</p>
 
-            {/* Page header */}
-            <div className="mb-11 text-center">
-              <h1 style={{ fontFamily: "'Baloo 2', sans-serif", fontWeight: 800, fontSize: 52, color: '#103A6B', lineHeight: 1.1, margin: 0 }}>
-                Pilih Paket{' '}
-                <span style={{ position: 'relative', display: 'inline-block', zIndex: 0 }}>
-                  <span style={{ position: 'absolute', left: -5, right: -5, bottom: '10%', height: '32%', background: '#FBD00A', borderRadius: 7, zIndex: -1 }} />
-                  Rekah
-                </span>
-              </h1>
-              <p style={{ fontFamily: "'Nunito Sans', sans-serif", fontWeight: 400, fontSize: 17, color: '#6B7790', lineHeight: 1.65, maxWidth: 500, margin: '14px auto 0' }}>
-                Pilih durasi langganan yang paling sesuai. Anda dapat berlangganan kembali kapan saja.
-              </p>
-            </div>
-
-            {/* Product card */}
-            <div style={{ background: '#fff', border: '1.5px solid #EEF0F4', borderRadius: 28, boxShadow: '0 16px 48px rgba(16,58,107,.08)', padding: '44px 44px 40px', marginBottom: 24 }}>
-
-              {/* Product header */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 30 }}>
-                <div style={{ width: 68, height: 68, borderRadius: 20, background: '#E4F1FB', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 16px rgba(46,139,201,.15)' }}>
-                  <Monitor size={34} color="#2E8BC9" />
-                </div>
-                <div>
-                  <p style={{ fontFamily: "'Baloo 2', sans-serif", fontWeight: 800, fontSize: 36, color: '#103A6B', margin: 0, lineHeight: 1.15 }}>
-                    Rekah
-                  </p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#E4F1FB', color: '#2E8BC9', fontWeight: 700, fontSize: 13, borderRadius: 999, padding: '4px 12px' }}>
-                      <Globe size={12} />
-                      Nasional
+              <div className="flex flex-col gap-3">
+                {PAKET.map(p => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => { setPaket(p.id); setLangkah('akun'); }}
+                    className={`relative flex items-center justify-between rounded-[18px] border-2 bg-white px-5 py-4 text-left transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah focus-visible:ring-offset-2 ${
+                      p.unggulan ? 'border-rekah shadow-[0_6px_22px_rgba(224,82,107,0.16)]' : 'border-pekat/10 hover:border-rekah/40'
+                    }`}
+                  >
+                    {p.unggulan && (
+                      <span className="absolute -top-3 left-5 rounded-full bg-rekah px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">
+                        Paling hemat
+                      </span>
+                    )}
+                    <span>
+                      <span className="flex items-center gap-2">
+                        <span className="text-[12px] font-bold uppercase tracking-wider text-pekat/55">{p.label}</span>
+                        {p.hemat && <span className="rounded-full bg-daun/15 px-2 py-0.5 text-[11px] font-bold text-daun">{p.hemat}</span>}
+                      </span>
+                      <span className="mt-1 block font-bricolage text-[26px] font-extrabold leading-none text-pekat">{p.harga}</span>
                     </span>
-                    <span style={{ fontFamily: "'Nunito Sans', sans-serif", fontWeight: 600, fontSize: 14, color: '#94A0B8' }}>
-                      Pembelajaran Online
+                    <span className={`rounded-full px-5 py-2.5 font-bricolage text-[15px] font-bold ${p.unggulan ? 'bg-rekah text-white' : 'bg-fajar text-pekat'}`}>
+                      Pilih
                     </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Divider */}
-              <div style={{ height: 1.5, background: '#EEF0F4', borderRadius: 99, marginBottom: 26 }} />
-
-              {/* Feature eyebrow */}
-              <div style={{ marginBottom: 16 }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#FFF3CC', color: '#103A6B', fontWeight: 800, fontSize: 11, letterSpacing: '2.5px', padding: '7px 18px', borderRadius: 999, textTransform: 'uppercase' as const }}>
-                  <span style={{ width: 6, height: 6, background: '#FBD00A', borderRadius: '50%', flexShrink: 0 }} />
-                  FITUR TERMASUK
-                </span>
-              </div>
-
-              {/* Feature list */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 34 }}>
-                {TIER2_FEATURES.map((f, i) => (
-                  <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <span style={{ width: 22, height: 22, borderRadius: '50%', background: FEATURE_BADGE[i].bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
-                        <path d="M2 6L5 9L10 3" stroke={FEATURE_BADGE[i].color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </span>
-                    <span style={{ fontFamily: "'Nunito Sans', sans-serif", fontWeight: 600, fontSize: 15, color: '#2E3A52' }}>{f}</span>
-                  </div>
+                  </button>
                 ))}
               </div>
 
-              {/* "Pilih Durasi" section label */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-                <span style={{ fontFamily: "'Baloo 2', sans-serif", fontWeight: 700, fontSize: 19, color: '#103A6B', flexShrink: 0 }}>Pilih Durasi</span>
-                <div style={{ flex: 1, height: 1.5, background: '#EEF0F4', borderRadius: 99 }} />
-              </div>
+              <p className="mt-6 flex items-center justify-center gap-2 text-[13px] text-pekat/50">
+                <Lock className="h-3.5 w-3.5" aria-hidden />
+                Pembayaran aman. Kami tidak menyimpan data kartu kamu.
+              </p>
+            </>
+          )}
 
-              {/* Pricing rows */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {PLANS.map(plan => {
-                  const isYearly = plan.id === 'yearly';
-                  return (
-                    <div
-                      key={plan.id}
-                      style={{
-                        position: 'relative',
-                        background: isYearly ? '#FFFEF0' : '#F8FBFE',
-                        border: isYearly ? '2px solid #FBD00A' : '1.5px solid #EEF0F4',
-                        borderRadius: 16,
-                        padding: isYearly ? '22px 24px 20px' : '20px 24px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        boxShadow: isYearly ? '0 6px 22px rgba(251,208,10,.22)' : 'none',
-                        transition: 'border-color .2s, box-shadow .2s',
-                        cursor: 'default',
-                      }}
-                      onMouseEnter={e => {
-                        if (isYearly) e.currentTarget.style.boxShadow = '0 10px 32px rgba(251,208,10,.35)';
-                        else { e.currentTarget.style.borderColor = '#C8E4F5'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(16,58,107,.07)'; }
-                      }}
-                      onMouseLeave={e => {
-                        if (isYearly) e.currentTarget.style.boxShadow = '0 6px 22px rgba(251,208,10,.22)';
-                        else { e.currentTarget.style.borderColor = '#EEF0F4'; e.currentTarget.style.boxShadow = 'none'; }
-                      }}
-                    >
-                      {/* TERPOPULER badge */}
-                      {plan.badge && (
-                        <span style={{ position: 'absolute', top: -14, left: 20, background: '#FBD00A', color: '#103A6B', fontFamily: "'Baloo 2', sans-serif", fontWeight: 800, fontSize: 11, letterSpacing: '2px', padding: '4px 16px', borderRadius: 999, textTransform: 'uppercase' as const }}>
-                          {plan.badge}
-                        </span>
-                      )}
-
-                      {/* Left: label + price */}
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                          <span style={{ fontFamily: "'Nunito Sans', sans-serif", fontWeight: 700, fontSize: 11, color: plan.labelColor, textTransform: 'uppercase' as const, letterSpacing: '2px' }}>
-                            {plan.label}
-                          </span>
-                          {plan.savings && (
-                            <span style={{ background: '#E7F7EF', color: '#3FBF6A', fontWeight: 800, fontSize: 11, borderRadius: 999, padding: '3px 10px' }}>
-                              {plan.savings}
-                            </span>
-                          )}
-                        </div>
-                        <span style={{ fontFamily: "'Baloo 2', sans-serif", fontWeight: 800, fontSize: 32, color: '#103A6B', lineHeight: 1 }}>
-                          {plan.price}
-                        </span>
-                      </div>
-
-                      {/* Right: button */}
-                      <ChoosePlanBtn
-                        variant={isYearly ? 'navy' : 'yellow'}
-                        onClick={() => { setSelectedPlan(plan.id); setStep('form'); }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Stripe note */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#94A0B8', fontSize: 14, fontFamily: "'Nunito Sans', sans-serif" }}>
-              <Lock size={14} color="#94A0B8" />
-              Pembayaran aman via Stripe. Kami tidak pernah menyimpan data kartu Anda.
-            </div>
-          </div>
-        </main>
-      )}
-
-      {/* ════════════════════════════════════════════════════════════════
-          STEP 3, BUAT AKUN
-      ════════════════════════════════════════════════════════════════ */}
-      {step === 'form' && (
-        <section className="px-4 py-14 sm:px-8 sm:py-20">
-          <div className="mx-auto max-w-[520px]">
-            <button type="button" onClick={() => setStep('pricing')}
-              className="mb-8 flex items-center gap-1.5 text-[14px] font-semibold text-stv-muted transition hover:text-stv-navy">
-              <ArrowLeft className="h-4 w-4" />Ganti Paket
-            </button>
-
-            {selectedPlan && (
-              <div className="mb-6 flex items-center gap-2 rounded-2xl bg-fajar px-4 py-3 text-[14px]">
-                <CheckCircle className="h-4 w-4 shrink-0 text-madu" />
-                <span className="text-stv-body">
-                  Paket dipilih:{' '}
-                  <strong className="text-stv-navy">
-                    {{ monthly: 'Bulanan', quarterly: '3 Bulan', yearly: 'Tahunan' }[selectedPlan]}
-                  </strong>
-                </span>
-              </div>
-            )}
-
-            <h1 className="mb-1 font-baloo text-[28px] font-extrabold text-stv-navy sm:text-[32px]">Buat Akun Rekah</h1>
-            <p className="mb-6 text-[14px] text-stv-body">Isi data di bawah untuk membuat akun, lalu lanjut ke pembayaran.</p>
-
-            {apiError && (
-              <div className="mb-4 flex items-start gap-2 rounded-xl bg-red-50 px-4 py-3 text-[13px] text-red-700">
-                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />{apiError}
-              </div>
-            )}
-
-            <div className="flex flex-col gap-3.5">
-              <div>
-                <label className="mb-1.5 block text-[13px] font-semibold text-stv-navy">Nama Lengkap <span className="text-red-500">*</span></label>
-                <input type="text" value={form.namaLengkap} onChange={e => setField('namaLengkap', e.target.value)} placeholder="Nama lengkap Anda" autoComplete="name" className={inputCls('namaLengkap')} />
-                {errors.namaLengkap && <p className="mt-1 flex items-center gap-1 text-[12px] text-red-500"><AlertCircle className="h-3 w-3" />{errors.namaLengkap}</p>}
-              </div>
-              <div>
-                <label className="mb-1.5 block text-[13px] font-semibold text-stv-navy">Email <span className="text-red-500">*</span></label>
-                <input type="email" value={form.email} onChange={e => setField('email', e.target.value)} placeholder="nama@email.com" autoComplete="email" className={inputCls('email')} />
-                {errors.email && <p className="mt-1 flex items-center gap-1 text-[12px] text-red-500"><AlertCircle className="h-3 w-3" />{errors.email}</p>}
-              </div>
-              <div>
-                <label className="mb-1.5 block text-[13px] font-semibold text-stv-navy">No. HP / WhatsApp <span className="text-[11px] font-normal text-stv-muted">(opsional)</span></label>
-                <input type="tel" value={form.noHp} onChange={e => setField('noHp', e.target.value)} placeholder="08xxxxxxxxxx" autoComplete="tel" className="w-full rounded-xl border border-stv-border bg-white px-4 py-3 text-[15px] text-stv-navy placeholder:text-stv-muted-2 transition focus:border-stv-sky-stroke focus:outline-none focus:ring-2 focus:ring-stv-sky-stroke/20" />
-              </div>
-              <div>
-                <label className="mb-1.5 block text-[13px] font-semibold text-stv-navy">Password <span className="text-red-500">*</span></label>
-                <div className="relative">
-                  <input type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setField('password', e.target.value)} placeholder="Minimal 8 karakter" autoComplete="new-password" className={`${inputCls('password')} pr-11`} />
-                  <button type="button" onClick={() => setShowPass(s => !s)} className="absolute right-3 top-1/2 -translate-y-1/2 text-stv-muted hover:text-stv-navy">
-                    {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-                <PasswordStrengthBar password={form.password} />
-                {errors.password && <p className="mt-1 flex items-center gap-1 text-[12px] text-red-500"><AlertCircle className="h-3 w-3" />{errors.password}</p>}
-              </div>
-              <div>
-                <label className="mb-1.5 block text-[13px] font-semibold text-stv-navy">Konfirmasi Password <span className="text-red-500">*</span></label>
-                <div className="relative">
-                  <input type={showConfirm ? 'text' : 'password'} value={form.konfirmasiPassword} onChange={e => setField('konfirmasiPassword', e.target.value)} placeholder="Ulangi password" autoComplete="new-password" className={`${inputCls('konfirmasiPassword')} pr-11`} />
-                  <button type="button" onClick={() => setShowConfirm(s => !s)} className="absolute right-3 top-1/2 -translate-y-1/2 text-stv-muted hover:text-stv-navy">
-                    {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-                {errors.konfirmasiPassword && <p className="mt-1 flex items-center gap-1 text-[12px] text-red-500"><AlertCircle className="h-3 w-3" />{errors.konfirmasiPassword}</p>}
-              </div>
-              <div className="rounded-xl border border-stv-border bg-slate-50 p-4">
-                <p className="mb-3 text-[12px] font-bold uppercase tracking-wide text-stv-muted-2">Info Anak</p>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="mb-1 block text-[13px] font-semibold text-stv-navy">Nama Anak <span className="text-red-500">*</span></label>
-                    <input type="text" value={form.namaAnak} onChange={e => setField('namaAnak', e.target.value)} placeholder="Nama anak" className={inputCls('namaAnak')} />
-                    {errors.namaAnak && <p className="mt-1 text-[11px] text-red-500">{errors.namaAnak}</p>}
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-[13px] font-semibold text-stv-navy">Usia <span className="text-red-500">*</span></label>
-                    <input type="number" min={0} max={18} value={form.usiaAnak} onChange={e => setField('usiaAnak', e.target.value)} placeholder="Tahun" className={inputCls('usiaAnak')} />
-                    {errors.usiaAnak && <p className="mt-1 text-[11px] text-red-500">{errors.usiaAnak}</p>}
-                  </div>
-                </div>
-              </div>
-              <div>
-                <label className={`flex cursor-pointer items-start gap-2.5 text-[13px] leading-[1.6] ${errors.setuju ? 'text-red-600' : 'text-stv-body'}`}>
-                  <input type="checkbox" checked={form.setuju} onChange={e => setField('setuju', e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 rounded accent-stv-sky-stroke" />
-                  Saya setuju dengan{' '}
-                  <Link to="/tentang" className="font-semibold text-stv-sky-stroke no-underline hover:underline">Syarat &amp; Ketentuan</Link>
-                  {' '}dan{' '}
-                  <Link to="/tentang" className="font-semibold text-stv-sky-stroke no-underline hover:underline">Kebijakan Privasi</Link>{' '}Studiva.
-                </label>
-                {errors.setuju && <p className="mt-1 flex items-center gap-1 text-[12px] text-red-500"><AlertCircle className="h-3 w-3" />{errors.setuju}</p>}
-              </div>
-              <button type="button" onClick={handleDaftar} disabled={submitting}
-                className="flex min-h-[50px] items-center justify-center gap-2 rounded-full bg-madu font-baloo text-[16px] font-bold text-white shadow-[0_6px_20px_rgba(251,146,60,.3)] transition hover:-translate-y-0.5 hover:bg-rekah disabled:opacity-60">
-                {submitting ? 'Memproses...' : 'Buat Akun & Lanjut ke Pembayaran'}
+          {/* ── Langkah 2: buat akun ──────────────────────────────── */}
+          {langkah === 'akun' && (
+            <>
+              <button
+                type="button"
+                onClick={() => setLangkah('paket')}
+                className="mb-6 flex items-center gap-1 text-[14px] font-semibold text-pekat/55 transition hover:text-pekat"
+              >
+                <ChevronLeft className="h-4 w-4" aria-hidden /> Ganti paket
               </button>
-            </div>
 
-            <p className="mt-5 text-center text-[14px] text-stv-body">
-              Sudah punya akun?{' '}
-              <Link to="/login" className="font-bold text-stv-sky-stroke no-underline hover:underline">Masuk</Link>
-            </p>
-          </div>
-        </section>
-      )}
+              <h1 className="mb-1 font-bricolage text-[28px] font-extrabold text-pekat sm:text-[32px]">Buat akun Rekah</h1>
+              <p className="mb-6 text-[15px] text-pekat/60">Isi data di bawah, lalu lanjut ke pembayaran.</p>
 
-      {selection && (
-        <PlanConfirmModal tier={selection.tier} plan={selection.plan} onClose={() => setSelection(null)} />
+              {paket && (
+                <div className="mb-5 flex items-center justify-between rounded-[14px] bg-fajar px-4 py-3 text-[14px]">
+                  <span className="text-pekat/70">Paket dipilih: <strong className="text-pekat">{NAMA_PAKET[paket]}</strong></span>
+                  <button type="button" onClick={() => setLangkah('paket')} className="text-[13px] font-semibold text-rekah hover:underline">Ubah</button>
+                </div>
+              )}
+
+              {apiError && (
+                <div className="mb-5 flex items-start gap-2 rounded-xl bg-rekah/10 px-4 py-3 text-[14px] text-rekah-tua">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />{apiError}
+                </div>
+              )}
+
+              <div className="flex flex-col gap-4">
+                <div>
+                  <label htmlFor="daftar-nama" className="mb-1.5 block text-[13px] font-semibold text-pekat">Nama lengkap</label>
+                  <input id="daftar-nama" type="text" value={form.namaLengkap} onChange={e => setField('namaLengkap', e.target.value)} placeholder="Nama kamu" autoComplete="name" className={inputCls('namaLengkap')} />
+                  <Galat f="namaLengkap" />
+                </div>
+                <div>
+                  <label htmlFor="daftar-email" className="mb-1.5 block text-[13px] font-semibold text-pekat">Email</label>
+                  <input id="daftar-email" type="email" value={form.email} onChange={e => setField('email', e.target.value)} placeholder="nama@email.com" autoComplete="email" className={inputCls('email')} />
+                  <Galat f="email" />
+                </div>
+                <div>
+                  <label htmlFor="daftar-password" className="mb-1.5 block text-[13px] font-semibold text-pekat">Password</label>
+                  <div className="relative">
+                    <input id="daftar-password" type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setField('password', e.target.value)} placeholder="Minimal 8 karakter" autoComplete="new-password" className={`${inputCls('password')} pr-11`} />
+                    <button type="button" onClick={() => setShowPass(s => !s)} aria-label={showPass ? 'Sembunyikan password' : 'Tampilkan password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-pekat/40 transition hover:text-pekat">
+                      {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                  <KekuatanPassword password={form.password} />
+                  <Galat f="password" />
+                </div>
+                <div>
+                  <label htmlFor="daftar-konfirmasi" className="mb-1.5 block text-[13px] font-semibold text-pekat">Ulangi password</label>
+                  <div className="relative">
+                    <input id="daftar-konfirmasi" type={showKonfirm ? 'text' : 'password'} value={form.konfirmasiPassword} onChange={e => setField('konfirmasiPassword', e.target.value)} onKeyDown={e => e.key === 'Enter' && handleDaftar()} placeholder="Ketik ulang password" autoComplete="new-password" className={`${inputCls('konfirmasiPassword')} pr-11`} />
+                    <button type="button" onClick={() => setShowKonfirm(s => !s)} aria-label={showKonfirm ? 'Sembunyikan password' : 'Tampilkan password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-pekat/40 transition hover:text-pekat">
+                      {showKonfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                  <Galat f="konfirmasiPassword" />
+                </div>
+
+                <div>
+                  <label className="flex cursor-pointer items-start gap-2.5 text-[13px] leading-[1.6] text-pekat/70">
+                    <input type="checkbox" checked={form.setuju} onChange={e => setField('setuju', e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 rounded accent-rekah" />
+                    <span>
+                      Saya setuju dengan{' '}
+                      <Link to="/tentang" className="font-semibold text-rekah no-underline hover:underline">Syarat &amp; Ketentuan</Link>
+                      {' '}dan{' '}
+                      <Link to="/tentang" className="font-semibold text-rekah no-underline hover:underline">Kebijakan Privasi</Link> Rekah.
+                    </span>
+                  </label>
+                  <Galat f="setuju" />
+                </div>
+
+                <p className="text-[13px] leading-[1.6] text-pekat/55">
+                  Data anak diisi setelah masuk, supaya isi Rekah langsung sesuai usianya.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={handleDaftar}
+                  disabled={submitting}
+                  className="flex min-h-[52px] items-center justify-center rounded-full bg-rekah font-bricolage text-[16px] font-bold text-white shadow-[0_4px_16px_rgba(224,82,107,0.28)] transition hover:bg-rekah-tua disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah focus-visible:ring-offset-2"
+                >
+                  {submitting ? 'Memproses...' : 'Buat akun & lanjut ke pembayaran'}
+                </button>
+              </div>
+            </>
+          )}
+
+          <p className="mt-6 text-center text-[14px] text-pekat/65">
+            Sudah punya akun Rekah?{' '}
+            <Link to="/login" className="font-bold text-rekah no-underline transition hover:underline">Masuk</Link>
+          </p>
+        </div>
+      </div>
+
+      {konfirmasi && (
+        <PlanConfirmModal tier={konfirmasi.tier} plan={konfirmasi.plan} onClose={() => setKonfirmasi(null)} />
       )}
     </div>
-  );
-}
-
-// ── ChoosePlanButton (inline to use hover state via React) ───────────────────
-
-function ChoosePlanBtn({ variant, onClick }: { variant: 'yellow' | 'navy'; onClick: () => void }) {
-  const [hovered, setHovered] = useState(false);
-  const base = {
-    fontFamily: "'Baloo 2', sans-serif",
-    fontWeight: 700,
-    fontSize: 16,
-    padding: '14px 30px',
-    borderRadius: 12,
-    border: 'none',
-    cursor: 'pointer',
-    transition: 'background .18s, transform .18s, box-shadow .18s',
-    transform: hovered ? 'translateY(-2px)' : 'translateY(0)',
-    whiteSpace: 'nowrap' as const,
-  };
-  const yellow = {
-    background: hovered ? '#F5C800' : '#FBD00A',
-    color: '#103A6B',
-    boxShadow: hovered ? '0 8px 20px rgba(251,208,10,.45)' : '0 5px 14px rgba(251,208,10,.35)',
-  };
-  const navy = {
-    background: hovered ? '#0C2E54' : '#103A6B',
-    color: '#FBD00A',
-    boxShadow: hovered ? '0 8px 24px rgba(16,58,107,.32)' : '0 5px 16px rgba(16,58,107,.22)',
-  };
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{ ...base, ...(variant === 'navy' ? navy : yellow) }}
-    >
-      Pilih
-    </button>
   );
 }

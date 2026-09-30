@@ -201,7 +201,7 @@ const HTML = `<!-- ===================== NAV ===================== -->
     </nav>
     <div class="nav-cta">
       <a class="btn btn-ghost" href="/login">Masuk →</a>
-      <a class="btn btn-pink" href="/daftar">Coba gratis</a>
+      <a class="btn btn-pink" href="/daftar">Daftar Sekarang</a>
     </div>
   </div>
 </header>
@@ -215,10 +215,10 @@ const HTML = `<!-- ===================== NAV ===================== -->
     <h1>Tahu saja<br>belum cukup.</h1>
     <p class="sub">Rekah menemanimu dari memahami cara mendampingi anak, sampai menjalankannya jadi kegiatan nyata yang tertata rapi setiap hari.</p>
     <div class="hero-cta">
-      <a class="btn btn-pink" href="/daftar">Mulai gratis</a>
+      <a class="btn btn-pink" href="/daftar">Daftar Sekarang</a>
       <a class="btn btn-outline" href="#cara">Lihat cara kerja</a>
     </div>
-    <p class="hero-note">Untuk keluarga dengan anak usia 0 sampai 6 tahun. Gratis untuk mulai.</p>
+    <p class="hero-note">Untuk keluarga dengan anak usia 0 sampai 6 tahun.</p>
   </div>
   <div class="hero-art">
     <div class="sway" style="right:36px;width:170px;height:270px"><svg viewBox="0 0 100 150" style="width:100%;height:100%;display:block;overflow:visible"><g><path d="M50 149 C49 118 50 98 50 82" fill="none" stroke="#6F9E3F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 118 C31 118 21 100 25 84 C41 94 48 106 50 118 Z" fill="#A7C63E" stroke="none"></path><path d="M50 112 C69 112 81 96 77 80 C59 90 52 100 50 112 Z" fill="#8FB84A" stroke="none"></path><path d="M36 80 C33 60 39 46 50 46 C61 46 67 60 64 80 C56 86 44 86 36 80 Z" fill="#F06BA8" stroke="none"></path><path d="M50 46 C56 46 61 56 62 70 C58 68 54 66 50 66 C50 58 50 52 50 46 Z" fill="#F8B9D4" stroke="none"></path><path d="M50 46 C44 46 39 56 38 70 C42 68 46 66 50 66 C50 58 50 52 50 46 Z" fill="#F06BA8" stroke="none"></path></g></svg></div>
@@ -472,8 +472,8 @@ const HTML = `<!-- ===================== NAV ===================== -->
     <div class="fl sway" style="left:24px"><svg viewBox="0 0 100 150" style="width:100%;height:100%;display:block;overflow:visible"><g><path d="M50 149 C50 122 50 98 50 74" fill="none" stroke="#6F9E3F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 100 C40 96 34 88 31 78" fill="none" stroke="#6F9E3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 92 C60 88 66 80 69 70" fill="none" stroke="#6F9E3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 116 C40 114 34 106 33 98 C42 102 48 109 50 116 Z" fill="#A7C63E" stroke="none"></path><circle cx="56" cy="70" r="4" fill="#F06BA8"></circle><circle cx="51.85410196624969" cy="75.70633909777092" r="4" fill="#F06BA8"></circle><circle cx="45.14589803375031" cy="73.52671151375483" r="4" fill="#F06BA8"></circle><circle cx="45.14589803375031" cy="66.47328848624517" r="4" fill="#F06BA8"></circle><circle cx="51.85410196624969" cy="64.29366090222908" r="4" fill="#F06BA8"></circle><circle cx="50" cy="70" r="2.6" fill="#FFE29A"></circle><circle cx="37" cy="74" r="4" fill="#F06BA8"></circle><circle cx="32.85410196624969" cy="79.70633909777092" r="4" fill="#F06BA8"></circle><circle cx="26.145898033750317" cy="77.52671151375483" r="4" fill="#F06BA8"></circle><circle cx="26.145898033750314" cy="70.47328848624517" r="4" fill="#F06BA8"></circle><circle cx="32.85410196624969" cy="68.29366090222908" r="4" fill="#F06BA8"></circle><circle cx="31" cy="74" r="2.6" fill="#FFE29A"></circle><circle cx="75" cy="66" r="4" fill="#F06BA8"></circle><circle cx="70.85410196624969" cy="71.70633909777092" r="4" fill="#F06BA8"></circle><circle cx="64.14589803375031" cy="69.52671151375483" r="4" fill="#F06BA8"></circle><circle cx="64.14589803375031" cy="62.47328848624516" r="4" fill="#F06BA8"></circle><circle cx="70.85410196624969" cy="60.29366090222908" r="4" fill="#F06BA8"></circle><circle cx="69" cy="66" r="2.6" fill="#FFE29A"></circle></g></svg></div>
     <div class="fl sway" style="right:24px"><svg viewBox="0 0 100 150" style="width:100%;height:100%;display:block;overflow:visible"><g><path d="M50 149 C49 120 50 100 50 86" fill="none" stroke="#6F9E3F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 122 C33 122 23 106 27 92 C43 102 49 111 50 122 Z" fill="#A7C63E" stroke="none"></path><path d="M50 130 C67 130 79 114 75 100 C57 110 52 119 50 130 Z" fill="#8FB84A" stroke="none"></path><circle cx="66" cy="56" r="8.5" fill="#5F84E6"></circle><circle cx="61.31370849898476" cy="67.31370849898477" r="8.5" fill="#5F84E6"></circle><circle cx="50" cy="72" r="8.5" fill="#5F84E6"></circle><circle cx="38.68629150101524" cy="67.31370849898477" r="8.5" fill="#5F84E6"></circle><circle cx="34" cy="56" r="8.5" fill="#5F84E6"></circle><circle cx="38.68629150101523" cy="44.68629150101524" r="8.5" fill="#5F84E6"></circle><circle cx="50" cy="40" r="8.5" fill="#5F84E6"></circle><circle cx="61.31370849898476" cy="44.68629150101523" r="8.5" fill="#5F84E6"></circle><circle cx="50" cy="56" r="10" fill="#FFE29A"></circle><circle cx="50" cy="56" r="5" fill="#8FB8F7"></circle></g></svg></div>
     <h2>Mulai temani tumbuh kembang si kecil hari ini.</h2>
-    <p>Gratis untuk memulai. Tanpa membanding-bandingkan, selamanya.</p>
-    <a class="btn btn-pink" href="/daftar">Coba gratis</a>
+    <p>Tanpa membanding-bandingkan, selamanya.</p>
+    <a class="btn btn-pink" href="/daftar">Daftar Sekarang</a>
   </div>
 </section>
 

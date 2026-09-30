@@ -65,7 +65,7 @@ export default function Navbar() {
                 to="/daftar"
                 className="rounded-full bg-rekah px-6 py-2.5 font-bricolage text-[15px] font-bold text-white shadow-[0_2px_12px_rgba(224,82,107,0.3)] transition hover:bg-rekah-tua focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
               >
-                Mulai Merekah
+                Daftar Sekarang
               </Link>
             </>
           )}
@@ -120,7 +120,7 @@ export default function Navbar() {
                 onClick={() => setOpen(false)}
                 className="w-full rounded-full bg-rekah px-6 py-3 text-center font-bricolage font-bold text-white"
               >
-                Mulai Merekah
+                Daftar Sekarang
               </Link>
             </>
           )}

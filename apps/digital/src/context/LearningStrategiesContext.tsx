@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
 import {
   ACTIVITIES as STATIC_ACTIVITIES,
   WEEKLY_PLANS as STATIC_PLANS,
@@ -7,6 +7,8 @@ import {
   Activity, WeeklyPlan, EduTool, Downloadable, ContentStatus,
 } from '../data/learningStrategies';
 import { api } from '../api/client';
+import { supabase } from '../lib/supabase/client';
+import { muatKatalogAjakMain } from '../lib/supabase/ajakMain';
 
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 
@@ -75,6 +77,8 @@ interface LearningStrategiesContextValue {
 
   // Published-only views (for user-facing pages)
   publishedActivities: Activity[];
+  /** Muat ulang kegiatan yang tayang dari Supabase (dipakai setelah admin menerapkan draf). */
+  muatUlangAjakMain: () => Promise<void>;
   publishedPlans: WeeklyPlan[];
   publishedTools: EduTool[];
   publishedDownloads: Downloadable[];
@@ -84,7 +88,7 @@ const LearningStrategiesContext = createContext<LearningStrategiesContextValue |
 
 export function LearningStrategiesProvider({ children }: { children: React.ReactNode }) {
   // ── Managed content (admin-editable, API-backed) ──────────────────────────
-  const [managedActivities, setManagedActivities] = useState<Activity[]>(() => STATIC_ACTIVITIES);
+  const [kegiatanDasar, setManagedActivities] = useState<Activity[]>(() => STATIC_ACTIVITIES);
   const [managedPlans, setManagedPlans] = useState<WeeklyPlan[]>(() => STATIC_PLANS);
   const [managedTools, setManagedTools] = useState<EduTool[]>(() => STATIC_TOOLS);
   const [managedDownloads, setManagedDownloads] = useState<Downloadable[]>(() => STATIC_DOWNLOADS);
@@ -117,6 +121,24 @@ export function LearningStrategiesProvider({ children }: { children: React.React
     }
     loadFromApi();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Kegiatan yang tayang lewat pipeline Rekah (Supabase, migrasi 028) menang atas backend & statis.
+  // Ini sumber utama untuk website online — backend Express hanya berjalan di lokal.
+  const [kegiatanSupabase, setKegiatanSupabase] = useState<Activity[]>([]);
+  const muatUlangAjakMain = useCallback(async () => {
+    const baru = (await muatKatalogAjakMain()) ?? [];
+    setKegiatanSupabase(prev => (JSON.stringify(prev) === JSON.stringify(baru) ? prev : baru));
+  }, []);
+  useEffect(() => {
+    void muatUlangAjakMain();
+    const { data } = supabase.auth.onAuthStateChange(() => { void muatUlangAjakMain(); });
+    return () => data.subscription.unsubscribe();
+  }, [muatUlangAjakMain]);
+  const managedActivities = useMemo(() => {
+    const dariSupabase = new Map(kegiatanSupabase.map(a => [a.id, a]));
+    const idDasar = new Set(kegiatanDasar.map(a => a.id));
+    return [...kegiatanDasar.map(a => dariSupabase.get(a.id) ?? a), ...kegiatanSupabase.filter(s => !idDasar.has(s.id))];
+  }, [kegiatanDasar, kegiatanSupabase]);
 
   // Admin: add (optimistic update + API)
   const adminAddActivity = useCallback((a: Omit<Activity, 'id'>) => {
@@ -378,6 +400,7 @@ export function LearningStrategiesProvider({ children }: { children: React.React
       adminDuplicateActivity, adminDuplicatePlan, adminDuplicateTool, adminDuplicateDownload,
       adminUpdateToolLink,
       publishedActivities, publishedPlans, publishedTools, publishedDownloads,
+      muatUlangAjakMain,
     }}>
       {children}
     </LearningStrategiesContext.Provider>

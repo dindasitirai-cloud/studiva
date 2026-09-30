@@ -21,6 +21,7 @@ import type { JadwalItem } from '../../components/PopupPilihHari';
 import { tanggalDariTimestampWIB } from '@studiva/shared';
 import { useAnakAktif } from '../../context/AnakContext';
 import { tambahKustomKeTanggal } from '../../lib/supabase/rekah';
+import { muatKatalogSikap } from '../../lib/supabase/ajakMain';
 import { useTemaniKatalog, journeyUntukKebiasaan } from '../temani/temaniKatalog';
 import {
   ActivityCard, ActivityModal,
@@ -713,7 +714,11 @@ export default function Bekal({
   const { profile, sapaan, usiaBulan } = useChildProfile();
   const isDev = process.env.NODE_ENV !== 'production';
 
-  const { bekal: bekalRakit, katalogSikap } = useMemo(() => rakitBekal(), []);
+  const { bekal: bekalRakit, katalogSikap: katalogSikapStatis } = useMemo(() => rakitBekal(), []);
+  // Sikap per fase yang tayang dari admin (Supabase, migrasi 028) ditambahkan ke katalog bawaan.
+  const [sikapTayang, setSikapTayang] = useState<ItemSikap[]>([]);
+  useEffect(() => { let batal = false; muatKatalogSikap().then(s => { if (!batal) setSikapTayang(s); }); return () => { batal = true; }; }, []);
+  const katalogSikap = useMemo(() => [...katalogSikapStatis, ...sikapTayang], [katalogSikapStatis, sikapTayang]);
 
   const profilAnak = useMemo<ProfilAnak | null>(() => {
     if (!profile.tanggalLahir) return null;

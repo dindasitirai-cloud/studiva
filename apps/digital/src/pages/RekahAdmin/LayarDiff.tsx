@@ -16,6 +16,8 @@ import TinjauanKebiasaan from './kebiasaan/TinjauanKebiasaan';
 import { terapkanKebiasaan } from '../../lib/supabase/kebiasaan';
 import { muatUlangKatalogIrama } from '../../features/irama-hari/iramaKatalog';
 import { terapkanPanduan } from '../../lib/supabase/panduan';
+import { terapkanAjakMain, terapkanSikap } from '../../lib/supabase/ajakMain';
+import { useLearningStrategies } from '../../context/LearningStrategiesContext';
 import { useKnowledgeLibrary } from '../../context/KnowledgeLibraryContext';
 import { terapkanBantu } from '../../lib/supabase/bantu';
 import { muatUlangKatalogBantu } from '../../features/bantu/bantuKatalog';
@@ -196,6 +198,7 @@ function RiwayatItem({ r }: { r: RiwayatTinjauan }) {
 
 export default function LayarDiff() {
   const { muatUlangPanduan } = useKnowledgeLibrary();
+  const { muatUlangAjakMain } = useLearningStrategies();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { peranStaf } = useAuth();
@@ -264,6 +267,11 @@ export default function LayarDiff() {
       } else if (draf.jenis === 'kebiasaan_baik') {
         await terapkanKebiasaan(id); // RPC SECURITY DEFINER (026), tanpa backend
         await muatUlangKatalogIrama();
+      } else if (draf.jenis === 'kegiatan_ajak_main') {
+        await terapkanAjakMain(id); // RPC SECURITY DEFINER (028) → tabel ajak_main_kegiatan
+        await muatUlangAjakMain();
+      } else if (draf.jenis === 'sikap') {
+        await terapkanSikap(id); // RPC SECURITY DEFINER (028) → tabel sikap, dibaca Bekal
       } else {
         await api.post(`/rekah-admin/terapkan-konten/${id}`);
       }

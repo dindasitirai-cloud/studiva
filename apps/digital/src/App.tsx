@@ -40,6 +40,7 @@ import LoginPage from './pages/LoginPage';
 import DaftarPage from './pages/DaftarPage';
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import PaymentFailedPage from './pages/PaymentFailedPage';
+import PembayaranSelesaiPage from './pages/PembayaranSelesaiPage';
 import SubscriptionSettingsPage from './pages/SubscriptionSettingsPage';
 
 // Admin standalone pages (use public Navbar)
@@ -155,6 +156,7 @@ export default function App() {
             <Route path="/daftar" element={<DaftarPage />} />
             <Route path="/payment-success" element={<PaymentSuccessPage />} />
             <Route path="/payment-failed" element={<PaymentFailedPage />} />
+            <Route path="/pembayaran/selesai" element={<PembayaranSelesaiPage />} />
             <Route
               path="/subscription-settings"
               element={

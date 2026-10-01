@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { X, Lock } from 'lucide-react';
-import PaymentButton from './PaymentButton';
+import PaymentButton, { type PenyediaBayar } from './PaymentButton';
 import { Plan, Tier } from '../types';
 import { PRICING, TIER_LABELS, formatIDR } from '../lib/pricing';
 
@@ -9,6 +9,12 @@ interface PlanConfirmModalProps {
   plan: Plan;
   onClose: () => void;
 }
+
+// Penyedia yang ditampilkan. Masa uji coba: keduanya ("midtrans,xendit").
+// Setelah memilih satu, isi REACT_APP_PENYEDIA_BAYAR di Vercel dengan satu nama saja.
+const PENYEDIA: PenyediaBayar[] = (process.env.REACT_APP_PENYEDIA_BAYAR || 'midtrans,xendit')
+  .split(',').map(s => s.trim()).filter((s): s is PenyediaBayar => s === 'midtrans' || s === 'xendit');
+const NAMA_PENYEDIA: Record<PenyediaBayar, string> = { midtrans: 'Midtrans', xendit: 'Xendit' };
 
 // Konfirmasi sebelum diarahkan ke halaman pembayaran — tampilan Rekah.
 export default function PlanConfirmModal({ tier, plan, onClose }: PlanConfirmModalProps) {
@@ -46,21 +52,29 @@ export default function PlanConfirmModal({ tier, plan, onClose }: PlanConfirmMod
 
         <p className="mt-4 flex items-start gap-2 text-[13px] leading-[1.6] text-pekat/60">
           <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
-          Kamu akan diarahkan ke halaman pembayaran yang aman untuk menyelesaikan langganan.
+          Kamu akan diarahkan ke halaman pembayaran yang aman. Bisa bayar dengan QRIS, transfer bank (virtual account), atau e-wallet.
         </p>
 
-        <div className="mt-6 grid grid-cols-1 gap-2.5 sm:grid-cols-[1fr_auto]">
-          <PaymentButton
-            tier={tier}
-            plan={plan}
-            className="flex min-h-[48px] w-full items-center justify-center rounded-full bg-rekah px-6 font-bricolage text-[15px] font-bold text-white shadow-[0_4px_16px_rgba(224,82,107,0.28)] transition hover:bg-rekah-tua disabled:opacity-60"
-          >
-            Lanjut ke pembayaran
-          </PaymentButton>
+        <div className="mt-6 flex flex-col gap-2.5">
+          {(PENYEDIA.length ? PENYEDIA : [undefined]).map((p, i) => (
+            <PaymentButton
+              key={p ?? 'bawaan'}
+              tier={tier}
+              plan={plan}
+              penyedia={p}
+              className={`flex min-h-[48px] w-full items-center justify-center rounded-full px-6 font-bricolage text-[15px] font-bold transition disabled:opacity-60 ${
+                i === 0
+                  ? 'bg-rekah text-white shadow-[0_4px_16px_rgba(224,82,107,0.28)] hover:bg-rekah-tua'
+                  : 'border-2 border-rekah text-rekah hover:bg-rekah/5'
+              }`}
+            >
+              {PENYEDIA.length > 1 && p ? `Bayar lewat ${NAMA_PENYEDIA[p]}` : 'Lanjut ke pembayaran'}
+            </PaymentButton>
+          ))}
           <button
             type="button"
             onClick={onClose}
-            className="min-h-[48px] rounded-full border border-pekat/15 px-6 font-bricolage text-[15px] font-bold text-pekat/70 transition hover:bg-kanvas"
+            className="min-h-[44px] rounded-full px-6 font-bricolage text-[15px] font-bold text-pekat/60 transition hover:bg-kanvas"
           >
             Batal
           </button>

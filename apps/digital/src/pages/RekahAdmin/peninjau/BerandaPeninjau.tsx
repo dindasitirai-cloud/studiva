@@ -13,7 +13,7 @@ import KebunFlat from './KebunFlat';
 import { lamaMenunggu, sapaanWaktu, LABEL_TINDAKAN, PERIKSA_UMUM } from './panduanTinjauan';
 
 export const TEMA_JENIS: Record<JenisKonten, KunciTema> = {
-  kegiatan_ajak_main: 'ajak', panduan_tumbuh: 'wawasan', sikap: 'sikap', temani_journey: 'temani', bantu_situasi: 'bantu', kebiasaan_baik: 'sikap',
+  kegiatan_ajak_main: 'ajak', panduan_tumbuh: 'wawasan', sikap: 'sikap', temani_journey: 'temani', bantu_situasi: 'bantu', kebiasaan_baik: 'sikap', aksi_kondisi: 'tracker',
 };
 const URUT_JENIS: JenisKonten[] = ['kebiasaan_baik', 'temani_journey', 'bantu_situasi', 'panduan_tumbuh', 'kegiatan_ajak_main', 'sikap'];
 

@@ -15,6 +15,7 @@ export const PERIKSA_JENIS: Record<JenisKonten, string[]> = {
   temani_journey: ['Urutan hari bertahap dan tidak membebani', 'Contoh kalimat terdengar alami untuk orang tua Indonesia', 'Penjelasan "kenapa" tidak berlebihan'],
   bantu_situasi: ['Langkah bisa dijalankan saat genting (2–4 langkah)', 'Pilihan jawaban yang menyangkut keselamatan membuka layar keselamatan', 'Tidak ada saran yang memakai rasa sakit atau ketidaknyamanan fisik'],
   kebiasaan_baik: ['Kebiasaan kecil dan bisa dilakukan dalam kegiatan harian', 'Kategori (rutin/situasional) dan kegiatan tempelannya tepat'],
+  aksi_kondisi: ['Teks jelas, hangat, tanpa menghakimi', 'Sesuai tahap/kondisi yang dipicu', 'Hal kesehatan diarahkan ke tenaga kesehatan'],
 };
 
 export const CATATAN_CEPAT = [

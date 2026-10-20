@@ -33,6 +33,8 @@ export interface InboxStore {
   todo: InboxItem[];
   rampung: InboxItem[];
   done: Set<string>;
+  /** id → tanggal selesai (YYYY-MM-DD; '' untuk data lama tanpa tanggal). */
+  selesaiPada: Record<string, string>;
   toggle: (id: string) => void;
   tambah: (judul: string) => void;
 }
@@ -80,7 +82,7 @@ export function useInboxStore(idAnak: string): InboxStore {
   const semua = [...tambahan, ...INBOX_SEED];
   const todo = semua.filter(i => !done.has(i.id));
   const rampung = semua.filter(i => done.has(i.id));
-  return { semua, todo, rampung, done, toggle, tambah };
+  return { semua, todo, rampung, done, selesaiPada: doneAt, toggle, tambah };
 }
 
 /** Read-only: daftar item "Untuk Dikelola" yang sudah ditandai selesai, beserta

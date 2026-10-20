@@ -615,7 +615,7 @@ export default function BantuPage() {
   );
 
   return (
-    <div style={{ background: '#FCEBD7' }} className="-mx-5 min-h-screen px-5 pb-16 pt-[30px] sm:-mx-8 sm:px-[46px]">
+    <div style={{ background: '#FFF3E6' }} className="-mx-5 min-h-screen px-5 pb-16 pt-[30px] sm:-mx-8 sm:px-[46px]">
       <section className="mx-auto w-full max-w-[1240px]" aria-live="polite">
         {layar === 'hub' && Hub()}
         {layar === 'clarify' && Clarify()}

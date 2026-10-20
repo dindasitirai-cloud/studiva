@@ -5,7 +5,7 @@ import { HeroAdmin, TEMA, BungaNilai } from './tema/temaAdmin';
 import type { KunciTema } from './tema/temaAdmin';
 
 const TEMA_JENIS: Record<JenisKonten, KunciTema> = {
-  kegiatan_ajak_main: 'ajak', panduan_tumbuh: 'wawasan', sikap: 'sikap', temani_journey: 'temani', bantu_situasi: 'bantu', kebiasaan_baik: 'sikap',
+  kegiatan_ajak_main: 'ajak', panduan_tumbuh: 'wawasan', sikap: 'sikap', temani_journey: 'temani', bantu_situasi: 'bantu', kebiasaan_baik: 'sikap', aksi_kondisi: 'tracker',
 };
 
 const STATUS_URUTAN: StatusPipeline[] = ['diajukan', 'draf', 'disetujui', 'tayang', 'ditolak'];

@@ -18,6 +18,14 @@ import {
   AGE_RANGES, DOMAIN_META,
   Activity, WeeklyPlan, EduTool, Downloadable, DomainKey, DownloadKategori, ContentStatus,
 } from '../../data/learningStrategies';
+import {
+  ALERGEN, TEKNIK_STIMULASI, ASPEK_STPPA, TAHAP_KESIAPAN, BAHASA_LABEL, MODE_DWIBAHASA_LABEL,
+  DOMAIN_BAHASA_LABEL, JENIS_KESIAPAN_LABEL, JENIS_LAYAR_LABEL, TAG_SAUDARA_LABEL, SUB_FM_LABEL, SUMBER_REGULASI_LABEL,
+} from '../../features/irama-hari/kontenMetadata';
+import type {
+  KontenMetadata, AllergenInfo, AspekSTPPA, SubFisikMotorik, TahapKesiapan, JenisLayar, SumberRegulasi,
+  ModeDwibahasa, BahasaKey, TagSaudara, JenisKesiapan, DomainBahasa, TeknikStimulasi,
+} from '../../features/irama-hari/kontenMetadata';
 import CsvImportModal from './CsvImportModal';
 import {
   ActivityCard,
@@ -87,6 +95,45 @@ function Field({ label, required, children }: { label: string; required?: boolea
 const inp = "w-full rounded-xl border border-stv-border px-3 py-2 text-[13px] focus:border-madu focus:outline-none";
 const ta  = `${inp} resize-none`;
 
+// ── Phase 25 metadata field helpers ────────────────────────────────────────────
+const rec2opt = <T extends string>(r: Record<T, string>): { k: T; label: string }[] =>
+  (Object.keys(r) as T[]).map(k => ({ k, label: r[k] }));
+
+function MetaChips<T extends string>({ label, options, selected, onToggle }: {
+  label: string; options: { k: T; label: string }[]; selected: readonly T[]; onToggle: (k: T) => void;
+}) {
+  return (
+    <Field label={label}>
+      <div className="flex flex-wrap gap-1.5 pt-1">
+        {options.map(o => {
+          const active = selected.includes(o.k);
+          return (
+            <button key={o.k} type="button" onClick={() => onToggle(o.k)}
+              className={`rounded-full px-2.5 py-1 text-[11px] font-semibold transition ${active ? 'bg-madu text-white' : 'bg-slate-100 text-stv-body'}`}>
+              {o.label}
+            </button>
+          );
+        })}
+      </div>
+    </Field>
+  );
+}
+
+function MetaToggle({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <Field label={label}>
+      <div className="flex gap-2 pt-1">
+        {[true, false].map(v => (
+          <button key={String(v)} type="button" onClick={() => onChange(v)}
+            className={`rounded-full px-3 py-1.5 text-[12px] font-semibold transition ${value === v ? 'bg-madu text-white' : 'bg-slate-100 text-stv-body'}`}>
+            {v ? 'Ya' : 'Tidak'}
+          </button>
+        ))}
+      </div>
+    </Field>
+  );
+}
+
 // ── shared modal shell ────────────────────────────────────────────────────────
 
 function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
@@ -144,7 +191,7 @@ const EMPTY_AFORM: AForm = {
   deskripsi: '', sci: '', sumber: '', tujuan: '',
   bahanItems: [], langkahItems: [''],
   variasiMudah: '', variasiMenantang: '', adaptasiABK: '',
-  catatanReviewer: '', status: 'draft',
+  catatanReviewer: '', status: 'draft', meta: {},
 };
 
 function toAForm(a: Activity): AForm {
@@ -166,6 +213,7 @@ function fromAForm(f: AForm, id?: number): Activity {
     variasiMudah: f.variasiMudah, variasiMenantang: f.variasiMenantang, adaptasiABK: f.adaptasiABK,
     catatanReviewer: f.catatanReviewer,
     status: f.status,
+    meta: f.meta,
   };
 }
 
@@ -176,6 +224,12 @@ function ActivityModal({ initial, id, onClose, pipelineOnly = false }: { initial
   const [err, setErr] = useState('');
   const [ajukanPesan, setAjukanPesan] = useState('');
   const [mengajukan, setMengajukan] = useState(false);
+  const [metaOpen, setMetaOpen] = useState(false);
+  const meta: KontenMetadata = form.meta ?? {};
+  const setMeta = (patch: Partial<KontenMetadata>) => setForm(f => ({ ...f, meta: { ...(f.meta ?? {}), ...patch } }));
+  const alg: AllergenInfo = meta.allergens ?? { mengandung: [] };
+  const setAlg = (patch: Partial<AllergenInfo>) => setMeta({ allergens: { mengandung: alg.mengandung, jejak: alg.jejak, ...patch } });
+  const toggleIn = <T,>(arr: readonly T[] | undefined, k: T): T[] => ((arr ?? []).includes(k) ? (arr ?? []).filter(x => x !== k) : [...(arr ?? []), k]);
 
   function save(status: ContentStatus) {
     if (!form.judul.trim() || !form.deskripsi.trim()) { setErr('Judul dan deskripsi wajib diisi.'); return; }
@@ -375,6 +429,114 @@ function ActivityModal({ initial, id, onClose, pipelineOnly = false }: { initial
         <Field label="Adaptasi untuk Anak dengan Kebutuhan Khusus">
           <textarea value={form.adaptasiABK} onChange={e => setForm(f => ({ ...f, adaptasiABK: e.target.value }))} rows={2} className={ta} />
         </Field>
+
+        <div className="rounded-xl border border-slate-200">
+          <button type="button" onClick={() => setMetaOpen(o => !o)}
+            className="flex w-full items-center justify-between px-3 py-2 text-[12px] font-bold text-stv-navy">
+            <span>Metadata Phase 25 (DRAFT - tinjauan Fitri)</span>
+            {metaOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </button>
+          {metaOpen && (
+            <div className="flex flex-col gap-3 border-t border-slate-100 p-3">
+              <p className="text-[11px] text-stv-muted">Isi hanya yang relevan dengan konten ini. Semua opsional; biarkan kosong bila tak berlaku.</p>
+
+              <MetaChips label="Alergen - mengandung" options={ALERGEN.map(a => ({ k: a.key, label: a.label }))}
+                selected={alg.mengandung} onToggle={k => setAlg({ mengandung: toggleIn(alg.mengandung, k) })} />
+              <MetaChips label="Alergen - jejak (may-contain)" options={ALERGEN.map(a => ({ k: a.key, label: a.label }))}
+                selected={alg.jejak ?? []} onToggle={k => setAlg({ jejak: toggleIn(alg.jejak, k) })} />
+              <MetaToggle label="Tag alergen lengkap & ditinjau (dapat difilter)"
+                value={!!meta.dapatDifilterAlergen} onChange={v => setMeta({ dapatDifilterAlergen: v })} />
+
+              <MetaToggle label="Ramah dwibahasa" value={!!meta.dwibahasa} onChange={v => setMeta({ dwibahasa: v })} />
+              <MetaChips label="Bahasa konten" options={rec2opt<BahasaKey>(BAHASA_LABEL)}
+                selected={meta.bahasa ?? []} onToggle={k => setMeta({ bahasa: toggleIn(meta.bahasa, k) })} />
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="Bahasa utama">
+                  <select value={meta.bahasaUtama ?? ''} className={inp}
+                    onChange={e => setMeta({ bahasaUtama: (e.target.value || undefined) as BahasaKey | undefined })}>
+                    <option value="">-</option>
+                    {rec2opt<BahasaKey>(BAHASA_LABEL).map(o => <option key={o.k} value={o.k}>{o.label}</option>)}
+                  </select>
+                </Field>
+                <Field label="Mode dwibahasa">
+                  <select value={meta.modeDwibahasa ?? ''} className={inp}
+                    onChange={e => setMeta({ modeDwibahasa: (e.target.value || undefined) as ModeDwibahasa | undefined })}>
+                    <option value="">-</option>
+                    {rec2opt<ModeDwibahasa>(MODE_DWIBAHASA_LABEL).map(o => <option key={o.k} value={o.k}>{o.label}</option>)}
+                  </select>
+                </Field>
+              </div>
+              <MetaChips label="Domain bahasa" options={rec2opt<DomainBahasa>(DOMAIN_BAHASA_LABEL)}
+                selected={meta.domainBahasa ?? []} onToggle={k => setMeta({ domainBahasa: toggleIn(meta.domainBahasa, k) })} />
+              <MetaChips label="Teknik stimulasi" options={rec2opt<TeknikStimulasi>(TEKNIK_STIMULASI)}
+                selected={meta.teknikStimulasi ?? []} onToggle={k => setMeta({ teknikStimulasi: toggleIn(meta.teknikStimulasi, k) })} />
+              <Field label="Milestone target (pisah dengan koma)">
+                <input className={inp} value={(meta.milestoneTarget ?? []).join(', ')}
+                  onChange={e => setMeta({ milestoneTarget: e.target.value.split(',').map(x => x.trim()).filter(Boolean) })} />
+              </Field>
+
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="Tahap toilet training">
+                  <select value={meta.tahapToilet ?? ''} className={inp}
+                    onChange={e => setMeta({ tahapToilet: (e.target.value || undefined) as TahapKesiapan | undefined })}>
+                    <option value="">-</option>
+                    {rec2opt<TahapKesiapan>(TAHAP_KESIAPAN).map(o => <option key={o.k} value={o.k}>{o.label}</option>)}
+                  </select>
+                </Field>
+                <Field label="Usia min toilet (bulan)">
+                  <input type="number" min={0} className={inp} value={meta.usiaMinToiletBulan ?? ''}
+                    onChange={e => setMeta({ usiaMinToiletBulan: e.target.value === '' ? undefined : Number(e.target.value) })} />
+                </Field>
+              </div>
+              <MetaChips label="Jenis kesiapan toilet" options={rec2opt<JenisKesiapan>(JENIS_KESIAPAN_LABEL)}
+                selected={meta.jenisKesiapan ?? []} onToggle={k => setMeta({ jenisKesiapan: toggleIn(meta.jenisKesiapan, k) })} />
+
+              <div className="grid grid-cols-2 gap-3">
+                <MetaToggle label="Berbasis layar" value={!!meta.berbasisLayar} onChange={v => setMeta({ berbasisLayar: v })} />
+                <Field label="Jenis layar">
+                  <select value={meta.jenisLayar ?? ''} className={inp}
+                    onChange={e => setMeta({ jenisLayar: (e.target.value || undefined) as JenisLayar | undefined })}>
+                    <option value="">-</option>
+                    {rec2opt<JenisLayar>(JENIS_LAYAR_LABEL).map(o => <option key={o.k} value={o.k}>{o.label}</option>)}
+                  </select>
+                </Field>
+              </div>
+
+              <MetaToggle label="Konten adaptasi adik" value={!!meta.adaptasiAdik} onChange={v => setMeta({ adaptasiAdik: v })} />
+              <MetaChips label="Tag saudara" options={rec2opt<TagSaudara>(TAG_SAUDARA_LABEL)}
+                selected={meta.tagSaudara ?? []} onToggle={k => setMeta({ tagSaudara: toggleIn(meta.tagSaudara, k) })} />
+
+              <div className="grid grid-cols-2 gap-3">
+                <Field label="Aspek STPPA">
+                  <select value={meta.aspekSTPPA ?? ''} className={inp}
+                    onChange={e => setMeta({ aspekSTPPA: (e.target.value || undefined) as AspekSTPPA | undefined })}>
+                    <option value="">-</option>
+                    {rec2opt<AspekSTPPA>(ASPEK_STPPA).map(o => <option key={o.k} value={o.k}>{o.label}</option>)}
+                  </select>
+                </Field>
+                <Field label="Sub fisik-motorik">
+                  <select value={meta.subFisikMotorik ?? ''} className={inp}
+                    onChange={e => setMeta({ subFisikMotorik: (e.target.value || undefined) as SubFisikMotorik | undefined })}>
+                    <option value="">-</option>
+                    {rec2opt<SubFisikMotorik>(SUB_FM_LABEL).map(o => <option key={o.k} value={o.k}>{o.label}</option>)}
+                  </select>
+                </Field>
+              </div>
+              <Field label="Sumber regulasi (PAUD)">
+                <select value={meta.sumberRegulasi ?? ''} className={inp}
+                  onChange={e => setMeta({ sumberRegulasi: (e.target.value || undefined) as SumberRegulasi | undefined })}>
+                  <option value="">-</option>
+                  {rec2opt<SumberRegulasi>(SUMBER_REGULASI_LABEL).map(o => <option key={o.k} value={o.k}>{o.label}</option>)}
+                </select>
+              </Field>
+
+              <Field label="Ditinjau oleh">
+                <input className={inp} value={meta.ditinjauOleh ?? ''} placeholder="mis. Fitri"
+                  onChange={e => setMeta({ ditinjauOleh: e.target.value || undefined })} />
+              </Field>
+            </div>
+          )}
+        </div>
 
         <Field label="Catatan Reviewer">
           <textarea value={form.catatanReviewer ?? ''} onChange={e => setForm(f => ({ ...f, catatanReviewer: e.target.value }))} rows={2} className={ta} />

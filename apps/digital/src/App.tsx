@@ -19,6 +19,7 @@ import BerandaRekahAdmin from './pages/RekahAdmin/BerandaRekahAdmin';
 import AntreanTinjauan from './pages/RekahAdmin/AntreanTinjauan';
 import LayarDiff from './pages/RekahAdmin/LayarDiff';
 import EditorSikap from './pages/RekahAdmin/EditorSikap';
+import EditorAksiKondisi from './pages/RekahAdmin/EditorAksiKondisi';
 import KebiasaanAdmin from './pages/RekahAdmin/kebiasaan/KebiasaanAdmin';
 import EditorKebiasaan from './pages/RekahAdmin/kebiasaan/EditorKebiasaan';
 import SemuaDraf from './pages/RekahAdmin/SemuaDraf';
@@ -186,7 +187,8 @@ export default function App() {
             >
               <Route index element={<BerandaPage />} />
               <Route path="journey/*" element={<JourneyRoutes />} /> {/* Family Journey — additive, inherits DashboardShellTier2 */}
-              <Route path="kompas-keluarga" element={<KompasKeluargaPage />} /> {/* GROUND: Kompas Keluarga — additive */}
+              <Route path="kompas-keluarga" element={<Navigate to="/dashboard/tier2/kelola?tab=perjalanan" replace />} /> {/* Phase 21: Arah & Kompas Perkembangan pindah ke Kelola → Perjalanan */}
+              <Route path="kompas-keluarga-lama" element={<KompasKeluargaPage />} /> {/* halaman lama, tetap hidup untuk QA/banding */}
               <Route path="profil-anak" element={<ProfilAnakTier2 />} />
               <Route path="subscription" element={<SubscriptionTier2 />} />
               <Route path="partner-orang-tua" element={<PartnerOrangTuaPage tierContext="tier2" />} />
@@ -256,6 +258,7 @@ export default function App() {
               <Route path="bantu/draf/:id" element={<EditorBantu />} />
               <Route path="bantu/revisi/:slug" element={<EditorBantu />} />
               <Route path="tracker" element={<HalamanTema tema="tracker" judul="Tracker Konten" deskripsi="Pantau kesegaran konten, tinjau sumber, dan kelola tanda secara terpusat."><TrackerKontenAdmin tanpaJudul /></HalamanTema>} />
+              <Route path="aksi-kondisi" element={<EditorAksiKondisi />} />
               <Route path="antrean" element={<AntreanTinjauan />} />
               <Route path="diff/:id" element={<LayarDiff />} />
               <Route path="riwayat" element={<RiwayatTinjauanPeninjau />} />

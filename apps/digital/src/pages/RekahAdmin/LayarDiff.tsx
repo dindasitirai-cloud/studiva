@@ -17,6 +17,7 @@ import { terapkanKebiasaan } from '../../lib/supabase/kebiasaan';
 import { muatUlangKatalogIrama } from '../../features/irama-hari/iramaKatalog';
 import { terapkanPanduan } from '../../lib/supabase/panduan';
 import { terapkanAjakMain, terapkanSikap } from '../../lib/supabase/ajakMain';
+import { terapkanAksiKondisi } from '../../lib/supabase/aksiKondisi';
 import { useLearningStrategies } from '../../context/LearningStrategiesContext';
 import { useKnowledgeLibrary } from '../../context/KnowledgeLibraryContext';
 import { terapkanBantu } from '../../lib/supabase/bantu';
@@ -120,6 +121,18 @@ function PratampilanIsi({ draf }: { draf: KontenDraf }) {
         <Baris label="Penting" nilai={isi.penting} />
         <Baris label="Yang dilakukan" nilai={isi.lakukan} />
         <Baris label="Perhatian" nilai={isi.perhatian} />
+      </>
+    );
+  }
+
+  if (draf.jenis === 'aksi_kondisi') {
+    return (
+      <>
+        <Baris label="Domain" nilai={isi.domain} />
+        <Baris label="Kunci (pemicu)" nilai={isi.kunci} />
+        <Baris label="Judul" nilai={isi.judul} />
+        <Baris label="Detail" nilai={isi.detail} />
+        <Baris label="Meta" nilai={JSON.stringify(isi.meta)} />
       </>
     );
   }
@@ -290,6 +303,8 @@ export default function LayarDiff() {
         await muatUlangAjakMain();
       } else if (draf.jenis === 'sikap') {
         await terapkanSikap(id); // RPC SECURITY DEFINER (028) → tabel sikap, dibaca Bekal
+      } else if (draf.jenis === 'aksi_kondisi') {
+        await terapkanAksiKondisi(id); // RPC SECURITY DEFINER (033) → tabel aksi_kondisi
       } else {
         await api.post(`/rekah-admin/terapkan-konten/${id}`);
       }

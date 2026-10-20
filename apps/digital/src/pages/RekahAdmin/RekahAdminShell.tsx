@@ -25,7 +25,7 @@ const NAV_PENINJAU: ItemNav[] = [
 ];
 
 /** Halaman khusus admin (menulis konten) — peninjau diarahkan ke Ruang Tinjauan. */
-const KHUSUS_ADMIN = /^\/rekah-admin\/(ajak-main|wawasan|tracker|sikap\/(baru|draf|revisi|fase)|temani\/(baru|draf|revisi)|bantu\/(baru|draf|revisi))/;
+const KHUSUS_ADMIN = /^\/rekah-admin\/(ajak-main|wawasan|tracker|aksi-kondisi|sikap\/(baru|draf|revisi|fase)|temani\/(baru|draf|revisi)|bantu\/(baru|draf|revisi))/;
 
 const NAV: ItemNav[] = [
   { to: '/rekah-admin',           label: 'Beranda',          Icon: LayoutDashboard, tema: 'beranda', end: true },
@@ -35,6 +35,7 @@ const NAV: ItemNav[] = [
   { to: '/rekah-admin/temani',    label: 'Temani',           Icon: Footprints,      tema: 'temani' },
   { to: '/rekah-admin/bantu',     label: 'Bantu',            Icon: LifeBuoy,        tema: 'bantu' },
   { to: '/rekah-admin/tracker',   label: 'Tracker Konten',   Icon: BarChart2,       tema: 'tracker' },
+  { to: '/rekah-admin/aksi-kondisi', label: 'Aksi per Kondisi', Icon: BarChart2,     tema: 'tracker' },
   { to: '/rekah-admin/antrean',   label: 'Antrean Tinjauan', Icon: ClipboardList,   tema: 'antrean', badge: true },
   { to: '/rekah-admin/semua',     label: 'Semua Draf',       Icon: BookOpen,        tema: 'semua' },
 ];

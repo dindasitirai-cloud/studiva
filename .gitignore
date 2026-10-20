@@ -30,3 +30,7 @@ packages/shared/dist/
 **/.fuse_hidden*
 supabase/.temp/
 supabase/.branches/
+
+# Deliverable & artefak non-source (jangan ikut commit)
+Claude outputs/
+apps/digital/public/_relay/

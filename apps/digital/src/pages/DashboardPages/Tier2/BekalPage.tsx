@@ -23,9 +23,9 @@ export default function BekalPage() {
 
   function handleTanam(nilai: NilaiAkar) {
     akarDispatch({ type: 'TANAM_NILAI', nilai });
-    // Setelah menanam nilai, bawa ke Kompas Keluarga agar caregiver melihat
-    // nilai tsb kini tertanam pada Arah Keluarga.
-    navigate('/dashboard/tier2/kompas-keluarga');
+    // Setelah menanam nilai, bawa ke Kelola → Perjalanan (rumah Arah Keluarga sejak Phase 21)
+    // agar caregiver melihat nilai tsb kini tertanam.
+    navigate('/dashboard/tier2/kelola?tab=perjalanan');
   }
 
   function handleCabut(nilai: NilaiAkar) {

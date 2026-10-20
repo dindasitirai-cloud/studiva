@@ -1,6 +1,8 @@
 // Learning Strategies data — all state via Context, no localStorage
 // TODO: replace mock data with API calls when backend endpoints are ready
 
+import type { KontenMetadata } from '../features/irama-hari/kontenMetadata';
+
 export type DomainKey = 'mk' | 'mh' | 'bhs' | 'kog' | 'sos' | 'sen' | 'fe';
 
 export const DOMAIN_META: Record<DomainKey, { label: string; color: string; bg: string }> = {
@@ -75,6 +77,8 @@ export interface Activity {
   tanpaTemaNilai?: boolean;
   catatanReviewer?: string;
   status?: ContentStatus; // undefined = published (backward compat)
+  /** Phase 25: metadata konten lintas-domain (alergi, bahasa, toilet, layar, saudara, PAUD). Opsional. */
+  meta?: KontenMetadata;
 }
 
 export interface PlanHari {

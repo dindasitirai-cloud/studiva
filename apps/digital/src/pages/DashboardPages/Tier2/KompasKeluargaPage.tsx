@@ -108,7 +108,7 @@ export default function KompasKeluargaPage() {
 
   return (
     <div
-      style={{ background: '#FCEBD7' }}
+      style={{ background: '#FFF3E6' }}
       className="-mx-5 sm:-mx-8 px-5 sm:px-[46px] pt-[34px] pb-14 min-h-screen"
     >
       {/* ── Header ─────────────────────────────────────────── */}

@@ -720,3 +720,28 @@ export async function simpanJurnalHari(idAnak: string, tanggal: string, isi: Jur
   if (error) throw error;
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
+
+// ── Jurnal: "Yang terlihat hari ini" (Phase 22 · migration 032) ─────────────
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/** Id prompt pengamatan yang terlihat per tanggal. Melempar error bila kolom belum ada (032 belum jalan). */
+export async function getTerlihatRentang(idAnak: string, daftarTanggal: readonly string[]): Promise<Record<string, string[]>> {
+  if (daftarTanggal.length === 0) return {};
+  const { data, error } = await (supabase as any)
+    .from('jurnal_hari').select('tanggal, terlihat')
+    .eq('id_anak', idAnak).in('tanggal', daftarTanggal as string[]);
+  if (error) throw error;
+  const hasil: Record<string, string[]> = {};
+  for (const b of (data ?? []) as any[]) {
+    hasil[b.tanggal] = Array.isArray(b.terlihat) ? b.terlihat.filter((x: unknown) => typeof x === 'string') : [];
+  }
+  return hasil;
+}
+
+/** Simpan daftar terlihat satu tanggal (hanya kolom terlihat — cerita/foto tidak tersentuh). */
+export async function simpanTerlihatHari(idAnak: string, tanggal: string, terlihat: string[]): Promise<void> {
+  const { error } = await (supabase as any)
+    .from('jurnal_hari')
+    .upsert({ id_anak: idAnak, tanggal, terlihat, diperbarui_pada: new Date().toISOString() }, { onConflict: 'id_anak,tanggal' });
+  if (error) throw error;
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */

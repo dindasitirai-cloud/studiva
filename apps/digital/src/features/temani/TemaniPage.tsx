@@ -16,6 +16,7 @@ import { useTemaniKatalog, journeysUntuk } from './temaniKatalog'; // katalog ad
 import { kebiasaanById } from './temaniSeed';
 import type { TemaniJourney, TemaniHari } from './temaniSeed';
 import JurnalTemani from './JurnalTemani';
+import { idKegiatanTemani, itemKelolaTemani } from './temaniKelola';
 import { Ornament } from './ornamen';
 
 type Layar = 'beranda' | 'hari' | 'reflect' | 'selesai' | 'jurnal';
@@ -80,7 +81,7 @@ const TMN_CSS = `
 .tmn .lift:hover{transform:translateY(-3px);box-shadow:0 22px 44px -34px rgba(90,50,70,.55)}
 .tmn .tap{transition:transform .16s cubic-bezier(.2,.7,.2,1)}
 .tmn .tap:active{transform:scale(.97)}
-.tmn .grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:22px;align-items:start}
+.tmn .grid{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;align-items:start}
 .tmn .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
 @media(max-width:900px){.tmn .grid{grid-template-columns:1fr}}
 @media(max-width:560px){.tmn .cards{grid-template-columns:1fr}}
@@ -190,14 +191,9 @@ export default function TemaniPage() {
   }, [journeyAktif, progres]);
 
   // ── Pop-up detail perjalanan (design_handoff_temani_popup) ────────────────
-  const idKegiatan = (slug: string, n: number) => `temani-${slug}-h${n}`;
-  const itemKelola = (j: TemaniJourney, h: TemaniHari) => ({
-    id: idKegiatan(j.slug, h.hari),
-    judul: h.fokus.length > 64 ? `${h.fokus.slice(0, 62)}…` : h.fokus,
-    tipe: 'aktivitas' as const, domain: 'sos', nilai: j.nilaiTerkait, pemilik: 'anak' as const,
-    sumberId: idKegiatan(j.slug, h.hari), kustom: true, kategoriKustom: 'momen' as const,
-    keteranganKapan: 'Dari Temani', deskripsiKustom: h.script,
-  });
+  // Bentuk id & item dipusatkan di temaniKelola.ts (dipakai juga papan Kelola — sinkron dua arah).
+  const idKegiatan = idKegiatanTemani;
+  const itemKelola = itemKelolaTemani;
 
   const bukaModal = (j: TemaniJourney) => { setAlasanOpen(false); setModalJ(j); };
 
@@ -435,28 +431,6 @@ export default function TemaniPage() {
             <Toast />
           </div>
 
-          {/* Rel kanan */}
-          <div className="rise" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-            <button onClick={() => setLayar('jurnal')} aria-label="Buka Buku Perjalanan" className="card lift tap" style={{ position: 'relative', overflow: 'hidden', borderRadius: 28, background: 'linear-gradient(165deg,#6E3B57 0%,#5A2E47 100%)', boxShadow: '0 26px 52px -34px rgba(90,50,70,.85)', cursor: 'pointer', border: 0, width: '100%', textAlign: 'left' }}>
-              <span style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 9, background: 'linear-gradient(180deg,#F06BA8 0%,#F890BE 100%)' }} aria-hidden />
-              <span aria-hidden className="sway" style={{ position: 'absolute', right: -14, bottom: -16, width: 120, height: 172, opacity: 0.18, pointerEvents: 'none', animationDuration: '15s' }}>
-                <Ornament type="foliage" bloom="#F8B9D4" bloom2="#FFF1F7" />
-              </span>
-              <div style={{ position: 'relative', padding: '24px 24px 22px 30px' }}>
-                <div className="font-shantell" style={{ fontWeight: 600, fontSize: 17, color: '#F8B9D4' }}>jurnal</div>
-                <div className="font-fredoka" style={{ fontWeight: 600, fontSize: 22, color: '#fff', lineHeight: 1.2, marginTop: 5 }}>Buku Perjalanan {nama}</div>
-                <div style={{ display: 'flex', justifyContent: 'center', padding: '30px 0 34px' }}>
-                  <span className="sway" style={{ width: 104, height: 104, display: 'block', animationDuration: '9s' }}>
-                    <img src="/images/logo-rekah-removebg.png" alt="Rekah" style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} />
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, paddingTop: 16, borderTop: '1.5px dashed rgba(248,185,212,.4)' }}>
-                  <span className="font-nunito" style={{ fontWeight: 700, fontSize: 14, color: '#F8D8E6' }}>Catatan harian</span>
-                  <span className="font-nunito" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, borderRadius: 999, padding: '10px 18px', background: 'rgba(255,255,255,.16)', fontWeight: 800, fontSize: 14, color: '#fff' }}>Buka <span style={{ lineHeight: 1 }}>→</span></span>
-                </div>
-              </div>
-            </button>
-          </div>
         </div>
 
         {/* Footer quote */}
@@ -573,7 +547,7 @@ export default function TemaniPage() {
   };
 
   return (
-    <div style={{ background: '#FCEBD7' }} className="-mx-5 min-h-screen px-5 pb-14 pt-[34px] sm:-mx-8 sm:px-[46px]">
+    <div style={{ background: '#FFF3E6' }} className="-mx-5 min-h-screen px-5 pb-14 pt-[34px] sm:-mx-8 sm:px-[46px]">
       <section className={`mx-auto w-full ${layar === 'beranda' ? 'max-w-6xl' : layar === 'jurnal' ? 'max-w-5xl' : 'max-w-md'}`} aria-live="polite">
         {layar === 'beranda' && <Beranda />}
         {layar === 'jurnal' && <JurnalTemani idAnak={idAnak} nama={nama} onKembali={() => setLayar('beranda')} />}

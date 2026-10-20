@@ -84,7 +84,9 @@ export function kegTemplate(waktu: Waktu, k: KatalogIrama = katalog): KegDef[] {
           .filter(b => tayang(b) && b.kategori === 'rutin' && b.template_key === t.key)
           .sort((a, b) => a.urutan - b.urutan)
           .map(keItem),
-        ...t.saran.map(s => ({ id: s.id, tipe: s.tipe, t: s.t }) as Item),
+        // Phase 21C: saran statis template (mis. "Tumpuk balok warna", "Baca buku bersama") TIDAK lagi
+        // dipasang di papan — diganti kurasi Rekah per anak per hari (kurasiPapan.ts). Data `saran`
+        // tetap ada di katalog (admin & HariIni lama masih membacanya).
       ],
     }));
 }

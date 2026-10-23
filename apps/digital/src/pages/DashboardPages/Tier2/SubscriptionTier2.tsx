@@ -1,141 +1,136 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CreditCard, CalendarDays, Wallet, ArrowUpCircle, XCircle } from 'lucide-react';
-import { api } from '../../../api/client';
-import { Subscription, SubscriptionStatus } from '../../../types';
-import { TIER_LABELS, formatIDR } from '../../../lib/pricing';
+import { CalendarDays, Receipt, ExternalLink } from 'lucide-react';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import { supabase } from '../../../lib/supabase/client';
+import { formatIDR } from '../../../lib/pricing';
 
-const PLAN_LABEL: Record<Subscription['plan'], string> = {
-  monthly: 'Bulanan',
-  quarterly: '3 Bulan',
-  yearly: 'Tahunan',
+// Langganan & Pembayaran — membaca tabel `langganan` dan `pembayaran` (Supabase, migrasi 004 & 031).
+// Status pembayaran diisi oleh notifikasi Midtrans/Xendit, bukan oleh browser.
+
+const sb = supabase as unknown as SupabaseClient;
+
+interface BarisLangganan { status: string; akhir_periode: string | null }
+interface BarisBayar {
+  kode_order: string; paket: 'monthly' | 'quarterly' | 'yearly'; jumlah: number; penyedia: string;
+  metode: string | null; status: 'menunggu' | 'lunas' | 'gagal' | 'kedaluwarsa';
+  url_bayar: string | null; dibuat_pada: string; dilunasi_pada: string | null;
+}
+
+const NAMA_PAKET = { monthly: 'Bulanan', quarterly: '3 Bulan', yearly: 'Tahunan' } as const;
+const LABEL_STATUS: Record<BarisBayar['status'], { teks: string; kelas: string }> = {
+  lunas:       { teks: 'Lunas',               kelas: 'bg-daun/15 text-daun' },
+  menunggu:    { teks: 'Menunggu pembayaran', kelas: 'bg-madu/25 text-pekat' },
+  gagal:       { teks: 'Gagal',               kelas: 'bg-rekah/10 text-rekah-tua' },
+  kedaluwarsa: { teks: 'Kedaluwarsa',         kelas: 'bg-pekat/5 text-pekat/60' },
+};
+const METODE: Record<string, string> = {
+  qris: 'QRIS', gopay: 'GoPay', shopeepay: 'ShopeePay', bank_transfer: 'Transfer bank (VA)', echannel: 'Mandiri Bill',
+  credit_card: 'Kartu kredit/debit', cstore: 'Gerai retail', ovo: 'OVO', dana: 'DANA',
 };
 
-const STATUS_LABEL: Record<SubscriptionStatus, string> = {
-  active: 'Aktif',
-  canceled: 'Dibatalkan',
-  expired: 'Berakhir',
-};
-
-const STATUS_STYLE: Record<SubscriptionStatus, string> = {
-  active: 'bg-stv-green-tint text-stv-green',
-  canceled: 'bg-stv-badge-navy-tint text-stv-navy',
-  expired: 'bg-red-100 text-red-600',
-};
+const tgl = (iso: string | null) =>
+  iso ? new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '—';
 
 export default function SubscriptionTier2() {
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [canceling, setCanceling] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [langganan, setLanggananState] = useState<BarisLangganan | null>(null);
+  const [riwayat, setRiwayat] = useState<BarisBayar[]>([]);
+  const [memuat, setMemuat] = useState(true);
 
   useEffect(() => {
-    load();
+    let batal = false;
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { setMemuat(false); return; }
+      const [l, p] = await Promise.all([
+        sb.from('langganan').select('status, akhir_periode').eq('id_orang_tua', user.id).maybeSingle(),
+        sb.from('pembayaran')
+          .select('kode_order, paket, jumlah, penyedia, metode, status, url_bayar, dibuat_pada, dilunasi_pada')
+          .eq('id_orang_tua', user.id).order('dibuat_pada', { ascending: false }).limit(50),
+      ]);
+      if (batal) return;
+      setLanggananState((l.data as BarisLangganan | null) ?? null);
+      setRiwayat(((p.data as BarisBayar[] | null) ?? []));
+      setMemuat(false);
+    })();
+    return () => { batal = true; };
   }, []);
 
-  async function load() {
-    try {
-      setLoading(true);
-      const { data } = await api.get('/subscriptions/my-subscription');
-      setSubscription(data.subscription);
-    } catch {
-      setMessage('Gagal memuat data subscription.');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleCancel() {
-    if (!window.confirm('Apakah Anda yakin ingin membatalkan subscription ini?')) return;
-    setCanceling(true);
-    setMessage(null);
-    try {
-      await api.post('/subscriptions/cancel');
-      setMessage('Subscription berhasil dibatalkan.');
-      await load();
-    } catch (err: any) {
-      setMessage(err.response?.data?.error || 'Gagal membatalkan subscription.');
-    } finally {
-      setCanceling(false);
-    }
-  }
+  const aktif = !!langganan && langganan.status === 'aktif' && !!langganan.akhir_periode && new Date(langganan.akhir_periode) > new Date();
+  const sisaHari = aktif ? Math.ceil((new Date(langganan!.akhir_periode!).getTime() - Date.now()) / 86_400_000) : 0;
 
   return (
-    <div className="mx-auto flex max-w-[760px] flex-col gap-6">
-      <div>
-        <h2 className="font-baloo text-[22px] font-extrabold text-stv-navy">Subscription</h2>
-        <p className="text-[14px] text-stv-muted">Kelola paket dan status pembayaran Rekah Anda.</p>
-      </div>
+    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+      <h1 className="font-bricolage text-[28px] font-extrabold text-pekat">Langganan & Pembayaran</h1>
+      <p className="mt-1 text-[15px] text-pekat/60">Status langganan Rekah dan riwayat pembayaranmu.</p>
 
-      {loading ? (
-        <div className="flex min-h-[40vh] items-center justify-center text-stv-muted">Memuat...</div>
-      ) : (
-        <>
-          {message && (
-            <p className="rounded-xl bg-fajar px-4 py-3 text-[13px] text-stv-body">{message}</p>
-          )}
-
-          {!subscription ? (
-            <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-mawar py-14 text-center">
-              <CreditCard className="h-10 w-10 text-madu" strokeWidth={1.5} />
-              <p className="mt-3 font-semibold text-stv-navy">Anda belum memiliki subscription</p>
-              <Link
-                to="/pricing"
-                className="mt-4 rounded-full bg-madu px-5 py-2 text-[14px] font-bold text-white no-underline transition hover:bg-rekah"
-              >
-                Lihat Paket Kami
-              </Link>
+      {/* ── Status langganan ─────────────────────────────────────── */}
+      <section className="mt-6 rounded-[24px] border border-pekat/10 bg-white p-6">
+        {memuat ? (
+          <p className="text-[14px] text-pekat/50">Memuat…</p>
+        ) : aktif ? (
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <span className="rounded-full bg-daun/15 px-3 py-1 text-[12px] font-bold text-daun">Aktif</span>
+              <p className="mt-3 flex items-center gap-2 text-[15px] text-pekat">
+                <CalendarDays className="h-4 w-4 text-pekat/50" aria-hidden />
+                Berlaku sampai <strong>{tgl(langganan!.akhir_periode)}</strong>
+              </p>
+              <p className="mt-1 text-[13px] text-pekat/55">Sisa {sisaHari} hari. Langganan tidak diperpanjang otomatis.</p>
             </div>
-          ) : (
-            <>
-              <div className="flex flex-col gap-4 rounded-2xl bg-white p-6 shadow-[0_4px_16px_rgba(16,58,107,.06)]">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-baloo text-[17px] font-bold text-stv-navy">{TIER_LABELS[subscription.tier]}</p>
-                  <span className={`w-fit rounded-full px-2.5 py-0.5 text-[11px] font-bold ${STATUS_STYLE[subscription.status]}`}>
-                    {STATUS_LABEL[subscription.status]}
-                  </span>
-                </div>
+            <Link to="/pricing" className="inline-flex min-h-[44px] items-center rounded-full border-2 border-rekah px-5 font-bricolage text-[14px] font-bold text-rekah no-underline hover:bg-rekah/5">
+              Perpanjang lebih awal
+            </Link>
+          </div>
+        ) : (
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <span className="rounded-full bg-pekat/5 px-3 py-1 text-[12px] font-bold text-pekat/60">
+                {langganan?.akhir_periode ? 'Sudah berakhir' : 'Belum berlangganan'}
+              </span>
+              <p className="mt-3 text-[15px] text-pekat/70">
+                {langganan?.akhir_periode
+                  ? <>Langganan berakhir pada <strong>{tgl(langganan.akhir_periode)}</strong>. Data si kecil tetap aman menunggu.</>
+                  : 'Pilih paket untuk mulai memakai Rekah.'}
+              </p>
+            </div>
+            <Link to="/pricing" className="inline-flex min-h-[44px] items-center rounded-full bg-rekah px-6 font-bricolage text-[14px] font-bold text-white no-underline hover:bg-rekah-tua">
+              Pilih paket
+            </Link>
+          </div>
+        )}
+      </section>
 
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-xl bg-fajar p-3.5">
-                    <p className="flex items-center gap-1.5 text-[12px] text-stv-muted"><CreditCard className="h-3.5 w-3.5" />Plan</p>
-                    <p className="mt-1 text-[14px] font-bold text-stv-navy">{PLAN_LABEL[subscription.plan]}</p>
-                  </div>
-                  <div className="rounded-xl bg-fajar p-3.5">
-                    <p className="flex items-center gap-1.5 text-[12px] text-stv-muted"><CalendarDays className="h-3.5 w-3.5" />Tanggal Perpanjangan</p>
-                    <p className="mt-1 text-[14px] font-bold text-stv-navy">{new Date(subscription.end_date).toLocaleDateString('id-ID')}</p>
-                  </div>
-                  <div className="rounded-xl bg-fajar p-3.5">
-                    <p className="flex items-center gap-1.5 text-[12px] text-stv-muted"><Wallet className="h-3.5 w-3.5" />Jumlah Dibayar</p>
-                    <p className="mt-1 text-[14px] font-bold text-stv-navy">{formatIDR(subscription.amount_paid)}</p>
-                  </div>
+      {/* ── Riwayat pembayaran ───────────────────────────────────── */}
+      <section className="mt-6">
+        <h2 className="flex items-center gap-2 font-bricolage text-[18px] font-bold text-pekat">
+          <Receipt className="h-5 w-5 text-pekat/50" aria-hidden /> Riwayat pembayaran
+        </h2>
+        {!memuat && riwayat.length === 0 && (
+          <p className="mt-3 rounded-[16px] bg-white px-5 py-4 text-[14px] text-pekat/55">Belum ada pembayaran.</p>
+        )}
+        {riwayat.length > 0 && (
+          <div className="mt-3 overflow-hidden rounded-[20px] border border-pekat/10 bg-white">
+            {riwayat.map((b, i) => (
+              <div key={b.kode_order} className={`flex flex-wrap items-center gap-x-4 gap-y-2 px-5 py-4 ${i ? 'border-t border-pekat/8' : ''}`}>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[14px] font-bold text-pekat">Rekah {NAMA_PAKET[b.paket]} · {formatIDR(b.jumlah)}</p>
+                  <p className="mt-0.5 text-[12px] text-pekat/50">
+                    {tgl(b.dibuat_pada)} · {b.kode_order}
+                    {b.metode ? ` · ${METODE[b.metode] ?? b.metode}` : ''}
+                  </p>
                 </div>
-              </div>
-
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  to="/pricing"
-                  className="flex items-center gap-1.5 rounded-full bg-madu px-5 py-2.5 text-[14px] font-bold text-white no-underline transition hover:bg-rekah"
-                >
-                  <ArrowUpCircle className="h-4 w-4" />
-                  Upgrade / Downgrade Tier
-                </Link>
-                {subscription.status === 'active' && (
-                  <button
-                    type="button"
-                    onClick={handleCancel}
-                    disabled={canceling}
-                    className="flex items-center gap-1.5 rounded-full border border-red-300 px-5 py-2.5 text-[14px] font-bold text-red-600 transition hover:bg-red-50 disabled:opacity-60"
-                  >
-                    <XCircle className="h-4 w-4" />
-                    {canceling ? 'Membatalkan...' : 'Batalkan Subscription'}
-                  </button>
+                <span className={`rounded-full px-3 py-1 text-[12px] font-bold ${LABEL_STATUS[b.status].kelas}`}>{LABEL_STATUS[b.status].teks}</span>
+                {b.status === 'menunggu' && b.url_bayar && (
+                  <a href={b.url_bayar} className="inline-flex items-center gap-1 text-[13px] font-bold text-rekah no-underline hover:underline">
+                    Lanjutkan bayar <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+                  </a>
                 )}
               </div>
-            </>
-          )}
-        </>
-      )}
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 // Sumber tunggal daftar fitur Rekah. Menambah fitur = tambah satu entri di sini.
 // Dipakai oleh: SidebarRekah, NavigasiBawah, AlurEkosistem (beranda), JembatanFitur (beranda).
 // TODO: review Fitri — label, ringkas, dan kapan.
-import { Home, Sun, Package, Leaf, Sprout, Baby, Compass, CalendarDays, LifeBuoy, Heart } from 'lucide-react';
+import { Home, Sun, Package, Leaf, Sprout, Baby, Compass, CalendarDays, LifeBuoy, Heart, CreditCard } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export type FiturId = 'beranda' | 'kompas' | 'irama' | 'kelola' | 'bekal' | 'bantu' | 'teduh' | 'jurnal' | 'panen';
@@ -120,6 +120,13 @@ export const PROFIL_ANAK = {
   to: '/dashboard/tier2/profil-anak',
   label: 'Profil Anak',
   icon: Baby,
+  end: false,
+} as const;
+
+export const LANGGANAN = {
+  to: '/dashboard/tier2/subscription',
+  label: 'Langganan',
+  icon: CreditCard,
   end: false,
 } as const;
 

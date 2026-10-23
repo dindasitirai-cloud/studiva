@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Baby, LogOut } from 'lucide-react';
+import { Baby, LogOut, CreditCard } from 'lucide-react';
 import LogoRekah from './LogoRekah';
 import { useAuth } from '../context/AuthContext';
 
 // TODO: review Fitri
 const TEKS = {
   PROFIL: 'Profil Anak',
+  LANGGANAN: 'Langganan',
   KELUAR: 'Keluar',
   KONFIRMASI: 'Keluar dari akun?',
   BATAL: 'Batal',
@@ -101,6 +102,15 @@ export default function HeaderMobileRekah() {
                 >
                   <Baby aria-hidden="true" style={{ width: 16, height: 16 }} strokeWidth={2} />
                   {TEKS.PROFIL}
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => { setMenuTerbuka(false); navigate('/dashboard/tier2/subscription'); }}
+                  style={styleMenuItem}
+                >
+                  <CreditCard aria-hidden="true" style={{ width: 16, height: 16 }} strokeWidth={2} />
+                  {TEKS.LANGGANAN}
                 </button>
                 <button
                   type="button"

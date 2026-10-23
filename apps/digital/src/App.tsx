@@ -53,7 +53,7 @@ import AdminFitriDashboardPage from './pages/AdminFitriDashboardPage';
 // Dashboard Tier 2
 import DashboardShellTier2 from './pages/DashboardPages/Tier2/DashboardShellTier2';
 import JourneyRoutes from './features/rekah-journey/JourneyRoutes'; // Family Journey (additive, Phase 10C-5)
-import ProfilAnakTier2 from './pages/DashboardPages/Tier2/ProfilAnakTier2';
+import ProfilAnakPage from './features/profil-anak/ProfilAnakPage'; // Phase 33: Profil Anak v2 (ProfilAnakTier2 lama tetap ada; ModalEditProfil-nya dipakai ulang)
 import SubscriptionTier2 from './pages/DashboardPages/Tier2/SubscriptionTier2';
 import { AudioPlayerProvider } from './context/AudioPlayerContext';
 import { KnowledgeLibraryProvider } from './context/KnowledgeLibraryContext';
@@ -189,7 +189,7 @@ export default function App() {
               <Route path="journey/*" element={<JourneyRoutes />} /> {/* Family Journey — additive, inherits DashboardShellTier2 */}
               <Route path="kompas-keluarga" element={<Navigate to="/dashboard/tier2/kelola?tab=perjalanan" replace />} /> {/* Phase 21: Arah & Kompas Perkembangan pindah ke Kelola → Perjalanan */}
               <Route path="kompas-keluarga-lama" element={<KompasKeluargaPage />} /> {/* halaman lama, tetap hidup untuk QA/banding */}
-              <Route path="profil-anak" element={<ProfilAnakTier2 />} />
+              <Route path="profil-anak" element={<ProfilAnakPage />} />
               <Route path="subscription" element={<SubscriptionTier2 />} />
               <Route path="partner-orang-tua" element={<PartnerOrangTuaPage tierContext="tier2" />} />
               <Route path="rencana" element={<RencanaPage />} />

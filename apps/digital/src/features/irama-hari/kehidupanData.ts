@@ -595,7 +595,7 @@ export function tagsDariPeta(jawaban: Record<string, string[]>): TagPenyesuaian[
 
 // ─── Ringkasan Peta jadi poin-poin (Phase 29: Keadaan sekarang) ───────────────
 export interface PoinRingkas { bidang: BidangPeta; label: string; nilai: string }
-const RINGKAS_LABEL: Record<string, string> = {
+export const RINGKAS_LABEL: Record<string, string> = {
   a_suasana: 'Watak', a_tenang: 'Menenangkan saat rewel',
   a_alergi: 'Alergi / pantangan', a_saudara: 'Posisi di keluarga', a_main: 'Suka main',
   a_khusus: 'Kebutuhan khusus', a_menyusu: 'Cara menyusu', a_tummy: 'Tummy time',

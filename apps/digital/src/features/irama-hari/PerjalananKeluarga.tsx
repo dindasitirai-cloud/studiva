@@ -41,7 +41,7 @@ const CSS = `
 `;
 
 // Domain amatan (Jurnal) → nama Indonesia + warna chip.
-const DOMAIN_OBS: Record<string, { label: string; soft: string; ink: string }> = {
+export const DOMAIN_OBS: Record<string, { label: string; soft: string; ink: string }> = {
   'Gross Motor': { label: 'Motorik Kasar', soft: '#EAF6E4', ink: '#4E7533' },
   'Fine Motor': { label: 'Motorik Halus', soft: '#FFEFE2', ink: '#B5602A' },
   'Cognitive': { label: 'Kognitif', soft: '#E8F1FC', ink: '#3F6FB5' },
@@ -50,7 +50,7 @@ const DOMAIN_OBS: Record<string, { label: string; soft: string; ink: string }> =
   'Self-Regulation & Executive Function': { label: 'Regulasi Diri', soft: '#F1ECFC', ink: '#7B5BB8' },
   'Adaptive / Self-Help': { label: 'Bantu Diri', soft: '#E4F4F1', ink: '#2F8C7E' },
 };
-const DOMAIN_TULIS = { label: 'Catatan sendiri', soft: '#F3EEF1', ink: '#8A7385' };
+export const DOMAIN_TULIS = { label: 'Catatan sendiri', soft: '#F3EEF1', ink: '#8A7385' };
 
 const relTgl = (tgl: string) => waktuRelatif(`${tgl}T00:00:00`);
 const gabung = (xs: string[]) => xs.length <= 1 ? (xs[0] ?? '') : `${xs.slice(0, -1).join(', ')} dan ${xs[xs.length - 1]}`;

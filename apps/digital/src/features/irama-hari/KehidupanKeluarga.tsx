@@ -223,7 +223,7 @@ const badgeBaru: React.CSSProperties = { fontWeight: 800, fontSize: 8.5, letterS
 const badgeOpt: React.CSSProperties = { fontWeight: 800, fontSize: 8.5, letterSpacing: '.3px', textTransform: 'uppercase', color: '#8A6A2A', background: '#FBF0D6', borderRadius: 5, padding: '1px 6px', marginLeft: 6 };
 
 // Satu pertanyaan Peta + pilihan chip (single / multi). Rekah yang bertanya.
-function PetaChips({ q, sel, warna, onPilih, onInbox, pesan, labelInbox }: {
+export function PetaChips({ q, sel, warna, onPilih, onInbox, pesan, labelInbox }: {
   q: PetaPertanyaan; sel: string[]; warna: string; onPilih: (v: string) => void; onInbox?: () => void; pesan?: string; labelInbox?: string;
 }) {
   return (
@@ -261,6 +261,34 @@ function PetaChips({ q, sel, warna, onPilih, onInbox, pesan, labelInbox }: {
       )}
     </div>
   );
+}
+
+/** Kalimat konfirmasi setelah orang tua menjawab pertanyaan Peta (dipakai Kelola & Profil Anak). */
+export function konfirmasiPeta(qid: string, sel: string[]): string | undefined {
+  if (sel.length === 0) return undefined;
+  if (qid === 'a_alergi') {
+    const al = sel.filter(v => v !== 'Tidak ada' && v !== 'Lainnya');
+    return al.length ? `Rekah akan menghindari ide main yang memakai ${al.map(x => x.toLowerCase()).join(', ')} di sarannya.` : undefined;
+  }
+  if (qid === 'c_bahasa') {
+    const dw = sel.includes('Dwibahasa') || (sel.includes('Indonesia') && sel.includes('Bahasa daerah'));
+    return dw ? 'Rekah akan mengutamakan ide yang ramah dua bahasa.' : undefined;
+  }
+  if (qid === 'c_ibu') {
+    const l = lembarTerbuka({ c_ibu: sel });
+    const nm: string[] = [];
+    if (l.nifas) nm.push('Nifas');
+    if (l.piring) nm.push('Piring Ibu');
+    return nm.length ? `Lembar ${nm.join(' & ')} sekarang aktif untukmu.` : undefined;
+  }
+  if (qid === 'r_rokok') {
+    if (sel.includes('Ya, di dalam') || sel.includes('Ya, di luar saja')) return 'Rekah menaruh pengingat: jadikan rumah & mobil bebas asap, ganti baju setelah merokok.';
+    return sel.includes('Tidak ada') ? 'Rumah bebas asap melindungi tumbuh kembang anak.' : undefined;
+  }
+  if (qid === 'r_tidur') {
+    return 'Panduan tidur aman: telentang, kasur keras & datar, area tidur kosong, sekamar dengan ortu bukan seranjang. (DRAFT)';
+  }
+  return undefined;
 }
 
 // Lembar Nifas — sheet (Buku KIA, DRAFT). Dibungkus ModalBungkus; hero + tab di dalam.
@@ -841,32 +869,6 @@ export default function KehidupanKeluarga({ nilaiFokus = [], onKeInbox, konteksA
   };
 
   const tambahInboxUnik = (judul: string) => { if (judul.trim() && !inbox.semua.some(i => i.judul === judul)) inbox.tambah(judul); };
-  const konfirmasiPeta = (qid: string, sel: string[]): string | undefined => {
-    if (sel.length === 0) return undefined;
-    if (qid === 'a_alergi') {
-      const al = sel.filter(v => v !== 'Tidak ada' && v !== 'Lainnya');
-      return al.length ? `Rekah akan menghindari ide main yang memakai ${al.map(x => x.toLowerCase()).join(', ')} di sarannya.` : undefined;
-    }
-    if (qid === 'c_bahasa') {
-      const dw = sel.includes('Dwibahasa') || (sel.includes('Indonesia') && sel.includes('Bahasa daerah'));
-      return dw ? 'Rekah akan mengutamakan ide yang ramah dua bahasa.' : undefined;
-    }
-    if (qid === 'c_ibu') {
-      const l = lembarTerbuka({ c_ibu: sel });
-      const nm: string[] = [];
-      if (l.nifas) nm.push('Nifas');
-      if (l.piring) nm.push('Piring Ibu');
-      return nm.length ? `Lembar ${nm.join(' & ')} sekarang aktif untukmu.` : undefined;
-    }
-    if (qid === 'r_rokok') {
-      if (sel.includes('Ya, di dalam') || sel.includes('Ya, di luar saja')) return 'Rekah menaruh pengingat: jadikan rumah & mobil bebas asap, ganti baju setelah merokok.';
-      return sel.includes('Tidak ada') ? 'Rumah bebas asap melindungi tumbuh kembang anak.' : undefined;
-    }
-    if (qid === 'r_tidur') {
-      return 'Panduan tidur aman: telentang, kasur keras & datar, area tidur kosong, sekamar dengan ortu bukan seranjang. (DRAFT)';
-    }
-    return undefined;
-  };
 
   const ringkas = ringkasanPeta(peta.jawaban);
 

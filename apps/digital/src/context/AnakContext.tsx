@@ -96,7 +96,13 @@ export interface AnakContextValue {
   mintaTambahAnak: () => void;
   batalTambahAnak: () => void;
 
-  tambahAnak: (draft: DraftAnak) => Promise<ProfilAnak>;
+  /**
+   * `setelahDibuat` (opsional) dijalankan setelah baris anak ada tetapi SEBELUM
+   * anak itu menjadi aktif — dipakai WizardAnak untuk menulis jawaban Peta dan
+   * menanam nilai, supaya dashboard yang terbuka sesudahnya sudah membaca isinya.
+   * Kegagalannya tidak membatalkan pembuatan profil.
+   */
+  tambahAnak: (draft: DraftAnak, setelahDibuat?: (profil: ProfilAnak) => Promise<void> | void) => Promise<ProfilAnak>;
   perbaruiAnak: (id: string, patch: PatchAnak) => Promise<void>;
   gantiFoto: (id: string, file: File) => Promise<void>;
   hapusFoto: (id: string) => Promise<void>;
@@ -148,7 +154,7 @@ export function AnakProvider({ children }: { children: React.ReactNode }) {
   const mintaTambahAnak = useCallback(() => setSedangTambahAnak(true), []);
   const batalTambahAnak = useCallback(() => setSedangTambahAnak(false), []);
 
-  const tambahAnak = useCallback(async (draft: DraftAnak): Promise<ProfilAnak> => {
+  const tambahAnak = useCallback(async (draft: DraftAnak, setelahDibuat?: (profil: ProfilAnak) => Promise<void> | void): Promise<ProfilAnak> => {
     const baris = await buatAnak({
       namaAnak: draft.namaAnak.trim(),
       tanggalLahir: draft.tanggalLahir,
@@ -168,6 +174,10 @@ export function AnakProvider({ children }: { children: React.ReactNode }) {
       } catch {
         dispatchRekahError('Profil tersimpan, tapi fotonya gagal diunggah. Bisa ditambahkan lagi dari halaman Profil Anak.');
       }
+    }
+
+    if (setelahDibuat) {
+      try { await setelahDibuat(profil); } catch { /* isian tambahan gagal: profil tetap tersimpan */ }
     }
 
     setDaftarAnak(prev => [...prev, profil]);

@@ -236,7 +236,7 @@ function ModalKoreksiTanggal({
 
 // ── Modal edit profil ────────────────────────────────────────────────────────
 
-function ModalEditProfil({ anak, onTutup }: { anak: ProfilAnak; onTutup: () => void }) {
+export function ModalEditProfil({ anak, onTutup }: { anak: ProfilAnak; onTutup: () => void }) {
   const { perbaruiAnak } = useAnak();
   const [nama, setNama] = useState(anak.namaAnak);
   const [kelamin, setKelamin] = useState<JenisKelamin | null>(anak.jenisKelamin);

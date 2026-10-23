@@ -26,7 +26,9 @@ interface AuthContextValue {
     childName?: string;
     childAge?: number;
     consentDiberikan: boolean;
-  }) => Promise<void>;
+    /** Alamat tujuan tautan konfirmasi email (harus terdaftar di Redirect URLs Supabase). */
+    emailRedirectTo?: string;
+  }) => Promise<{ perluKonfirmasiEmail: boolean }>;
   logout: () => Promise<void>;
   refreshTier: () => Promise<Tier | null>;
 }
@@ -118,7 +120,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     childName?: string;
     childAge?: number;
     consentDiberikan: boolean;
-  }): Promise<void> {
+    emailRedirectTo?: string;
+  }): Promise<{ perluKonfirmasiEmail: boolean }> {
     if (!params.consentDiberikan) {
       throw new Error('Persetujuan kebijakan privasi wajib diberikan untuk mendaftar.');
     }
@@ -127,7 +130,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: params.email,
       password: params.password,
-      options: { data: { name: params.name } },
+      options: { data: { name: params.name }, emailRedirectTo: params.emailRedirectTo },
     });
     if (signUpError) throw new Error(signUpError.message);
     // user.id tersedia dari response signUp — tidak perlu menunggu sesi aktif
@@ -160,6 +163,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.error('[Rekah] Gagal menyimpan profil/consent ke Supabase:', e);
       }
     }
+
+    // Bila Supabase mewajibkan konfirmasi email, signUp tidak mengembalikan sesi:
+    // orang tua harus membuka tautan di email dulu sebelum bisa membayar.
+    return { perluKonfirmasiEmail: !signUpData.session };
   }
 
   async function logout(): Promise<void> {

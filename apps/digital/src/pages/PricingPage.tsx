@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Check, Lock, Info } from 'lucide-react';
 import PlanConfirmModal from '../components/PlanConfirmModal';
 import Kelopak from '../components/Kelopak';
@@ -35,6 +35,16 @@ export default function PricingPage() {
   const sudahMasuk = !!(user || supabaseUser);
 
   const [pilihan, setPilihan] = useState<Plan | null>(null);
+  const [params, setParams] = useSearchParams();
+
+  // Datang dari tautan konfirmasi email (/pricing?paket=monthly): buka konfirmasi paket otomatis.
+  useEffect(() => {
+    const paket = params.get('paket');
+    if (!sudahMasuk || !paket || !(PLAN_ORDER as string[]).includes(paket)) return;
+    setPilihan(paket as Plan);
+    params.delete('paket');
+    setParams(params, { replace: true });
+  }, [sudahMasuk, params, setParams]);
 
   function pilihPaket(plan: Plan) {
     if (!sudahMasuk) {

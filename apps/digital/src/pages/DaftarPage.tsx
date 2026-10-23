@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Eye, EyeOff, AlertCircle, Check, ChevronLeft, Lock } from 'lucide-react';
+import { Eye, EyeOff, AlertCircle, Check, ChevronLeft, Lock, Mail } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import PlanConfirmModal from '../components/PlanConfirmModal';
 import LogoRekah from '../components/LogoRekah';
@@ -95,6 +95,7 @@ export default function DaftarPage() {
   const [showKonfirm, setShowKonfirm] = useState(false);
   const [submitting, setSubmitting]   = useState(false);
   const [apiError, setApiError]       = useState<string | null>(null);
+  const [cekEmail, setCekEmail]       = useState(false);
   const [form, setForm] = useState<FormState>({ namaLengkap: '', email: '', password: '', konfirmasiPassword: '', setuju: false });
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -123,7 +124,12 @@ export default function DaftarPage() {
     setSubmitting(true); setApiError(null);
     try {
       // TODO: teks kebijakan privasi final oleh manusia + tinjauan hukum sebelum live
-      await signup({ email: form.email, password: form.password, name: form.namaLengkap, role: 'parent', consentDiberikan: form.setuju });
+      const { perluKonfirmasiEmail } = await signup({
+        email: form.email, password: form.password, name: form.namaLengkap, role: 'parent', consentDiberikan: form.setuju,
+        // Setelah konfirmasi email, orang tua kembali ke halaman paket dan langsung melihat konfirmasi pembayaran.
+        emailRedirectTo: `${window.location.origin}/pricing${paket ? `?paket=${paket}` : ''}`,
+      });
+      if (perluKonfirmasiEmail) { setCekEmail(true); return; }
       if (paket) setKonfirmasi({ tier: 'tier2', plan: paket });
     } catch (e: unknown) {
       const msg = (e instanceof Error ? e.message : null) || (e as { response?: { data?: { error?: string } } })?.response?.data?.error;
@@ -228,8 +234,25 @@ export default function DaftarPage() {
             </>
           )}
 
+          {/* ── Setelah daftar: konfirmasi email dulu ─────────────── */}
+          {cekEmail && (
+            <div className="rounded-[24px] bg-white p-7 shadow-[0_12px_40px_rgba(110,59,87,0.10)]" role="status" aria-live="polite">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-rekah/10 text-rekah">
+                <Mail className="h-6 w-6" aria-hidden />
+              </span>
+              <h1 className="mt-4 font-bricolage text-[26px] font-extrabold leading-tight text-pekat">Cek emailmu dulu, ya</h1>
+              <p className="mt-3 text-[15px] leading-[1.7] text-pekat/65">
+                Kami mengirim tautan konfirmasi ke <strong className="text-pekat">{form.email}</strong>. Buka tautan itu, lalu kamu akan
+                langsung diarahkan ke pembayaran paket <strong className="text-pekat">{paket ? NAMA_PAKET[paket] : 'pilihanmu'}</strong>.
+              </p>
+              <p className="mt-3 text-[13px] leading-[1.6] text-pekat/50">
+                Tidak ada di kotak masuk? Cek folder Spam atau Promosi. Tautan dibuka di perangkat ini atau perangkat lain sama saja.
+              </p>
+            </div>
+          )}
+
           {/* ── Langkah 2: buat akun ──────────────────────────────── */}
-          {langkah === 'akun' && (
+          {langkah === 'akun' && !cekEmail && (
             <>
               <button
                 type="button"

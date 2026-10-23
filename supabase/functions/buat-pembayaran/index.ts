@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
 
   const { jumlah, label } = HARGA[paket];
   const kodeOrder = `RKH-${Date.now()}-${crypto.randomUUID().slice(0, 6)}`;
-  const situs = env('SITUS_URL') || 'https://rekah.vercel.app';
+  const situs = env('SITUS_URL') || 'https://rekah.app';
   const urlSelesai = `${situs}/pembayaran/selesai?order=${encodeURIComponent(kodeOrder)}`;
   const nama = (user.user_metadata?.name as string | undefined) || user.email.split('@')[0];
   const deskripsi = `Langganan Rekah ${label}`;

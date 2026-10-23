@@ -38,7 +38,7 @@ Kunci rahasia hanya disimpan di Secrets Supabase — **jangan pernah ditempel di
    | `MIDTRANS_IS_PRODUCTION` | `false` |
    | `XENDIT_SECRET_KEY` | Secret key test Xendit |
    | `XENDIT_CALLBACK_TOKEN` | Verification token Xendit |
-   | `SITUS_URL` | `https://rekah.vercel.app` |
+   | `SITUS_URL` | `https://rekah.app` |
    | `PENYEDIA_BAWAAN` | (opsional) `midtrans` atau `xendit` |
 
    Cukup isi kunci penyedia yang sudah ada; penyedia tanpa kunci otomatis tidak dipakai.
@@ -76,3 +76,17 @@ Kunci rahasia hanya disimpan di Secrets Supabase — **jangan pernah ditempel di
 Setelah verifikasi usaha disetujui penyedia: ganti Secrets dengan kunci produksi,
 set `MIDTRANS_IS_PRODUCTION=true` (untuk Midtrans), dan daftarkan ulang URL notifikasi di
 lingkungan produksi dashboard penyedia.
+
+## 6. Domain rekah.app
+
+Situs utama Rekah: **https://rekah.app** (rekah.vercel.app tetap bisa dibuka sebagai cadangan).
+Pengaturan di luar kode yang harus memakai domain ini:
+
+| Tempat | Isi |
+|---|---|
+| Vercel → proyek rekah → Settings → Domains | `rekah.app` (dan `www.rekah.app` dialihkan ke `rekah.app`) |
+| Supabase → Edge Functions → Secrets | `SITUS_URL` = `https://rekah.app` |
+| Supabase → Authentication → URL Configuration | Site URL `https://rekah.app`; Redirect URLs tambah `https://rekah.app/**` |
+| Midtrans → profil usaha / data merchant | Website: `https://rekah.app` |
+
+Notification URL Midtrans/Xendit **tidak berubah** karena mengarah ke Supabase, bukan ke domain situs.

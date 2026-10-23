@@ -142,6 +142,9 @@ const CSS = `@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@
   .cta h2{font-size:40px;color:var(--plum);max-width:600px;margin:0 auto}
   .cta p{opacity:.72;font-size:15px;margin-top:12px}
   .cta .btn{margin-top:22px}
+  .cta .harga{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:22px}
+  .cta .harga span{background:#fff;border-radius:999px;padding:8px 16px;font-weight:800;font-size:14px}
+  .cta .harga-link{display:block;margin-top:14px;font-weight:800;font-size:14px;color:var(--pink)}
   .cta .fl{position:absolute;bottom:-6px;width:90px;height:150px}
 
   /* FOOTER */
@@ -198,6 +201,7 @@ const HTML = `<!-- ===================== NAV ===================== -->
       <a href="#fitur">Fitur</a>
       <a href="#tahap">Tahap usia</a>
       <a href="#ciri">Ciri khas</a>
+      <a href="/pricing">Harga</a>
     </nav>
     <div class="nav-cta">
       <a class="btn btn-ghost" href="/login">Masuk →</a>
@@ -473,7 +477,13 @@ const HTML = `<!-- ===================== NAV ===================== -->
     <div class="fl sway" style="right:24px"><svg viewBox="0 0 100 150" style="width:100%;height:100%;display:block;overflow:visible"><g><path d="M50 149 C49 120 50 100 50 86" fill="none" stroke="#6F9E3F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 122 C33 122 23 106 27 92 C43 102 49 111 50 122 Z" fill="#A7C63E" stroke="none"></path><path d="M50 130 C67 130 79 114 75 100 C57 110 52 119 50 130 Z" fill="#8FB84A" stroke="none"></path><circle cx="66" cy="56" r="8.5" fill="#5F84E6"></circle><circle cx="61.31370849898476" cy="67.31370849898477" r="8.5" fill="#5F84E6"></circle><circle cx="50" cy="72" r="8.5" fill="#5F84E6"></circle><circle cx="38.68629150101524" cy="67.31370849898477" r="8.5" fill="#5F84E6"></circle><circle cx="34" cy="56" r="8.5" fill="#5F84E6"></circle><circle cx="38.68629150101523" cy="44.68629150101524" r="8.5" fill="#5F84E6"></circle><circle cx="50" cy="40" r="8.5" fill="#5F84E6"></circle><circle cx="61.31370849898476" cy="44.68629150101523" r="8.5" fill="#5F84E6"></circle><circle cx="50" cy="56" r="10" fill="#FFE29A"></circle><circle cx="50" cy="56" r="5" fill="#8FB8F7"></circle></g></svg></div>
     <h2>Mulai temani tumbuh kembang si kecil hari ini.</h2>
     <p>Tanpa membanding-bandingkan, selamanya.</p>
+    <div class="harga" aria-label="Harga langganan Rekah">
+      <span>Bulanan Rp79.000</span>
+      <span>3 Bulan Rp200.000</span>
+      <span>Tahunan Rp650.000</span>
+    </div>
     <a class="btn btn-pink" href="/daftar">Daftar Sekarang</a>
+    <a class="harga-link" href="/pricing">Lihat detail paket &amp; harga</a>
   </div>
 </section>
 

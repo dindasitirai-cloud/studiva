@@ -165,81 +165,216 @@ function reducer(s: State, a: Aksi): State {
   }
 }
 
-// ── Bagian bersama ───────────────────────────────────────────────────────────
+// ── Bagian bersama (design handoff Tambah Anak, 2026-10-27) ──────────────────
+// Bingkai lima langkah: Kembali · progres bunga · tutup, judul berlabel
+// "LANGKAH N DARI 5", kebun yang tumbuh di dasar layar, dan kaki Lanjut.
 
-function KelopakProgres({ langkahKe }: { langkahKe: number }) {
+/** Lima bunga kecil di satu tangkai; bagian yang sudah dilalui menghijau. */
+function ProgresBunga({ langkahKe }: { langkahKe: number }) {
   return (
     <div
-      className="flex items-center gap-1.5"
-      role="status"
+      className="relative flex items-center gap-2.5"
+      role="progressbar"
+      aria-valuemin={1}
+      aria-valuemax={JUMLAH_LANGKAH}
+      aria-valuenow={langkahKe}
       aria-label={`Langkah ${langkahKe} dari ${JUMLAH_LANGKAH}`}
     >
-      {Array.from({ length: JUMLAH_LANGKAH }, (_, i) => (
-        <span
-          key={i}
-          aria-hidden
-          style={{ borderRadius: '70% 70% 70% 4px', width: 13, height: 20 }}
-          className={`transition-colors motion-reduce:transition-none ${
-            i < langkahKe ? 'bg-rekah' : 'bg-mawar/60'
-          }`}
-        />
+      <span aria-hidden className="absolute left-3 right-3 top-1/2 -mt-[1.5px] h-[3px] rounded-sm bg-[#F8B9D4]" />
+      <span
+        aria-hidden
+        className="wa-transisi absolute left-3 top-1/2 -mt-[1.5px] h-[3px] rounded-sm bg-[#8FB84A] transition-[width] duration-[400ms]"
+        style={{ width: `calc((100% - 24px) * ${(langkahKe - 1) / (JUMLAH_LANGKAH - 1)})` }}
+      />
+      {Array.from({ length: JUMLAH_LANGKAH }, (_, i) => {
+        const n = i + 1;
+        const lewat = n <= langkahKe;
+        const kelopak = lewat ? '#F06BA8' : '#F8B9D4';
+        return (
+          <svg
+            key={n}
+            aria-hidden
+            width="24"
+            height="24"
+            viewBox="-12 -12 24 24"
+            className="wa-transisi relative transition-transform duration-300"
+            style={{ transform: `scale(${n === langkahKe ? 1.25 : 1})` }}
+          >
+            {[[0, -6], [5.7, -1.9], [3.5, 4.9], [-3.5, 4.9], [-5.7, -1.9]].map(([cx, cy], k) => (
+              <circle key={k} cx={cx} cy={cy} r="4.6" fill={kelopak} />
+            ))}
+            <circle cx="0" cy="0" r="3.4" fill={lewat ? '#FFE29A' : '#FFF3E6'} />
+          </svg>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Kebun yang tumbuh: langkah N membuka N bunga; titik yang belum dicapai masih tunas daun. */
+function KebunTumbuh({ langkahKe }: { langkahKe: number }) {
+  const JENIS: NonNullable<BotanicalConfig['type']>[] = ['tulip', 'daisy', 'bell', 'fivepetal', 'sprig'];
+  const WARNA = [
+    { bloom: '#F06BA8', bloom2: '#F8B9D4', center: '#FFE29A' },
+    { bloom: '#8FB8F7', bloom2: '#FFF3E6', center: '#FFE29A' },
+    { bloom: '#FFE29A', bloom2: '#FFF3E6', center: '#F06BA8' },
+    { bloom: '#C9B8F0', bloom2: '#FFF3E6', center: '#6E3B57' },
+    { bloom: '#5F84E6', bloom2: '#8FB8F7', center: '#FFE29A' },
+  ];
+  const dasar = [4, 26, 50, 74, 96].map((x, k) => ({
+    key: `d${k}`, left: x, w: 60, bottom: -6, dur: 6, delay: -k,
+    cfg: { type: k % 2 ? 'leaf' : 'foliage', leaf: '#A7C63E' } as BotanicalConfig,
+  }));
+  const bunga = [8, 92, 20, 80, 33].map((x, k) => {
+    const mekar = k < langkahKe;
+    return {
+      key: `b${k}`, left: x, w: mekar ? 100 : 54, bottom: mekar ? 30 : 20, dur: 5 + (k % 3), delay: -(k % 4),
+      cfg: (mekar ? { type: JENIS[k], ...WARNA[k] } : { type: 'leaf', leaf: '#8FB84A' }) as BotanicalConfig,
+    };
+  });
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[200px] overflow-hidden">
+      <div className="absolute rounded-[50%] bg-[#DCEBC4]" style={{ left: '-10%', right: '-10%', bottom: -150, height: 230 }} />
+      <div className="absolute rounded-[50%] bg-[#EEFFD4]" style={{ left: '-20%', width: '62%', bottom: -170, height: 220 }} />
+      <div className="absolute rounded-[50%] bg-[#EEFFD4]" style={{ right: '-20%', width: '62%', bottom: -176, height: 226 }} />
+      {[...dasar, ...bunga].map(t => (
+        <div
+          key={t.key}
+          className="wa-goyang wa-transisi absolute transition-[width,height] duration-500"
+          style={{ left: `${t.left}%`, bottom: t.bottom, width: t.w, height: t.w * 1.5, marginLeft: -t.w / 2, animationDuration: `${t.dur}s`, animationDelay: `${t.delay}s` }}
+        >
+          <BotanicalStem cfg={t.cfg} />
+        </div>
       ))}
     </div>
   );
 }
 
+const TOMBOL_UTAMA =
+  'wa-transisi inline-flex h-[60px] items-center gap-2.5 rounded-full bg-rekah pl-[34px] pr-[30px] font-fredoka text-[20px] font-bold text-white shadow-[0_16px_26px_-16px_#F06BA8] transition hover:-translate-y-0.5 hover:bg-[#E0559A] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah focus-visible:ring-offset-2';
+
+/** Bingkai setiap langkah 1–5. */
 function Cangkang({
   children,
   langkahKe,
+  judul,
+  sub,
   onMundur,
   onBatal,
+  onLanjut,
+  onLewati,
+  labelLanjut = COPY.nav.lanjut,
+  lanjutNonaktif = false,
 }: {
   children: React.ReactNode;
   langkahKe: number;
+  judul: string;
+  sub: string;
+  /** Kosong = tombol Kembali tampil redup dan tidak bisa dipakai (langkah 1 saat menambah anak). */
   onMundur?: () => void;
   onBatal?: () => void;
+  onLanjut: () => void;
+  onLewati?: () => void;
+  labelLanjut?: string;
+  lanjutNonaktif?: boolean;
 }) {
+  // Judul baru → mulai dari atas lagi.
+  useEffect(() => { window.scrollTo(0, 0); }, [langkahKe]);
   return (
-    <div className="flex min-h-screen flex-col bg-kanvas">
-      <div className="mx-auto w-full max-w-lg flex-1 px-4 py-8 sm:px-6">
-        <div className="mb-6 flex items-center justify-between">
-          {onMundur ? (
-            <button
-              type="button"
-              onClick={onMundur}
-              className="flex min-h-[40px] items-center gap-1.5 rounded-full px-3 font-nunito text-[13.5px] font-extrabold text-[#9A6F86] transition hover:bg-mawar/40 hover:text-pekat focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
-            >
-              <ArrowLeft className="h-4 w-4" aria-hidden />
-              {COPY.nav.kembali}
-            </button>
-          ) : (
-            <span />
-          )}
+    <div className="relative flex min-h-screen flex-col items-center overflow-hidden bg-[linear-gradient(180deg,#FFF3E6_0%,#FFF3E6_62%,#FCE3EE_100%)] font-nunito text-pekat">
+      <style>{GAYA_GERAK}</style>
+      <KebunTumbuh langkahKe={langkahKe} />
 
-          <div className="flex items-center gap-3">
-            <KelopakProgres langkahKe={langkahKe} />
+      <div className="relative z-[1] flex w-full max-w-[960px] flex-col px-5 pb-[230px] pt-6 sm:px-8 sm:pt-7">
+        <div className="flex items-center justify-between gap-4">
+          <button
+            type="button"
+            onClick={onMundur}
+            disabled={!onMundur}
+            className="flex min-h-[44px] items-center gap-2 rounded-full py-2.5 pl-2 pr-3.5 text-[16px] font-extrabold text-pekat transition hover:bg-[#FCE3EE] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
+          >
+            <ArrowLeft className="h-5 w-5" strokeWidth={2.4} aria-hidden />
+            {COPY.nav.kembali}
+          </button>
+
+          <div className="flex items-center gap-4">
+            <ProgresBunga langkahKe={langkahKe} />
             {onBatal && (
               <button
                 type="button"
                 onClick={onBatal}
-                aria-label="Batalkan penambahan anak"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-pekat/50 transition hover:text-pekat focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
+                aria-label="Tutup, batalkan penambahan anak"
+                className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-white text-pekat shadow-[0_8px_18px_-14px_#6E3B57] transition hover:bg-[#FCE3EE] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
               >
-                <X className="h-4 w-4" aria-hidden />
+                <X className="h-[18px] w-[18px]" strokeWidth={2.4} aria-hidden />
               </button>
             )}
           </div>
         </div>
 
+        <p className="mt-10 text-[13px] font-extrabold tracking-[.16em] text-[#8A5A73] sm:mt-12">
+          LANGKAH {langkahKe} DARI {JUMLAH_LANGKAH}
+        </p>
+        <h2 className="mt-2.5 font-fredoka text-[clamp(30px,4.6vw,42px)] font-bold leading-[1.12] text-pekat [text-wrap:balance]">{judul}</h2>
+        <p className="mt-2 max-w-[640px] text-[17px] font-semibold leading-normal text-[#8A5A73] [text-wrap:pretty]">{sub}</p>
+
         {children}
+
+        <div className="mt-10 flex items-center justify-between gap-4">
+          <div>
+            {onLewati && (
+              <button
+                type="button"
+                onClick={onLewati}
+                className="flex h-[52px] items-center rounded-full px-3.5 text-[16px] font-extrabold text-pekat transition hover:bg-[#FCE3EE] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
+              >
+                {COPY.nav.lewati}
+              </button>
+            )}
+          </div>
+          <button type="button" onClick={onLanjut} disabled={lanjutNonaktif} className={TOMBOL_UTAMA}>
+            {labelLanjut}
+            <ChevronRight className="h-[18px] w-[18px]" strokeWidth={3} aria-hidden />
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
-const GAYA_INPUT =
-  'w-full rounded-[16px] border-[1.5px] border-[#F2DDE7] bg-white px-4 py-3 font-nunito text-[15px] font-extrabold text-pekat placeholder:text-pekat/30 transition focus:border-rekah/40 focus:outline-none focus:ring-2 focus:ring-rekah/20 min-h-[52px]';
+/** Chip pilihan bersama (jenis kelamin, peran, jawaban Peta). */
+function Chip({
+  on,
+  onClick,
+  role,
+  tinggi = 46,
+  children,
+}: {
+  on: boolean;
+  onClick: () => void;
+  role: 'radio' | 'checkbox';
+  tinggi?: 44 | 46 | 52;
+  children: React.ReactNode;
+}) {
+  const ukuran = tinggi === 52 ? 'h-[52px] px-[22px] text-[16px]' : tinggi === 44 ? 'h-11 px-4 text-[15px]' : 'h-[46px] px-[18px] text-[15.5px]';
+  return (
+    <button
+      type="button"
+      role={role}
+      aria-checked={on}
+      onClick={onClick}
+      className={`wa-transisi inline-flex items-center gap-1.5 rounded-full border-2 font-extrabold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah focus-visible:ring-offset-1 ${ukuran} ${
+        on ? 'border-rekah bg-rekah text-white' : 'border-[#FCE3EE] bg-white text-pekat hover:border-rekah'
+      }`}
+    >
+      {on && <Check className="h-[15px] w-[15px]" strokeWidth={3.2} aria-hidden />}
+      {children}
+    </button>
+  );
+}
 
+const GAYA_INPUT =
+  'wa-transisi h-[60px] w-full rounded-[22px] border-2 border-[#FCE3EE] bg-white px-[22px] font-nunito text-[18px] font-extrabold text-pekat placeholder:text-[#B98CA3] transition-colors focus:border-rekah focus:outline-none';
 
 // ── Langkah 0 — Sambutan ─────────────────────────────────────────────────────
 
@@ -285,11 +420,11 @@ function KebunKecil({ n = 5 }: { n?: number }) {
 }
 
 const GAYA_GERAK = `
-@keyframes waSway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+@keyframes waSway{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
 @keyframes waFloaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .wa-goyang{transform-origin:50% 100%;animation:waSway 6s ease-in-out infinite}
 .wa-apung{animation:waFloaty 6s ease-in-out infinite}
-@media (prefers-reduced-motion: reduce){.wa-goyang,.wa-apung{animation:none}}
+@media (prefers-reduced-motion: reduce){.wa-goyang,.wa-apung{animation:none!important}.wa-transisi{transition:none!important}.wa-transisi:hover{transform:none!important}}
 `;
 
 function Sambutan({ onMulai }: { onMulai: () => void }) {
@@ -349,32 +484,35 @@ function PemilihFoto({
   }
 
   return (
-    <div className="flex flex-none flex-col items-center gap-1">
+    <div className="flex flex-none flex-col items-center gap-2">
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
         aria-label={file ? COPY.anak.ctaGantiFoto : `${COPY.anak.ctaPilihFoto} (opsional)`}
         title={COPY.anak.catatanFoto}
-        style={{ borderRadius: '36px 36px 36px 11px' }}
-        className={`relative flex h-[72px] w-[72px] items-center justify-center overflow-hidden text-rekah transition hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah focus-visible:ring-offset-2 ${pratinjau ? 'bg-mawar' : 'border-2 border-dashed border-[#F8B9D4] bg-white'}`}
+        style={{ borderRadius: '52px 52px 52px 16px' }}
+        className={`wa-transisi relative flex h-[104px] w-[104px] items-center justify-center overflow-hidden text-rekah transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah focus-visible:ring-offset-2 ${pratinjau ? 'bg-mawar' : 'border-2 border-dashed border-[#F8B9D4] bg-white hover:border-rekah'}`}
       >
-        {pratinjau ? <img src={pratinjau} alt="" className="h-full w-full object-cover" /> : <Camera className="h-6 w-6" strokeWidth={2.2} aria-hidden />}
+        {pratinjau ? <img src={pratinjau} alt="" className="h-full w-full object-cover" /> : <Camera className="h-[30px] w-[30px]" strokeWidth={2} aria-hidden />}
       </button>
       {file ? (
         <button type="button" onClick={() => { onPilih(null); if (inputRef.current) inputRef.current.value = ''; }}
-          className="rounded font-nunito text-[11.5px] font-extrabold text-[#B48DA3] hover:text-[#D2559A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah">
+          className="min-h-[32px] rounded-full px-2 text-[13px] font-bold text-[#8A5A73] hover:text-[#D2478A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah">
           {COPY.anak.ctaHapusFoto}
         </button>
       ) : (
-        <span className="font-nunito text-[11.5px] font-bold text-[#B48DA3]">Foto</span>
+        <span className="text-[13px] font-bold text-[#8A5A73]">Foto</span>
       )}
-      {galat && <p role="alert" className="max-w-[120px] text-center font-nunito text-[11.5px] font-bold text-[#D2559A]">{galat}</p>}
+      {galat && <p role="alert" className="max-w-[130px] text-center text-[12.5px] font-bold text-[#D2478A]">{galat}</p>}
       <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={tangani} />
     </div>
   );
 }
 
-// ── Langkah 1 — Profil anak ──────────────────────────────────────────────────
+const GALAT = 'mt-1 text-[14px] font-bold text-[#D2478A]';
+const BANTU = 'text-[14px] font-semibold leading-normal text-[#8A5A73]';
+
+// ── Langkah 1 — Siapa yang akan kita temani ──────────────────────────────────
 
 function LangkahAnak({
   s,
@@ -384,7 +522,7 @@ function LangkahAnak({
 }: {
   s: State;
   dispatch: React.Dispatch<Aksi>;
-  onMundur: () => void;
+  onMundur?: () => void;
   onBatal?: () => void;
 }) {
   const namaRef = useRef<HTMLInputElement>(null);
@@ -397,29 +535,17 @@ function LangkahAnak({
   const tanggalValid = tanggalTerbaca && !masaDepan;
   const bolehLanjut = namaValid && tanggalValid;
 
-  // Pesan konfirmasi bergantung tiga keadaan: rentang siap, rentang masih
-  // disiapkan, atau usia di luar jangkauan Rekah.
+  // Kotak usia muncul begitu tanggal lahir terbaca. Tiga keadaan: rentang
+  // siap, rentang masih disiapkan, atau usia di luar jangkauan Rekah.
   const konfirmasi = (() => {
-    if (!tanggalValid || !namaValid) return null;
-    const nama = s.namaAnak.trim();
+    if (!tanggalValid) return null;
+    const nama = s.namaAnak.trim() || 'Si kecil';
     const usiaBulan = usiaDalamBulan(s.tanggalLahir);
-    const usia = formatUsia(usiaBulan);
     const ringkas = ringkasRentang(usiaBulan);
-
-    if (!ringkas) {
-      return { nada: 'luar' as const, teks: COPY.anak.diLuarRentang(nama) };
-    }
-    if (ringkas.siap) {
-      return { nada: 'siap' as const, teks: COPY.anak.rentangSiap(nama, usia, ringkas.rentang) };
-    }
-    return { nada: 'segera' as const, teks: COPY.anak.rentangSegera(nama, usia, ringkas.rentang) };
+    if (!ringkas) return COPY.anak.diLuarRentang(nama);
+    const usia = formatUsia(usiaBulan);
+    return ringkas.siap ? COPY.anak.rentangSiap(nama, usia, ringkas.rentang) : COPY.anak.rentangSegera(nama, usia, ringkas.rentang);
   })();
-
-  const LATAR_KONFIRMASI = {
-    siap:   'bg-[#F1EBFB] text-[#7B5BB8]',
-    segera: 'bg-[#FFF1C9] text-[#9A7A2C]',
-    luar:   'bg-[#FDE9F2] text-[#9A4F78]',
-  } as const;
 
   function lanjut() {
     dispatch({ type: 'SENTUH' });
@@ -427,96 +553,97 @@ function LangkahAnak({
   }
 
   return (
-    <Cangkang langkahKe={1} onMundur={onMundur} onBatal={onBatal}>
-      <JudulLangkah eyebrow="LANGKAH 1" judul={COPY.anak.judul} sub={COPY.anak.sub} />
+    <Cangkang
+      langkahKe={1}
+      judul={COPY.anak.judul}
+      sub={COPY.anak.sub}
+      onMundur={onMundur}
+      onBatal={onBatal}
+      onLanjut={lanjut}
+      lanjutNonaktif={s.disentuh && !bolehLanjut}
+    >
+      <div className="mt-9 grid items-start gap-x-10 gap-y-7 [grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))]">
+        <div className="flex flex-col gap-7">
+          {/* Foto + nama panggilan */}
+          <div className="flex items-start gap-5">
+            <PemilihFoto file={s.fileFoto} nama={s.namaAnak} onPilih={f => dispatch({ type: 'SET_FOTO', value: f })} />
+            <div className="flex min-w-0 flex-1 flex-col gap-2.5">
+              <label htmlFor="wa-nama" className="text-[16px] font-extrabold text-pekat">{COPY.anak.labelNama}</label>
+              <input
+                ref={namaRef}
+                id="wa-nama"
+                type="text"
+                value={s.namaAnak}
+                autoComplete="off"
+                placeholder={COPY.anak.placeholderNama}
+                onChange={e => dispatch({ type: 'SET_NAMA', value: e.target.value })}
+                onKeyDown={e => e.key === 'Enter' && lanjut()}
+                aria-invalid={s.disentuh && !namaValid}
+                className={GAYA_INPUT}
+              />
+              {s.disentuh && !namaValid && <p className={GALAT}>{COPY.anak.galatNama}</p>}
+            </div>
+          </div>
 
-      <div className="flex flex-col gap-4">
-        {/* Foto (kiri) + nama */}
-        <div className="flex items-start gap-3.5">
-          <PemilihFoto file={s.fileFoto} nama={s.namaAnak} onPilih={f => dispatch({ type: 'SET_FOTO', value: f })} />
-          <div className="min-w-0 flex-1">
-            <label htmlFor="wa-nama" className="mb-1.5 block font-nunito text-[13px] font-extrabold text-pekat">
-              {COPY.anak.labelNama}
-            </label>
+          {/* Tanggal lahir */}
+          <div className="flex flex-col gap-2.5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <label htmlFor="wa-tanggal" className="text-[16px] font-extrabold text-pekat">{COPY.anak.labelTanggal}</label>
+              <span className="flex items-center gap-1.5 text-[13px] font-bold text-[#8A5A73]">
+                <Lock className="h-3.5 w-3.5" strokeWidth={2.4} aria-hidden /> dikunci setelah tersimpan
+              </span>
+            </div>
             <input
-              ref={namaRef}
-              id="wa-nama"
-              type="text"
-              value={s.namaAnak}
-              autoComplete="off"
-              placeholder={COPY.anak.placeholderNama}
-              onChange={e => dispatch({ type: 'SET_NAMA', value: e.target.value })}
-              onKeyDown={e => e.key === 'Enter' && lanjut()}
+              id="wa-tanggal"
+              type="date"
+              max={HARI_INI}
+              value={s.tanggalLahir}
+              onChange={e => dispatch({ type: 'SET_TANGGAL', value: e.target.value })}
+              aria-invalid={masaDepan || (s.disentuh && !tanggalTerbaca)}
               className={GAYA_INPUT}
             />
-            {s.disentuh && !namaValid && (
-              <p className="mt-1 font-nunito text-[12px] font-bold text-[#D2559A]">{COPY.anak.galatNama}</p>
-            )}
+            {masaDepan && <p className={GALAT}>{COPY.anak.galatMasaDepan}</p>}
+            {s.disentuh && !tanggalTerbaca && <p className={GALAT}>{COPY.anak.galatTanggal}</p>}
+            <p className={BANTU}>{COPY.anak.catatanKoreksi}</p>
           </div>
         </div>
 
-        {/* Tanggal lahir */}
-        <div>
-          <label htmlFor="wa-tanggal" className="mb-1.5 flex items-center justify-between font-nunito text-[13px] font-extrabold text-pekat">
-            {COPY.anak.labelTanggal}
-            <span className="flex items-center gap-1 text-[11.5px] font-bold text-[#B48DA3]">
-              <Lock className="h-3 w-3" strokeWidth={2.4} aria-hidden /> dikunci setelah tersimpan
-            </span>
-          </label>
-          <input
-            id="wa-tanggal"
-            type="date"
-            max={HARI_INI}
-            value={s.tanggalLahir}
-            onChange={e => dispatch({ type: 'SET_TANGGAL', value: e.target.value })}
-            className={GAYA_INPUT}
-          />
-          {masaDepan && <p className="mt-1 font-nunito text-[12px] font-bold text-[#D2559A]">{COPY.anak.galatMasaDepan}</p>}
-          {s.disentuh && !tanggalTerbaca && (
-            <p className="mt-1 font-nunito text-[12px] font-bold text-[#D2559A]">{COPY.anak.galatTanggal}</p>
+        <div className="flex flex-col gap-7">
+          {konfirmasi && (
+            <div className="flex items-start gap-3.5 rounded-[24px] bg-[#FFF3D0] px-[22px] py-5" role="status">
+              <div aria-hidden className="-mt-0.5 h-[45px] w-[30px] flex-none">
+                <BotanicalStem cfg={{ type: 'sprig', bloom: '#F06BA8', bloom2: '#FFE29A' }} />
+              </div>
+              <p className="text-[15.5px] font-bold leading-[1.55] text-[#6B4A00] [text-wrap:pretty]">{konfirmasi}</p>
+            </div>
           )}
-          <p className="mt-1.5 font-nunito text-[11.5px] font-semibold leading-snug text-[#B48DA3]">{COPY.anak.catatanKoreksi}</p>
+
+          <div className="flex flex-col gap-3">
+            <span id="wa-label-kelamin" className="text-[16px] font-extrabold text-pekat">{COPY.anak.labelKelamin}</span>
+            <div role="radiogroup" aria-labelledby="wa-label-kelamin" className="flex flex-wrap gap-2.5">
+              {(Object.keys(LABEL_JENIS_KELAMIN) as JenisKelamin[]).map(key => {
+                const dipilih = s.jenisKelamin === key;
+                return (
+                  <Chip key={key} role="radio" tinggi={52} on={dipilih}
+                    onClick={() => dispatch({ type: 'SET_KELAMIN', value: dipilih ? null : key })}>
+                    {LABEL_JENIS_KELAMIN[key]}
+                  </Chip>
+                );
+              })}
+            </div>
+            <p className={BANTU}>{COPY.anak.catatanKelamin}</p>
+          </div>
         </div>
-
-        {/* Konfirmasi rentang usia */}
-        {konfirmasi && (
-          <div className={`rounded-[14px] px-3.5 py-2.5 ${LATAR_KONFIRMASI[konfirmasi.nada]}`}>
-            <p className="font-nunito text-[13px] font-bold leading-relaxed">{konfirmasi.teks}</p>
-          </div>
-        )}
-
-        {/* Jenis kelamin: chip */}
-        <fieldset>
-          <legend className="mb-1.5 font-nunito text-[13px] font-extrabold text-pekat">{COPY.anak.labelKelamin}</legend>
-          <div className="flex flex-wrap gap-2">
-            {(Object.keys(LABEL_JENIS_KELAMIN) as JenisKelamin[]).map(key => {
-              const dipilih = s.jenisKelamin === key;
-              return (
-                <button key={key} type="button" aria-pressed={dipilih}
-                  onClick={() => dispatch({ type: 'SET_KELAMIN', value: dipilih ? null : key })}
-                  className={`inline-flex min-h-[40px] items-center gap-1.5 rounded-full border-[1.5px] px-4 font-nunito text-[14px] font-extrabold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah focus-visible:ring-offset-1 ${dipilih ? 'border-[#D2559A] bg-[#D2559A] text-white' : 'border-[#F2DDE7] bg-white text-pekat hover:border-rekah'}`}>
-                  {dipilih && <Check className="h-3.5 w-3.5" strokeWidth={3.4} aria-hidden />}
-                  {LABEL_JENIS_KELAMIN[key]}
-                </button>
-              );
-            })}
-          </div>
-          <p className="mt-1.5 font-nunito text-[11.5px] font-semibold leading-snug text-[#B48DA3]">{COPY.anak.catatanKelamin}</p>
-        </fieldset>
       </div>
-
-      <KakiLanjut onLanjut={lanjut} nonaktif={s.disentuh && !bolehLanjut} />
     </Cangkang>
   );
 }
 
 // ── Langkah 2 — Pendamping ───────────────────────────────────────────────────
 
-const WARNA_AVATAR = [
-  { bg: '#FDE9F2', ink: '#D2559A' }, { bg: '#FFF1C9', ink: '#B07A1E' }, { bg: '#F1EBFB', ink: '#7B5BB8' }, { bg: '#E3EEFC', ink: '#3F64A8' },
-];
+const WARNA_AVATAR = ['#FCE3EE', '#FFF3D0', '#F1ECFB', '#E4EFFD'];
 
-function BarisPendamping({
+function KartuPendamping({
   pendamping,
   index,
   bolehHapus,
@@ -532,16 +659,19 @@ function BarisPendamping({
   const ref = useRef<HTMLInputElement>(null);
   useEffect(() => { if (autoFocus) ref.current?.focus(); }, [autoFocus]);
   const idNama = `wa-pendamping-nama-${index}`;
-  const w = WARNA_AVATAR[index % WARNA_AVATAR.length];
   const inisial = pendamping.panggilan.trim().charAt(0).toUpperCase();
 
   return (
-    <div className="flex items-start gap-3 rounded-[22px] border-[1.5px] border-[#F6E6EE] bg-white p-3.5">
-      <span aria-hidden="true" className="mt-0.5 flex h-[42px] w-[42px] flex-none items-center justify-center rounded-full font-fredoka text-[17px] font-bold" style={{ background: w.bg, color: w.ink }}>
-        {inisial || <Plus className="h-4 w-4" strokeWidth={2.6} />}
+    <div className="flex items-start gap-4 rounded-[28px] border-2 border-[#FCE3EE] bg-white p-[18px]">
+      <span
+        aria-hidden="true"
+        className="flex h-14 w-14 flex-none items-center justify-center font-fredoka text-[24px] font-bold text-pekat"
+        style={{ background: WARNA_AVATAR[index % WARNA_AVATAR.length], borderRadius: '28px 28px 28px 10px' }}
+      >
+        {inisial || <Plus className="h-[22px] w-[22px] text-rekah" strokeWidth={2.6} />}
       </span>
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
+      <div className="flex min-w-0 flex-1 flex-col gap-3">
+        <div className="flex items-center gap-1.5">
           <label htmlFor={idNama} className="sr-only">{COPY.pendamping.labelNama}</label>
           <input
             ref={ref}
@@ -552,32 +682,24 @@ function BarisPendamping({
             maxLength={40}
             placeholder={COPY.pendamping.placeholderNama}
             onChange={e => dispatch({ type: 'SET_PENDAMPING_PANGGILAN', index, value: e.target.value })}
-            className="min-h-[40px] w-full min-w-0 rounded-[12px] border-[1.5px] border-transparent bg-[#FFF8FB] px-3 font-nunito text-[15px] font-extrabold text-pekat placeholder:text-pekat/30 focus:border-[#F2DDE7] focus:outline-none focus:ring-2 focus:ring-rekah/20"
+            className="wa-transisi h-[52px] w-full min-w-0 flex-1 rounded-[18px] border-2 border-[#FCE3EE] bg-[#FFF9F3] px-[18px] text-[17px] font-extrabold text-pekat placeholder:text-[#B98CA3] transition-colors focus:border-rekah focus:bg-white focus:outline-none"
           />
           {bolehHapus && (
             <button type="button" onClick={() => dispatch({ type: 'HAPUS_PENDAMPING', index })}
               aria-label={COPY.pendamping.ctaHapus(pendamping.panggilan)}
-              className="flex h-9 w-9 flex-none items-center justify-center rounded-full text-pekat/40 transition hover:bg-mawar/40 hover:text-[#D2559A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah">
-              <Trash2 className="h-4 w-4" aria-hidden />
+              className="flex h-11 w-11 flex-none items-center justify-center rounded-full text-[#8A5A73] transition hover:bg-[#FCE3EE] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah">
+              <Trash2 className="h-[19px] w-[19px]" strokeWidth={2.2} aria-hidden />
             </button>
           )}
         </div>
-        <fieldset className="mt-2">
-          <legend className="sr-only">{COPY.pendamping.labelPeran}</legend>
-          <div className="flex flex-wrap gap-1.5">
-            {PERAN_PENDAMPING.map(key => {
-              const dipilih = pendamping.peran === key;
-              return (
-                <button key={key} type="button" aria-pressed={dipilih}
-                  onClick={() => dispatch({ type: 'SET_PENDAMPING_PERAN', index, value: key })}
-                  className={`inline-flex min-h-[34px] items-center gap-1 rounded-full border-[1.5px] px-3 font-nunito text-[12.5px] font-extrabold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah focus-visible:ring-offset-1 ${dipilih ? 'border-[#D2559A] bg-[#D2559A] text-white' : 'border-[#F2DDE7] bg-white text-pekat hover:border-rekah'}`}>
-                  {dipilih && <Check className="h-3 w-3" strokeWidth={3.4} aria-hidden />}
-                  {PERAN_COPY[key]}
-                </button>
-              );
-            })}
-          </div>
-        </fieldset>
+        <div role="radiogroup" aria-label={`${COPY.pendamping.labelPeran} ${pendamping.panggilan || 'pendamping'}`} className="flex flex-wrap gap-2">
+          {PERAN_PENDAMPING.map(key => (
+            <Chip key={key} role="radio" tinggi={44} on={pendamping.peran === key}
+              onClick={() => dispatch({ type: 'SET_PENDAMPING_PERAN', index, value: key })}>
+              {PERAN_COPY[key]}
+            </Chip>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -592,7 +714,7 @@ function LangkahPendamping({
   dispatch: React.Dispatch<Aksi>;
   onBatal?: () => void;
 }) {
-  // Baris yang baru ditambah mendapat fokus, supaya tidak perlu klik lagi.
+  // Kartu yang baru ditambah mendapat fokus, supaya tidak perlu klik lagi.
   const [indexBaru, setIndexBaru] = useState<number | null>(null);
   const penuh = s.pendamping.length >= MAKS_PENDAMPING;
 
@@ -602,23 +724,26 @@ function LangkahPendamping({
   }
 
   return (
-    <Cangkang langkahKe={2} onMundur={() => dispatch({ type: 'MUNDUR' })} onBatal={onBatal}>
-      <JudulLangkah eyebrow="LANGKAH 2" judul={COPY.pendamping.judul} sub={COPY.pendamping.sub} />
-
-      <div className="flex flex-col gap-2.5">
+    <Cangkang
+      langkahKe={2}
+      judul={COPY.pendamping.judul}
+      sub={COPY.pendamping.sub}
+      onMundur={() => dispatch({ type: 'MUNDUR' })}
+      onBatal={onBatal}
+      onLanjut={() => dispatch({ type: 'MAJU' })}
+    >
+      <div className="mt-8 grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(min(100%,400px),1fr))]">
         {s.pendamping.map((p, i) => (
-          <BarisPendamping key={i} pendamping={p} index={i} bolehHapus={s.pendamping.length > 1} dispatch={dispatch} autoFocus={i === indexBaru} />
+          <KartuPendamping key={i} pendamping={p} index={i} bolehHapus={s.pendamping.length > 1} dispatch={dispatch} autoFocus={i === indexBaru} />
         ))}
       </div>
 
       <button type="button" onClick={tambah} disabled={penuh}
-        className="mt-3 inline-flex min-h-[38px] items-center gap-1.5 rounded-full border-[1.5px] border-dashed border-[#F2C6DA] px-4 font-nunito text-[13.5px] font-extrabold text-[#B48DA3] transition hover:border-rekah hover:text-[#D2559A] disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah">
-        <Plus className="h-3.5 w-3.5" strokeWidth={3} aria-hidden /> {COPY.pendamping.ctaTambah}
+        className="wa-transisi mt-4 inline-flex h-[52px] items-center gap-2 self-start rounded-full border-2 border-dashed border-[#F8B9D4] px-[22px] text-[16px] font-extrabold text-pekat transition-colors hover:border-rekah hover:bg-white disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah">
+        <Plus className="h-[18px] w-[18px] text-rekah" strokeWidth={2.8} aria-hidden /> {COPY.pendamping.ctaTambah}
       </button>
-      {penuh && <p className="mt-2 font-nunito text-[12px] font-semibold text-[#B48DA3]">{COPY.pendamping.batasTercapai}</p>}
-      <p className="mt-3 font-nunito text-[11.5px] font-semibold leading-snug text-[#B48DA3]">{COPY.pendamping.catatan}</p>
-
-      <KakiLanjut onLanjut={() => dispatch({ type: 'MAJU' })} />
+      {penuh && <p className={`mt-3 ${BANTU}`}>{COPY.pendamping.batasTercapai}</p>}
+      <p className={`mt-3.5 ${BANTU}`}>{COPY.pendamping.catatan}</p>
     </Cangkang>
   );
 }
@@ -626,84 +751,40 @@ function LangkahPendamping({
 // ── Langkah 3–5 — pertanyaan Peta & nilai (opsional) ─────────────────────────
 
 /** Satu pertanyaan Peta sebagai kartu chip. Data & konfirmasi sama dengan Kelola. */
-function KartuTanya({ q, sel, onPilih, sesuaiUsia }: { q: PetaPertanyaan; sel: string[]; onPilih: (v: string) => void; sesuaiUsia?: boolean }) {
+function KartuTanya({ q, sel, onPilih, inisial }: { q: PetaPertanyaan; sel: string[]; onPilih: (v: string) => void; inisial: string }) {
   const pesan = konfirmasiPeta(q.id, sel);
+  const idJudul = `wa-tanya-${q.id}`;
   return (
-    <fieldset className="rounded-[22px] border-[1.5px] border-[#F6E6EE] bg-white px-4 py-3.5">
-      <legend className="sr-only">{q.teks}</legend>
-      <p aria-hidden="true" className="flex flex-wrap items-center gap-2 font-nunito text-[14.5px] font-extrabold text-pekat">
-        <span className="flex h-[22px] w-[22px] flex-none items-center justify-center bg-[#FDE9F2] font-fredoka text-[11px] font-bold text-[#D2559A]" style={{ borderRadius: '70% 70% 70% 5px' }}>R</span>
-        {q.teks}
-        {sesuaiUsia && <span className="rounded-[5px] bg-[#F1EBFB] px-1.5 py-0.5 text-[10px] tracking-[.06em] text-[#7B5BB8]">SESUAI USIA</span>}
-        {q.sensitif && <span className="rounded-[5px] bg-[#FFF1C9] px-1.5 py-0.5 text-[10px] tracking-[.06em] text-[#9A7A2C]">OPSIONAL</span>}
-        {q.multi && <span className="font-bold text-[12px] text-[#9A6F86]">(boleh lebih dari satu)</span>}
-      </p>
-      <div className="mt-2.5 flex flex-wrap gap-1.5">
-        {q.opsi.map(op => {
-          const on = sel.includes(op.v);
-          return (
-            <button key={op.v} type="button" aria-pressed={on} onClick={() => onPilih(op.v)}
-              className={`inline-flex min-h-[38px] items-center gap-1.5 rounded-full border-[1.5px] px-3.5 font-nunito text-[13.5px] font-extrabold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah focus-visible:ring-offset-1 ${on ? 'border-[#D2559A] bg-[#D2559A] text-white' : 'border-[#F2DDE7] bg-white text-pekat hover:border-rekah'}`}>
-              {on && <Check className="h-3 w-3" strokeWidth={3.4} aria-hidden />}
-              {op.v}
-            </button>
-          );
-        })}
+    <div className="flex flex-col gap-3.5 rounded-[28px] border-2 border-[#FCE3EE] bg-white px-[22px] pb-6 pt-[22px]">
+      <div className="flex flex-wrap items-baseline gap-2.5">
+        <span aria-hidden className="flex h-[30px] w-[30px] flex-none items-center justify-center self-center bg-[#FCE3EE] font-fredoka text-[15px] font-bold text-[#D2478A]" style={{ borderRadius: '15px 15px 15px 5px' }}>
+          {inisial}
+        </span>
+        <span id={idJudul} className="text-[17px] font-extrabold text-pekat">{q.teks}</span>
+        {q.multi && <span className="text-[13.5px] font-bold text-[#8A5A73]">(boleh lebih dari satu)</span>}
+        {q.sensitif && <span className="rounded-[6px] bg-[#FFF3D0] px-2 py-0.5 text-[11px] font-extrabold tracking-[.06em] text-[#6B4A00]">OPSIONAL</span>}
       </div>
-      {pesan && <p className="mt-2.5 rounded-xl bg-[#F1EBFB] px-3 py-2 font-nunito text-[12.5px] font-bold leading-snug text-[#7B5BB8]">{pesan}</p>}
-    </fieldset>
-  );
-}
-
-function JudulLangkah({ judul, sub, eyebrow }: { judul: string; sub: string; eyebrow?: string }) {
-  return (
-    <div className="mb-5">
-      {eyebrow && <p className="mb-1 font-nunito text-[12px] font-extrabold tracking-[1.4px] text-[#B48DA3]">{eyebrow}</p>}
-      <h2 className="mb-1 font-fredoka text-[1.55rem] font-bold leading-snug text-pekat">{judul}</h2>
-      <p className="font-nunito text-[14px] font-bold leading-relaxed text-[#9A6F86]">{sub}</p>
-    </div>
-  );
-}
-
-function KakiLanjut({ onLanjut, nonaktif = false }: { onLanjut: () => void; nonaktif?: boolean }) {
-  return (
-    <div className="mt-7 flex justify-end">
-      <button type="button" onClick={onLanjut} disabled={nonaktif}
-        className="inline-flex min-h-[48px] items-center gap-1.5 rounded-full bg-rekah px-7 font-nunito text-[15px] font-extrabold text-white transition hover:bg-rekah-tua disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah focus-visible:ring-offset-2"
-        style={{ boxShadow: '0 10px 20px -12px #D2559A' }}>
-        {COPY.nav.lanjut} <ChevronRight className="h-4 w-4" strokeWidth={3} aria-hidden />
-      </button>
-    </div>
-  );
-}
-
-function KakiOpsional({ onLewati, onLanjut }: { onLewati: () => void; onLanjut: () => void }) {
-  return (
-    <div className="mt-6 flex items-center justify-between gap-3">
-      <button type="button" onClick={onLewati}
-        className="min-h-[44px] rounded-full px-2 font-nunito text-[14px] font-extrabold text-[#B48DA3] transition hover:text-[#D2559A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah">
-        {COPY.nav.lewati}
-      </button>
-      <button type="button" onClick={onLanjut}
-        className="inline-flex min-h-[48px] items-center gap-1.5 rounded-full bg-rekah px-7 font-nunito text-[15px] font-extrabold text-white transition hover:bg-rekah-tua focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah focus-visible:ring-offset-2"
-        style={{ boxShadow: '0 10px 20px -12px #D2559A' }}>
-        {COPY.nav.lanjut} <ChevronRight className="h-4 w-4" strokeWidth={3} aria-hidden />
-      </button>
+      <div role={q.multi ? 'group' : 'radiogroup'} aria-labelledby={idJudul} className="flex flex-wrap gap-2">
+        {q.opsi.map(op => (
+          <Chip key={op.v} role={q.multi ? 'checkbox' : 'radio'} on={sel.includes(op.v)} onClick={() => onPilih(op.v)}>
+            {op.v}
+          </Chip>
+        ))}
+      </div>
+      {pesan && <p role="status" className="rounded-[16px] bg-[#F1ECFB] px-4 py-3 text-[14.5px] font-bold text-[#5B3FA0]">{pesan}</p>}
     </div>
   );
 }
 
 const usiaBulanDari = (s: State) => usiaDalamBulan(s.tanggalLahir);
 const tanya = (id: string) => PETA_PERTANYAAN.find(q => q.id === id);
+const inisialAnak = (s: State) => (s.namaAnak.trim().charAt(0) || 'S').toUpperCase();
 
 /** Pertanyaan bidang Anak di wizard: 3 umum + 1 sesuai tahap usia. */
-function pertanyaanKenali(usiaBulan: number | null): { q: PetaPertanyaan; usia: boolean }[] {
+function pertanyaanKenali(usiaBulan: number | null): PetaPertanyaan[] {
   const band = bandPeta(usiaBulan);
   const khusus = band === 'bayi' ? 'a_menyusu' : band === 'batita' ? 'a_makan_bt' : 'a_sekolah';
-  return [
-    ...['a_suasana', 'a_tenang', 'a_alergi'].map(id => ({ id, usia: false })),
-    { id: khusus, usia: true },
-  ].flatMap(({ id, usia }) => { const q = tanya(id); return q ? [{ q, usia }] : []; });
+  return ['a_suasana', 'a_tenang', 'a_alergi', khusus].flatMap(id => { const q = tanya(id); return q ? [q] : []; });
 }
 
 /** Pertanyaan keluarga: kondisi ibu hanya untuk anak di bawah 1 tahun. */
@@ -712,17 +793,24 @@ function pertanyaanKeluarga(usiaBulan: number | null): PetaPertanyaan[] {
   return ids.flatMap(id => { const q = tanya(id); return q ? [q] : []; });
 }
 
+const GRID_TANYA = 'grid items-start gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr))]';
+
 function LangkahKenali({ s, dispatch, onBatal }: { s: State; dispatch: React.Dispatch<Aksi>; onBatal?: () => void }) {
-  const nama = s.namaAnak.trim();
+  const nama = s.namaAnak.trim() || 'si kecil';
   return (
-    <Cangkang langkahKe={3} onMundur={() => dispatch({ type: 'MUNDUR' })} onBatal={onBatal}>
-      <JudulLangkah eyebrow="LANGKAH 3" judul={COPY.kenali.judul(nama)} sub={COPY.kenali.sub} />
-      <div className="flex flex-col gap-3">
-        {pertanyaanKenali(usiaBulanDari(s)).map(({ q, usia }) => (
-          <KartuTanya key={q.id} q={q} sel={s.jawaban[q.id] ?? []} sesuaiUsia={usia} onPilih={v => dispatch({ type: 'PILIH_PETA', q, value: v })} />
+    <Cangkang
+      langkahKe={3}
+      judul={COPY.kenali.judul(nama)}
+      sub={COPY.kenali.sub}
+      onMundur={() => dispatch({ type: 'MUNDUR' })}
+      onBatal={onBatal}
+      onLanjut={() => dispatch({ type: 'MAJU' })}
+    >
+      <div className={`mt-6 ${GRID_TANYA}`}>
+        {pertanyaanKenali(usiaBulanDari(s)).map(q => (
+          <KartuTanya key={q.id} q={q} inisial={inisialAnak(s)} sel={s.jawaban[q.id] ?? []} onPilih={v => dispatch({ type: 'PILIH_PETA', q, value: v })} />
         ))}
       </div>
-      <KakiOpsional onLewati={() => dispatch({ type: 'MAJU' })} onLanjut={() => dispatch({ type: 'MAJU' })} />
     </Cangkang>
   );
 }
@@ -730,49 +818,77 @@ function LangkahKenali({ s, dispatch, onBatal }: { s: State; dispatch: React.Dis
 function LangkahKeluarga({ s, dispatch, onBatal }: { s: State; dispatch: React.Dispatch<Aksi>; onBatal?: () => void }) {
   const usia = usiaBulanDari(s);
   return (
-    <Cangkang langkahKe={4} onMundur={() => dispatch({ type: 'MUNDUR' })} onBatal={onBatal}>
-      <JudulLangkah eyebrow="LANGKAH 4" judul={COPY.keluarga.judul} sub={COPY.keluarga.sub} />
+    <Cangkang
+      langkahKe={4}
+      judul={COPY.keluarga.judul}
+      sub={COPY.keluarga.sub}
+      onMundur={() => dispatch({ type: 'MUNDUR' })}
+      onBatal={onBatal}
+      onLanjut={() => dispatch({ type: 'MAJU' })}
+      onLewati={() => dispatch({ type: 'MAJU' })}
+    >
       {s.salinDari && (
-        <p className="mb-3 rounded-xl bg-[#FFF1C9] px-3.5 py-2.5 font-nunito text-[13px] font-bold text-[#9A7A2C]">{COPY.keluarga.catatanSalin(s.salinDari)}</p>
+        <p className="mt-7 flex items-center gap-3 rounded-[20px] bg-[#FFF3D0] px-5 py-3.5 text-[15.5px] font-bold text-[#6B4A00]">
+          <Check className="h-5 w-5 flex-none" strokeWidth={2.4} aria-hidden />
+          {COPY.keluarga.catatanSalin(s.salinDari)}
+        </p>
       )}
-      <div className="flex flex-col gap-3">
+      <div className={`mt-6 ${GRID_TANYA}`}>
         {pertanyaanKeluarga(usia).map(q => (
-          <KartuTanya key={q.id} q={q} sel={s.jawaban[q.id] ?? []} onPilih={v => dispatch({ type: 'PILIH_PETA', q, value: v })} />
+          <KartuTanya key={q.id} q={q} inisial={inisialAnak(s)} sel={s.jawaban[q.id] ?? []} onPilih={v => dispatch({ type: 'PILIH_PETA', q, value: v })} />
         ))}
       </div>
-      <p className="mt-3 font-nunito text-[12px] font-semibold leading-snug text-[#B48DA3]">
-        {(usia ?? 99) < 12 ? COPY.keluarga.catatanIbu : COPY.keluarga.catatanNanti}
-      </p>
-      <KakiOpsional onLewati={() => dispatch({ type: 'MAJU' })} onLanjut={() => dispatch({ type: 'MAJU' })} />
+      <p className={`mt-4 ${BANTU}`}>{(usia ?? 99) < 12 ? COPY.keluarga.catatanIbu : COPY.keluarga.catatanNanti}</p>
     </Cangkang>
   );
 }
 
+/** Warna lembut kartu nilai saat dipilih (handoff). */
+const WARNA_NILAI: Record<NilaiAkar, string> = {
+  'Kejujuran': '#E6ECFC', 'Syukur': '#FFF3D0', 'Kasih Sayang': '#F1ECFB', 'Empati': '#FCE7F0',
+  'Kemandirian': '#FFF3D0', 'Tanggung Jawab': '#F1ECFB', 'Kesederhanaan': '#FCE3EE', 'Cinta Ilmu': '#E4EFFD',
+  'Sabar': '#E4EFFD', 'Berbagi': '#E6ECFC', 'Keberanian': '#FCE3EE', 'Hormat pada Sesama': '#FFF3D0',
+};
+
 function LangkahNilai({ s, dispatch, onBatal }: { s: State; dispatch: React.Dispatch<Aksi>; onBatal?: () => void }) {
   const penuh = s.nilai.length >= MAKS_NILAI;
   return (
-    <Cangkang langkahKe={5} onMundur={() => dispatch({ type: 'MUNDUR' })} onBatal={onBatal}>
-      <JudulLangkah eyebrow="LANGKAH 5" judul={COPY.nilai.judul} sub={COPY.nilai.sub} />
-      <div className="grid grid-cols-3 gap-2">
+    <Cangkang
+      langkahKe={5}
+      judul={COPY.nilai.judul}
+      sub={COPY.nilai.sub}
+      onMundur={() => dispatch({ type: 'MUNDUR' })}
+      onBatal={onBatal}
+      onLanjut={() => dispatch({ type: 'MAJU' })}
+      onLewati={() => dispatch({ type: 'MAJU' })}
+      labelLanjut={COPY.nav.selesai}
+    >
+      <div className="mt-[30px] grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr))] max-[440px]:grid-cols-2">
         {NILAI.map(n => {
           const urut = s.nilai.indexOf(n);
           const on = urut > -1;
+          const redup = !on && penuh;
           const bunga = BUNGA_DARI_NAMA.get(n);
           return (
-            <button key={n} type="button" aria-pressed={on} onClick={() => dispatch({ type: 'TOGGLE_NILAI', value: n })}
-              aria-disabled={!on && penuh}
-              className={`relative flex min-h-[96px] flex-col items-center justify-center gap-1 rounded-[18px] border-[1.5px] px-1 py-2 text-center font-nunito text-[12.5px] font-extrabold leading-tight text-pekat transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah ${on ? 'border-rekah bg-[#FFF4F9]' : 'border-[#F2DDE7] bg-white hover:border-rekah'} ${!on && penuh ? 'opacity-50' : ''}`}>
-              {on && <span className="absolute right-1.5 top-1.5 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-rekah text-[10.5px] text-white">{urut + 1}</span>}
-              <span aria-hidden="true" className="pointer-events-none">{bunga && <BungaMekar bunga={bunga} mekar={TAHAP_MAKS} size={40} />}</span>
-              {n}
+            <button key={n} type="button" role="checkbox" aria-checked={on} aria-disabled={redup}
+              onClick={() => dispatch({ type: 'TOGGLE_NILAI', value: n })}
+              className={`wa-transisi relative flex flex-col items-center gap-2 rounded-[26px] border-2 px-2.5 pb-[18px] pt-[22px] text-center transition duration-200 hover:-translate-y-[3px] hover:border-rekah focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah ${on ? 'border-rekah' : 'border-[#FCE3EE] bg-white'} ${redup ? 'opacity-[.55]' : ''}`}
+              style={on ? { background: WARNA_NILAI[n] } : undefined}>
+              {on && (
+                <span aria-hidden className="absolute right-2.5 top-2.5 flex h-[26px] w-[26px] items-center justify-center bg-rekah font-fredoka text-[14px] font-bold text-white" style={{ borderRadius: '13px 13px 13px 4px' }}>
+                  {urut + 1}
+                </span>
+              )}
+              <span aria-hidden className="wa-transisi pointer-events-none flex h-[58px] w-[58px] items-center justify-center transition-transform duration-300" style={{ transform: `scale(${on ? 1.12 : 1})` }}>
+                {bunga && <BungaMekar bunga={bunga} mekar={TAHAP_MAKS} size={58} />}
+              </span>
+              <span className="text-[15.5px] font-extrabold text-pekat">{n}</span>
+              {urut === 0 && <span className="-mt-1 font-shantell text-[13px] font-semibold text-pekat">{COPY.nilai.fokus}</span>}
             </button>
           );
         })}
       </div>
-      <p className="mt-3 font-nunito text-[12px] font-semibold leading-snug text-[#B48DA3]" role="status">
-        {penuh ? COPY.nilai.maks : COPY.nilai.catatan}
-      </p>
-      <KakiOpsional onLewati={() => dispatch({ type: 'MAJU' })} onLanjut={() => dispatch({ type: 'MAJU' })} />
+      <p className={`mt-4 ${BANTU}`} role="status">{penuh ? COPY.nilai.maks : COPY.nilai.catatan}</p>
     </Cangkang>
   );
 }
@@ -935,7 +1051,8 @@ export default function WizardAnak({ mode = 'pertama', onSelesai, onBatal }: Wiz
         <LangkahAnak
           s={s}
           dispatch={dispatch}
-          onMundur={() => (mode === 'tambah' ? onBatal?.() : dispatch({ type: 'MUNDUR' }))}
+          // Langkah 1 saat menambah anak: Kembali redup (handoff); keluar lewat tombol tutup.
+          onMundur={mode === 'tambah' ? undefined : () => dispatch({ type: 'MUNDUR' })}
           onBatal={mode === 'tambah' ? onBatal : undefined}
         />
       );

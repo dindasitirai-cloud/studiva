@@ -18,6 +18,7 @@ export const COPY = {
     kembali: 'Kembali',
     lanjut: 'Lanjut',
     lewati: 'Lewati dulu',
+    selesai: 'Selesai',
   },
 
   sambutan: {
@@ -112,6 +113,7 @@ export const COPY = {
     sub: 'Pilih sampai tiga. Yang pertama jadi fokus pekan ini.',
     maks: 'Sudah tiga. Lepas salah satu untuk mengganti.',
     catatan: 'Nilai lain bisa ditanam kapan saja dari Bekal dan Perjalanan.',
+    fokus: 'fokus pekan ini',
   },
 
   siap: {

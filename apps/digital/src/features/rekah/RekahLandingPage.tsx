@@ -21,7 +21,7 @@ const CSS = `@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@
   a{color:inherit;text-decoration:none}
   h1,h2,h3,h4{font-family:'Fredoka',sans-serif;font-weight:700;margin:0;line-height:1.05}
   p{margin:0}
-  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,4vw,40px)}
   .btn{font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;border-radius:28px;transition:transform .15s ease, box-shadow .15s ease}
   .btn:hover{transform:translateY(-2px)}
   .btn-pink{color:#fff;background:var(--pink);padding:14px 30px;box-shadow:0 14px 26px -12px rgba(240,107,168,.85)}
@@ -34,7 +34,7 @@ const CSS = `@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@
 
   /* NAV */
   header{position:sticky;top:0;z-index:50;background:rgba(251,243,230,.86);backdrop-filter:blur(10px);border-bottom:1px solid rgba(110,59,87,.08)}
-  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding-top:14px;padding-bottom:14px}
   .logo{font-family:'Fredoka',sans-serif;font-weight:700;font-size:28px;color:var(--pink);display:flex;align-items:center;gap:9px}
   .logo .mark{width:34px;height:34px}
   .nav-links{display:flex;gap:26px;align-items:center}
@@ -43,7 +43,7 @@ const CSS = `@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@
   .nav-cta{display:flex;align-items:center;gap:8px}
 
   /* HERO */
-  .hero{display:grid;grid-template-columns:1.15fr 1fr;gap:24px;align-items:center;padding:44px 0 30px}
+  .hero{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(24px,4vw,56px);align-items:center;padding-top:clamp(36px,6vw,72px);padding-bottom:30px}
   .hero h1{font-size:60px;color:var(--plum)}
   .hero .sub{font-size:19px;line-height:1.55;opacity:.82;max-width:520px;margin-top:6px}
   .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
@@ -60,7 +60,7 @@ const CSS = `@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@
   .pill .dot{width:10px;height:10px;border-radius:50%;flex:none}
 
   /* IDEA */
-  .idea{text-align:center;padding:76px 0 8px;max-width:820px;margin:0 auto}
+  .idea{text-align:center;padding-top:76px;padding-bottom:8px;max-width:820px;margin:0 auto}
   .idea h2{font-size:44px;color:var(--plum);margin-top:10px}
   .idea .q{color:var(--pink)}
   .idea p{font-size:18px;line-height:1.65;opacity:.82;margin-top:18px}
@@ -158,23 +158,30 @@ const CSS = `@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@
   .foot-col .h{font-family:'Fredoka',sans-serif;font-weight:700;font-size:14px;color:var(--butter)}
   .foot-col a{font-size:13.5px;opacity:.78}
   .foot-col a:hover{opacity:1;color:var(--peony)}
-  .disclaimer{max-width:1180px;margin:34px auto 0;padding:0 28px;font-size:12.5px;opacity:.55;line-height:1.55}
+  .disclaimer{max-width:1180px;margin:34px auto 0;padding:0 clamp(20px,4vw,40px);font-size:12.5px;opacity:.55;line-height:1.55}
 
   /* RESPONSIVE */
   @media (max-width:940px){
-    .hero{grid-template-columns:1fr}
-    .hero-art{height:240px;order:-1}
-    .hero h1{font-size:44px}
-    .stages{grid-template-columns:repeat(2,1fr)}
-    .feats{grid-template-columns:1fr}
+    /* Tablet: hero tetap dua kolom, menu tengah disembunyikan supaya tombol tidak terlipat. */
+    .nav-links{display:none}
+    .nav-cta .btn{white-space:nowrap}
+    .hero h1{font-size:46px}
+    .hero-art{height:280px}
+    .stages{grid-template-columns:repeat(3,1fr)}
     .dgrid{grid-template-columns:1fr 1fr}
-    .steps{grid-template-columns:1fr}
-    .dna-grid{grid-template-columns:1fr}
     .dna-flower{display:none}
     .quote{flex-direction:column;text-align:center;gap:16px}
   }
+  @media (max-width:760px){
+    .hero{grid-template-columns:1fr}
+    .hero-art{height:240px;order:-1}
+    .hero h1{font-size:44px}
+    .feats{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr}
+    .dna-grid{grid-template-columns:1fr}
+  }
   @media (max-width:620px){
-    .wrap{padding:0 16px}
+    .wrap{padding-left:16px;padding-right:16px}
     .nav-links{display:none}
     .hero h1{font-size:36px}
     .idea h2{font-size:29px}

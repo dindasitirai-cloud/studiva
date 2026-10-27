@@ -441,7 +441,7 @@ function IramaKeseharian({ nilaiFokus, centangKebiasaan, tanggalHariIni, onCenta
       </div>
 
       <p style={{ fontFamily: 'Nunito, sans-serif', fontWeight: 600, fontSize: 11.5, color: '#A98BA0', margin: '14px 2px 0', lineHeight: 1.6 }}>
-        Hari ini kamu <b style={{ color: '#8A5A74' }}>menjalani</b>; hari lain kamu <b style={{ color: '#8A5A74' }}>merencanakan</b>. Susunan tiap hari otomatis muncul saat harinya tiba. Tersimpan per tanggal di perangkat ini (localStorage).
+        Hari ini kamu <b style={{ color: '#8A5A74' }}>menjalani</b>; hari lain kamu <b style={{ color: '#8A5A74' }}>merencanakan</b>. Susunan tiap hari otomatis muncul saat harinya tiba. Tersimpan di akunmu, jadi tidak hilang walau ganti perangkat.
       </p>
 
       {dikelolaTerbuka && (

@@ -131,7 +131,7 @@ export default function RencanaMinggu({ nilaiFokus = [], centangKebiasaan, tangg
       </div>
 
       <p style={{ fontFamily: 'Nunito, sans-serif', fontWeight: 600, fontSize: 11.5, color: '#A98BA0', margin: '14px 2px 0', lineHeight: 1.6 }}>
-        Susunan untuk suatu hari otomatis muncul di panel <b style={{ color: '#8A5A74' }}>Hari Ini</b> saat hari itu tiba. Tersimpan per tanggal di perangkat ini (localStorage) — sinkron ke akun menyusul.
+        Susunan untuk suatu hari otomatis muncul di panel <b style={{ color: '#8A5A74' }}>Hari Ini</b> saat hari itu tiba. Tersimpan di akunmu, jadi tidak hilang walau ganti perangkat.
       </p>
     </div>
   );

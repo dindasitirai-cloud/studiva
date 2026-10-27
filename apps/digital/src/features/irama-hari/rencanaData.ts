@@ -3,7 +3,8 @@
 // Dipakai oleh tab "Rencana Minggu" (menyusun rencana per hari) dan panel
 // "Hari Ini" (menampilkan rencana hari berjalan ke kolom pagi/siang/malam
 // + Untuk Dikelola). Slot = pagi | siang | malam (kegiatan) atau kelola.
-// Persistensi localStorage per anak per minggu (Supabase menyusul).
+// Persistensi localStorage per anak per minggu; ikut tersimpan di akun lewat
+// lib/simpananKelola (tabel simpanan_kelola, migration 035).
 // =============================================================
 import { useMemo, useState } from 'react';
 

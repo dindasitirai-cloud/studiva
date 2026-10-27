@@ -12,7 +12,7 @@
 // mengambil sendiri dari useAnakAktif(), sehingga hanya ada satu sumber data.
 // ============================================================================
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { useAnak } from '../../../context/AnakContext';
@@ -22,6 +22,10 @@ import PilihAnak from '../../../features/pilih-anak/PilihAnak';
 import SidebarRekah from '../../../components/SidebarRekah';
 import HeaderMobileRekah from '../../../components/HeaderMobileRekah';
 import NavigasiBawah from '../../../components/NavigasiBawah';
+import { pasangSinkronKelola, pulihkanSimpananKelola } from '../../../lib/simpananKelola';
+
+// Rencana mingguan & papan harian Kelola ikut tersimpan di akun (migration 035).
+pasangSinkronKelola();
 
 // Guard: tier2 users only
 function Tier2Guard({ children }: { children: React.ReactNode }) {
@@ -49,6 +53,18 @@ export default function DashboardShellTier2() {
     daftarAnak, anakAktif, memuat,
     sedangTambahAnak, mintaTambahAnak, batalTambahAnak,
   } = useAnak();
+
+  // Sebelum layar anak tampil, satukan rencana Kelola di akun & perangkat supaya
+  // yang dibaca halaman sudah versi terbaru. Paling lama 3 detik (offline tetap jalan).
+  const idAktif = anakAktif?.id ?? null;
+  const [pulihUntuk, setPulihUntuk] = useState<string | null>(null);
+  useEffect(() => {
+    if (!idAktif) return;
+    let batal = false;
+    Promise.race([pulihkanSimpananKelola(idAktif), new Promise(r => setTimeout(r, 3000))])
+      .then(() => { if (!batal) setPulihUntuk(idAktif); });
+    return () => { batal = true; };
+  }, [idAktif]);
 
   if (memuat) {
     return (
@@ -85,6 +101,14 @@ export default function DashboardShellTier2() {
     return (
       <Tier2Guard>
         <PilihAnak onTambahAnak={mintaTambahAnak} />
+      </Tier2Guard>
+    );
+  }
+
+  if (pulihUntuk !== anakAktif.id) {
+    return (
+      <Tier2Guard>
+        <div className="flex h-48 items-center justify-center text-pekat/50">Memuat...</div>
       </Tier2Guard>
     );
   }

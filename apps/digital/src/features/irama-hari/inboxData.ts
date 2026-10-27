@@ -1,6 +1,6 @@
 // =============================================================
 // inboxData — sumber tunggal data Inbox Kelola (Phase 15 · Tahap 4).
-// Dipakai bersama oleh tab Inbox (InboxKelola) dan kartu "Untuk Dikelola"
+// Dipakai bersama oleh kartu "Untuk Dikelola" + jendela "Lihat semua" (DaftarDikelola); tab Inbox dihapus 2026-10-27. Juga
 // di panel Hari Ini, agar isinya selalu sinkron (localStorage per anak).
 // Supabase menyusul. Konten SEED = contoh (DRAFT, review Fitri).
 // =============================================================

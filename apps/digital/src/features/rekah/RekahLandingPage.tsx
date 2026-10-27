@@ -336,7 +336,7 @@ const HTML = `<!-- ===================== NAV ===================== -->
       <div class="fsub">
         <div class="s"><b>Irama Keseharian.</b> Menyusun kegiatan, kebiasaan, dan rencana ke dalam ritme hari yang merdu. Hari ini untuk dijalani, hari lain untuk direncanakan, tanpa skor atau kejar setoran.</div>
         <div class="s"><b>Keadaan Keluarga.</b> Mencatat apa yang sedang berubah di rumah, misalnya tidur malam yang belum stabil atau bunda kembali bekerja, lalu Rekah menyesuaikan sarannya mengikuti keadaan itu.</div>
-        <div class="s"><b>Inbox.</b> Menampung cepat semua “nanti harus…” lalu menatanya jadi hal untuk dikerjakan, dibicarakan, diingat, atau ditelusuri, supaya tidak ada yang tercecer.</div>
+        <div class="s"><b>Untuk Dikelola.</b> Menampung cepat semua “nanti harus…” jadi daftar centang di Irama Keseharian. Yang sudah ditandai turun ke bawah, supaya tidak ada yang tercecer.</div>
       </div>
     </div>
 

@@ -256,7 +256,7 @@ export function PetaChips({ q, sel, warna, onPilih, onInbox, pesan, labelInbox }
       )}
       {onInbox && sel.length > 0 && (
         <div style={{ margin: '8px 0 0 30px' }}>
-          <button type="button" onClick={onInbox} style={{ ...miniLink, color: '#B4477F' }}><Plus size={13} strokeWidth={2.4} /> {labelInbox ?? 'Kirim ke Inbox'}</button>
+          <button type="button" onClick={onInbox} style={{ ...miniLink, color: '#B4477F' }}><Plus size={13} strokeWidth={2.4} /> {labelInbox ?? 'Tambah ke Untuk Dikelola'}</button>
         </div>
       )}
     </div>

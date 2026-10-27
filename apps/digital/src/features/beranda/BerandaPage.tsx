@@ -72,7 +72,7 @@ export default function BerandaPage() {
       {/* Baris 1: Rencana hari ini + Fondasi/Rekomendasi (berdampingan) */}
       <div className="grid grid-cols-1 gap-[22px] items-stretch xl:grid-cols-[minmax(0,1fr)_360px]">
         <RencanaHariIni items={papan.items} status={papan.status} onBuka={() => navigate('/dashboard/tier2/kelola')} />
-        <UntukmuHariIni idAnak={idAnak} nama={namaAnak} usiaBulan={usiaBulan ?? null} tanggalLahir={profile.tanggalLahir} peta={peta} aktif={aktif} inbox={inbox} onKeInbox={() => navigate('/dashboard/tier2/kelola')} onBuka={(to) => navigate(to)} />
+        <UntukmuHariIni idAnak={idAnak} nama={namaAnak} usiaBulan={usiaBulan ?? null} tanggalLahir={profile.tanggalLahir} peta={peta} aktif={aktif} inbox={inbox} onKeInbox={() => navigate('/dashboard/tier2/kelola?tab=dikelola')} onBuka={(to) => navigate(to)} />
       </div>
 
       {/* Baris 2: Progres Perjalanan + Forum (tanya jawab) + Konseling Online, berjejer */}

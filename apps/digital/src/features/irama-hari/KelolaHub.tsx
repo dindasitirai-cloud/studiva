@@ -18,7 +18,7 @@ import BungaNilai from '../../components/BungaNilai';
 import { plant, Tanaman, type TanamanCfg } from '../beranda/komponen/plant';
 import { useChildProfile } from '../beranda-usia/useChildProfile';
 import { useAnak } from '../../context/AnakContext';
-import { useInboxStore } from './inboxData';
+import { useInboxStore, SUMBER } from './inboxData';
 import { useRencanaMinggu, hariIndex, awalMinggu, localISO } from './rencanaData';
 import { idNilai, statusMekar, buatMekar, useCentangHari } from './dayPlanData';
 import { useParameterPenyesuaian, catatanPenyesuaianRingkas } from './kehidupanData';
@@ -27,7 +27,7 @@ import { useIramaKatalog, situasionalUntuk } from './iramaKatalog';
 import { UntukDikelolaHari } from './RencanaMinggu';
 import KehidupanKeluarga from './KehidupanKeluarga';
 import type { KonteksAwal } from './KehidupanKeluarga';
-import InboxKelola from './InboxKelola';
+import DaftarDikelola, { type ItemDikelola } from './DaftarDikelola';
 import PerjalananKeluarga from './PerjalananKeluarga';
 import JurnalTemani from '../temani/JurnalTemani';
 import { useTerlihat, labelTerlihat as labelIdTerlihat } from './terlihatData';
@@ -41,10 +41,13 @@ interface PropsKelolaHub {
 }
 
 // Phase 22: urutan tab mengikuti siklus — jalani → catat → baca & sesuaikan; lalu keadaan & tangkap.
-const TABS = ['Irama Keseharian', 'Jurnal', 'Perjalanan', 'Kehidupan Keluarga', 'Inbox'];
-const KATA_KERJA: Record<string, string> = { 'Irama Keseharian': 'jalani', Jurnal: 'catat', Perjalanan: 'baca', 'Kehidupan Keluarga': 'keadaan', Inbox: 'tangkap' };
+// Tab Inbox dihapus (2026-10-27): isinya dibuka dari kartu Untuk Dikelola → Lihat semua.
+const TABS = ['Irama Keseharian', 'Jurnal', 'Perjalanan', 'Kehidupan Keluarga'];
+const KATA_KERJA: Record<string, string> = { 'Irama Keseharian': 'jalani', Jurnal: 'catat', Perjalanan: 'baca', 'Kehidupan Keluarga': 'keadaan' };
 // ?tab= (slug) → tab awal. Dipakai pengalihan route lama /kompas-keluarga → Perjalanan (Phase 21).
-const TAB_SLUG: Record<string, string> = { irama: 'Irama Keseharian', jurnal: 'Jurnal', keluarga: 'Kehidupan Keluarga', inbox: 'Inbox', perjalanan: 'Perjalanan' };
+const TAB_SLUG: Record<string, string> = { irama: 'Irama Keseharian', jurnal: 'Jurnal', keluarga: 'Kehidupan Keluarga', perjalanan: 'Perjalanan' };
+// Tautan lama ?tab=inbox dan ?tab=dikelola → Irama Keseharian dengan daftar Untuk Dikelola terbuka.
+const SLUG_DIKELOLA = new Set(['inbox', 'dikelola']);
 const HARI_PENDEK = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
 const HARI_PANJANG_MON = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
 const BULAN_PENDEK = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
@@ -95,7 +98,7 @@ function PolaBunga() {
   );
 }
 
-// ─── Untuk Dikelola (sinkron Inbox) ───────────────────────────────────────────
+// ─── Untuk Dikelola ───────────────────────────────────────────
 
 interface RailTugas { id: string; judul: string; done: boolean }
 
@@ -138,7 +141,7 @@ function UntukDikelola({ todo, doneCount, total, onToggle, onAdd, onLihatSemua }
             <div style={{ fontFamily: 'Fredoka, sans-serif', fontWeight: 600, fontSize: 18, color: '#6E3B57', lineHeight: 1.15 }}>Untuk Dikelola</div>
             <div style={{ fontFamily: 'Nunito, sans-serif', fontWeight: 700, fontSize: 11.5, color: '#8A3A66', marginTop: 2 }}>Belum punya waktu</div>
           </div>
-          <button type="button" onClick={onLihatSemua} style={{ flexShrink: 0, fontFamily: 'Nunito, sans-serif', fontWeight: 800, fontSize: 12.5, color: '#B4477F', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Lihat semua</button>
+          <button type="button" onClick={onLihatSemua} aria-haspopup="dialog" style={{ flexShrink: 0, fontFamily: 'Nunito, sans-serif', fontWeight: 800, fontSize: 12.5, color: '#B4477F', background: 'none', border: 'none', cursor: 'pointer', padding: '12px 4px', margin: '-12px -4px' }}>Lihat semua</button>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 12 }}>
           <span style={{ flex: 1, height: 7, borderRadius: 999, background: '#DCEAFD', display: 'block', overflow: 'hidden' }}>
@@ -157,7 +160,7 @@ function UntukDikelola({ todo, doneCount, total, onToggle, onAdd, onLihatSemua }
             style={{ flex: 1, minWidth: 0, background: 'none', border: 'none', outline: 'none', fontFamily: 'Nunito, sans-serif', fontWeight: 700, fontSize: 12.5, color: '#6E3B57' }} />
           {teks.trim() && <button type="button" onClick={submit} style={{ flexShrink: 0, borderRadius: 9, border: 'none', background: '#C6407F', color: '#fff', padding: '6px 12px', fontFamily: 'Nunito, sans-serif', fontWeight: 800, fontSize: 11.5, cursor: 'pointer' }}>Tambah</button>}
         </div>
-        <p style={{ fontFamily: 'Nunito, sans-serif', fontWeight: 600, fontSize: 12, lineHeight: 1.5, color: '#A98BA0', margin: '12px 0 0' }}>Sinkron dengan Inbox — item juga muncul di tab Inbox.</p>
+        <p style={{ fontFamily: 'Nunito, sans-serif', fontWeight: 600, fontSize: 12, lineHeight: 1.5, color: '#A98BA0', margin: '12px 0 0' }}>Lihat semua untuk melihat yang sudah ditandai.</p>
       </div>
     </div>
   );
@@ -261,13 +264,14 @@ function RailKelola({
 
 // ─── Tab Irama Keseharian (gabungan Hari Ini + Rencana Minggu) ────────────────
 
-function IramaKeseharian({ nilaiFokus, centangKebiasaan, tanggalHariIni, onCentangToggle, onKeInbox, onKeKeluarga, onKeJurnal }: {
+function IramaKeseharian({ nilaiFokus, centangKebiasaan, tanggalHariIni, onCentangToggle, dikelolaTerbuka, setDikelolaTerbuka, onKeKeluarga, onKeJurnal }: {
   onKeJurnal?: (tanggal: string) => void;
   nilaiFokus: readonly NilaiAkar[];
   centangKebiasaan: CentangKebiasaan;
   tanggalHariIni: string;
   onCentangToggle: (n: NilaiAkar, id: string) => void;
-  onKeInbox: () => void;
+  dikelolaTerbuka: boolean;
+  setDikelolaTerbuka: (b: boolean) => void;
   onKeKeluarga: () => void;
 }) {
   const { anakAktif } = useAnak();
@@ -317,6 +321,20 @@ function IramaKeseharian({ nilaiFokus, centangKebiasaan, tanggalHariIni, onCenta
   const tugasTotal = tugasTodo.length;
   const tugasDoneCount = tugasTodo.filter(t => t.done).length;
   const toggleTugas = (id: string) => { if (id.startsWith('rc:')) rencana.toggle(id.slice(3)); else inbox.toggle(id); };
+
+  // Jendela "Lihat semua": semua item Untuk Dikelola, dibagi belum / sudah ditandai.
+  // Yang sudah ditandai memuat seluruh riwayat Inbox (terbaru di atas), bukan hanya hari ini.
+  const RENCANA = { label: 'Rencana hari ini', warna: '#FFE29A' };
+  const dikelolaBelum: ItemDikelola[] = [
+    ...inbox.todo.map(i => ({ id: i.id, judul: i.judul, ket: i.ket, due: i.due, sumber: i.src === 'manual' ? undefined : SUMBER[i.src] })),
+    ...kelolaHari.filter(p => !p.done).map(p => ({ id: `rc:${p.id}`, judul: p.teks, sumber: RENCANA })),
+  ];
+  const dikelolaSudah: ItemDikelola[] = [
+    ...kelolaHari.filter(p => p.done).map(p => ({ id: `rc:${p.id}`, judul: p.teks, sumber: RENCANA, selesaiPada: tglAktifISO })),
+    ...[...inbox.rampung]
+      .sort((a, b) => (inbox.selesaiPada[b.id] ?? '').localeCompare(inbox.selesaiPada[a.id] ?? ''))
+      .map(i => ({ id: i.id, judul: i.judul, sumber: i.src === 'manual' ? undefined : SUMBER[i.src], selesaiPada: inbox.selesaiPada[i.id] || undefined })),
+  ];
 
   const resetHariIni = () => { setOffset(0); setPilihHari(hariIndex(new Date())); };
 
@@ -396,7 +414,7 @@ function IramaKeseharian({ nilaiFokus, centangKebiasaan, tanggalHariIni, onCenta
             {isHariIni ? (
               <RailKelola situFokus={situFokus} centangHari={centangHariIni} mekarDari={mekarDari}
                 tugasTodo={tugasTodo} tugasDone={tugasDoneCount} tugasTotal={tugasTotal} onToggleTugas={toggleTugas} onAddTugas={inbox.tambah}
-                onToggleKeb={onCentangToggle} onKeInbox={onKeInbox} />
+                onToggleKeb={onCentangToggle} onKeInbox={() => setDikelolaTerbuka(true)} />
             ) : (
               <UntukDikelolaHari items={kelolaHari} onAdd={teks => rencana.tambah(pilihHari, 'kelola', teks)} onToggle={rencana.toggle} onDel={rencana.hapus} />
             )}
@@ -424,6 +442,10 @@ function IramaKeseharian({ nilaiFokus, centangKebiasaan, tanggalHariIni, onCenta
       <p style={{ fontFamily: 'Nunito, sans-serif', fontWeight: 600, fontSize: 11.5, color: '#A98BA0', margin: '14px 2px 0', lineHeight: 1.6 }}>
         Hari ini kamu <b style={{ color: '#8A5A74' }}>menjalani</b>; hari lain kamu <b style={{ color: '#8A5A74' }}>merencanakan</b>. Susunan tiap hari otomatis muncul saat harinya tiba. Tersimpan per tanggal di perangkat ini (localStorage).
       </p>
+
+      {dikelolaTerbuka && (
+        <DaftarDikelola belum={dikelolaBelum} sudah={dikelolaSudah} onToggle={toggleTugas} onTambah={inbox.tambah} onTutup={() => setDikelolaTerbuka(false)} />
+      )}
     </>
   );
 }
@@ -433,6 +455,8 @@ function IramaKeseharian({ nilaiFokus, centangKebiasaan, tanggalHariIni, onCenta
 export default function KelolaHub({ nilaiFokus = [], centangKebiasaan, tanggalHariIni, onCentangToggle, onBekal }: PropsKelolaHub) {
   const [searchParams] = useSearchParams();
   const [tab, setTab] = useState(() => TAB_SLUG[searchParams.get('tab') ?? ''] ?? 'Irama Keseharian');
+  const [dikelolaTerbuka, setDikelolaTerbuka] = useState(() => SLUG_DIKELOLA.has(searchParams.get('tab') ?? ''));
+  const bukaDikelola = () => { setTab('Irama Keseharian'); setDikelolaTerbuka(true); };
   // Draf konteks dari Perjalanan ("Cukup berat") → dibuka sekali di Kehidupan Keluarga.
   const [konteksAwal, setKonteksAwal] = useState<KonteksAwal | null>(null);
   const [tanggalJurnal, setTanggalJurnal] = useState<string | undefined>(undefined);
@@ -484,14 +508,13 @@ export default function KelolaHub({ nilaiFokus = [], centangKebiasaan, tanggalHa
       {/* Tab content */}
       {tab === 'Irama Keseharian' && (
         <IramaKeseharian nilaiFokus={nilaiFokus} centangKebiasaan={centangKebiasaan} tanggalHariIni={tanggalHariIni} onCentangToggle={onCentangToggle}
-          onKeInbox={() => setTab('Inbox')} onKeKeluarga={() => setTab('Kehidupan Keluarga')} onKeJurnal={keJurnal} />
+          dikelolaTerbuka={dikelolaTerbuka} setDikelolaTerbuka={setDikelolaTerbuka} onKeKeluarga={() => setTab('Kehidupan Keluarga')} onKeJurnal={keJurnal} />
       )}
       {tab === 'Jurnal' && (
         <JurnalTemani tertanam key={tanggalJurnal ?? 'hari-ini'} idAnak={anakJurnal?.id ?? 'anon'} nama={profilJurnal.namaAnak || 'si kecil'}
           tanggalAwal={tanggalJurnal} keteranganMusim={nilaiFokus.length ? `musim ${nilaiFokus.join(' & ')}` : undefined} />
       )}
-      {tab === 'Kehidupan Keluarga' && <KehidupanKeluarga nilaiFokus={nilaiFokus} onKeInbox={() => setTab('Inbox')} konteksAwal={konteksAwal} onKonteksAwalDipakai={() => setKonteksAwal(null)} />}
-      {tab === 'Inbox' && <InboxKelola />}
+      {tab === 'Kehidupan Keluarga' && <KehidupanKeluarga nilaiFokus={nilaiFokus} onKeInbox={bukaDikelola} konteksAwal={konteksAwal} onKonteksAwalDipakai={() => setKonteksAwal(null)} />}
       {tab === 'Perjalanan' && (
         <PerjalananKeluarga nilaiFokus={nilaiFokus} centangKebiasaan={centangKebiasaan}
           onKeIrama={() => setTab('Irama Keseharian')} onKeKeluarga={() => setTab('Kehidupan Keluarga')} onKeJurnal={() => keJurnal()}

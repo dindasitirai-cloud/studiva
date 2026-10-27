@@ -240,7 +240,7 @@ const HTML = `<!-- ===================== NAV ===================== -->
   <div class="hero-col">
     <div class="eyebrow">bukan sekadar tahu</div>
     <h1>Tahu saja<br>belum cukup.</h1>
-    <p class="sub">Rekah menemanimu dari memahami cara mendampingi anak, sampai menjalankannya jadi kegiatan nyata yang tertata rapi setiap hari.</p>
+    <p class="sub">Rekah membantumu memahami tumbuh kembang si kecil, lalu menjalankannya lewat langkah kecil setiap hari.</p>
     <div class="hero-cta">
       <a class="btn btn-pink" href="/daftar">Daftar Sekarang</a>
       <a class="btn btn-outline" href="#cara">Lihat cara kerja</a>
@@ -259,9 +259,9 @@ const HTML = `<!-- ===================== NAV ===================== -->
   <div class="strip">
     <div class="strip-lead">Dirancang bersama psikolog, untuk keluarga Indonesia.</div>
     <div class="strip-items">
-      <div class="pill"><span class="dot" style="background:var(--pink)"></span>Merujuk pada panduan lembaga kesehatan anak dan literatur ilmiah yang terdata</div>
+      <div class="pill"><span class="dot" style="background:var(--pink)"></span>Merujuk panduan kesehatan anak & riset tepercaya</div>
       <div class="pill"><span class="dot" style="background:var(--sky)"></span>Ditinjau psikolog sebelum tayang</div>
-      <div class="pill"><span class="dot" style="background:var(--lilac)"></span>Tanpa membanding-bandingkan anak</div>
+      <div class="pill"><span class="dot" style="background:var(--lilac)"></span>Tanpa membandingkan anak</div>
     </div>
   </div>
 </div>
@@ -270,7 +270,7 @@ const HTML = `<!-- ===================== NAV ===================== -->
 <section class="wrap idea">
   <div class="eyebrow">satu pertanyaan yang menenangkan</div>
   <h2>“Apa <span class="q">satu hal</span> yang bisa kulakukan untuk anakku hari ini?”</h2>
-  <p>Membesarkan anak bukan soal mengejar daftar panjang. Rekah menjawab pertanyaan itu dengan satu ajakan sederhana tiap hari yang kecil, mungkin dilakukan di sela kesibukan, dan pas untuk usia si kecil. Kamu bukan cuma tahu apa yang dilakukan, tapi juga apa yang sedang tumbuh pada anakmu.</p>
+  <p>Rekah menjawabnya dengan satu ajakan kecil setiap hari, pas untuk usia si kecil dan muat di sela kesibukanmu. Kamu juga tahu apa yang sedang tumbuh pada anakmu.</p>
 </section>
 
 <!-- ===================== STAGES ===================== -->
@@ -278,7 +278,7 @@ const HTML = `<!-- ===================== NAV ===================== -->
   <div class="sec-head">
     <div class="eyebrow">tahap demi tahap</div>
     <h2>Menemani tiap fase usia</h2>
-    <p class="lead">Kebutuhan anak berubah seiring ia tumbuh. Rekah ikut menyesuaikan, dari bayi baru lahir hingga usia enam tahun.</p>
+    <p class="lead">Isi Rekah menyesuaikan usia si kecil, dari baru lahir sampai 6 tahun.</p>
   </div>
   <div class="stages">
     <div class="stage" style="background:#FCE3EE">
@@ -319,7 +319,7 @@ const HTML = `<!-- ===================== NAV ===================== -->
   <div class="sec-head">
     <div class="eyebrow">yang bisa kamu buka di Rekah</div>
     <h2>Empat ruang, satu alur yang tenang</h2>
-    <p class="lead">Dari mengenal, menjalani, sampai menata semuanya dalam keseharian. Setiap ruang punya perannya sendiri.</p>
+    <p class="lead">Bekal untuk tahu, Kelola untuk menata, Temani untuk menjalani, dan Bantu saat butuh pegangan.</p>
   </div>
   <div class="feats">
 
@@ -327,23 +327,24 @@ const HTML = `<!-- ===================== NAV ===================== -->
       <div class="ic sway"><svg viewBox="0 0 100 150" style="width:100%;height:100%;display:block;overflow:visible"><g><path d="M64 149 C60 126 48 116 42 104" fill="none" stroke="#6F9E3F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M58 132 C43 132 34 118 38 106 C50 114 55 123 58 132 Z" fill="#A7C63E" stroke="none"></path><circle cx="42" cy="84" r="9" fill="#F06BA8"></circle><circle cx="53.412678195541844" cy="92.29179606750063" r="9" fill="#F06BA8"></circle><circle cx="49.05342302750968" cy="105.70820393249937" r="9" fill="#F06BA8"></circle><circle cx="34.94657697249032" cy="105.70820393249937" r="9" fill="#F06BA8"></circle><circle cx="30.587321804458156" cy="92.29179606750063" r="9" fill="#F06BA8"></circle><circle cx="42" cy="96" r="5.5" fill="#FFE29A"></circle></g></svg></div>
       <div class="fhead"><span class="ftag">BEKAL</span></div>
       <h3>Bekal untuk menemani</h3>
-      <p class="intro">Perpustakaan Rekah yang bisa kamu buka kapan saja, selalu menyesuaikan usia si kecil.</p>
+      <p class="intro">Bacaan dan ide sesuai usia si kecil, bisa dibuka kapan saja.</p>
       <div class="fsub">
-        <div class="s"><b>Kebiasaan Baik.</b> Kebiasaan kecil yang menumbuhkan nilai keluarga, dicentang setiap hari, dan membuat bunga kebiasaan mekar pelan-pelan.</div>
-        <div class="s"><b>Ajak Main.</b> Ide bermain yang melatih tahap perkembangan anak, lengkap dengan alasan apa yang sedang dilatih.</div>
-        <div class="s"><b>Panduan Tumbuh Kembang.</b> Wawasan singkat untuk orang tua sesuai usia anak, supaya kamu paham apa yang wajar di tiap tahap.</div>
+        <div class="s"><b>Kebiasaan Baik.</b> Kebiasaan kecil yang menumbuhkan nilai keluarga.</div>
+        <div class="s"><b>Ajak Main.</b> Ide bermain beserta apa yang sedang dilatih.</div>
+        <div class="s"><b>Wawasan Tumbuh.</b> Bacaan singkat tentang apa yang wajar di tiap tahap.</div>
       </div>
     </div>
 
     <div class="fcard center">
       <div class="ic sway"><svg viewBox="0 0 100 150" style="width:100%;height:100%;display:block;overflow:visible"><g><path d="M50 149 C49 120 50 100 50 86" fill="none" stroke="#6F9E3F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 122 C33 122 23 106 27 92 C43 102 49 111 50 122 Z" fill="#A7C63E" stroke="none"></path><path d="M50 130 C67 130 79 114 75 100 C57 110 52 119 50 130 Z" fill="#8FB84A" stroke="none"></path><circle cx="66" cy="56" r="8.5" fill="#F8B9D4"></circle><circle cx="61.31370849898476" cy="67.31370849898477" r="8.5" fill="#F8B9D4"></circle><circle cx="50" cy="72" r="8.5" fill="#F8B9D4"></circle><circle cx="38.68629150101524" cy="67.31370849898477" r="8.5" fill="#F8B9D4"></circle><circle cx="34" cy="56" r="8.5" fill="#F8B9D4"></circle><circle cx="38.68629150101523" cy="44.68629150101524" r="8.5" fill="#F8B9D4"></circle><circle cx="50" cy="40" r="8.5" fill="#F8B9D4"></circle><circle cx="61.31370849898476" cy="44.68629150101523" r="8.5" fill="#F8B9D4"></circle><circle cx="50" cy="56" r="10" fill="#FFE29A"></circle><circle cx="50" cy="56" r="5" fill="#F06BA8"></circle></g></svg></div>
       <div class="fhead"><span class="ftag">KELOLA</span><span class="badge">PUSAT</span></div>
-      <h3>Tempat semuanya tertata rapi</h3>
-      <p class="intro">Rekah tidak berhenti di materi. Kelola membantu mewujudkan materi baik itu dalam keseharian, supaya semua hal di keluargamu tetap tercatat, terorganisir, dan teratur, tanpa membuatmu kewalahan.</p>
+      <h3>Tempat semuanya tertata</h3>
+      <p class="intro">Mengubah yang kamu baca jadi rencana harian yang ringan, tanpa skor. Semuanya tersimpan di akunmu.</p>
       <div class="fsub">
-        <div class="s"><b>Irama Keseharian.</b> Menyusun kegiatan, kebiasaan, dan rencana ke dalam ritme hari yang merdu. Hari ini untuk dijalani, hari lain untuk direncanakan, tanpa skor atau kejar setoran.</div>
-        <div class="s"><b>Keadaan Keluarga.</b> Mencatat apa yang sedang berubah di rumah, misalnya tidur malam yang belum stabil atau bunda kembali bekerja, lalu Rekah menyesuaikan sarannya mengikuti keadaan itu.</div>
-        <div class="s"><b>Untuk Dikelola.</b> Menampung cepat semua “nanti harus…” jadi daftar centang di Irama Keseharian. Yang sudah ditandai turun ke bawah, supaya tidak ada yang tercecer.</div>
+        <div class="s"><b>Irama Keseharian.</b> Susun pagi, siang, dan malam untuk hari ini dan minggu depan, lengkap dengan daftar Untuk Dikelola.</div>
+        <div class="s"><b>Jurnal.</b> Catat cerita, foto, dan hal baru yang terlihat dari si kecil.</div>
+        <div class="s"><b>Perjalanan.</b> Pilih nilai fokus pekan ini dan tinjau minggumu dengan lembut.</div>
+        <div class="s"><b>Kehidupan Keluarga.</b> Ceritakan keadaan di rumah, Rekah menyesuaikan sarannya. Ada Lembar Nifas dan Piring Ibu untuk ibu baru.</div>
       </div>
     </div>
 
@@ -351,10 +352,10 @@ const HTML = `<!-- ===================== NAV ===================== -->
       <div class="ic sway"><svg viewBox="0 0 100 150" style="width:100%;height:100%;display:block;overflow:visible"><g><path d="M22 149 C40 140 52 122 44 100" fill="none" stroke="#6F9E3F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M30 138 C16 134 10 120 14 108 C26 116 30 128 30 138 Z" fill="#A7C63E" stroke="none"></path><path d="M40 118 C55 116 64 104 61 92 C49 100 44 110 40 118 Z" fill="#8FB84A" stroke="none"></path><path d="M44 92 C33 92 30 106 34 116 C37 123 51 123 54 116 C58 106 55 92 44 92 Z" fill="#8FB8F7" stroke="none"></path><circle cx="44" cy="96" r="5" fill="#5F84E6"></circle></g></svg></div>
       <div class="fhead"><span class="ftag">TEMANI</span></div>
       <h3>Ditemani menjalani, bukan cuma tahu</h3>
-      <p class="intro">Kalau Bekal memberi tahu, Temani menemanimu menjalaninya, langkah demi langkah.</p>
+      <p class="intro">Perjalanan beberapa hari dengan satu langkah kecil setiap hari.</p>
       <div class="fsub">
-        <div class="s"><b>Perjalanan bertahap.</b> Alur lembut beberapa hari dengan satu fokus kecil tiap hari, yang menyesuaikan respons anakmu.</div>
-        <div class="s"><b>Jurnal.</b> Tempat menyimpan catatan dan momen kecil sepanjang perjalanan, bisa dilihat kembali kapan saja.</div>
+        <div class="s"><b>Perjalanan bertema.</b> Misalnya tidur lebih tenang, makan lebih santai, atau anak lebih mandiri.</div>
+        <div class="s"><b>Progres yang terlihat.</b> Tandai langkah yang sudah dijalani dan lihat sejauh mana kalian melangkah.</div>
       </div>
     </div>
 
@@ -362,11 +363,11 @@ const HTML = `<!-- ===================== NAV ===================== -->
       <div class="ic sway"><svg viewBox="0 0 100 150" style="width:100%;height:100%;display:block;overflow:visible"><g><path d="M50 149 C50 122 50 98 50 74" fill="none" stroke="#6F9E3F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 100 C40 96 34 88 31 78" fill="none" stroke="#6F9E3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 92 C60 88 66 80 69 70" fill="none" stroke="#6F9E3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 116 C40 114 34 106 33 98 C42 102 48 109 50 116 Z" fill="#A7C63E" stroke="none"></path><circle cx="56" cy="70" r="4" fill="#C9B8F0"></circle><circle cx="51.85410196624969" cy="75.70633909777092" r="4" fill="#C9B8F0"></circle><circle cx="45.14589803375031" cy="73.52671151375483" r="4" fill="#C9B8F0"></circle><circle cx="45.14589803375031" cy="66.47328848624517" r="4" fill="#C9B8F0"></circle><circle cx="51.85410196624969" cy="64.29366090222908" r="4" fill="#C9B8F0"></circle><circle cx="50" cy="70" r="2.6" fill="#F8B9D4"></circle><circle cx="37" cy="74" r="4" fill="#C9B8F0"></circle><circle cx="32.85410196624969" cy="79.70633909777092" r="4" fill="#C9B8F0"></circle><circle cx="26.145898033750317" cy="77.52671151375483" r="4" fill="#C9B8F0"></circle><circle cx="26.145898033750314" cy="70.47328848624517" r="4" fill="#C9B8F0"></circle><circle cx="32.85410196624969" cy="68.29366090222908" r="4" fill="#C9B8F0"></circle><circle cx="31" cy="74" r="2.6" fill="#F8B9D4"></circle><circle cx="75" cy="66" r="4" fill="#C9B8F0"></circle><circle cx="70.85410196624969" cy="71.70633909777092" r="4" fill="#C9B8F0"></circle><circle cx="64.14589803375031" cy="69.52671151375483" r="4" fill="#C9B8F0"></circle><circle cx="64.14589803375031" cy="62.47328848624516" r="4" fill="#C9B8F0"></circle><circle cx="70.85410196624969" cy="60.29366090222908" r="4" fill="#C9B8F0"></circle><circle cx="69" cy="66" r="2.6" fill="#F8B9D4"></circle></g></svg></div>
       <div class="fhead"><span class="ftag">BANTU</span></div>
       <h3>Saat situasi terasa sulit</h3>
-      <p class="intro">Ruang yang selalu bisa kamu buka ketika butuh arahan atau teman bicara.</p>
+      <p class="intro">Pegangan cepat saat butuh arahan atau teman bicara.</p>
       <div class="fsub">
-        <div class="s"><b>Panduan situasi.</b> Langkah menenangkan untuk momen sulit sehari-hari, tanpa menghakimi.</div>
-        <div class="s"><b>Forum orang tua.</b> Berbagi dan bertanya dengan orang tua lain di ruang yang dijaga hangat.</div>
-        <div class="s"><b>Tanya Psikolog.</b> Bicara dengan psikolog lewat konsultasi yang tersedia terpisah. Ini bukan layanan darurat dan tidak menggantikan pemeriksaan medis.</div>
+        <div class="s"><b>Panduan situasi.</b> Langkah tenang untuk tantrum, susah tidur, sampai konflik saudara.</div>
+        <div class="s"><b>Forum orang tua.</b> Bertanya dan berbagi di ruang yang dijaga hangat.</div>
+        <div class="s"><b>Konsultasi psikolog.</b> Sesi terpisah dengan psikolog anak. Bukan layanan darurat.</div>
       </div>
     </div>
 
@@ -379,37 +380,37 @@ const HTML = `<!-- ===================== NAV ===================== -->
     <div class="sec-head">
       <div class="eyebrow">arah di balik setiap materi</div>
       <h2 style="margin-top:8px">Selalu tahu apa yang sedang bertumbuh</h2>
-      <p class="lead">Tiap materi Rekah terhubung ke arah yang jelas. Menariknya, ketiga bagian ini memakai peta yang berbeda, sesuai perannya.</p>
+      <p class="lead">Setiap materi di Bekal punya arah yang jelas.</p>
     </div>
 
     <div class="domblock">
       <div class="bh"><span class="name">Ajak Main</span><span class="count">6 domain perkembangan</span></div>
-      <p class="bd">Setiap ide bermain melatih satu sisi perkembangan anak.</p>
+      <p class="bd">Tiap ide bermain melatih satu dari enam domain.</p>
       <div class="dgrid">
-        <div class="dcard"><span class="d" style="background:var(--pink)"></span><div><h4>Motorik Kasar</h4><p>Gerak tubuh besar seperti merangkak, berjalan, melompat.</p></div></div>
-        <div class="dcard"><span class="d" style="background:var(--sky)"></span><div><h4>Motorik Halus</h4><p>Gerak jemari seperti menjumput, mencorat-coret, menyusun.</p></div></div>
-        <div class="dcard"><span class="d" style="background:var(--corn)"></span><div><h4>Bahasa &amp; Komunikasi</h4><p>Mendengar, bicara, dan semua cara menyampaikan maksud.</p></div></div>
-        <div class="dcard"><span class="d" style="background:var(--lilac)"></span><div><h4>Kognitif</h4><p>Mengamati, memecahkan masalah, dan memahami dunia.</p></div></div>
-        <div class="dcard"><span class="d" style="background:#FFC94D"></span><div><h4>Sosial Emosional</h4><p>Mengenali perasaan, berteman, dan mengelola emosi.</p></div></div>
-        <div class="dcard"><span class="d" style="background:var(--peony)"></span><div><h4>Kemandirian &amp; Bantu Diri</h4><p>Makan, berpakaian, dan rutinitas harian sendiri.</p></div></div>
+        <div class="dcard"><span class="d" style="background:var(--pink)"></span><div><h4>Motorik Kasar</h4><p>Merangkak, berjalan, melompat.</p></div></div>
+        <div class="dcard"><span class="d" style="background:var(--sky)"></span><div><h4>Motorik Halus</h4><p>Menjumput, mencoret, menyusun.</p></div></div>
+        <div class="dcard"><span class="d" style="background:var(--corn)"></span><div><h4>Bahasa &amp; Komunikasi</h4><p>Mendengar, bicara, menyampaikan maksud.</p></div></div>
+        <div class="dcard"><span class="d" style="background:var(--lilac)"></span><div><h4>Kognitif</h4><p>Mengamati dan memecahkan masalah.</p></div></div>
+        <div class="dcard"><span class="d" style="background:#FFC94D"></span><div><h4>Sosial Emosional</h4><p>Mengenali perasaan dan berteman.</p></div></div>
+        <div class="dcard"><span class="d" style="background:var(--peony)"></span><div><h4>Kemandirian &amp; Bantu Diri</h4><p>Makan, berpakaian, rutinitas sendiri.</p></div></div>
       </div>
     </div>
 
     <div class="domblock">
-      <div class="bh"><span class="name">Panduan Tumbuh Kembang</span><span class="count">7 domain</span></div>
-      <p class="bd">Sisi wawasan untuk orang tua memakai enam domain perkembangan yang sama (Motorik Kasar, Motorik Halus, Bahasa &amp; Komunikasi, Kognitif, Sosial Emosional, Kemandirian &amp; Bantu Diri), lalu ditambah satu domain khusus.</p>
+      <div class="bh"><span class="name">Wawasan Tumbuh</span><span class="count">7 domain</span></div>
+      <p class="bd">Enam domain yang sama, ditambah satu:</p>
       <div class="dk">
         <span class="d"></span>
         <div>
           <h4>Deteksi Dini &amp; Kebutuhan Khusus</h4>
-          <p>Panduan mengenali kapan anak mungkin perlu perhatian lebih atau perlu berkonsultasi. Disampaikan sebagai arah untuk menemani, bukan sebagai label atau diagnosis.</p>
+          <p>Mengenali kapan anak perlu perhatian lebih atau konsultasi. Sebagai arah, bukan label atau diagnosis.</p>
         </div>
       </div>
     </div>
 
     <div class="domblock">
       <div class="bh"><span class="name">Kebiasaan Baik</span><span class="count">12 nilai keluarga</span></div>
-      <p class="bd">Bagian ini tidak memakai domain perkembangan, melainkan nilai karakter yang keluargamu pilih. Tiap kebiasaan kecil menumbuhkan satu nilai.</p>
+      <p class="bd">Tiap kebiasaan menumbuhkan satu nilai yang keluargamu pilih.</p>
       <div class="chips">
         <span class="chip2">Kejujuran</span>
         <span class="chip2">Syukur</span>
@@ -438,18 +439,18 @@ const HTML = `<!-- ===================== NAV ===================== -->
   <div class="steps">
     <div class="step">
       <div class="n">1</div>
-      <h3>Kenali &amp; pilih</h3>
-      <p>Ceritakan usia si kecil dan pilih nilai yang penting bagi keluargamu.</p>
+      <h3>Kenalkan si kecil</h3>
+      <p>Isi usia, pendamping, dan nilai keluarga. Bisa untuk lebih dari satu anak.</p>
     </div>
     <div class="step">
       <div class="n">2</div>
       <h3>Dapat satu langkah</h3>
-      <p>Tiap hari Rekah menawarkan satu ajakan kecil yang pas untuk usianya, tinggal dilakukan.</p>
+      <p>Tiap hari ada satu ajakan kecil yang pas untuk usianya.</p>
     </div>
     <div class="step">
       <div class="n">3</div>
-      <h3>Temani &amp; rayakan</h3>
-      <p>Jalani bersama, rayakan hal kecil, dan lihat kebiasaan baik mekar pelan-pelan.</p>
+      <h3>Jalani &amp; rayakan</h3>
+      <p>Tata di Kelola, catat di Jurnal, dan lihat kebiasaan baik mekar.</p>
     </div>
   </div>
 </section>
@@ -460,23 +461,23 @@ const HTML = `<!-- ===================== NAV ===================== -->
     <div class="dna-flower sway"><svg viewBox="0 0 100 150" style="width:100%;height:100%;display:block;overflow:visible"><g><path d="M50 149 C49 118 50 98 50 82" fill="none" stroke="#6F9E3F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 118 C31 118 21 100 25 84 C41 94 48 106 50 118 Z" fill="#A7C63E" stroke="none"></path><path d="M50 112 C69 112 81 96 77 80 C59 90 52 100 50 112 Z" fill="#8FB84A" stroke="none"></path><path d="M36 80 C33 60 39 46 50 46 C61 46 67 60 64 80 C56 86 44 86 36 80 Z" fill="#F8B9D4" stroke="none"></path><path d="M50 46 C56 46 61 56 62 70 C58 68 54 66 50 66 C50 58 50 52 50 46 Z" fill="#F06BA8" stroke="none"></path><path d="M50 46 C44 46 39 56 38 70 C42 68 46 66 50 66 C50 58 50 52 50 46 Z" fill="#F8B9D4" stroke="none"></path></g></svg></div>
     <div class="eyebrow">yang membuat Rekah berbeda</div>
     <h2>Menemani, bukan menilai</h2>
-    <p class="lead">Kami percaya setiap anak mekar dengan iramanya sendiri. Prinsip ini tertanam di setiap sudut Rekah, bukan sekadar janji.</p>
+    <p class="lead">Setiap anak mekar dengan iramanya sendiri. Prinsip ini ada di setiap sudut Rekah.</p>
     <div class="dna-grid">
       <div class="dna-item">
         <h3>Tanpa membandingkan</h3>
-        <p>Anakmu hanya dibandingkan dengan dirinya sendiri kemarin. Tidak ada peringkat, tidak ada anak lain sebagai tolok ukur.</p>
+        <p>Anakmu hanya dibandingkan dengan dirinya sendiri kemarin.</p>
       </div>
       <div class="dna-item">
         <h3>Merayakan, bukan mengoreksi</h3>
-        <p>Tidak ada skor, tidak ada rapor merah, tidak ada rasa tertinggal. Yang ada hanya perayaan atas langkah kecil.</p>
+        <p>Tanpa skor dan rapor merah. Yang ada perayaan langkah kecil.</p>
       </div>
       <div class="dna-item">
         <h3>Ramah untuk semua anak</h3>
-        <p>Setiap cara berkomunikasi dihargai setara, termasuk anak dengan kebutuhan khusus, tanpa bahasa yang melabeli.</p>
+        <p>Setiap cara berkomunikasi dihargai, termasuk anak berkebutuhan khusus, tanpa label.</p>
       </div>
       <div class="dna-item">
         <h3>Ditinjau psikolog</h3>
-        <p>Isi Rekah ditinjau psikolog sebelum sampai ke kamu, dengan rujukan tumbuh kembang tepercaya.</p>
+        <p>Isi Rekah ditinjau psikolog dan merujuk sumber tepercaya.</p>
       </div>
     </div>
   </div>
@@ -499,7 +500,7 @@ const HTML = `<!-- ===================== NAV ===================== -->
     <div class="fl sway" style="left:24px"><svg viewBox="0 0 100 150" style="width:100%;height:100%;display:block;overflow:visible"><g><path d="M50 149 C50 122 50 98 50 74" fill="none" stroke="#6F9E3F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 100 C40 96 34 88 31 78" fill="none" stroke="#6F9E3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 92 C60 88 66 80 69 70" fill="none" stroke="#6F9E3F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 116 C40 114 34 106 33 98 C42 102 48 109 50 116 Z" fill="#A7C63E" stroke="none"></path><circle cx="56" cy="70" r="4" fill="#F06BA8"></circle><circle cx="51.85410196624969" cy="75.70633909777092" r="4" fill="#F06BA8"></circle><circle cx="45.14589803375031" cy="73.52671151375483" r="4" fill="#F06BA8"></circle><circle cx="45.14589803375031" cy="66.47328848624517" r="4" fill="#F06BA8"></circle><circle cx="51.85410196624969" cy="64.29366090222908" r="4" fill="#F06BA8"></circle><circle cx="50" cy="70" r="2.6" fill="#FFE29A"></circle><circle cx="37" cy="74" r="4" fill="#F06BA8"></circle><circle cx="32.85410196624969" cy="79.70633909777092" r="4" fill="#F06BA8"></circle><circle cx="26.145898033750317" cy="77.52671151375483" r="4" fill="#F06BA8"></circle><circle cx="26.145898033750314" cy="70.47328848624517" r="4" fill="#F06BA8"></circle><circle cx="32.85410196624969" cy="68.29366090222908" r="4" fill="#F06BA8"></circle><circle cx="31" cy="74" r="2.6" fill="#FFE29A"></circle><circle cx="75" cy="66" r="4" fill="#F06BA8"></circle><circle cx="70.85410196624969" cy="71.70633909777092" r="4" fill="#F06BA8"></circle><circle cx="64.14589803375031" cy="69.52671151375483" r="4" fill="#F06BA8"></circle><circle cx="64.14589803375031" cy="62.47328848624516" r="4" fill="#F06BA8"></circle><circle cx="70.85410196624969" cy="60.29366090222908" r="4" fill="#F06BA8"></circle><circle cx="69" cy="66" r="2.6" fill="#FFE29A"></circle></g></svg></div>
     <div class="fl sway" style="right:24px"><svg viewBox="0 0 100 150" style="width:100%;height:100%;display:block;overflow:visible"><g><path d="M50 149 C49 120 50 100 50 86" fill="none" stroke="#6F9E3F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M50 122 C33 122 23 106 27 92 C43 102 49 111 50 122 Z" fill="#A7C63E" stroke="none"></path><path d="M50 130 C67 130 79 114 75 100 C57 110 52 119 50 130 Z" fill="#8FB84A" stroke="none"></path><circle cx="66" cy="56" r="8.5" fill="#5F84E6"></circle><circle cx="61.31370849898476" cy="67.31370849898477" r="8.5" fill="#5F84E6"></circle><circle cx="50" cy="72" r="8.5" fill="#5F84E6"></circle><circle cx="38.68629150101524" cy="67.31370849898477" r="8.5" fill="#5F84E6"></circle><circle cx="34" cy="56" r="8.5" fill="#5F84E6"></circle><circle cx="38.68629150101523" cy="44.68629150101524" r="8.5" fill="#5F84E6"></circle><circle cx="50" cy="40" r="8.5" fill="#5F84E6"></circle><circle cx="61.31370849898476" cy="44.68629150101523" r="8.5" fill="#5F84E6"></circle><circle cx="50" cy="56" r="10" fill="#FFE29A"></circle><circle cx="50" cy="56" r="5" fill="#8FB8F7"></circle></g></svg></div>
     <h2>Mulai temani tumbuh kembang si kecil hari ini.</h2>
-    <p>Tanpa membanding-bandingkan, selamanya.</p>
+    <p>Satu langkah kecil setiap hari, tanpa membandingkan.</p>
     <div class="harga" aria-label="Harga langganan Rekah">
       <span>Bulanan Rp79.000</span>
       <span>3 Bulan Rp200.000</span>
@@ -540,7 +541,7 @@ const HTML = `<!-- ===================== NAV ===================== -->
       </div>
     </div>
   </div>
-  <div class="disclaimer">Rekah adalah panduan pendampingan tumbuh kembang, bukan layanan medis darurat, dan tidak menggantikan konsultasi langsung dengan tenaga kesehatan. Layanan konsultasi tersedia terpisah serta bersifat non-darurat dan non-diagnostik.</div>
+  <div class="disclaimer">Rekah adalah panduan pendampingan tumbuh kembang, bukan layanan medis darurat, dan tidak menggantikan pemeriksaan tenaga kesehatan. Konsultasi psikolog tersedia terpisah, bersifat non-darurat dan non-diagnostik.</div>
 </footer>`;
 
 export default function RekahLandingPage() {

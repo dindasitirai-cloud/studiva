@@ -102,7 +102,9 @@ export default function DashboardShellTier2() {
           {/* Mobile: header atas dengan logo + avatar */}
           <HeaderMobileRekah />
 
-          <main className="flex-1">
+          {/* relative + overflow-x-clip: hiasan halaman (mis. lingkaran di pojok Langganan) bisa
+              menempel ke tepi kanan area konten di layar lebar tanpa memicu scroll horizontal. */}
+          <main className="relative flex-1 overflow-x-clip">
             <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 pb-[80px] lg:pb-0">
               {/*
                 Remount seluruh subtree saat anak aktif berganti. Tanpa ini,

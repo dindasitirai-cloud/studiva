@@ -114,7 +114,9 @@ export default function SubscriptionTier2() {
   const terlihat = semua ? baris : baris.slice(0, BATAS_BARIS);
 
   return (
-    <div className="relative min-h-full overflow-hidden bg-kanvas font-nunito text-pekat">
+    // Akar halaman sengaja tidak `relative`: lingkaran hiasan menempel ke pojok kanan atas <main>
+    // (DashboardShellTier2), bukan ke kolom konten max-w-7xl, jadi tidak terpotong di layar lebar.
+    <div className="font-nunito text-pekat">
       <style>{GAYA}</style>
       <div aria-hidden className="pointer-events-none absolute -right-[60px] -top-10 h-[260px] w-[260px] rounded-full bg-[#FCE3EE] opacity-60" />
 

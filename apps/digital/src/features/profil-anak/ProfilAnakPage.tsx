@@ -48,7 +48,7 @@ const KELOLA = '/dashboard/tier2/kelola';
 // ── Token handoff (Langit Peony, hi-fi) ──────────────────────────────────────
 const kartuPutih = 'rounded-[28px] border-[1.5px] border-[#F6E6EE] bg-white px-6 py-[22px]';
 const judulKartu = 'font-fredoka text-[21px] font-bold text-pekat';
-const tautan = 'rounded font-nunito text-[13.5px] font-extrabold text-[#D2559A] transition hover:text-rekah focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah';
+const tautan = 'inline-flex min-h-[44px] flex-none items-center whitespace-nowrap rounded font-nunito text-[13.5px] font-extrabold text-[#D2559A] transition hover:text-rekah focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah';
 const fokusCincin = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah focus-visible:ring-offset-2';
 
 // Warna tile fakta per pertanyaan (handoff §4); sisanya bergilir dari palet yang sama.

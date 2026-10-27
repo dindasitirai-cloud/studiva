@@ -171,11 +171,6 @@ export default function LoginPage() {
       <div className="flex flex-1 items-center justify-center bg-kanvas px-4 py-12 sm:px-8">
         <div className="w-full max-w-[420px]">
 
-          {/* Mobile logo */}
-          <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <LogoRekah size={36} withWordmark />
-          </div>
-
           <h1 className="mb-1 font-bricolage text-[28px] font-extrabold text-pekat sm:text-[32px]">Masuk</h1>
           <p className="mb-7 text-[15px] text-pekat/60">Masuk ke akun Rekah kamu</p>
 
@@ -215,7 +210,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setError('Fitur lupa password akan segera tersedia. Hubungi kami via WhatsApp.')}
-                  className="text-[13px] font-semibold text-rekah transition hover:underline"
+                  className="-my-3 inline-flex min-h-[44px] items-center px-1 text-[13px] font-semibold text-rekah transition hover:underline"
                 >
                   Lupa password?
                 </button>
@@ -228,26 +223,26 @@ export default function LoginPage() {
                   onKeyDown={e => e.key === 'Enter' && handleSubmit()}
                   placeholder="Password kamu"
                   autoComplete="current-password"
-                  className="w-full rounded-[14px] border border-daun/30 bg-white px-4 py-3 pr-11 text-[15px] text-pekat placeholder:text-pekat/35 transition focus:border-rekah focus:outline-none focus:ring-2 focus:ring-rekah/20 min-h-[52px]"
+                  className="w-full rounded-[14px] border border-daun/30 bg-white px-4 py-3 pr-12 text-[15px] text-pekat placeholder:text-pekat/35 transition focus:border-rekah focus:outline-none focus:ring-2 focus:ring-rekah/20 min-h-[52px]"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(s => !s)}
                   aria-label={showPass ? 'Sembunyikan password' : 'Tampilkan password'}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-pekat/40 transition hover:text-pekat"
+                  className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-pekat/40 transition hover:text-pekat focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah"
                 >
-                  {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showPass ? <EyeOff className="h-[18px] w-[18px]" /> : <Eye className="h-[18px] w-[18px]" />}
                 </button>
               </div>
             </div>
 
             {/* Ingat saya */}
-            <label className="flex cursor-pointer items-center gap-2.5 text-[14px] text-pekat/70">
+            <label className="flex min-h-[44px] cursor-pointer items-center gap-2.5 self-start text-[14px] text-pekat/70">
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={e => setRememberMe(e.target.checked)}
-                className="h-4 w-4 rounded accent-rekah"
+                className="h-5 w-5 rounded accent-rekah"
               />
               Ingat saya
             </label>

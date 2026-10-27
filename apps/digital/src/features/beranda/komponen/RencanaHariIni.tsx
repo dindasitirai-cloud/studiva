@@ -38,7 +38,7 @@ export default function RencanaHariIni({ items, status, onBuka }: Props) {
       </div>
       <div style={{ position: 'relative', paddingTop: 14, flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
         <div aria-hidden style={{ position: 'absolute', left: 0, right: 0, top: 20, height: 2, background: '#E4CDB4' }} />
-        <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 14, flex: 1 }}>
+        <div className="rhi-grid" style={{ position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 14, flex: 1 }}>
           {SLOTS.map(s => (
             <div key={s.key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', alignSelf: 'stretch' }}>
               <div aria-hidden style={{ width: 14, height: 14, borderRadius: '50%', border: '2.5px solid #8A5A74', background: '#FFF3E6', zIndex: 1 }} />

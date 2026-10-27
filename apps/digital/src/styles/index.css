@@ -242,3 +242,34 @@
     display: none !important;
   }
 }
+
+
+/* ── Tampilan HP (Phase 38, 2026-10-27) ─────────────────────────────────────
+   Banyak komponen memakai gaya inline; aturan di bawah hanya berlaku di layar
+   sempit sehingga tampilan desktop tidak berubah. */
+@media (max-width: 640px) {
+  /* Huruf terkecil (di bawah 11px) dinaikkan supaya terbaca di HP. */
+  [style*="font-size: 9px"], [style*="font-size: 9.5px"], [style*="font-size: 10px"], [style*="font-size: 10.5px"],
+  .text-\[9px\], .text-\[9\.5px\], .text-\[10px\], .text-\[10\.5px\] { font-size: 11.5px !important; }
+
+  /* Beranda: kepala kebun lebih pendek, sapaan & kartu anak bertumpuk. */
+  .hg-taman { height: 220px !important; }
+  .hg-isi { flex-direction: column !important; align-items: stretch !important; gap: 14px !important; padding: 20px 22px 22px !important; }
+  .hg-isi > button { align-self: flex-start; }
+
+  /* Beranda: Rencana hari ini digeser ke samping, satu kolom selebar layar. */
+  .rhi-grid { grid-template-columns: repeat(4, minmax(210px, 74vw)) !important; overflow-x: auto; scroll-snap-type: x mandatory;
+    margin: 0 -20px; padding: 0 20px 8px; scroll-padding-left: 20px; scrollbar-width: none; }
+  .rhi-grid::-webkit-scrollbar { display: none; }
+  .rhi-grid > * { scroll-snap-align: start; }
+}
+
+@media (max-width: 1023px) {
+  /* Kelola: papan Pagi/Siang/Malam digeser per kolom, tiap kolom hampir selebar layar. */
+  .pk-gulir { scroll-snap-type: x mandatory; }
+  .pk-papan { grid-template-columns: repeat(3, minmax(260px, 82vw)) !important; min-width: 0 !important; }
+  .pk-papan > * { scroll-snap-align: start; }
+  /* Ikon kecil di kartu kegiatan: area sentuh diperluas tanpa menggeser tata letak. */
+  .pk-ikon { padding: 7px !important; margin: -7px -2px !important; }
+  .pk-ikon-panah { padding: 2px 8px !important; margin: -2px -6px !important; }
+}

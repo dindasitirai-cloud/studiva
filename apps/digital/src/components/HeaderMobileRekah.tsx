@@ -54,8 +54,8 @@ export default function HeaderMobileRekah() {
             aria-haspopup="menu"
             aria-label={TEKS.BUKA_MENU}
             style={{
-              width: 36,
-              height: 36,
+              width: 40,
+              height: 40,
               borderRadius: '50%',
               background: '#E0526B',
               border: 'none',

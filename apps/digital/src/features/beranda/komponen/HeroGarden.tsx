@@ -18,7 +18,7 @@ const KEBUN: TanamanCfg[] = [
 export default function HeroGarden({ baris1, baris2, namaAnak, usiaTeks, inisial, onChip }: Props) {
   return (
     <div style={{ position: 'relative', overflow: 'hidden', borderRadius: 30, background: '#fff', boxShadow: '0 22px 48px -40px rgba(90,50,70,.5)', marginBottom: 28 }}>
-      <div style={{ position: 'relative', height: 340, overflow: 'hidden', background: '#6E3B57' }}>
+      <div className="hg-taman" style={{ position: 'relative', height: 340, overflow: 'hidden', background: '#6E3B57' }}>
         <div aria-hidden style={{ position: 'absolute', left: -70, top: -6, width: 250, height: 220, borderRadius: '50% 50% 46% 54%/56% 44% 50% 50%', background: '#8A5A74', opacity: .6 }} />
         <div aria-hidden style={{ position: 'absolute', right: -44, top: 6, width: 192, height: 184, borderRadius: '52% 48% 44% 56%/48% 52% 50% 50%', background: '#B4477F', opacity: .45 }} />
         <div aria-hidden style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 44, background: '#F8D8E6', backgroundImage: 'radial-gradient(circle at 50% -1px,#6E3B57 16px,transparent 16.4px)', backgroundSize: 'calc(100% / 32) 32px', backgroundRepeat: 'repeat-x' }} />
@@ -28,7 +28,7 @@ export default function HeroGarden({ baris1, baris2, namaAnak, usiaTeks, inisial
           {KEBUN.map((k, i) => <Tanaman key={i} {...k} />)}
         </div>
       </div>
-      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, padding: '22px 30px 24px' }}>
+      <div className="hg-isi" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, padding: '22px 30px 24px' }}>
         <div style={{ minWidth: 0 }}>
           <div style={{ fontFamily: 'Fredoka, system-ui, sans-serif', fontWeight: 600, fontSize: 24, color: '#6E3B57', lineHeight: 1.2 }}>{baris1}</div>
           <div style={{ fontFamily: 'Nunito, system-ui, sans-serif', fontWeight: 700, fontSize: 14.5, color: '#8A5A74', marginTop: 6 }}>{baris2}</div>

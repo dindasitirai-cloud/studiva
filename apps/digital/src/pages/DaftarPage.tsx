@@ -185,11 +185,6 @@ export default function DaftarPage() {
       <div className="flex flex-1 justify-center bg-kanvas px-4 py-12 sm:px-8">
         <div className="w-full max-w-[480px]">
 
-          {/* Logo mobile */}
-          <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <LogoRekah size={36} withWordmark />
-          </div>
-
           <PenandaLangkah aktif={langkah} />
 
           {/* ── Langkah 1: pilih paket ─────────────────────────────── */}
@@ -293,7 +288,7 @@ export default function DaftarPage() {
                   <label htmlFor="daftar-password" className="mb-1.5 block text-[13px] font-semibold text-pekat">Password</label>
                   <div className="relative">
                     <input id="daftar-password" type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setField('password', e.target.value)} placeholder="Minimal 8 karakter" autoComplete="new-password" className={`${inputCls('password')} pr-11`} />
-                    <button type="button" onClick={() => setShowPass(s => !s)} aria-label={showPass ? 'Sembunyikan password' : 'Tampilkan password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-pekat/40 transition hover:text-pekat">
+                    <button type="button" onClick={() => setShowPass(s => !s)} aria-label={showPass ? 'Sembunyikan password' : 'Tampilkan password'} className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-pekat/40 transition hover:text-pekat focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah">
                       {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
@@ -304,7 +299,7 @@ export default function DaftarPage() {
                   <label htmlFor="daftar-konfirmasi" className="mb-1.5 block text-[13px] font-semibold text-pekat">Ulangi password</label>
                   <div className="relative">
                     <input id="daftar-konfirmasi" type={showKonfirm ? 'text' : 'password'} value={form.konfirmasiPassword} onChange={e => setField('konfirmasiPassword', e.target.value)} onKeyDown={e => e.key === 'Enter' && handleDaftar()} placeholder="Ketik ulang password" autoComplete="new-password" className={`${inputCls('konfirmasiPassword')} pr-11`} />
-                    <button type="button" onClick={() => setShowKonfirm(s => !s)} aria-label={showKonfirm ? 'Sembunyikan password' : 'Tampilkan password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-pekat/40 transition hover:text-pekat">
+                    <button type="button" onClick={() => setShowKonfirm(s => !s)} aria-label={showKonfirm ? 'Sembunyikan password' : 'Tampilkan password'} className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-pekat/40 transition hover:text-pekat focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah">
                       {showKonfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
@@ -313,7 +308,7 @@ export default function DaftarPage() {
 
                 <div>
                   <label className="flex cursor-pointer items-start gap-2.5 text-[13px] leading-[1.6] text-pekat/70">
-                    <input type="checkbox" checked={form.setuju} onChange={e => setField('setuju', e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 rounded accent-rekah" />
+                    <input type="checkbox" checked={form.setuju} onChange={e => setField('setuju', e.target.checked)} className="mt-0.5 h-5 w-5 shrink-0 rounded accent-rekah" />
                     <span>
                       Saya setuju dengan{' '}
                       <Link to="/tentang" className="font-semibold text-rekah no-underline hover:underline">Syarat &amp; Ketentuan</Link>

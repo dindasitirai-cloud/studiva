@@ -292,18 +292,18 @@ function KartuAktivitas({
           {badge && <span style={{ display: 'inline-block', marginTop: 4, fontFamily: 'Nunito, sans-serif', fontWeight: 800, fontSize: 9.5, letterSpacing: '.4px', textTransform: 'uppercase', color: '#B4477F', background: '#FCE4EE', borderRadius: 999, padding: '2px 8px' }}>{badge}</span>}
         </div>
         {onUbahKeg && !ubah && (
-          <button type="button" aria-label={`Ubah ${nm}`} onClick={bukaUbah} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: '#C9AEBD', padding: 0, lineHeight: 1 }}>
+          <button type="button" className="pk-ikon" aria-label={`Ubah ${nm}`} onClick={bukaUbah} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: '#C9AEBD', padding: 0, lineHeight: 1 }}>
             <Pencil style={{ width: 15, height: 15 }} strokeWidth={2} />
           </button>
         )}
         {(onUp || onDown) && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flexShrink: 0 }}>
-            <button type="button" aria-label="Naikkan urutan" onClick={onUp} disabled={!canUp} style={{ background: 'none', border: 'none', cursor: canUp ? 'pointer' : 'default', color: canUp ? '#B79AAC' : '#EAD8E2', padding: 0, lineHeight: 0 }}><ChevronUp style={{ width: 16, height: 16 }} strokeWidth={2.4} /></button>
-            <button type="button" aria-label="Turunkan urutan" onClick={onDown} disabled={!canDown} style={{ background: 'none', border: 'none', cursor: canDown ? 'pointer' : 'default', color: canDown ? '#B79AAC' : '#EAD8E2', padding: 0, lineHeight: 0 }}><ChevronDown style={{ width: 16, height: 16 }} strokeWidth={2.4} /></button>
+            <button type="button" className="pk-ikon-panah" aria-label="Naikkan urutan" onClick={onUp} disabled={!canUp} style={{ background: 'none', border: 'none', cursor: canUp ? 'pointer' : 'default', color: canUp ? '#B79AAC' : '#EAD8E2', padding: 0, lineHeight: 0 }}><ChevronUp style={{ width: 16, height: 16 }} strokeWidth={2.4} /></button>
+            <button type="button" className="pk-ikon-panah" aria-label="Turunkan urutan" onClick={onDown} disabled={!canDown} style={{ background: 'none', border: 'none', cursor: canDown ? 'pointer' : 'default', color: canDown ? '#B79AAC' : '#EAD8E2', padding: 0, lineHeight: 0 }}><ChevronDown style={{ width: 16, height: 16 }} strokeWidth={2.4} /></button>
           </div>
         )}
         {onDelKeg && (
-          <button type="button" aria-label={`Hapus ${nm}`} onClick={onDelKeg} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: '#C9AEBD', padding: 0, lineHeight: 1 }}>
+          <button type="button" className="pk-ikon" aria-label={`Hapus ${nm}`} onClick={onDelKeg} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: '#C9AEBD', padding: 0, lineHeight: 1 }}>
             <Trash2 style={{ width: 15, height: 15 }} strokeWidth={2} />
           </button>
         )}
@@ -387,7 +387,7 @@ function KartuAktivitas({
                           )}
                         </div>
                       </div>
-                      <button type="button" aria-label={`Hapus ${it.t}`} onClick={() => mintaHapus(it, def)} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: '#C9AEBD', marginTop: 2, padding: 0, lineHeight: 1 }}>
+                      <button type="button" className="pk-ikon" aria-label={`Hapus ${it.t}`} onClick={() => mintaHapus(it, def)} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: '#C9AEBD', marginTop: 2, padding: 0, lineHeight: 1 }}>
                         <Trash2 style={{ width: 14, height: 14 }} strokeWidth={2} />
                       </button>
                     </div>
@@ -423,7 +423,7 @@ function KartuAktivitas({
                         {param?.langkahPendek && <span style={{ display: 'inline-block', fontFamily: 'Nunito, sans-serif', fontWeight: 800, fontSize: 11, lineHeight: 1.3, color: '#4F7A48', background: '#E7F2E4', borderRadius: 999, padding: '2px 9px' }}>versi singkat · beberapa menit</span>}
                       </div>
                     </div>
-                    <button type="button" aria-label={`Hapus ${it.t}`} onClick={() => mintaHapus(it, def)} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: '#C9AEBD', marginTop: 2, padding: 0, lineHeight: 1 }}>
+                    <button type="button" className="pk-ikon" aria-label={`Hapus ${it.t}`} onClick={() => mintaHapus(it, def)} style={{ flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: '#C9AEBD', marginTop: 2, padding: 0, lineHeight: 1 }}>
                       <Trash2 style={{ width: 14, height: 14 }} strokeWidth={2} />
                     </button>
                   </div>
@@ -573,8 +573,8 @@ export default function PapanKegiatan({ idAnak, tanggal, nilaiFokus, centangHari
 
   return (
     <>
-      <div className="overflow-x-auto -mx-1 px-1 pb-2 lg:overflow-visible lg:mx-0 lg:px-0">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 14, alignItems: 'start', minWidth: 620 }}>
+      <div className="pk-gulir overflow-x-auto -mx-1 px-1 pb-2 lg:overflow-visible lg:mx-0 lg:px-0">
+        <div className="pk-papan" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 14, alignItems: 'start', minWidth: 620 }}>
           {DEFAULT_KOLOM.map(col => {
             const kegs = plan.orderedKeg(col.key);
             const cap = SLOT_CAP[col.key];

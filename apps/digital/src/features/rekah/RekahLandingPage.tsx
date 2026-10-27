@@ -190,6 +190,22 @@ const CSS = `@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@
     .strip{padding:20px}
     .domains{padding:30px 22px}
     .disclaimer{padding:0 16px}
+    .nav-cta{gap:4px}
+    .nav-cta .btn{white-space:nowrap;font-size:15px}
+    .nav-cta .btn-ghost{color:var(--plum);padding:12px 8px}
+    .nav-cta .btn-ghost .panah{display:none}
+    .nav-cta .btn-pink{padding:12px 18px}
+    .cta{padding:44px 20px 132px}
+    .cta .fl{width:64px;height:106px}
+    .cta .harga-link{display:inline-flex;align-items:center;min-height:44px}
+    .foot-col{gap:0}
+    .foot-col a{padding:10px 0;font-size:14px}
+    .foot-cols{gap:28px}
+  }
+  @media (max-width:380px){
+    .logo{font-size:22px}
+    .nav-cta .btn-pink{padding:11px 14px;font-size:14px}
+    .nav-cta .btn-ghost{font-size:14px;padding:11px 6px}
   }`;
 
 const HTML = `<!-- ===================== NAV ===================== -->
@@ -204,7 +220,7 @@ const HTML = `<!-- ===================== NAV ===================== -->
       <a href="/pricing">Harga</a>
     </nav>
     <div class="nav-cta">
-      <a class="btn btn-ghost" href="/login">Masuk →</a>
+      <a class="btn btn-ghost" href="/login">Masuk<span class="panah"> →</span></a>
       <a class="btn btn-pink" href="/daftar">Daftar Sekarang</a>
     </div>
   </div>

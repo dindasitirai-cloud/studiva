@@ -336,7 +336,7 @@ export default function TemaniPage() {
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#F06BA8', display: 'block' }} />
               <span className="font-nunito" style={{ fontWeight: 800, fontSize: 11.5, letterSpacing: 1, textTransform: 'uppercase', color: '#B4477F' }}>Temani</span>
             </span>
-            <h1 className="font-shantell" style={{ fontWeight: 700, fontSize: 52, color: '#6E3B57', margin: '12px 0 0', letterSpacing: -1, lineHeight: 0.98 }}>Mari kita jalani bersama</h1>
+            <h1 className="font-shantell" style={{ fontWeight: 700, fontSize: 'clamp(38px, 10.5vw, 52px)', color: '#6E3B57', margin: '12px 0 0', letterSpacing: -1, lineHeight: 0.98 }}>Mari kita jalani bersama</h1>
             <div className="font-nunito" style={{ fontWeight: 600, fontSize: 17, color: '#7A4A64', marginTop: 8 }}>Pelan-pelan saja — satu langkah kecil tiap hari, bersama {nama}.</div>
           </div>
         </div>

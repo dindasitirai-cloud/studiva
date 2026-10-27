@@ -324,12 +324,12 @@ export default function BantuPage() {
             ))}
           </div>
 
-          <div className="mt-4 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-4 grid grid-cols-2 gap-2.5 sm:gap-3.5 lg:grid-cols-3">
             {situasiTampil.map(s => {
               const ink = TOPIC_INK[s.slug] ?? '#F06BA8';
               return (
                 <button key={s.slug} onClick={() => keGuideAtauClarify(s)}
-                  className="group flex flex-col items-start gap-2 rounded-[20px] bg-white px-4 pb-[15px] pt-4 text-left transition hover:-translate-y-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                  className="group flex flex-col items-start gap-2 rounded-[20px] bg-white px-3.5 pb-[15px] pt-4 text-left sm:px-4 transition hover:-translate-y-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                   style={{ boxShadow: '0 18px 40px -34px rgba(90,50,70,.55)', outlineColor: ink }}>
                   <Stem c={ink} h={28} />
                   <span className="font-fredoka text-[16.5px] font-semibold" style={{ color: '#6E3B57' }}>{s.label}</span>

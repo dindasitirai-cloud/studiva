@@ -8,7 +8,7 @@
 import { useMemo, useState } from 'react';
 
 export type Slot = 'pagi' | 'siang' | 'malam' | 'kelola';
-export interface PlanItem { id: string; hari: number; slot: Slot; teks: string; done: boolean }
+export interface PlanItem { id: string; hari: number; slot: Slot; teks: string; done: boolean; /** Waktu ditandai (ISO). */ ditandaiPada?: string }
 
 /** Senin (awal minggu) dari tanggal d, jam 00:00 lokal. */
 export function awalMinggu(d: Date): Date {
@@ -53,7 +53,7 @@ export function useRencanaMinggu(idAnak: string, senin: string): RencanaStore {
     const t = teks.trim(); if (!t) return;
     simpan([...items, { id: `r-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 5)}`, hari, slot, teks: t, done: false }]);
   };
-  const toggle = (id: string) => simpan(items.map(p => p.id === id ? { ...p, done: !p.done } : p));
+  const toggle = (id: string) => simpan(items.map(p => p.id === id ? { ...p, done: !p.done, ditandaiPada: p.done ? undefined : new Date().toISOString() } : p));
   const hapus = (id: string) => simpan(items.filter(p => p.id !== id));
   return { items, tambah, toggle, hapus };
 }

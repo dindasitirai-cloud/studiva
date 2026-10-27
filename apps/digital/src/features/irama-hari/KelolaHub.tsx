@@ -330,11 +330,12 @@ function IramaKeseharian({ nilaiFokus, centangKebiasaan, tanggalHariIni, onCenta
     ...kelolaHari.filter(p => !p.done).map(p => ({ id: `rc:${p.id}`, judul: p.teks, sumber: RENCANA })),
   ];
   const dikelolaSudah: ItemDikelola[] = [
-    ...kelolaHari.filter(p => p.done).map(p => ({ id: `rc:${p.id}`, judul: p.teks, sumber: RENCANA, selesaiPada: tglAktifISO })),
+    ...kelolaHari.filter(p => p.done).map(p => ({ id: `rc:${p.id}`, judul: p.teks, sumber: RENCANA, ditandaiPada: p.ditandaiPada ?? '' })),
     ...[...inbox.rampung]
-      .sort((a, b) => (inbox.selesaiPada[b.id] ?? '').localeCompare(inbox.selesaiPada[a.id] ?? ''))
-      .map(i => ({ id: i.id, judul: i.judul, sumber: i.src === 'manual' ? undefined : SUMBER[i.src], selesaiPada: inbox.selesaiPada[i.id] || undefined })),
+      .sort((a, b) => (inbox.ditandaiPada[b.id] ?? '').localeCompare(inbox.ditandaiPada[a.id] ?? ''))
+      .map(i => ({ id: i.id, judul: i.judul, sumber: i.src === 'manual' ? undefined : SUMBER[i.src], ditandaiPada: inbox.ditandaiPada[i.id] })),
   ];
+  const hapusDikelola = (id: string) => { if (id.startsWith('rc:')) rencana.hapus(id.slice(3)); else inbox.hapus(id); };
 
   const resetHariIni = () => { setOffset(0); setPilihHari(hariIndex(new Date())); };
 
@@ -444,7 +445,7 @@ function IramaKeseharian({ nilaiFokus, centangKebiasaan, tanggalHariIni, onCenta
       </p>
 
       {dikelolaTerbuka && (
-        <DaftarDikelola belum={dikelolaBelum} sudah={dikelolaSudah} onToggle={toggleTugas} onTambah={inbox.tambah} onTutup={() => setDikelolaTerbuka(false)} />
+        <DaftarDikelola belum={dikelolaBelum} sudah={dikelolaSudah} onToggle={toggleTugas} onTambah={inbox.tambah} onHapus={hapusDikelola} onTutup={() => setDikelolaTerbuka(false)} />
       )}
     </>
   );

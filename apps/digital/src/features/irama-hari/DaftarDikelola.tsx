@@ -6,7 +6,7 @@
 // sebuah item langsung memindahkannya ke bagian bawah (dan sebaliknya).
 // =============================================================
 import React, { useEffect, useRef, useState } from 'react';
-import { Check, Plus, X } from 'lucide-react';
+import { Check, Plus, Trash2, X } from 'lucide-react';
 
 export interface ItemDikelola {
   id: string;
@@ -14,17 +14,26 @@ export interface ItemDikelola {
   ket?: string;
   sumber?: { label: string; warna: string };
   due?: string;
-  /** YYYY-MM-DD; kosong bila tidak tercatat. Hanya untuk item yang sudah ditandai. */
-  selesaiPada?: string;
+  /** Waktu ditandai: ISO, atau tanggal saja (YYYY-MM-DD) untuk data lama, '' bila tidak tercatat. */
+  ditandaiPada?: string;
 }
 
-const BULAN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-const tglPendek = (iso?: string) => {
-  if (!iso) return '';
-  const [y, m, d] = iso.split('-').map(Number);
-  if (!y || !m || !d) return '';
-  return `${d} ${BULAN[m - 1]}`;
-};
+type Filter = 'semua' | 'belum' | 'sudah';
+
+/** "Ditandai Selasa, 27 Okt 2026 pukul 16.05" — tanggal saja untuk data lama. */
+export function teksDitandai(ditandai?: string): string {
+  if (!ditandai) return 'Waktu menandai tidak tercatat';
+  if (ditandai.length === 10) {
+    const d = new Date(`${ditandai}T12:00:00`);
+    if (isNaN(d.getTime())) return 'Waktu menandai tidak tercatat';
+    return `Ditandai ${d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })}`;
+  }
+  const d = new Date(ditandai);
+  if (isNaN(d.getTime())) return 'Waktu menandai tidak tercatat';
+  const tgl = d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
+  const jam = d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  return `Ditandai ${tgl} pukul ${jam}`;
+}
 
 const GAYA = `
 @keyframes ddMasuk{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
@@ -36,15 +45,16 @@ const GAYA = `
 @media (prefers-reduced-motion: reduce){.dd-baris,.dd-latar,.dd-panel{animation:none}}
 `;
 
-function Baris({ it, sudah, onToggle }: { it: ItemDikelola; sudah: boolean; onToggle: () => void }) {
+function Baris({ it, sudah, onToggle, onHapus }: { it: ItemDikelola; sudah: boolean; onToggle: () => void; onHapus?: () => void }) {
+  const [yakin, setYakin] = useState(false);
   return (
-    <li className="dd-baris">
+    <li className="dd-baris relative">
       <button
         type="button"
         role="checkbox"
         aria-checked={sudah}
         onClick={onToggle}
-        className={`flex w-full items-start gap-3 rounded-[16px] px-3.5 py-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah ${
+        className={`flex w-full items-start gap-3 rounded-[16px] py-3 pl-3.5 ${onHapus ? 'pr-14' : 'pr-3.5'} text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah ${
           sudah ? 'bg-[#FBF3F8]' : 'bg-white shadow-[0_10px_22px_-20px_rgba(90,50,70,.8)] hover:bg-[#FFF9FC]'
         }`}
       >
@@ -59,7 +69,10 @@ function Baris({ it, sudah, onToggle }: { it: ItemDikelola; sudah: boolean; onTo
         <span className="min-w-0 flex-1">
           <span className={`block font-nunito text-[15px] font-bold leading-snug ${sudah ? 'text-[#A98BA0] line-through' : 'text-pekat'}`}>{it.judul}</span>
           {it.ket && !sudah && <span className="mt-0.5 block font-nunito text-[13px] font-semibold leading-snug text-[#8A5A74]">{it.ket}</span>}
-          {(it.sumber || it.due || (sudah && it.selesaiPada)) && (
+          {sudah && (
+            <span className="mt-1 block font-nunito text-[12.5px] font-bold text-[#5F84E6]">{teksDitandai(it.ditandaiPada)}</span>
+          )}
+          {(it.sumber || (it.due && !sudah)) && (
             <span className="mt-1.5 flex flex-wrap items-center gap-1.5">
               {it.sumber && (
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F7EEF5] px-2.5 py-0.5 font-nunito text-[12px] font-extrabold text-[#8A5A74]">
@@ -67,11 +80,23 @@ function Baris({ it, sudah, onToggle }: { it: ItemDikelola; sudah: boolean; onTo
                 </span>
               )}
               {it.due && !sudah && <span className="font-nunito text-[12px] font-extrabold text-[#8A5A74]">{it.due}</span>}
-              {sudah && it.selesaiPada && <span className="font-nunito text-[12px] font-bold text-[#A98BA0]">Selesai {tglPendek(it.selesaiPada)}</span>}
             </span>
           )}
         </span>
       </button>
+      {onHapus && !yakin && (
+        <button type="button" onClick={() => setYakin(true)} aria-label={`Hapus ${it.judul}`}
+          className="absolute right-1.5 top-1.5 flex h-11 w-11 items-center justify-center rounded-full text-[#B79AAC] transition hover:bg-[#FCE3EE] hover:text-[#C6407F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah">
+          <Trash2 className="h-[18px] w-[18px]" strokeWidth={2} />
+        </button>
+      )}
+      {onHapus && yakin && (
+        <div role="alertdialog" aria-label={`Hapus ${it.judul}?`} className="mt-1.5 flex flex-wrap items-center gap-2 rounded-[14px] bg-[#FFF0F4] px-3.5 py-2.5">
+          <span className="flex-1 font-nunito text-[13.5px] font-bold text-[#8A3A66]">Hapus permanen? Catatan waktunya ikut terhapus.</span>
+          <button type="button" onClick={() => setYakin(false)} className="h-10 rounded-full px-3.5 font-nunito text-[13.5px] font-extrabold text-pekat hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah">Batal</button>
+          <button type="button" onClick={onHapus} className="h-10 rounded-full bg-[#C6407F] px-4 font-nunito text-[13.5px] font-extrabold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah">Hapus</button>
+        </div>
+      )}
     </li>
   );
 }
@@ -81,15 +106,18 @@ export default function DaftarDikelola({
   sudah,
   onToggle,
   onTambah,
+  onHapus,
   onTutup,
 }: {
   belum: ItemDikelola[];
   sudah: ItemDikelola[];
   onToggle: (id: string) => void;
   onTambah: (judul: string) => void;
+  onHapus: (id: string) => void;
   onTutup: () => void;
 }) {
   const [teks, setTeks] = useState('');
+  const [filter, setFilter] = useState<Filter>('semua');
   const panelRef = useRef<HTMLDivElement>(null);
 
   // Fokus ke jendela, kunci gulir halaman, Esc untuk menutup, fokus kembali saat ditutup.
@@ -164,6 +192,16 @@ export default function DaftarDikelola({
             )}
           </div>
 
+          <div role="tablist" aria-label="Saring daftar" className="mt-4 flex gap-1.5 overflow-x-auto rounded-full bg-[#F7EEF5] p-1">
+            {([['semua', 'Semua', total], ['belum', 'Belum ditandai', belum.length], ['sudah', 'Sudah ditandai', sudah.length]] as [Filter, string, number][]).map(([k, label, n]) => (
+              <button key={k} type="button" role="tab" aria-selected={filter === k} onClick={() => setFilter(k)}
+                className={`flex h-10 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 font-nunito text-[13.5px] font-extrabold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rekah ${filter === k ? 'bg-white text-pekat shadow-[0_6px_14px_-10px_rgba(90,50,70,.7)]' : 'text-[#8A5A74] hover:text-pekat'}`}>
+                {label} <span className={`rounded-full px-1.5 text-[12px] ${filter === k ? 'bg-[#FCE3EE] text-[#B4477F]' : 'bg-white/70'}`}>{n}</span>
+              </button>
+            ))}
+          </div>
+
+          {filter !== 'sudah' && (
           <section aria-labelledby="dd-belum" className="mt-5">
             <h3 id="dd-belum" className="mb-2.5 flex items-center gap-2 font-nunito text-[13px] font-extrabold uppercase tracking-[.08em] text-[#B4477F]">
               Belum ditandai <span className="rounded-full bg-[#FCE3EE] px-2 py-0.5 text-[12px] tracking-normal">{belum.length}</span>
@@ -172,12 +210,14 @@ export default function DaftarDikelola({
               <p className="rounded-[16px] bg-white px-4 py-5 text-center font-nunito text-[14px] font-semibold text-[#8A5A74]">Semua sudah dikelola.</p>
             ) : (
               <ul className="flex flex-col gap-2">
-                {belum.map(it => <Baris key={`b-${it.id}`} it={it} sudah={false} onToggle={() => onToggle(it.id)} />)}
+                {belum.map(it => <Baris key={`b-${it.id}`} it={it} sudah={false} onToggle={() => onToggle(it.id)} onHapus={() => onHapus(it.id)} />)}
               </ul>
             )}
           </section>
+          )}
 
-          <section aria-labelledby="dd-sudah" className="mt-6">
+          {filter !== 'belum' && (
+          <section aria-labelledby="dd-sudah" className={filter === 'sudah' ? 'mt-5' : 'mt-6'}>
             <h3 id="dd-sudah" className="mb-2.5 flex items-center gap-2 font-nunito text-[13px] font-extrabold uppercase tracking-[.08em] text-[#5F84E6]">
               Sudah ditandai <span className="rounded-full bg-[#DCEAFD] px-2 py-0.5 text-[12px] tracking-normal">{sudah.length}</span>
             </h3>
@@ -185,13 +225,14 @@ export default function DaftarDikelola({
               <p className="rounded-[16px] bg-white/70 px-4 py-5 text-center font-nunito text-[14px] font-semibold text-[#A98BA0]">Belum ada yang ditandai.</p>
             ) : (
               <ul className="flex flex-col gap-2">
-                {sudah.map(it => <Baris key={`s-${it.id}`} it={it} sudah onToggle={() => onToggle(it.id)} />)}
+                {sudah.map(it => <Baris key={`s-${it.id}`} it={it} sudah onToggle={() => onToggle(it.id)} onHapus={() => onHapus(it.id)} />)}
               </ul>
             )}
           </section>
+          )}
 
           <p className="mt-5 font-nunito text-[12.5px] font-semibold leading-relaxed text-[#A98BA0]">
-            Ketuk lagi item yang sudah ditandai untuk mengembalikannya. Yang selesai juga tercatat di Jurnal.
+            Ketuk lagi item yang sudah ditandai untuk mengembalikannya. Semua item dan waktu menandainya tersimpan di akunmu dan tidak hilang kecuali kamu hapus. Yang selesai juga tercatat di Jurnal.
           </p>
         </div>
       </div>

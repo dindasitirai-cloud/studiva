@@ -66,4 +66,13 @@ describe('simpananKelola', () => {
     await tunggu(900);
     expect(tabel.some(b => b.kunci === `rekah_rencana_v3_${A}_2026-10-26`)).toBe(false);
   });
+  test('data Kehidupan Keluarga, Temani, dan Bantu ikut terunggah', async () => {
+    localStorage.setItem(`rekah_kehidupan_bidang_${A}`, '{"items":[1]}');
+    localStorage.setItem(`rekah_temani_${A}`, '{"slug":"tidur"}');
+    localStorage.setItem(`rekah_bantu_tersimpan_${A}`, '[{"id":"tantrum"}]');
+    await tunggu(900);
+    for (const k of [`rekah_kehidupan_bidang_${A}`, `rekah_temani_${A}`, `rekah_bantu_tersimpan_${A}`]) {
+      expect(tabel.find(b => b.kunci === k)?.id_anak).toBe(A);
+    }
+  });
 });

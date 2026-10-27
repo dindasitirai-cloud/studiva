@@ -1,5 +1,5 @@
 // =============================================================
-// simpananKelola — rencana mingguan & papan harian Kelola ikut tersimpan di akun.
+// simpananKelola — data Kelola, Temani, dan Bantu ikut tersimpan di akun.
 //
 // Irama Keseharian (rencana minggu, papan per tanggal, kegiatan bawaan, centang
 // hari lain, tinjauan minggu) ditulis ke localStorage oleh banyak berkas. Daripada
@@ -18,14 +18,38 @@ import { supabase } from './supabase/client';
 
 const sb = supabase as unknown as SupabaseClient;
 
+// Semua data Kelola, Temani, dan Bantu yang masih disimpan per anak di perangkat.
+// (Untuk Dikelola punya tabel sendiri: untuk_dikelola. "Yang terlihat" Jurnal sudah
+// di jurnal_hari, jadi tidak ikut di sini.) Diurutkan dari awalan terpanjang supaya
+// mis. rekah_kehidupan_bidang_ tidak tertangkap sebagai rekah_kehidupan_.
 const AWALAN = [
-  'rekah_rencana_v3_',
-  'rekah_hariini_v3_',
-  'rekah_irama_default_',
-  'rekah_centanglokal_',
-  'rekah_tinjau_nanti_',
-  'rekah_tinjau_',
-];
+  // Kelola · Irama Keseharian
+  'rekah_rencana_v3_',          // rencana per hari dalam seminggu
+  'rekah_hariini_v3_',          // papan per tanggal
+  'rekah_irama_default_',       // kegiatan bawaan yang diubah
+  'rekah_centanglokal_',        // centang kebiasaan hari selain hari ini
+  'rekah_tinjau_nanti_',        // tinjauan minggu ditunda
+  'rekah_tinjau_',              // tinjauan minggu
+  'rekah_fokus_minggu_',        // fokus nilai pekan ini
+  'rekah_refleksi_',            // refleksi kegiatan per tanggal
+  // Kelola · Kehidupan Keluarga & Perjalanan
+  'rekah_kehidupan_bidang_',
+  'rekah_kehidupan_',
+  'rekah_cara_mengasuh_',
+  'rekah_peristiwa_',
+  'rekah_imunisasi_',
+  'rekah_peta_',
+  'rekah_nifas_',
+  'rekah_piring_',
+  'rekah_jejak_pengamatan_',
+  'rekah_observasi_kompas_',
+  'rekah_catatan_teks_',
+  'rekah_catatan_kompas_',
+  // Temani
+  'rekah_temani_',              // perjalanan yang sedang dijalani & progresnya
+  // Bantu
+  'rekah_bantu_tersimpan_',     // panduan yang disimpan
+].sort((a, b) => b.length - a.length);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
 const JEDA_MS = 800;
 
@@ -54,7 +78,7 @@ let peringatanSekali = false;
 function peringatan(err: unknown): void {
   if (peringatanSekali) return;
   peringatanSekali = true;
-  console.warn('[Kelola] tabel simpanan_kelola belum tersedia — rencana tersimpan di perangkat ini dulu. Jalankan migration 035.', err);
+  console.warn('[Rekah] tabel simpanan_kelola belum tersedia — data Kelola/Temani/Bantu tersimpan di perangkat ini dulu. Jalankan migration 035.', err);
 }
 
 // ── Antrean unggah ───────────────────────────────────────────────────────────

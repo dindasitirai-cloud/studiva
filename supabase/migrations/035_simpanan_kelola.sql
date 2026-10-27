@@ -1,11 +1,16 @@
 -- ═══════════════════════════════════════════════════════════════════════════
--- 035 — Simpanan Kelola (rencana mingguan & papan harian)  [idempoten]
--- Sebelumnya Irama Keseharian hanya tersimpan di localStorage perangkat:
+-- 035 — Simpanan Kelola, Temani & Bantu per anak  [idempoten]
+-- Sebelumnya data Kelola, Temani, dan Bantu hanya tersimpan di localStorage
+-- perangkat, antara lain:
 --   rekah_rencana_v3_<anak>_<senin>     rencana per hari (pagi/siang/malam/kelola)
 --   rekah_hariini_v3_<anak>_<tanggal>   papan hari (kegiatan, to-do, urutan, tanda)
---   rekah_irama_default_<anak>          kegiatan bawaan yang diubah
---   rekah_centanglokal_<anak>_<tanggal> centang kebiasaan di hari selain hari ini
---   rekah_tinjau_<anak>_<senin>         tinjauan minggu (+ rekah_tinjau_nanti_…)
+--   rekah_irama_default_, rekah_centanglokal_, rekah_tinjau_, rekah_fokus_minggu_,
+--   rekah_refleksi_                     Irama Keseharian lainnya
+--   rekah_kehidupan_, rekah_peta_, rekah_peristiwa_, rekah_imunisasi_, rekah_nifas_,
+--   rekah_piring_, rekah_cara_mengasuh_ Kehidupan Keluarga
+--   rekah_temani_<anak>                 perjalanan Temani & progresnya
+--   rekah_bantu_tersimpan_<anak>        panduan Bantu yang disimpan
+-- Daftar lengkapnya ada di apps/digital/src/lib/simpananKelola.ts (AWALAN).
 -- Kini setiap kunci juga tersimpan di akun (satu baris per kunci), sehingga tidak
 -- hilang saat data browser dibersihkan atau ganti perangkat. Yang terakhir
 -- diubah menang. Baris hanya hilang bila datanya dihapus dari aplikasi.
